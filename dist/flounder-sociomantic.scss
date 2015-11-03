@@ -1,0 +1,101 @@
+//----------------------------------------------------------------------------//
+//  $FLOUNDER - Sociomantic styling
+//----------------------------------------------------------------------------//
+.flounder-wrapper
+{
+    @extend .ProximaNova-SemiBold;
+}
+
+
+.flounder
+{
+    border-radius:                  2px;
+    border-color:                   $mid--soft--grey;
+
+    &:hover
+    {
+        border-color:               $blue;
+    }
+}
+
+
+.open .flounder
+{
+    @include black-box-shadow;
+
+    &:hover
+    {
+        border-color:               $mid--soft--grey;
+    }
+}
+
+
+.flounder__option
+{
+    &:hover
+    {
+        background-color:           $medium-dark--grey;
+        color:                      $almost-black;
+    }
+}
+
+
+.flounder__option--selected
+{
+    background-color:               $section-dark;
+}
+
+
+.flounder__option--selected--displayed
+{
+    @include rem-fallback( font-size, 1.2 );
+    background-color:               $medium-dark--grey;
+    color:                          $almost-black;
+}
+
+
+.odd .flounder__option--selected--displayed
+{
+    background-color:               $white;
+}
+
+
+.flounder__input, .flounder__list-wrapper
+{
+    @include black-box-shadow;
+}
+
+
+.flounder__list-wrapper
+{
+    @include rem-fallback( font-size, 1.2 );
+    background-color:               $white;
+    color:                          $slate-grey;
+    border-color:                   $mid--soft--grey;
+}
+
+
+.flounder__multi--selected
+{
+    background-color:               $section-dark;
+    color:                          $almost-black;
+}
+
+
+.flounder__multiple--select--tag
+{
+    border-color:                   $mid--soft--grey;
+    color:                          $body-copy-link;
+    @include rem-fallback( font-size, 1.1 );
+
+    &:hover
+    {
+        background:                     linear-gradient( to bottom, $white 0%, $off-white 100% );
+    }
+}
+
+
+.flounder--disabled
+{
+    color:                          $disabled--grey;
+}
