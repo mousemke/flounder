@@ -197,7 +197,6 @@ class Flounder
         let options             = [];
         let selectOptions       = [];
         let constructElement    = this.constructElement;
-        let attachAttributes    = this.attachAttributes;
 
         _options.forEach( ( _option, i ) =>
         {
@@ -490,7 +489,7 @@ class Flounder
      */
     displayMultipleTags( selectedOptions, multiTagWrapper )
     {
-        let _span, _a, refs = this.refs, search = refs.search;
+        let _span, _a, refs = this.refs;
 
         let removeMultiTag = this.removeMultiTag
 
@@ -500,7 +499,6 @@ class Flounder
         } );
 
         multiTagWrapper.innerHTML = '';
-        let offset = this.defaultTextIndent;
 
         selectedOptions.forEach( function( option )
         {
@@ -1084,7 +1082,6 @@ class Flounder
 
         let refs                = this.refs;
         let selectTag           = refs.select;
-        let optionsList         = refs.optionsList;
         let options             = refs.options;
         let optionsMaxIndex     = options.length - 1;
         let index               = selectTag.selectedIndex + increment;
@@ -1258,7 +1255,6 @@ class Flounder
         let refs        = this.refs;
         let optionsList = refs.optionsListWrapper;
         let wrapper     = refs.wrapper;
-        let dropmask    = refs.dropmask;
 
         if ( force === 'open' || force !== 'close' && optionsList.className.indexOf( 'flounder--hidden' ) !== -1 )
         {
