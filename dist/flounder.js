@@ -379,8 +379,7 @@ var Flounder = (function () {
         this.displayMultipleTags = function (selectedOptions, multiTagWrapper) {
             var _span = undefined,
                 _a = undefined,
-                refs = _this4.refs,
-                search = refs.search;
+                refs = _this4.refs;
 
             var removeMultiTag = _this4.removeMultiTag;
 
@@ -389,7 +388,6 @@ var Flounder = (function () {
             });
 
             multiTagWrapper.innerHTML = '';
-            var offset = _this4.defaultTextIndent;
 
             selectedOptions.forEach(function (option) {
                 _span = document.createElement('span');
@@ -502,7 +500,6 @@ var Flounder = (function () {
 
             var refs = _this4.refs;
             var selectTag = refs.select;
-            var optionsList = refs.optionsList;
             var options = refs.options;
             var optionsMaxIndex = options.length - 1;
             var index = selectTag.selectedIndex + increment;
@@ -587,7 +584,6 @@ var Flounder = (function () {
             var refs = _this4.refs;
             var optionsList = refs.optionsListWrapper;
             var wrapper = refs.wrapper;
-            var dropmask = refs.dropmask;
 
             if (force === 'open' || force !== 'close' && optionsList.className.indexOf('flounder--hidden') !== -1) {
                 _this4.showElement(optionsList);

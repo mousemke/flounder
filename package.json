@@ -1,33 +1,35 @@
 {
-    "name": "flounder",
-    "version": "0.0.1",
-    "description": "a native friendly dropdown menu",
-    "main": "./dist/flounder.js",
-    "scripts": {
-        "gulp": "./node_modules/.bin/gulp && echo \"Build complete.\""
-    },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/sociomantic/flounder.git"
-    },
-    "keywords": [
-        "select2",
-        "dropdown",
-        "front",
-        "end",
-        "frontend",
-        "select",
-        "box"
-    ],
-    "author": "Mouse Braun <mouse@sociomantic.com> (http://sociomantic.com)",
-    "license": "MIT",
-    "bugs": {
-        "url": "https://github.com/sociomantic/flounder/issues"
-    },
-    "homepage": "https://github.com/sociomantic/flounder#readme",
-    "devDependencies": {
-        "babelify": "^6.3.0",
-        "browserify": "^11.2.0",
-        "gulp": "^3.9.0"
-    }
+  "name": "flounder",
+  "version": "0.0.1",
+  "description": "a native friendly dropdown menu",
+  "main": "./dist/flounder.js",
+  "scripts": {
+    "gulp": "./node_modules/.bin/gulp && echo \"Build complete.\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sociomantic/flounder.git"
+  },
+  "keywords": [
+    "select2",
+    "dropdown",
+    "front",
+    "end",
+    "frontend",
+    "select",
+    "box"
+  ],
+  "author": "Mouse Braun <mouse@sociomantic.com> (http://sociomantic.com)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sociomantic/flounder/issues"
+  },
+  "homepage": "https://github.com/sociomantic/flounder#readme",
+  "devDependencies": {
+    "babelify": "^6.3.0",
+    "browserify": "^11.2.0",
+    "gulp": "^3.9.0",
+    "react": "^0.14.2",
+    "react-dom": "^0.14.2"
+  }
 }
