@@ -80,6 +80,42 @@ var Flounder = (function () {
             select.addEventListener('keydown', this.setSelectArrows);
             select.focus();
         }
+    }, {
+        key: 'attachAttributes',
+        value: function attachAttributes(_el, _elObj) {
+            for (var att in _elObj) {
+                if (att.indexOf('data-') !== -1) {
+                    _el.setAttribute(att, _elObj[att]);
+                } else {
+                    _el[att] = _elObj[att];
+                }
+            }
+        }
+
+        /**
+         * ## bindThis
+         *
+         * binds this to whatever functions need it.  Arrow functions cannot be used
+         * here due to the react extension needing them as well;
+         *
+         * @return _Void_
+         */
+    }, {
+        key: 'bindThis',
+        value: function bindThis() {
+            this.attachAttributes = this.attachAttributes.bind(this);
+            this.catchBodyClick = this.catchBodyClick.bind(this);
+            this.checkClickTarget = this.checkClickTarget.bind(this);
+            this.checkPlaceholder = this.checkPlaceholder.bind(this);
+            this.clickSet = this.clickSet.bind(this);
+            this.displayMultipleTags = this.displayMultipleTags.bind(this);
+            this.fuzzySearch = this.fuzzySearch.bind(this);
+            this.removeMultiTag = this.removeMultiTag.bind(this);
+            this.setSelectArrows = this.setSelectArrows.bind(this);
+            this.setSelectValue = this.setSelectValue.bind(this);
+            this.toggleClass = this.toggleClass.bind(this);
+            this.toggleList = this.toggleList.bind(this);
+        }
 
         /**
          * ## buildDom
@@ -115,7 +151,7 @@ var Flounder = (function () {
                 'data-value': _default.value });
             selected.innerHTML = _default.text;
 
-            var multiTagWrapper = this.props.search ? constructElement({ className: 'multi--tag--list' }) : null;
+            var multiTagWrapper = this.props.multiple ? constructElement({ className: 'multi--tag--list' }) : null;
 
             if (multiTagWrapper !== null) {
                 multiTagWrapper.style.textIndent = this.defaultTextIndent + 'px';
@@ -168,6 +204,7 @@ var Flounder = (function () {
             var options = [];
             var selectOptions = [];
             var constructElement = this.constructElement;
+            var attachAttributes = this.attachAttributes;
 
             _options.forEach(function (_option, i) {
                 if (typeof _option === 'string') {
@@ -187,7 +224,7 @@ var Flounder = (function () {
 
                 for (var _o in _option) {
                     if (_o !== 'text') {
-                        res['data-' + _o] = _option[_o];
+                        res[_o] = _option[_o];
                     }
                 }
 
@@ -224,36 +261,81 @@ var Flounder = (function () {
          * @return _Void_
          */
     }, {
-        key: 'componentDidMount',
+        key: 'catchBodyClick',
+        value: function catchBodyClick(e) {
+            if (!this.checkClickTarget(e)) {
+                if (this.cancelFunc) {
+                    this.cancelFunc();
+                }
+                this.toggleList();
+            }
+        }
 
         /**
-         * ## componentDidMount
+         * ## checkClickTarget
          *
-         * attaches necessary events to the built DOM
+         * checks whether the target of a click is the menu or not
+         *
+         * @param  {Object} e event object
+         * @param  {DOMElement} target click target
+         *
+         * @return _Boolean_
+         */
+    }, {
+        key: 'checkClickTarget',
+        value: function checkClickTarget(e, target) {
+            target = target || e.target;
+
+            if (target === document) {
+                return false;
+            } else if (target === this.refs.flounder) {
+                return true;
+            }
+
+            return this.checkClickTarget(e, target.parentNode);
+        }
+
+        /**
+         * ## checkPlaceholder
+         *
+         * clears or readds the placeholder
+         *
+         * @param {Object} e event object
          *
          * @return _Void_
          */
-        value: function componentDidMount() {
-            var _this2 = this;
-
-            var props = this.props;
+    }, {
+        key: 'checkPlaceholder',
+        value: function checkPlaceholder(e) {
+            var type = e.type;
             var refs = this.refs;
-            var options = refs.options;
 
-            options.forEach(function (option, i) {
-                if (option.tagName === 'DIV') {
-                    option.addEventListener('click', _this2.clickSet);
+            if (type === 'focus') {
+                refs.selected.innerHTML = '';
+            } else {
+                if (refs.multiTagWrapper && refs.multiTagWrapper.children.length === 0) {
+                    this.refs.selected.innerHTML = this['default'].text;
                 }
-            });
+            }
+        }
 
-            refs.selected.addEventListener('click', this.toggleList);
+        /**
+         * ## clickSet
+         *
+         * when a flounder option is clicked on it needs to set the option as selected
+         *
+         * @param {Object} e event object
+         *
+         * @return _Void_
+         */
+    }, {
+        key: 'clickSet',
+        value: function clickSet(e) {
 
-            if (props.search) {
-                var search = refs.search;
-                search.addEventListener('click', this.toggleList);
-                search.addEventListener('keyup', this.fuzzySearch);
-                search.addEventListener('focus', this.checkPlaceholder);
-                search.addEventListener('blur', this.checkPlaceholder);
+            this.setSelectValue({}, e);
+
+            if (!this.multiple || !e[this.multiSelect]) {
+                this.toggleList();
             }
         }
 
@@ -267,7 +349,7 @@ var Flounder = (function () {
     }, {
         key: 'componentWillUnmount',
         value: function componentWillUnmount() {
-            var _this3 = this;
+            var _this2 = this;
 
             var props = this.props;
             var refs = this.refs;
@@ -281,7 +363,7 @@ var Flounder = (function () {
 
             refs.options.forEach(function (_option) {
                 if (_option.tagName === 'DIV') {
-                    _option.removeEventListener('click', _this3.clickSet);
+                    _option.removeEventListener('click', _this2.clickSet);
                 }
             });
 
@@ -289,8 +371,8 @@ var Flounder = (function () {
 
             if (props.search) {
                 var search = refs.search;
-                search.addEventListener('click', this.toggleList);
-                search.addEventListener('keyup', this.fuzzySearch);
+                search.removeEventListener('click', this.toggleList);
+                search.removeEventListener('keyup', this.fuzzySearch);
             }
         }
 
@@ -301,324 +383,30 @@ var Flounder = (function () {
          *
          * @return _Element_
          */
-    }, {
-        key: 'constructElement',
-        value: function constructElement(_elObj) {
-            var _el = document.createElement(_elObj.tagname || 'div');
-
-            for (var att in _elObj) {
-                if (att.indexOf('data-') !== -1) {
-                    _el.setAttribute(att, _elObj[att]);
-                } else {
-                    _el[att] = _elObj[att];
-                }
-            }
-
-            return _el;
-        }
-
-        /**
-         * ## constructor
-         *
-         * main constuctor
-         *
-         * @param {DOMElement} target flounder mount point
-         * @param {Object} props passed options
-         *
-         * @return _Object_ new flounder object
-         */
     }]);
 
+    /**
+     * ## constructor
+     *
+     * main constuctor
+     *
+     * @param {DOMElement} target flounder mount point
+     * @param {Object} props passed options
+     *
+     * @return _Object_ new flounder object
+     */
+
     function Flounder(target, props) {
-        var _this4 = this;
+        var _this3 = this;
 
         _classCallCheck(this, Flounder);
 
-        this.catchBodyClick = function (e) {
-            if (!_this4.checkClickTarget(e)) {
-                if (_this4.cancelFunc) {
-                    _this4.cancelFunc();
-                }
-                _this4.toggleList();
-            }
-        };
+        this.constructElement = function (_elObj) {
+            var _el = document.createElement(_elObj.tagname || 'div');
 
-        this.checkClickTarget = function (e, target) {
-            target = target || e.target;
+            _this3.attachAttributes(_el, _elObj);
 
-            if (target === document) {
-                return false;
-            } else if (target === _this4.refs.flounder) {
-                return true;
-            }
-
-            return _this4.checkClickTarget(e, target.parentNode);
-        };
-
-        this.checkPlaceholder = function (e) {
-            var type = e.type;
-            var refs = _this4.refs;
-
-            if (type === 'focus') {
-                refs.selected.innerHTML = '';
-            } else {
-                if (refs.multiTagWrapper && refs.multiTagWrapper.children.length === 0) {
-                    _this4.refs.selected.innerHTML = _this4['default'].text;
-                }
-            }
-        };
-
-        this.clickSet = function (e) {
-            _this4.setSelectValue({}, e);
-
-            if (!_this4.multiple || !e[_this4.multiSelect]) {
-                _this4.toggleList();
-            }
-        };
-
-        this.displayMultipleTags = function (selectedOptions, multiTagWrapper) {
-            var _span = undefined,
-                _a = undefined,
-                refs = _this4.refs;
-
-            var removeMultiTag = _this4.removeMultiTag;
-
-            _slice.call(multiTagWrapper.children).forEach(function (el) {
-                el.firstChild.removeEventListener('click', removeMultiTag);
-            });
-
-            multiTagWrapper.innerHTML = '';
-
-            selectedOptions.forEach(function (option) {
-                _span = document.createElement('span');
-                _span.className = 'flounder__multiple--select--tag';
-
-                _a = document.createElement('a');
-                _a.className = 'flounder__multiple__tag__close';
-                _a.setAttribute('data-index', option.index);
-
-                _span.appendChild(_a);
-
-                _span.innerHTML += option.innerHTML;
-
-                multiTagWrapper.appendChild(_span);
-            });
-
-            _this4.setTextMultiTagIndent();
-
-            _slice.call(multiTagWrapper.children).forEach(function (el) {
-                el.firstChild.addEventListener('click', removeMultiTag);
-            });
-        };
-
-        this.fuzzySearch = function (e) // disclaimer: not actually fuzzy
-        {
-            e.preventDefault();
-            var keyCode = e.keyCode;
-
-            if (keyCode !== 38 && keyCode !== 40 && keyCode !== 13 && keyCode !== 27) {
-                (function () {
-                    var term = e.target.value.toLowerCase();
-
-                    _this4.refs.options.forEach(function (_option) {
-                        var text = _option.innerHTML.toLowerCase();
-
-                        if (term !== '' && text.indexOf(term) === -1) {
-                            _this4.addClass(_option, 'flounder--search--hidden');
-                        } else {
-                            _this4.removeClass(_option, 'flounder--search--hidden');
-                        }
-                    });
-                })();
-            } else {
-                _this4.setSelectArrows(e);
-                _this4.setSelectValue(e);
-            }
-        };
-
-        this.removeMultiTag = function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-
-            var value = undefined;
-            var refs = _this4.refs;
-            var select = refs.select;
-            var selected = refs.selected;
-            var target = e.target;
-            var index = target.getAttribute('data-index');
-            select[index].selected = false;
-
-            var selectedOptions = _slice.call(select.selectedOptions);
-
-            _this4.removeClass(refs.options[index], 'flounder__option--selected--hidden');
-
-            var span = target.parentNode;
-            span.parentNode.removeChild(span);
-
-            if (selectedOptions.length === 0) {
-                selected.innerHTML = _this4['default'].text;
-                value = _this4['default'].value;
-            } else {
-                value = selectedOptions.map(function (option) {
-                    return option.value;
-                });
-            }
-
-            _this4.setTextMultiTagIndent();
-
-            selected.setAttribute('data-value', value);
-
-            if (_this4.selectFunc) {
-                _this4.selectFunc();
-            }
-        };
-
-        this.setSelectArrows = function (e) {
-            var increment = 0;
-
-            switch (e.keyCode) {
-                case 13:
-                case 27:
-                    _this4.toggleList();
-                    return;
-                case 38:
-                    e.preventDefault();
-                    increment--;
-                    break;
-                case 40:
-                    e.preventDefault();
-                    increment++;
-                    break;
-                default:
-                    return;
-            }
-
-            if (!!window.sidebar) // ff
-                {
-                    increment = 0;
-                }
-
-            var refs = _this4.refs;
-            var selectTag = refs.select;
-            var options = refs.options;
-            var optionsMaxIndex = options.length - 1;
-            var index = selectTag.selectedIndex + increment;
-
-            if (index > optionsMaxIndex) {
-                index = 0;
-            } else if (index < 0) {
-                index = optionsMaxIndex;
-            }
-
-            selectTag.selectedIndex = index;
-
-            var optionClassName = options[index].className;
-
-            if (optionClassName.indexOf('flounder--hidden') !== -1 && optionClassName.indexOf('flounder__option--selected--hidden') !== -1) {
-                _this4.setSelectArrows(e);
-            }
-        };
-
-        this.setSelectValue = function (obj, e) {
-            var refs = _this4.refs;
-            var options = refs.options;
-            var select = refs.select;
-            var selectedClass = _this4.selectedClass;
-            var _addClass = _this4.addClass;
-            var _toggleClass = _this4.toggleClass;
-
-            var index = undefined,
-                selectedOption = undefined;
-
-            if (e) // click
-                {
-                    if (!_this4.multiple || _this4.multiple && !_this4.multipleTags && !e[_this4.multiSelect]) {
-                        _this4.removeSelectedClass(options);
-                        _this4.removeSelectedValue(options);
-                    }
-                    var _target = e.target;
-
-                    _toggleClass(_target, selectedClass);
-                    index = _target.getAttribute('data-index');
-
-                    selectedOption = refs.selectOptions[index];
-
-                    selectedOption.selected = selectedOption.selected === true ? false : true;
-                    selectedOption = select.selectedOptions;
-                } else // button press
-                {
-                    if (_this4.multiple) {
-                        obj.preventDefault();
-                        obj.stopPropagation();
-
-                        return false;
-                    }
-
-                    _this4.removeSelectedClass(options);
-
-                    selectedOption = options[select.selectedOptions[0].index];
-                    _addClass(selectedOption, selectedClass);
-
-                    _this4.scrollTo(selectedOption);
-                }
-
-            _this4.displaySelected(refs.selected, refs);
-
-            if (_this4.selectFunc) {
-                _this4.selectFunc();
-            }
-        };
-
-        this.toggleClass = function (_el, _class) {
-            var _addClass = _this4.addClass;
-            var _removeClass = _this4.removeClass;
-
-            if (_el.className.indexOf(_class) !== -1) {
-                _removeClass(_el, _class);
-            } else {
-                _addClass(_el, _class);
-            }
-        };
-
-        this.toggleList = function (force) {
-            var refs = _this4.refs;
-            var optionsList = refs.optionsListWrapper;
-            var wrapper = refs.wrapper;
-
-            if (force === 'open' || force !== 'close' && optionsList.className.indexOf('flounder--hidden') !== -1) {
-                _this4.showElement(optionsList);
-                _this4.addSelectKeyListener();
-                _this4.addClass(wrapper, 'open');
-
-                document.body.addEventListener('click', _this4.catchBodyClick);
-
-                if (_this4.props.search) {
-                    refs.search.focus();
-                }
-
-                if (_this4.openFunc) {
-                    _this4.openFunc();
-                }
-            } else if (force === 'close' || optionsList.className.indexOf('flounder--hidden') === -1) {
-                _this4.hideElement(optionsList);
-                _this4.removeSelectKeyListener();
-                _this4.removeClass(wrapper, 'open');
-
-                document.body.removeEventListener('click', _this4.catchBodyClick);
-
-                if (_this4.props.search) {
-                    _this4.fuzzySearchReset();
-                    refs.search.blur();
-                }
-
-                optionsList.blur();
-                refs.optionsList.blur();
-                refs.select.blur();
-
-                if (_this4.closeFunc) {
-                    _this4.closeFunc();
-                }
-            }
+            return _el;
         };
 
         if (target && target.length !== 0) {
@@ -633,6 +421,8 @@ var Flounder = (function () {
 
             this.target = target;
 
+            this.bindThis();
+
             this.initialzeOptions();
 
             if (this.initFunc) {
@@ -641,7 +431,7 @@ var Flounder = (function () {
 
             this.buildDom();
 
-            this.componentDidMount();
+            this.onRender();
 
             if (this.componentDidMountFunc) {
                 this.componentDidMountFunc();
@@ -682,7 +472,43 @@ var Flounder = (function () {
          * @return _Void_
          */
     }, {
-        key: 'displaySelected',
+        key: 'displayMultipleTags',
+        value: function displayMultipleTags(selectedOptions, multiTagWrapper) {
+            var _span = undefined,
+                _a = undefined,
+                refs = this.refs,
+                search = refs.search;
+
+            var removeMultiTag = this.removeMultiTag;
+
+            _slice.call(multiTagWrapper.children).forEach(function (el) {
+                el.firstChild.removeEventListener('click', removeMultiTag);
+            });
+
+            multiTagWrapper.innerHTML = '';
+            var offset = this.defaultTextIndent;
+
+            selectedOptions.forEach(function (option) {
+                _span = document.createElement('span');
+                _span.className = 'flounder__multiple--select--tag';
+
+                _a = document.createElement('a');
+                _a.className = 'flounder__multiple__tag__close';
+                _a.setAttribute('data-index', option.index);
+
+                _span.appendChild(_a);
+
+                _span.innerHTML += option.innerHTML;
+
+                multiTagWrapper.appendChild(_span);
+            });
+
+            this.setTextMultiTagIndent();
+
+            _slice.call(multiTagWrapper.children).forEach(function (el) {
+                el.firstChild.addEventListener('click', removeMultiTag);
+            });
+        }
 
         /**
          * ## displaySelected
@@ -692,6 +518,8 @@ var Flounder = (function () {
          * @param {DOMElement} selected display area for the selected option(s)
          * @param {Object} refs element references
           */
+    }, {
+        key: 'displaySelected',
         value: function displaySelected(selected, refs) {
             var value = [];
 
@@ -708,6 +536,7 @@ var Flounder = (function () {
             } else {
                 if (this.multipleTags) {
                     selected.innerHTML = '';
+
                     this.displayMultipleTags(selectedOption, this.refs.multiTagWrapper);
                 } else {
                     selected.innerHTML = this.multipleMessage;
@@ -746,7 +575,33 @@ var Flounder = (function () {
          * @return _Void_
          */
     }, {
-        key: 'fuzzySearchReset',
+        key: 'fuzzySearch',
+        value: function fuzzySearch(e) // disclaimer: not actually fuzzy
+        {
+            var _this4 = this;
+
+            e.preventDefault();
+            var keyCode = e.keyCode;
+
+            if (keyCode !== 38 && keyCode !== 40 && keyCode !== 13 && keyCode !== 27) {
+                (function () {
+                    var term = e.target.value.toLowerCase();
+
+                    _this4.refs.options.forEach(function (_option) {
+                        var text = _option.innerHTML.toLowerCase();
+
+                        if (term !== '' && text.indexOf(term) === -1) {
+                            _this4.addClass(_option, 'flounder--search--hidden');
+                        } else {
+                            _this4.removeClass(_option, 'flounder--search--hidden');
+                        }
+                    });
+                })();
+            } else {
+                this.setSelectArrows(e);
+                this.setSelectValue(e);
+            }
+        }
 
         /**
          * ## fuzzySearchReset
@@ -755,6 +610,8 @@ var Flounder = (function () {
          *
          * @return _Void_
          */
+    }, {
+        key: 'fuzzySearchReset',
         value: function fuzzySearchReset() {
             var _this5 = this;
 
@@ -879,6 +736,39 @@ var Flounder = (function () {
         }
 
         /**
+         * ## onRender
+         *
+         * attaches necessary events to the built DOM
+         *
+         * @return _Void_
+         */
+    }, {
+        key: 'onRender',
+        value: function onRender() {
+            var _this7 = this;
+
+            var props = this.props;
+            var refs = this.refs;
+            var options = refs.options;
+
+            options.forEach(function (option, i) {
+                if (option.tagName === 'DIV') {
+                    option.addEventListener('click', _this7.clickSet);
+                }
+            });
+
+            refs.selected.addEventListener('click', this.toggleList);
+
+            if (props.search) {
+                var search = refs.search;
+                search.addEventListener('click', this.toggleList);
+                search.addEventListener('keyup', this.fuzzySearch);
+                search.addEventListener('focus', this.checkPlaceholder);
+                search.addEventListener('blur', this.checkPlaceholder);
+            }
+        }
+
+        /**
          * ## removeClass
          *
          * on the quest to nuke jquery, a wild helper function appears
@@ -916,6 +806,44 @@ var Flounder = (function () {
          * @return _Void_
          */
     }, {
+        key: 'removeMultiTag',
+        value: function removeMultiTag(e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            var value = undefined;
+            var refs = this.refs;
+            var select = refs.select;
+            var selected = refs.selected;
+            var target = e.target;
+            var index = target.getAttribute('data-index');
+            select[index].selected = false;
+
+            var selectedOptions = _slice.call(select.selectedOptions);
+
+            this.removeClass(refs.options[index], 'flounder__option--selected--hidden');
+
+            var span = target.parentNode;
+            span.parentNode.removeChild(span);
+
+            if (selectedOptions.length === 0) {
+                selected.innerHTML = this['default'].text;
+                value = this['default'].value;
+            } else {
+                value = selectedOptions.map(function (option) {
+                    return option.value;
+                });
+            }
+
+            this.setTextMultiTagIndent();
+
+            selected.setAttribute('data-value', value);
+
+            if (this.selectFunc) {
+                this.selectFunc();
+            }
+        }
+    }, {
         key: 'removeSelectKeyListener',
 
         /**
@@ -940,10 +868,10 @@ var Flounder = (function () {
     }, {
         key: 'removeSelectedClass',
         value: function removeSelectedClass(options) {
-            var _this7 = this;
+            var _this8 = this;
 
             options.forEach(function (_option, i) {
-                _this7.removeClass(_option, _this7.selectedClass);
+                _this8.removeClass(_option, _this8.selectedClass);
             });
         }
 
@@ -957,10 +885,10 @@ var Flounder = (function () {
     }, {
         key: 'removeSelectedValue',
         value: function removeSelectedValue(options) {
-            var _this8 = this;
+            var _this9 = this;
 
             options.forEach(function (_option, i) {
-                _this8.refs.select[i].selected = false;
+                _this9.refs.select[i].selected = false;
             });
         }
 
@@ -1077,7 +1005,118 @@ var Flounder = (function () {
          * @return _Void_
          */
     }, {
-        key: 'setTextMultiTagIndent',
+        key: 'setSelectArrows',
+        value: function setSelectArrows(e) {
+            var increment = 0;
+
+            switch (e.keyCode) {
+                case 13:
+                case 27:
+                    this.toggleList();
+                    return;
+                case 38:
+                    e.preventDefault();
+                    increment--;
+                    break;
+                case 40:
+                    e.preventDefault();
+                    increment++;
+                    break;
+                default:
+                    return;
+            }
+
+            if (!!window.sidebar) // ff
+                {
+                    increment = 0;
+                }
+
+            var refs = this.refs;
+            var selectTag = refs.select;
+            var optionsList = refs.optionsList;
+            var options = refs.options;
+            var optionsMaxIndex = options.length - 1;
+            var index = selectTag.selectedIndex + increment;
+
+            if (index > optionsMaxIndex) {
+                index = 0;
+            } else if (index < 0) {
+                index = optionsMaxIndex;
+            }
+
+            selectTag.selectedIndex = index;
+
+            var optionClassName = options[index].className;
+
+            if (optionClassName.indexOf('flounder--hidden') !== -1 && optionClassName.indexOf('flounder__option--selected--hidden') !== -1) {
+                this.setSelectArrows(e);
+            }
+        }
+
+        /**
+         * ## setSelectValue
+         *
+         * sets the selected value in flounder.  when activated by a click, the event
+         * object is moved to the second variable.  this gives us the ability to
+         * discern between triggered events (keyup) and processed events (click)
+         * for the sake of choosing our targets
+         *
+         * @param {Object} obj possible event object
+         * @param {Object} e event object
+         *
+         * @return _Void_
+         */
+    }, {
+        key: 'setSelectValue',
+        value: function setSelectValue(obj, e) {
+            var refs = this.refs;
+            var options = refs.options;
+            var select = refs.select;
+            var selectedClass = this.selectedClass;
+            var _addClass = this.addClass;
+            var _toggleClass = this.toggleClass;
+
+            var index = undefined,
+                selectedOption = undefined;
+
+            if (e) // click
+                {
+                    if (!this.multiple || this.multiple && !this.multipleTags && !e[this.multiSelect]) {
+                        this.removeSelectedClass(options);
+                        this.removeSelectedValue(options);
+                    }
+                    var target = e.target;
+
+                    _toggleClass(target, selectedClass);
+                    index = target.getAttribute('data-index');
+
+                    selectedOption = refs.selectOptions[index];
+
+                    selectedOption.selected = selectedOption.selected === true ? false : true;
+                    selectedOption = select.selectedOptions;
+                } else // button press
+                {
+                    if (this.multiple) {
+                        obj.preventDefault();
+                        obj.stopPropagation();
+
+                        return false;
+                    }
+
+                    this.removeSelectedClass(options);
+
+                    selectedOption = options[select.selectedOptions[0].index];
+                    _addClass(selectedOption, selectedClass);
+
+                    this.scrollTo(selectedOption);
+                }
+
+            this.displaySelected(refs.selected, refs);
+
+            if (this.selectFunc) {
+                this.selectFunc();
+            }
+        }
 
         /**
          * ## setTextMultiTagIndent
@@ -1086,19 +1125,21 @@ var Flounder = (function () {
          *
          * @return _Void_
          */
+    }, {
+        key: 'setTextMultiTagIndent',
         value: function setTextMultiTagIndent() {
-            var _this9 = this;
+            var _this10 = this;
 
             var search = this.refs.search;
             var offset = this.defaultTextIndent;
 
             if (search) {
                 $('.flounder__multiple--select--tag').each(function (i, e) {
-                    offset += _this9.getActualWidth(e);
+                    offset += _this10.getActualWidth(e);
                 });
-            }
 
-            search.style.textIndent = offset + 'px';
+                search.style.textIndent = offset + 'px';
+            }
         }
 
         /**
@@ -1126,6 +1167,72 @@ var Flounder = (function () {
          *
          * @return _Void_
          */
+    }, {
+        key: 'toggleClass',
+        value: function toggleClass(_el, _class) {
+            var _addClass = this.addClass;
+            var _removeClass = this.removeClass;
+
+            if (_el.className.indexOf(_class) !== -1) {
+                _removeClass(_el, _class);
+            } else {
+                _addClass(_el, _class);
+            }
+        }
+
+        /**
+         * ## toggleList
+         *
+         * on click of flounder--selected, this shows or hides the options list
+         *
+         * @param {String} force toggle can be forced by passing 'open' or 'close'
+         *
+         * @return _Void_
+         */
+    }, {
+        key: 'toggleList',
+        value: function toggleList(force) {
+
+            var refs = this.refs;
+            var optionsList = refs.optionsListWrapper;
+            var wrapper = refs.wrapper;
+            var dropmask = refs.dropmask;
+
+            if (force === 'open' || force !== 'close' && optionsList.className.indexOf('flounder--hidden') !== -1) {
+                this.showElement(optionsList);
+                this.addSelectKeyListener();
+                this.addClass(wrapper, 'open');
+
+                document.body.addEventListener('click', this.catchBodyClick);
+
+                if (this.props.search) {
+                    refs.search.focus();
+                }
+
+                if (this.openFunc) {
+                    this.openFunc();
+                }
+            } else if (force === 'close' || optionsList.className.indexOf('flounder--hidden') === -1) {
+                this.hideElement(optionsList);
+                this.removeSelectKeyListener();
+                this.removeClass(wrapper, 'open');
+
+                document.body.removeEventListener('click', this.catchBodyClick);
+
+                if (this.props.search) {
+                    this.fuzzySearchReset();
+                    refs.search.blur();
+                }
+
+                optionsList.blur();
+                refs.optionsList.blur();
+                refs.select.blur();
+
+                if (this.closeFunc) {
+                    this.closeFunc();
+                }
+            }
+        }
     }]);
 
     return Flounder;
@@ -1133,60 +1240,5 @@ var Flounder = (function () {
 
 exports['default'] = Flounder;
 module.exports = exports['default'];
-
-/**
- * ## checkClickTarget
- *
- * checks whether the target of a click is the menu or not
- *
- * @param  {Object} e event object
- * @param  {DOMElement} target click target
- *
- * @return _Boolean_
- */
-
-/**
- * ## checkPlaceholder
- *
- * clears or readds the placeholder
- *
- * @param {Object} e event object
- *
- * @return _Void_
- */
-
-/**
- * ## clickSet
- *
- * when a flounder option is clicked on it needs to set the option as selected
- *
- * @param {Object} e event object
- *
- * @return _Void_
- */
-
-/**
- * ## setSelectValue
- *
- * sets the selected value in flounder.  when activated by a click, the event
- * object is moved to the second variable.  this gives us the ability to
- * discern between triggered events (keyup) and processed events (click)
- * for the sake of choosing our targets
- *
- * @param {Object} obj possible event object
- * @param {Object} e event object
- *
- * @return _Void_
- */
-
-/**
- * ## toggleList
- *
- * on click of flounder--selected, this shows or hides the options list
- *
- * @param {String} force toggle can be forced by passing 'open' or 'close'
- *
- * @return _Void_
- */
 
 },{}]},{},[1]);

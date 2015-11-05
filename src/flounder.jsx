@@ -4,7 +4,7 @@
 
 const _slice = Array.prototype.slice;
 
-export default class Flounder
+class Flounder
 {
     /**
      * ## addClass
@@ -74,6 +74,47 @@ export default class Flounder
     }
 
 
+    attachAttributes( _el, _elObj )
+    {
+        for ( let att in _elObj )
+        {
+            if ( att.indexOf( 'data-' ) !== -1 )
+            {
+                _el.setAttribute( att, _elObj[ att ] );
+            }
+            else
+            {
+                _el[ att ] = _elObj[ att ];
+            }
+        }
+    }
+
+
+    /**
+     * ## bindThis
+     *
+     * binds this to whatever functions need it.  Arrow functions cannot be used
+     * here due to the react extension needing them as well;
+     *
+     * @return _Void_
+     */
+    bindThis()
+    {
+        this.attachAttributes      = this.attachAttributes.bind( this );
+        this.catchBodyClick        = this.catchBodyClick.bind( this );
+        this.checkClickTarget      = this.checkClickTarget.bind( this );
+        this.checkPlaceholder      = this.checkPlaceholder.bind( this );
+        this.clickSet              = this.clickSet.bind( this );
+        this.displayMultipleTags   = this.displayMultipleTags.bind( this );
+        this.fuzzySearch           = this.fuzzySearch.bind( this );
+        this.removeMultiTag        = this.removeMultiTag.bind( this );
+        this.setSelectArrows       = this.setSelectArrows.bind( this );
+        this.setSelectValue        = this.setSelectValue.bind( this );
+        this.toggleClass           = this.toggleClass.bind( this );
+        this.toggleList            = this.toggleList.bind( this );
+    }
+
+
     /**
      * ## buildDom
      *
@@ -108,7 +149,7 @@ export default class Flounder
                                         'data-value' : _default.value  } );
             selected.innerHTML  = _default.text;
 
-        let multiTagWrapper     = this.props.search ? constructElement( { className : 'multi--tag--list' } ) : null;
+        let multiTagWrapper     = this.props.multiple ? constructElement( { className : 'multi--tag--list' } ) : null;
 
         if ( multiTagWrapper !== null )
         {
@@ -156,6 +197,7 @@ export default class Flounder
         let options             = [];
         let selectOptions       = [];
         let constructElement    = this.constructElement;
+        let attachAttributes    = this.attachAttributes;
 
         _options.forEach( ( _option, i ) =>
         {
@@ -179,7 +221,7 @@ export default class Flounder
             {
                 if ( _o !== 'text' )
                 {
-                    res[ 'data-' + _o ] = _option[ _o ];
+                    res[ _o ] = _option[ _o ];
                 }
             }
 
@@ -220,7 +262,7 @@ export default class Flounder
      *
      * @return _Void_
      */
-    catchBodyClick = e =>
+    catchBodyClick( e )
     {
         if ( ! this.checkClickTarget( e ) )
         {
@@ -243,7 +285,7 @@ export default class Flounder
      *
      * @return _Boolean_
      */
-    checkClickTarget = ( e, target ) =>
+    checkClickTarget( e, target )
     {
         target = target || e.target;
 
@@ -269,7 +311,7 @@ export default class Flounder
      *
      * @return _Void_
      */
-    checkPlaceholder = e =>
+    checkPlaceholder( e )
     {
         let type = e.type;
         let refs = this.refs;
@@ -298,47 +340,14 @@ export default class Flounder
      *
      * @return _Void_
      */
-    clickSet = e =>
+    clickSet( e )
     {
+
         this.setSelectValue( {}, e );
 
         if ( !this.multiple || !e[ this.multiSelect ] )
         {
             this.toggleList();
-        }
-    }
-
-
-    /**
-     * ## componentDidMount
-     *
-     * attaches necessary events to the built DOM
-     *
-     * @return _Void_
-     */
-    componentDidMount()
-    {
-        let props       = this.props;
-        let refs        = this.refs;
-        let options     = refs.options;
-
-        options.forEach( ( option, i ) =>
-        {
-            if ( option.tagName === 'DIV' )
-            {
-                option.addEventListener( 'click', this.clickSet );
-            }
-        } );
-
-        refs.selected.addEventListener( 'click', this.toggleList );
-
-        if ( props.search )
-        {
-            let search = refs.search;
-            search.addEventListener( 'click', this.toggleList );
-            search.addEventListener( 'keyup', this.fuzzySearch );
-            search.addEventListener( 'focus', this.checkPlaceholder );
-            search.addEventListener( 'blur', this.checkPlaceholder );
         }
     }
 
@@ -376,8 +385,8 @@ export default class Flounder
         if ( props.search )
         {
             let search = refs.search;
-            search.addEventListener( 'click', this.toggleList );
-            search.addEventListener( 'keyup', this.fuzzySearch );
+            search.removeEventListener( 'click', this.toggleList );
+            search.removeEventListener( 'keyup', this.fuzzySearch );
         }
     }
 
@@ -389,21 +398,11 @@ export default class Flounder
      *
      * @return _Element_
      */
-    constructElement( _elObj )
+    constructElement = _elObj =>
     {
         let _el         = document.createElement( _elObj.tagname || 'div' );
 
-        for ( let att in _elObj )
-        {
-            if ( att.indexOf( 'data-' ) !== -1 )
-            {
-                _el.setAttribute( att, _elObj[ att ] );
-            }
-            else
-            {
-                _el[ att ] = _elObj[ att ];
-            }
-        }
+        this.attachAttributes( _el, _elObj );
 
         return _el;
     }
@@ -435,6 +434,8 @@ export default class Flounder
 
             this.target = target;
 
+            this.bindThis();
+
             this.initialzeOptions();
 
             if ( this.initFunc )
@@ -444,7 +445,7 @@ export default class Flounder
 
             this.buildDom();
 
-            this.componentDidMount();
+            this.onRender();
 
             if ( this.componentDidMountFunc )
             {
@@ -487,9 +488,9 @@ export default class Flounder
      *
      * @return _Void_
      */
-    displayMultipleTags = ( selectedOptions, multiTagWrapper ) =>
+    displayMultipleTags( selectedOptions, multiTagWrapper )
     {
-        let _span, _a, refs = this.refs;
+        let _span, _a, refs = this.refs, search = refs.search;
 
         let removeMultiTag = this.removeMultiTag
 
@@ -499,6 +500,7 @@ export default class Flounder
         } );
 
         multiTagWrapper.innerHTML = '';
+        let offset = this.defaultTextIndent;
 
         selectedOptions.forEach( function( option )
         {
@@ -557,6 +559,7 @@ export default class Flounder
             if ( this.multipleTags )
             {
                 selected.innerHTML  = '';
+
                 this.displayMultipleTags( selectedOption, this.refs.multiTagWrapper );
             }
             else
@@ -601,7 +604,7 @@ export default class Flounder
      *
      * @return _Void_
      */
-    fuzzySearch = e => // disclaimer: not actually fuzzy
+    fuzzySearch( e ) // disclaimer: not actually fuzzy
     {
         e.preventDefault();
         let keyCode = e.keyCode;
@@ -766,6 +769,40 @@ export default class Flounder
 
 
     /**
+     * ## onRender
+     *
+     * attaches necessary events to the built DOM
+     *
+     * @return _Void_
+     */
+    onRender()
+    {
+        let props       = this.props;
+        let refs        = this.refs;
+        let options     = refs.options;
+
+        options.forEach( ( option, i ) =>
+        {
+            if ( option.tagName === 'DIV' )
+            {
+                option.addEventListener( 'click', this.clickSet );
+            }
+        } );
+
+        refs.selected.addEventListener( 'click', this.toggleList );
+
+        if ( props.search )
+        {
+            let search = refs.search;
+            search.addEventListener( 'click', this.toggleList );
+            search.addEventListener( 'keyup', this.fuzzySearch );
+            search.addEventListener( 'focus', this.checkPlaceholder );
+            search.addEventListener( 'blur', this.checkPlaceholder );
+        }
+    }
+
+
+    /**
      * ## removeClass
      *
      * on the quest to nuke jquery, a wild helper function appears
@@ -804,7 +841,7 @@ export default class Flounder
      *
      * @return _Void_
      */
-    removeMultiTag = e =>
+    removeMultiTag( e )
     {
         e.preventDefault();
         e.stopPropagation();
@@ -1018,7 +1055,7 @@ export default class Flounder
      *
      * @return _Void_
      */
-    setSelectArrows = e =>
+    setSelectArrows( e )
     {
         let increment = 0;
 
@@ -1047,6 +1084,7 @@ export default class Flounder
 
         let refs                = this.refs;
         let selectTag           = refs.select;
+        let optionsList         = refs.optionsList;
         let options             = refs.options;
         let optionsMaxIndex     = options.length - 1;
         let index               = selectTag.selectedIndex + increment;
@@ -1085,7 +1123,7 @@ export default class Flounder
      *
      * @return _Void_
      */
-    setSelectValue = ( obj, e ) =>
+    setSelectValue( obj, e )
     {
         let refs            = this.refs;
         let options         = refs.options;
@@ -1158,9 +1196,9 @@ export default class Flounder
             {
                 offset += this.getActualWidth( e );
             } );
-        }
 
-        search.style.textIndent = offset + 'px';
+            search.style.textIndent = offset + 'px';
+        }
     }
 
 
@@ -1189,7 +1227,7 @@ export default class Flounder
      *
      * @return _Void_
      */
-    toggleClass = ( _el, _class ) =>
+    toggleClass( _el, _class )
     {
         let _addClass       = this.addClass;
         let _removeClass    = this.removeClass;
@@ -1214,11 +1252,13 @@ export default class Flounder
      *
      * @return _Void_
      */
-    toggleList = force =>
+    toggleList( force )
     {
+
         let refs        = this.refs;
         let optionsList = refs.optionsListWrapper;
         let wrapper     = refs.wrapper;
+        let dropmask    = refs.dropmask;
 
         if ( force === 'open' || force !== 'close' && optionsList.className.indexOf( 'flounder--hidden' ) !== -1 )
         {
@@ -1263,4 +1303,7 @@ export default class Flounder
         }
     }
 }
+
+
+export default Flounder;
 
