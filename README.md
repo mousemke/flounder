@@ -1,11 +1,18 @@
 Flounder.js
 ===========
 
+require('flounder');
+
+or
+
+import Flounder from 'flounder';
+
+
 available options
 =================
  
 ```
-new this.Flounder( elementJqueryObjectOrMicrobe, {
+new Flounder( elementJqueryObjectOrMicrobe, {
     default             : defaultValue,
     cancel              : function(){},
     className           : 'extra--class',
@@ -20,7 +27,7 @@ new this.Flounder( elementJqueryObjectOrMicrobe, {
     options             : dataObject,
     search              : true,
     select              : function(){}
-}
+} );
 ```
 
 
