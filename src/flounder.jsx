@@ -775,9 +775,22 @@ class Flounder
      */
     onRender()
     {
-        let props       = this.props;
-        let refs        = this.refs;
-        let options     = refs.options;
+        let props   = this.props;
+        let refs    = this.refs;
+        let options = refs.options;
+        let self    = this;
+
+        var _func = function( e )
+        {
+            var index   = this.selectedIndex;
+            var _e      = {
+                target          : refs.options[ index ]
+            };
+
+            self.setSelectValue( _e );
+        };
+
+        refs.select.addEventListener( 'change', _func  );
 
         options.forEach( ( option, i ) =>
         {
