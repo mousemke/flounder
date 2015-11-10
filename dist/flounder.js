@@ -204,7 +204,6 @@ var Flounder = (function () {
             var options = [];
             var selectOptions = [];
             var constructElement = this.constructElement;
-            var attachAttributes = this.attachAttributes;
 
             _options.forEach(function (_option, i) {
                 if (typeof _option === 'string') {
@@ -415,7 +414,7 @@ var Flounder = (function () {
             target = target.nodeType === 1 ? target : document.querySelector(target);
 
             if (target.tagName === 'INPUT') {
-                target.classList.add('flounder--hidden');
+                this.addClass(target, 'flounder--hidden');
                 target = target.parentNode;
             }
 
@@ -476,8 +475,7 @@ var Flounder = (function () {
         value: function displayMultipleTags(selectedOptions, multiTagWrapper) {
             var _span = undefined,
                 _a = undefined,
-                refs = this.refs,
-                search = refs.search;
+                refs = this.refs;
 
             var removeMultiTag = this.removeMultiTag;
 
@@ -486,7 +484,6 @@ var Flounder = (function () {
             });
 
             multiTagWrapper.innerHTML = '';
-            var offset = this.defaultTextIndent;
 
             selectedOptions.forEach(function (option) {
                 _span = document.createElement('span');
@@ -1033,7 +1030,6 @@ var Flounder = (function () {
 
             var refs = this.refs;
             var selectTag = refs.select;
-            var optionsList = refs.optionsList;
             var options = refs.options;
             var optionsMaxIndex = options.length - 1;
             var index = selectTag.selectedIndex + increment;
@@ -1196,7 +1192,6 @@ var Flounder = (function () {
             var refs = this.refs;
             var optionsList = refs.optionsListWrapper;
             var wrapper = refs.wrapper;
-            var dropmask = refs.dropmask;
 
             if (force === 'open' || force !== 'close' && optionsList.className.indexOf('flounder--hidden') !== -1) {
                 this.showElement(optionsList);

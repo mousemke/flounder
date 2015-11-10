@@ -427,7 +427,7 @@ class Flounder
 
             if ( target.tagName === 'INPUT' )
             {
-                target.classList.add( 'flounder--hidden' );
+                this.addClass( target, 'flounder--hidden' );
                 target = target.parentNode;
             }
 
