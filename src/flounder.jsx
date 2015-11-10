@@ -431,7 +431,7 @@ class Flounder
                 target = target.parentNode;
             }
 
-            this.target = target;
+            this.target     = target;
 
             this.bindThis();
 
@@ -444,14 +444,14 @@ class Flounder
 
             this.buildDom();
 
+            this.setPlatform();
+
             this.onRender();
 
             if ( this.componentDidMountFunc )
             {
                 this.componentDidMountFunc();
             }
-
-            this.setPlatform();
 
             this.refs.select.flounder = this.refs.selected.flounder = this.target.flounder = this;
 
@@ -766,6 +766,21 @@ class Flounder
     }
 
 
+    iosVersion()
+    {
+
+      if ( /iPad|iPhone|iPod/.test( navigator.platform ) )
+      {
+        if ( !!window.indexedDB ) { return '8+'; }
+        if ( !!window.SpeechSynthesisUtterance ) { return '7'; }
+        if ( !!window.webkitAudioContext ) { return '6'; }
+        return '5-';
+      }
+
+      return false;
+    }
+
+
     /**
      * ## onRender
      *
@@ -779,6 +794,12 @@ class Flounder
         let refs    = this.refs;
         let options = refs.options;
 
+        if ( !!this.isIos && ( !this.multipleTags || !this.multiple )  )
+        {
+            let sel     = refs.select;
+            this.removeClass( sel, 'flounder--hidden' );
+            this.addClass( sel, 'flounder--hidden--ios' );
+        }
 
 
         let self    = this;
@@ -1063,7 +1084,8 @@ class Flounder
     {
         let _osx = this.isOsx = window.navigator.platform.indexOf( 'Mac' ) === -1 ? false : true;
 
-        this.multiSelect = _osx ? 'metaKey' : 'ctrlKey';
+        this.isIos          = this.iosVersion();
+        this.multiSelect    = _osx ? 'metaKey' : 'ctrlKey';
     }
 
 
@@ -1278,14 +1300,20 @@ class Flounder
         let refs        = this.refs;
         let optionsList = refs.optionsListWrapper;
         let wrapper     = refs.wrapper;
+        let isIos       = this.isIos
 
         if ( force === 'open' || force !== 'close' && optionsList.className.indexOf( 'flounder--hidden' ) !== -1 )
         {
-            this.showElement( optionsList );
             this.addSelectKeyListener();
-            this.addClass( wrapper, 'open' );
 
-            document.body.addEventListener( 'click', this.catchBodyClick );
+            if ( !isIos || ( this.multipleTags === true && this.multiple === true ) )
+            {
+                this.showElement( optionsList );
+                this.addClass( wrapper, 'open' );
+
+                document.body.addEventListener( 'click', this.catchBodyClick );
+                document.body.addEventListener( 'touchend', this.catchBodyClick );
+            }
 
             if ( this.props.search )
             {
@@ -1304,6 +1332,7 @@ class Flounder
             this.removeClass( wrapper, 'open' );
 
             document.body.removeEventListener( 'click', this.catchBodyClick );
+            document.body.removeEventListener( 'touchend', this.catchBodyClick );
 
             if ( this.props.search )
             {

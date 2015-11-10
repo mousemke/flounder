@@ -286,8 +286,10 @@ var Flounder = (function () {
             target = target || e.target;
 
             if (target === document) {
+                console.log('no');
                 return false;
             } else if (target === this.refs.flounder) {
+                console.log('yes');
                 return true;
             }
 
