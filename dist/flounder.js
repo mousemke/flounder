@@ -747,18 +747,22 @@ var Flounder = (function () {
             var props = this.props;
             var refs = this.refs;
             var options = refs.options;
-            var self = this;
 
-            var _func = function _func(e) {
+            var self = this;
+            var _divertTarget = function _divertTarget(e) {
                 var index = this.selectedIndex;
                 var _e = {
                     target: refs.options[index]
                 };
 
                 self.setSelectValue(_e);
+
+                if (!self.multiple) {
+                    self.toggleList('close');
+                }
             };
 
-            refs.select.addEventListener('change', _func);
+            refs.select.addEventListener('change', _divertTarget);
 
             options.forEach(function (option, i) {
                 if (option.tagName === 'DIV') {

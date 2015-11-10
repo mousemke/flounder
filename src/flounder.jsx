@@ -778,9 +778,11 @@ class Flounder
         let props   = this.props;
         let refs    = this.refs;
         let options = refs.options;
-        let self    = this;
 
-        var _func = function( e )
+
+
+        let self    = this;
+        var _divertTarget = function( e )
         {
             var index   = this.selectedIndex;
             var _e      = {
@@ -788,9 +790,17 @@ class Flounder
             };
 
             self.setSelectValue( _e );
+
+            if ( !self.multiple )
+            {
+                self.toggleList( 'close' );
+            }
         };
 
-        refs.select.addEventListener( 'change', _func  );
+
+
+
+        refs.select.addEventListener( 'change', _divertTarget  );
 
         options.forEach( ( option, i ) =>
         {
