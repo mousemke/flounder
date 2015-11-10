@@ -747,6 +747,18 @@ var Flounder = (function () {
             var props = this.props;
             var refs = this.refs;
             var options = refs.options;
+            var self = this;
+
+            var _func = function _func(e) {
+                var index = this.selectedIndex;
+                var _e = {
+                    target: refs.options[index]
+                };
+
+                self.setSelectValue(_e);
+            };
+
+            refs.select.addEventListener('change', _func);
 
             options.forEach(function (option, i) {
                 if (option.tagName === 'DIV') {
