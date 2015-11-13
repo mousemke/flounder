@@ -145,7 +145,7 @@ var Flounder = (function () {
 
             var _options = this.options;
 
-            var _default = this['default'] = this.setDefaultOption(this['default'], _options);
+            var _default = this._default = this.setDefaultOption(this._default, _options);
 
             var selected = constructElement({ className: 'flounder__option--selected--displayed',
                 'data-value': _default.value });
@@ -634,6 +634,14 @@ var Flounder = (function () {
             var style = getComputedStyle(_el);
             return _el.offsetWidth + parseInt(style['margin-left']) + parseInt(style['margin-right']);
         }
+
+        /**
+         * ## getSelectedOptions
+         *
+         * returns the currently selected otions of a SELECT box
+         *
+         * @param {Object} _el select box
+         */
     }, {
         key: 'getSelectedOptions',
         value: function getSelectedOptions(_el) {
@@ -642,9 +650,10 @@ var Flounder = (function () {
             } else {
                 var opts = [],
                     opt;
+                var _options = _el.options;
 
-                for (var i = 0, len = _el.options.length; i < len; i++) {
-                    opt = sel.options[i];
+                for (var i = 0, len = _options.length; i < len; i++) {
+                    opt = _options[i];
 
                     if (opt.selected) {
                         opts.push(opt);
@@ -697,9 +706,9 @@ var Flounder = (function () {
 
             this.selectedClass = this.multiple ? 'flounder__option--selected--hidden' : 'flounder__option--selected';
 
-            this['default'] = '';
-            if (props['default'] || props['default'] === 0) {
-                this['default'] = props['default'];
+            this._default = '';
+            if (props._default || props._default === 0) {
+                this._default = props._default;
             }
         }
 
@@ -788,9 +797,9 @@ var Flounder = (function () {
             var options = refs.options;
 
             if (!!this.isIos && (!this.multipleTags || !this.multiple)) {
-                var _sel = refs.select;
-                this.removeClass(_sel, 'flounder--hidden');
-                this.addClass(_sel, 'flounder--hidden--ios');
+                var sel = refs.select;
+                this.removeClass(sel, 'flounder--hidden');
+                this.addClass(sel, 'flounder--hidden--ios');
             }
 
             var self = this;
@@ -1163,7 +1172,7 @@ var Flounder = (function () {
 
                     this.removeSelectedClass(options);
 
-                    selectedOption = options[this.getSelectedOptions(select[0]).index];
+                    selectedOption = options[this.getSelectedOptions(select)[0].index];
                     _addClass(selectedOption, selectedClass);
 
                     this.scrollTo(selectedOption);
