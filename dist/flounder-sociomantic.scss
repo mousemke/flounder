@@ -69,6 +69,7 @@
 .flounder__list-wrapper
 {
     @include rem-fallback( font-size, 1.2 );
+
     background-color:               $white;
     color:                          $slate-grey;
     border-color:                   $mid--soft--grey;
@@ -98,4 +99,18 @@
 .flounder--disabled
 {
     color:                          $disabled--grey;
+}
+
+
+
+/* Parsley errors */
+.form__input.parsley-error ~ .flounder-wrapper > .flounder
+{
+    border:                         1px solid #e64b6e;
+}
+
+
+.parsley-error--flounder .error-container--icon
+{
+    z-index:                        999999;
 }
