@@ -13,7 +13,7 @@ available options
  
 ```
 new Flounder( elementJqueryObjectOrMicrobe, {
-    default             : defaultValue,
+    _default            : defaultValue,
     cancel              : function(){},
     className           : 'extra--class',
     close               : function(){},

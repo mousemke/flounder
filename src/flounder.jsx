@@ -143,7 +143,7 @@ class Flounder
 
         let _options            = this.options;
 
-        let _default            = this.default = this.setDefaultOption( this.default, _options );
+        let _default            = this._default = this.setDefaultOption( this._default, _options );
 
         let selected            = constructElement( { className : 'flounder__option--selected--displayed',
                                         'data-value' : _default.value  } );
@@ -743,10 +743,10 @@ class Flounder
 
         this.selectedClass          = this.multiple ? 'flounder__option--selected--hidden'          : 'flounder__option--selected';
 
-        this.default    = '';
-        if ( props.default || props.default === 0 )
+        this._default    = '';
+        if ( props._default || props._default === 0 )
         {
-            this.default = props.default;
+            this._default = props._default;
         }
     }
 
