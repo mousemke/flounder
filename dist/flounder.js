@@ -286,10 +286,8 @@ var Flounder = (function () {
             target = target || e.target;
 
             if (target === document) {
-                console.log('no');
                 return false;
             } else if (target === this.refs.flounder) {
-                console.log('yes');
                 return true;
             }
 
@@ -432,13 +430,13 @@ var Flounder = (function () {
 
             this.buildDom();
 
+            this.setPlatform();
+
             this.onRender();
 
             if (this.componentDidMountFunc) {
                 this.componentDidMountFunc();
             }
-
-            this.setPlatform();
 
             this.refs.select.flounder = this.refs.selected.flounder = this.target.flounder = this;
 
@@ -522,7 +520,7 @@ var Flounder = (function () {
         value: function displaySelected(selected, refs) {
             var value = [];
 
-            var selectedOption = _slice.call(refs.select.selectedOptions);
+            var selectedOption = _slice.call(this.getSelectedOptions(refs.select));
             var selectedLength = selectedOption.length;
             var multiple = this.multiple;
 
@@ -636,6 +634,26 @@ var Flounder = (function () {
             var style = getComputedStyle(_el);
             return _el.offsetWidth + parseInt(style['margin-left']) + parseInt(style['margin-right']);
         }
+    }, {
+        key: 'getSelectedOptions',
+        value: function getSelectedOptions(_el) {
+            if (_el.selectedOptions) {
+                return _el.selectedOptions;
+            } else {
+                var opts = [],
+                    opt;
+
+                for (var i = 0, len = _el.options.length; i < len; i++) {
+                    opt = sel.options[i];
+
+                    if (opt.selected) {
+                        opts.push(opt);
+                    }
+                }
+
+                return opts;
+            }
+        }
 
         /**
          * hideElement
@@ -733,6 +751,25 @@ var Flounder = (function () {
 
             return select;
         }
+    }, {
+        key: 'iosVersion',
+        value: function iosVersion() {
+
+            if (/iPad|iPhone|iPod/.test(navigator.platform)) {
+                if (!!window.indexedDB) {
+                    return '8+';
+                }
+                if (!!window.SpeechSynthesisUtterance) {
+                    return '7';
+                }
+                if (!!window.webkitAudioContext) {
+                    return '6';
+                }
+                return '5-';
+            }
+
+            return false;
+        }
 
         /**
          * ## onRender
@@ -749,6 +786,12 @@ var Flounder = (function () {
             var props = this.props;
             var refs = this.refs;
             var options = refs.options;
+
+            if (!!this.isIos && (!this.multipleTags || !this.multiple)) {
+                var _sel = refs.select;
+                this.removeClass(_sel, 'flounder--hidden');
+                this.addClass(_sel, 'flounder--hidden--ios');
+            }
 
             var self = this;
             var _divertTarget = function _divertTarget(e) {
@@ -834,7 +877,7 @@ var Flounder = (function () {
             var index = target.getAttribute('data-index');
             select[index].selected = false;
 
-            var selectedOptions = _slice.call(select.selectedOptions);
+            var selectedOptions = _slice.call(this.getSelectedOptions(select));
 
             this.removeClass(refs.options[index], 'flounder__option--selected--hidden');
 
@@ -1007,6 +1050,7 @@ var Flounder = (function () {
         value: function setPlatform() {
             var _osx = this.isOsx = window.navigator.platform.indexOf('Mac') === -1 ? false : true;
 
+            this.isIos = this.iosVersion();
             this.multiSelect = _osx ? 'metaKey' : 'ctrlKey';
         }
 
@@ -1107,7 +1151,7 @@ var Flounder = (function () {
                     selectedOption = refs.selectOptions[index];
 
                     selectedOption.selected = selectedOption.selected === true ? false : true;
-                    selectedOption = select.selectedOptions;
+                    selectedOption = this.getSelectedOptions(select);
                 } else // button press
                 {
                     if (this.multiple) {
@@ -1119,7 +1163,7 @@ var Flounder = (function () {
 
                     this.removeSelectedClass(options);
 
-                    selectedOption = options[select.selectedOptions[0].index];
+                    selectedOption = options[this.getSelectedOptions(select[0]).index];
                     _addClass(selectedOption, selectedClass);
 
                     this.scrollTo(selectedOption);
@@ -1210,13 +1254,18 @@ var Flounder = (function () {
             var refs = this.refs;
             var optionsList = refs.optionsListWrapper;
             var wrapper = refs.wrapper;
+            var isIos = this.isIos;
 
             if (force === 'open' || force !== 'close' && optionsList.className.indexOf('flounder--hidden') !== -1) {
-                this.showElement(optionsList);
                 this.addSelectKeyListener();
-                this.addClass(wrapper, 'open');
 
-                document.body.addEventListener('click', this.catchBodyClick);
+                if (!isIos || this.multipleTags === true && this.multiple === true) {
+                    this.showElement(optionsList);
+                    this.addClass(wrapper, 'open');
+
+                    document.body.addEventListener('click', this.catchBodyClick);
+                    document.body.addEventListener('touchend', this.catchBodyClick);
+                }
 
                 if (this.props.search) {
                     refs.search.focus();
@@ -1231,6 +1280,7 @@ var Flounder = (function () {
                 this.removeClass(wrapper, 'open');
 
                 document.body.removeEventListener('click', this.catchBodyClick);
+                document.body.removeEventListener('touchend', this.catchBodyClick);
 
                 if (this.props.search) {
                     this.fuzzySearchReset();

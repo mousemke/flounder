@@ -538,7 +538,7 @@ class Flounder
     {
         let value = [];
 
-        let selectedOption  = _slice.call( refs.select.selectedOptions );
+        let selectedOption  = _slice.call( this.getSelectedOptions( refs.select ) );
         let selectedLength  = selectedOption.length;
         let multiple        = this.multiple
 
@@ -666,6 +666,39 @@ class Flounder
         let style = getComputedStyle( _el );
         return _el.offsetWidth + parseInt( style[ 'margin-left' ] ) +
                                 parseInt( style[ 'margin-right' ] );
+    }
+
+
+    /**
+     * ## getSelectedOptions
+     *
+     * returns the currently selected otions of a SELECT box
+     *
+     * @param {Object} _el select box
+     */
+    getSelectedOptions( _el )
+    {
+        if ( _el.selectedOptions )
+        {
+            return _el.selectedOptions;
+        }
+        else
+        {
+            var opts        = [], opt;
+            var _options    = _el.options;
+
+            for ( var i = 0, len = _options.length; i < len; i++ )
+            {
+                opt = _options[ i ];
+
+                if ( opt.selected )
+                {
+                    opts.push( opt );
+                }
+            }
+
+            return opts;
+        }
     }
 
 
@@ -896,7 +929,7 @@ class Flounder
         let index           = target.getAttribute( 'data-index' );
         select[ index ].selected = false;
 
-        let selectedOptions = _slice.call( select.selectedOptions );
+        let selectedOptions = _slice.call( this.getSelectedOptions( select ) );
 
         this.removeClass( refs.options[ index ], 'flounder__option--selected--hidden' );
 
@@ -1191,7 +1224,7 @@ class Flounder
             selectedOption          = refs.selectOptions[ index ];
 
             selectedOption.selected = selectedOption.selected === true ? false : true;
-            selectedOption          = select.selectedOptions;
+            selectedOption          = this.getSelectedOptions( select );
         }
         else // button press
         {
@@ -1205,7 +1238,7 @@ class Flounder
 
             this.removeSelectedClass( options );
 
-            selectedOption = options[ select.selectedOptions[ 0 ].index ]
+            selectedOption = options[ this.getSelectedOptions( select )[ 0 ].index ];
             _addClass( selectedOption, selectedClass );
 
             this.scrollTo( selectedOption );
