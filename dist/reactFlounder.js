@@ -19328,7 +19328,8 @@ var Flounder = (function () {
                 refs.selected.innerHTML = '';
             } else {
                 if (refs.multiTagWrapper && refs.multiTagWrapper.children.length === 0) {
-                    this.refs.selected.innerHTML = this['default'].text;
+                    console.trace();
+                    this.refs.selected.innerHTML = this._default.text;
                 }
             }
         }
@@ -19543,8 +19544,8 @@ var Flounder = (function () {
                 selected.innerHTML = selectedOption[0].innerHTML;
                 value = selectedOption[0].value;
             } else if (selectedLength === 0) {
-                selected.innerHTML = this['default'].text;
-                value = this['default'].value;
+                selected.innerHTML = this._default.text;
+                value = this._default.value;
             } else {
                 if (this.multipleTags) {
                     selected.innerHTML = '';
@@ -19909,8 +19910,8 @@ var Flounder = (function () {
             span.parentNode.removeChild(span);
 
             if (selectedOptions.length === 0) {
-                selected.innerHTML = this['default'].text;
-                value = this['default'].value;
+                selected.innerHTML = this._default.text;
+                value = this._default.value;
             } else {
                 value = selectedOptions.map(function (option) {
                     return option.value;

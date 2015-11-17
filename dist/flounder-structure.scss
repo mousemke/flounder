@@ -35,7 +35,7 @@
 .flounder__list-wrapper
 {
     display:                        block;
-    z-index:                        8000;
+    z-index:                        800;
     position:                       absolute;
     max-height:                     200px;
     overflow-x:                     hidden;
@@ -55,7 +55,7 @@
     top:                            0;
     left:                           0;
     display:                        block;
-    z-index:                        8000;
+    z-index:                        800;
     border:                         0;
     margin:                         0;
     padding:                        0;
@@ -97,7 +97,7 @@
 /* -------------------------------------------------------------------------- */
 .flounder:hover, .flounder:hover .flounder__list-wrapper
 {
-    z-index:                        8000;
+    z-index:                        800;
 }
 
 
@@ -107,7 +107,7 @@
 /* -------------------------------------------------------------------------- */
 .open .flounder
 {
-    z-index:                        8000;
+    z-index:                        800;
 }
 
 

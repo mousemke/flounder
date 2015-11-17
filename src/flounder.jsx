@@ -324,7 +324,8 @@ class Flounder
             if ( refs.multiTagWrapper &&
                     refs.multiTagWrapper.children.length === 0 )
             {
-                this.refs.selected.innerHTML = this.default.text;
+                console.trace();
+                this.refs.selected.innerHTML = this._default.text;
             }
         }
     }
@@ -549,8 +550,8 @@ class Flounder
         }
         else if ( selectedLength === 0 )
         {
-            selected.innerHTML  = this.default.text;
-            value               = this.default.value;
+            selected.innerHTML  = this._default.text;
+            value               = this._default.value;
         }
         else
         {
@@ -938,8 +939,8 @@ class Flounder
 
         if ( selectedOptions.length === 0 )
         {
-            selected.innerHTML  = this.default.text;
-            value               = this.default.value;
+            selected.innerHTML  = this._default.text;
+            value               = this._default.value;
         }
         else
         {

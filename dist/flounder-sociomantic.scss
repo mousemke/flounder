@@ -110,7 +110,13 @@
 }
 
 
-.parsley-error--flounder .error-container--icon
+.contact__form__phone__wrapper .parsley-error-list
 {
-    z-index:                        999999;
+    z-index:                        802;
+}
+
+
+.parsley-error--flounder  .error-container--icon
+{
+    z-index:                        803;
 }
