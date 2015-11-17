@@ -324,7 +324,6 @@ class Flounder
             if ( refs.multiTagWrapper &&
                     refs.multiTagWrapper.children.length === 0 )
             {
-                console.trace();
                 this.refs.selected.innerHTML = this._default.text;
             }
         }
