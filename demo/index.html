@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<title>Flounder demo</title>
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+		<script src="../js/flounder.js"></script>
+        <link rel="stylesheet" href="../../css/style.css">
+	</head>
+
+	<body>
+		<button id="enable-select">Enable select</button>
+		<button id="disable-select">Disable select</button>
+
+		<br><br>
+
+		<input type="text" id="new-option">
+		<button id="add">Add</button>
+		<button id="remove">Remove</button>
+		<button id="enable">Enable</button>
+		<button id="disable">Disable</button>
+
+		<br><br>
+
+		<select id="element" class="form__input--flounderSelect flounder-me-please">
+            <option selected value="Ofir">Ofir</option>
+            <option disabled value="Julien">Julien</option>
+            <option value="Dan">Dan</option>
+        </select>
+
+		<select id="element2" class="form__input--flounderSelect flounder-me-please">
+            <option selected value="Ofir">Ofir</option>
+            <option disabled value="Julien">Julien</option>
+            <option value="Dan">Dan</option>
+        </select>
+
+		<select id="element3" class="form__input--flounderSelect flounder-me-please">
+            <option selected value="Ofir">Ofir</option>
+            <option disabled value="Julien">Julien</option>
+            <option value="Dan">Dan</option>
+        </select>
+
+		<script>
+			var floundy;
+
+			$( function()
+			{
+				// multiple flounderization
+				var flounders = $( '.flounder-me-please' ).Flounder();
+
+				console.log( flounders );
+
+				floundy = flounders[0];
+
+				$( '.salut' ).change( function ( e )
+				{
+					console.log('STEEEEVE, there\'s a CHANGE !' );
+				} );
+			} );
+
+			$( '#enable-select' ).click( function ()
+			{
+				floundy.enable();
+			} );
+
+			$( '#disable-select' ).click( function ()
+			{
+				floundy.disable();
+			} );
+
+			$( '#add' ).click( function ()
+			{
+				var value = $( '#new-option' ).val();
+				floundy.addOption( { text: value, value: value } );
+			} );
+
+			$( '#remove' ).click( function ()
+			{
+				var newOption = $( '#new-option' ).val();
+				floundy.removeOption( newOption );
+			} );
+
+			$( '#enable' ).click( function ()
+			{
+				var newOption = $( '#new-option' ).val();
+				floundy.enableOption( newOption );
+			} );
+
+			$( '#disable' ).click( function ()
+			{
+				var newOption = $( '#new-option' ).val();
+				floundy.disableOption( newOption );
+			} );
+		</script>
+
+	</body>
+</html>

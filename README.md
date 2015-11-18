@@ -46,8 +46,7 @@ options must be passed as an array of objects
 ]
 ```
 
-all extra properties given will be added as data attributes for the sake of
-reference later.  The options can be accessed in the init (before building) as this.options if they need reformatting or filtering.
+all extra properties passed that are not shown here will be added as data attributes for the sake of reference later.  The options can be accessed in the init (before building) as this.options if they need reformatting or filtering.
 
 
 Contributing
