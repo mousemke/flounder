@@ -53,6 +53,7 @@ var Flounder = (function () {
         value: function addOptionDescription(_el, text) {
             var _e = document.createElement('div');
             _e.innerHTML = text;
+            _e.className = 'flounder__option--description';
             _el.appendChild(_e);
         }
 

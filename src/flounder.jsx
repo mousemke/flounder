@@ -44,6 +44,7 @@ class Flounder
     {
         let _e = document.createElement( 'div' );
         _e.innerHTML = text;
+        _e.className = 'flounder__option--description';
         _el.appendChild( _e );
     }
 
