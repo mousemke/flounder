@@ -664,6 +664,20 @@ class Flounder
     getActualWidth( _el )
     {
         let style = getComputedStyle( _el );
+
+        if ( _el.offsetWidth === 0 )
+        {
+            if ( this.__checkWidthAgain !== true )
+            {
+                setTimeout( this.setTextMultiTagIndent.bind( this ), 1500 );
+                this.__checkWidthAgain === true;
+            }
+        }
+        else
+        {
+            this.__checkWidthAgain !== false
+        }
+
         return _el.offsetWidth + parseInt( style[ 'margin-left' ] ) +
                                 parseInt( style[ 'margin-right' ] );
     }
