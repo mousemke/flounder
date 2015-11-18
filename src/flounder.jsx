@@ -31,6 +31,24 @@ class Flounder
 
 
     /**
+     * ## addOptionDescription
+     *
+     * adds a description to the option
+     *
+     * @param {DOMElement} _el option leement to add description to
+     * @param {String} text description
+     *
+     * @return _Void_
+     */
+    addOptionDescription( _el, text )
+    {
+        let _e = document.createElement( 'div' );
+        _e.innerHTML = text;
+        _el.appendChild( _e );
+    }
+
+
+    /**
      * ## addSearch
      *
      * checks if a search box is required and attaches it or not
@@ -74,6 +92,16 @@ class Flounder
     }
 
 
+    /**
+     * ## attachAttribute
+     *
+     * attached data attributes and others (seperately)
+     *
+     * @param {DOMElement} _el element to assign attributes
+     * @param {Object} _elObj contains the attributes to attach
+     *
+     * @return _Void_
+     */
     attachAttributes( _el, _elObj )
     {
         for ( let att in _elObj )
@@ -197,6 +225,7 @@ class Flounder
         let options             = [];
         let selectOptions       = [];
         let constructElement    = this.constructElement;
+        let addOptionDescription      = this.addOptionDescription;
 
         _options.forEach( ( _option, i ) =>
         {
@@ -218,7 +247,7 @@ class Flounder
 
             for ( let _o in _option )
             {
-                if ( _o !== 'text' )
+                if ( _o !== 'text' && _o !== 'description' )
                 {
                     res[ _o ] = _option[ _o ];
                 }
@@ -228,6 +257,13 @@ class Flounder
 
             options[ i ].innerHTML = escapedText;
             optionsList.appendChild( options[ i ] );
+
+            let description = _option.description;
+
+            if ( description )
+            {
+                addOptionDescription( options[ i ], description );
+            }
 
             if ( ! this.refs.select )
             {

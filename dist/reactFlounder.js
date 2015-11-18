@@ -19054,6 +19054,24 @@ var Flounder = (function () {
         }
 
         /**
+         * ## addOptionDescription
+         *
+         * adds a description to the option
+         *
+         * @param {DOMElement} _el option leement to add description to
+         * @param {String} text description
+         *
+         * @return _Void_
+         */
+    }, {
+        key: 'addOptionDescription',
+        value: function addOptionDescription(_el, text) {
+            var _e = document.createElement('div');
+            _e.innerHTML = text;
+            _el.appendChild(_e);
+        }
+
+        /**
          * ## addSearch
          *
          * checks if a search box is required and attaches it or not
@@ -19095,6 +19113,17 @@ var Flounder = (function () {
             select.addEventListener('keydown', this.setSelectArrows);
             select.focus();
         }
+
+        /**
+         * ## attachAttribute
+         *
+         * attached data attributes and others (seperately)
+         *
+         * @param {DOMElement} _el element to assign attributes
+         * @param {Object} _elObj contains the attributes to attach
+         *
+         * @return _Void_
+         */
     }, {
         key: 'attachAttributes',
         value: function attachAttributes(_el, _elObj) {
@@ -19219,6 +19248,7 @@ var Flounder = (function () {
             var options = [];
             var selectOptions = [];
             var constructElement = this.constructElement;
+            var addOptionDescription = this.addOptionDescription;
 
             _options.forEach(function (_option, i) {
                 if (typeof _option === 'string') {
@@ -19237,7 +19267,7 @@ var Flounder = (function () {
                 };
 
                 for (var _o in _option) {
-                    if (_o !== 'text') {
+                    if (_o !== 'text' && _o !== 'description') {
                         res[_o] = _option[_o];
                     }
                 }
@@ -19246,6 +19276,12 @@ var Flounder = (function () {
 
                 options[i].innerHTML = escapedText;
                 optionsList.appendChild(options[i]);
+
+                var description = _option.description;
+
+                if (description) {
+                    addOptionDescription(options[i], description);
+                }
 
                 if (!_this.refs.select) {
                     selectOptions[i] = constructElement({ tagname: 'option',

@@ -39,8 +39,9 @@ options must be passed as an array of objects
 ```
 [
     {
-        text    : 'probably the string you want to see',
-        value   : 'return value'
+        text        : 'probably the string you want to see',
+        value       : 'return value',
+        description : 'a longer description of this option' // optional
     }
 ]
 ```
