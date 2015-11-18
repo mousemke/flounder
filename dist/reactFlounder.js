@@ -19328,7 +19328,6 @@ var Flounder = (function () {
                 refs.selected.innerHTML = '';
             } else {
                 if (refs.multiTagWrapper && refs.multiTagWrapper.children.length === 0) {
-                    console.trace();
                     this.refs.selected.innerHTML = this._default.text;
                 }
             }
@@ -19648,6 +19647,16 @@ var Flounder = (function () {
         key: 'getActualWidth',
         value: function getActualWidth(_el) {
             var style = getComputedStyle(_el);
+
+            if (_el.offsetWidth === 0) {
+                if (this.__checkWidthAgain !== true) {
+                    setTimeout(this.setTextMultiTagIndent.bind(this), 1500);
+                    this.__checkWidthAgain === true;
+                }
+            } else {
+                this.__checkWidthAgain !== false;
+            }
+
             return _el.offsetWidth + parseInt(style['margin-left']) + parseInt(style['margin-right']);
         }
 
