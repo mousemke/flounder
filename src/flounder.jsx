@@ -579,22 +579,23 @@ class Flounder
         let selectedLength  = selectedOption.length;
         let multiple        = this.multiple
 
-        if ( !multiple )
+        if ( !multiple || selectedLength === 1 )
         {
             selected.innerHTML  = selectedOption[0].innerHTML;
             value               = selectedOption[0].value;
         }
         else if ( selectedLength === 0 )
         {
-            selected.innerHTML  = this._default.text;
-            value               = this._default.value;
+            let _default = this._default;
+
+            selected.innerHTML  = _default.text;
+            value               = _default.value;
         }
         else
         {
             if ( this.multipleTags )
             {
                 selected.innerHTML  = '';
-
                 this.displayMultipleTags( selectedOption, this.refs.multiTagWrapper );
             }
             else
@@ -792,7 +793,7 @@ class Flounder
         this.defaultTextIndent      = props.defaultTextIndent   !== undefined ? props.defaultTextIndent : 0;
         this.options                = props.options             !== undefined ? props.options         : [];
 
-        this.selectedClass          = this.multiple ? 'flounder__option--selected--hidden'          : 'flounder__option--selected';
+        this.selectedClass          = this.multipleTags ? 'flounder__option--selected--hidden'          : 'flounder__option--selected';
 
         this._default    = '';
         if ( props._default || props._default === 0 )
@@ -1395,8 +1396,8 @@ class Flounder
                 this.showElement( optionsList );
                 this.addClass( wrapper, 'open' );
 
-                document.body.addEventListener( 'click', this.catchBodyClick );
-                document.body.addEventListener( 'touchend', this.catchBodyClick );
+                document.querySelector( 'html' ).addEventListener( 'click', this.catchBodyClick );
+                document.querySelector( 'html' ).addEventListener( 'touchend', this.catchBodyClick );
             }
 
             if ( this.props.search )
@@ -1415,8 +1416,8 @@ class Flounder
             this.removeSelectKeyListener();
             this.removeClass( wrapper, 'open' );
 
-            document.body.removeEventListener( 'click', this.catchBodyClick );
-            document.body.removeEventListener( 'touchend', this.catchBodyClick );
+            document.querySelector( 'html' ).removeEventListener( 'click', this.catchBodyClick );
+            document.querySelector( 'html' ).removeEventListener( 'touchend', this.catchBodyClick );
 
             if ( this.props.search )
             {
@@ -1436,6 +1437,10 @@ class Flounder
     }
 }
 
+if ( window )
+{
+    window.Flounder = Flounder;
+}
 
 export default Flounder;
 

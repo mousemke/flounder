@@ -561,16 +561,17 @@ var Flounder = (function () {
             var selectedLength = selectedOption.length;
             var multiple = this.multiple;
 
-            if (!multiple) {
+            if (!multiple || selectedLength === 1) {
                 selected.innerHTML = selectedOption[0].innerHTML;
                 value = selectedOption[0].value;
             } else if (selectedLength === 0) {
-                selected.innerHTML = this._default.text;
-                value = this._default.value;
+                var _default = this._default;
+
+                selected.innerHTML = _default.text;
+                value = _default.value;
             } else {
                 if (this.multipleTags) {
                     selected.innerHTML = '';
-
                     this.displayMultipleTags(selectedOption, this.refs.multiTagWrapper);
                 } else {
                     selected.innerHTML = this.multipleMessage;
@@ -751,7 +752,7 @@ var Flounder = (function () {
             this.defaultTextIndent = props.defaultTextIndent !== undefined ? props.defaultTextIndent : 0;
             this.options = props.options !== undefined ? props.options : [];
 
-            this.selectedClass = this.multiple ? 'flounder__option--selected--hidden' : 'flounder__option--selected';
+            this.selectedClass = this.multipleTags ? 'flounder__option--selected--hidden' : 'flounder__option--selected';
 
             this._default = '';
             if (props._default || props._default === 0) {
@@ -1319,8 +1320,8 @@ var Flounder = (function () {
                     this.showElement(optionsList);
                     this.addClass(wrapper, 'open');
 
-                    document.body.addEventListener('click', this.catchBodyClick);
-                    document.body.addEventListener('touchend', this.catchBodyClick);
+                    document.querySelector('html').addEventListener('click', this.catchBodyClick);
+                    document.querySelector('html').addEventListener('touchend', this.catchBodyClick);
                 }
 
                 if (this.props.search) {
@@ -1335,8 +1336,8 @@ var Flounder = (function () {
                 this.removeSelectKeyListener();
                 this.removeClass(wrapper, 'open');
 
-                document.body.removeEventListener('click', this.catchBodyClick);
-                document.body.removeEventListener('touchend', this.catchBodyClick);
+                document.querySelector('html').removeEventListener('click', this.catchBodyClick);
+                document.querySelector('html').removeEventListener('touchend', this.catchBodyClick);
 
                 if (this.props.search) {
                     this.fuzzySearchReset();
@@ -1356,6 +1357,10 @@ var Flounder = (function () {
 
     return Flounder;
 })();
+
+if (window) {
+    window.Flounder = Flounder;
+}
 
 exports['default'] = Flounder;
 module.exports = exports['default'];

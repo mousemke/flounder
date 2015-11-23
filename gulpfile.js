@@ -4,6 +4,15 @@ var browserify  = require('browserify');
 var babelify    = require('babelify');
 
 
+gulp.task( 'demo', function()
+{
+    browserify( './demo/demo.js' )
+        .transform( babelify, { stage : 0 } )
+        .bundle()
+        .pipe( fs.createWriteStream( __dirname + '/demo/demoDist.js' ) );
+} );
+
+
 gulp.task( 'vanilla', function()
 {
     browserify( './src/flounder.jsx' )
@@ -24,5 +33,5 @@ gulp.task( 'react', function()
 
 gulp.task( 'default', [], function()
 {
-    gulp.start( [ 'vanilla', 'react' ] );
+    gulp.start( [ 'vanilla', 'react', 'demo' ] );
 } );

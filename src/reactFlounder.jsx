@@ -34,6 +34,11 @@ class FlounderReact extends Component
     {
         let refs            = this.refs;
 
+        if ( !this.props.multiple )
+        {
+            refs.select.removeAttribute( 'multiple' );
+        }
+
         this.target         = refs.wrapper.parentNode;
 
         refs.options        = slice.call( refs.optionsList.children, 0 );
@@ -148,7 +153,7 @@ class FlounderReact extends Component
         let props           = this.props;
         let options         = this.options = this.prepOptions( props.options || this.options );
         let handleChange    = this.handleChange.bind( this );
-
+        let multiple        = props.multiple;
         let _default        = this.default = this.setDefaultOption( props._default || this.default, options );
 
         let _stateModifier  = this.state.modifier;
@@ -184,7 +189,7 @@ class FlounderReact extends Component
                     </div>
                     { props.search ? <input ref="search" type="text" className="flounder__input--search" /> : null }
                 </div>
-                <select ref="select" className="flounder--select--tag  flounder--hidden">
+                <select ref="select" className="flounder--select--tag  flounder--hidden" multiple>
                 {
                     options.map( ( _option, i ) =>
                     {
@@ -230,8 +235,10 @@ FlounderReact.prototype.displaySelected         = Flounder.prototype.displaySele
 FlounderReact.prototype.escapeHTML              = Flounder.prototype.escapeHTML;
 FlounderReact.prototype.fuzzySearchReset        = Flounder.prototype.fuzzySearchReset;
 FlounderReact.prototype.getActualWidth          = Flounder.prototype.getActualWidth;
+FlounderReact.prototype.getSelectedOptions      = Flounder.prototype.getSelectedOptions;
 FlounderReact.prototype.hideElement             = Flounder.prototype.hideElement;
 FlounderReact.prototype.initialzeOptions        = Flounder.prototype.initialzeOptions;
+FlounderReact.prototype.iosVersion              = Flounder.prototype.iosVersion;
 FlounderReact.prototype.onRender                = Flounder.prototype.onRender;
 FlounderReact.prototype.removeClass             = Flounder.prototype.removeClass;
 FlounderReact.prototype.removeSelectKeyListener = Flounder.prototype.removeSelectKeyListener;
@@ -244,5 +251,11 @@ FlounderReact.prototype.setPlatform             = Flounder.prototype.setPlatform
 FlounderReact.prototype.setTextMultiTagIndent   = Flounder.prototype.setTextMultiTagIndent;
 FlounderReact.prototype.showElement             = Flounder.prototype.showElement;
 
-export default {  React, Component, ReactDOM, FlounderReact, Flounder };
+
+if ( window )
+{
+    window.FlounderReact = FlounderReact;
+}
+
+export default { React, Component, ReactDOM, FlounderReact, Flounder };
 

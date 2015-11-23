@@ -4,7 +4,10 @@
   "description": "a native friendly dropdown menu",
   "main": "./dist/flounder.js",
   "scripts": {
-    "gulp": "./node_modules/.bin/gulp && echo \"Build complete.\""
+    "gulp": "./node_modules/.bin/gulp",
+    "vanilla": "./node_modules/.bin/gulp vanilla",
+    "react": "./node_modules/.bin/gulp react",
+    "demo": "./node_modules/.bin/gulp demo"
   },
   "repository": {
     "type": "git",

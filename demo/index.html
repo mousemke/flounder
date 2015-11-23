@@ -1,97 +1,189 @@
 <!DOCTYPE html>
 <html>
+    <head>
+        <title>Flounder demo</title>
+        <link rel="stylesheet" href="../dist/flounder-structure.css">
+        <style type="text/css">
+        .flounder__option--selected
+        {
+            background-color: #88f;
+        }
+        </style>
+    </head>
+    <body>
+        <div>
+            <span style="width:150px;margin-top:15px;display:inline-block;">Vanilla from Input (multiple, tags)</span>
+            <input id="vanilla--input--tags" type="text">
+        </div>
+        <div>
+            <span style="width:150px;margin-top:15px;display:inline-block;">Vanilla from Input (multiple, no tags)</span>
+            <input id="vanilla--input" type="text">
+        </div>
+        <div>
+            <span style="width:150px;margin-top:15px;display:inline-block;">Vanilla from Select</span>
+            <select id="vanilla--select">
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+            </select>
+        </div>
+        <div>
+            <span style="width:150px;margin-top:15px;display:inline-block;">React from Div</span>
+            <div style="display:inline-block;" id="react--div"></div>
+        </div>
+        <div>
+            <span style="width:150px;margin-top:15px;display:inline-block;">React from Div (multiple, tags)</span>
+            <div style="display:inline-block;" id="react--multiple--tags"></div>
+        </div>
+        <div>
+            <span style="width:150px;margin-top:15px;display:inline-block;">React from Div (multiple, no-tags)</span>
+            <div style="display:inline-block;" id="react--multiple"></div>
+        </div>
 
-	<head>
-		<title>Flounder demo</title>
-		<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
-		<script src="../js/flounder.js"></script>
-        <link rel="stylesheet" href="../../css/style.css">
-	</head>
 
-	<body>
-		<button id="enable-select">Enable select</button>
-		<button id="disable-select">Disable select</button>
+        <script type="text/javascript" src="../dist/flounder.js"></script>
+        <script type="text/javascript" src="../demo/demoDist.js"></script>
 
-		<br><br>
+        <script type="text/javascript">
 
-		<input type="text" id="new-option">
-		<button id="add">Add</button>
-		<button id="remove">Remove</button>
-		<button id="enable">Enable</button>
-		<button id="disable">Disable</button>
+            var options = [
+                {
+                    cssClass    : 'select-filters',
+                    id          : 'All',
+                    isTaxonomy  : true,
+                    text        : 'All'
+                },
+                {
+                    cssClass    : 'category',
+                    id          : 'category',
+                    isTaxonomy  : true,
+                    text        : 'Categories'
+                },
+                {
+                    cssClass    : 'tag',
+                    id          : 'tag',
+                    isTaxonomy  : true,
+                    text        : 'Tags'
+                },
+                {
+                    cssClass    : 'month',
+                    id          : 'month',
+                    isTaxonomy  : true,
+                    text        : 'Month'
+                }
+            ];
 
-		<br><br>
+            var flounder = function( target, options )
+            {
+                return new Flounder( target, options );
+            };
 
-		<select id="element" class="form__input--flounderSelect flounder-me-please">
-            <option selected value="Ofir">Ofir</option>
-            <option disabled value="Julien">Julien</option>
-            <option value="Dan">Dan</option>
-        </select>
+            flounder( document.getElementById( 'vanilla--input--tags' ), {
+                default             : 'placeholders!',
 
-		<select id="element2" class="form__input--flounderSelect flounder-me-please">
-            <option selected value="Ofir">Ofir</option>
-            <option disabled value="Julien">Julien</option>
-            <option value="Dan">Dan</option>
-        </select>
+                init                : function()
+                {
+                    var res = [];
+                    options.forEach( function( option )
+                    {
+                        res.push( {
+                            text        : option.text,
+                            value       : option.id
+                        } );
+                    } );
 
-		<select id="element3" class="form__input--flounderSelect flounder-me-please">
-            <option selected value="Ofir">Ofir</option>
-            <option disabled value="Julien">Julien</option>
-            <option value="Dan">Dan</option>
-        </select>
+                    this.options = res;
+                },
 
-		<script>
-			var floundy;
+                multiple            : true } );
 
-			$( function()
-			{
-				// multiple flounderization
-				var flounders = $( '.flounder-me-please' ).Flounder();
 
-				console.log( flounders );
+            flounder( document.getElementById( 'vanilla--input' ), {
+                default             : 'placeholders!',
 
-				floundy = flounders[0];
+                init                : function()
+                {
+                    var res = [];
+                    options.forEach( function( option )
+                    {
+                        res.push( {
+                            text        : option.text,
+                            value       : option.id
+                        } );
+                    } );
 
-				$( '.salut' ).change( function ( e )
-				{
-					console.log('STEEEEVE, there\'s a CHANGE !' );
-				} );
-			} );
+                    this.options = res;
+                },
 
-			$( '#enable-select' ).click( function ()
-			{
-				floundy.enable();
-			} );
+                multiple            : true,
 
-			$( '#disable-select' ).click( function ()
-			{
-				floundy.disable();
-			} );
+                multipleTags        : false } );
 
-			$( '#add' ).click( function ()
-			{
-				var value = $( '#new-option' ).val();
-				floundy.addOption( { text: value, value: value } );
-			} );
 
-			$( '#remove' ).click( function ()
-			{
-				var newOption = $( '#new-option' ).val();
-				floundy.removeOption( newOption );
-			} );
+            flounder( document.getElementById( 'vanilla--select' ), {
+                default             : 'placeholders!' } );
 
-			$( '#enable' ).click( function ()
-			{
-				var newOption = $( '#new-option' ).val();
-				floundy.enableOption( newOption );
-			} );
 
-			$( '#disable' ).click( function ()
-			{
-				var newOption = $( '#new-option' ).val();
-				floundy.disableOption( newOption );
-			} );
-		</script>
+            ReactDOM.render( React.createElement( FlounderReact, {
+                default             : 'placeholders!',
 
-	</body>
+                init                : function()
+                {
+                    var res = [];
+                    options.forEach( function( option )
+                    {
+                        res.push( {
+                            text        : option.text,
+                            value       : option.id
+                        } );
+                    } );
+
+                    this.options = res;
+                } } ), document.getElementById( 'react--div' ) );
+
+
+            ReactDOM.render( React.createElement( FlounderReact, {
+                default             : 'placeholders!',
+
+                multiple            : true,
+
+                init                : function()
+                {
+                    var res = [];
+                    options.forEach( function( option )
+                    {
+                        res.push( {
+                            text        : option.text,
+                            value       : option.id
+                        } );
+                    } );
+
+                    this.options = res;
+                } } ), document.getElementById( 'react--multiple--tags' ) );
+
+
+            ReactDOM.render( React.createElement( FlounderReact, {
+                default             : 'placeholders!',
+
+                multiple            : true,
+
+                multipleTags        : false,
+
+                init                : function()
+                {
+                    var res = [];
+                    options.forEach( function( option )
+                    {
+                        res.push( {
+                            text        : option.text,
+                            value       : option.id
+                        } );
+                    } );
+
+                    this.options = res;
+                } } ), document.getElementById( 'react--multiple' ) );
+        </script>
+    </body>
 </html>
