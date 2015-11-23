@@ -19576,7 +19576,7 @@ var Flounder = (function () {
             var selectedLength = selectedOption.length;
             var multiple = this.multiple;
 
-            if (!multiple || selectedLength === 1) {
+            if (!multiple || !this.multipleTags && selectedLength === 1) {
                 selected.innerHTML = selectedOption[0].innerHTML;
                 value = selectedOption[0].value;
             } else if (selectedLength === 0) {

@@ -30,6 +30,11 @@
             </select>
         </div>
         <div>
+            <span style="width:150px;margin-top:15px;display:inline-block;">Vanilla from Div (multiple, no-tags, desciption)</span>
+            <div style="display:inline-block;" id="vanilla--multiple--desc"></div>
+        </div>
+        vanilla--input--desc
+        <div>
             <span style="width:150px;margin-top:15px;display:inline-block;">React from Div</span>
             <div style="display:inline-block;" id="react--div"></div>
         </div>
@@ -41,7 +46,10 @@
             <span style="width:150px;margin-top:15px;display:inline-block;">React from Div (multiple, no-tags)</span>
             <div style="display:inline-block;" id="react--multiple"></div>
         </div>
-
+        <div>
+            <span style="width:150px;margin-top:15px;display:inline-block;">React from Div (multiple, no-tags, desciption)</span>
+            <div style="display:inline-block;" id="react--multiple--desc"></div>
+        </div>
 
         <script type="text/javascript" src="../dist/flounder.js"></script>
         <script type="text/javascript" src="../demo/demoDist.js"></script>
@@ -126,6 +134,27 @@
                 default             : 'placeholders!' } );
 
 
+            flounder( document.getElementById( 'vanilla--multiple--desc' ), {
+                default             : 'placeholders!',
+
+                init                : function()
+                {
+                    var res = [];
+                    options.forEach( function( option )
+                    {
+                        res.push( {
+                            text        : option.text,
+                            value       : option.id,
+                            description : option.text + ' - ' + option.text
+                        } );
+                    } );
+
+                    this.options = res;
+                },
+
+                multiple            : true } );
+
+
             ReactDOM.render( React.createElement( FlounderReact, {
                 default             : 'placeholders!',
 
@@ -184,6 +213,30 @@
 
                     this.options = res;
                 } } ), document.getElementById( 'react--multiple' ) );
+
+
+
+            ReactDOM.render( React.createElement( FlounderReact, {
+                default             : 'placeholders!',
+
+                multiple            : true,
+
+                multipleTags        : false,
+
+                init                : function()
+                {
+                    var res = [];
+                    options.forEach( function( option )
+                    {
+                        res.push( {
+                            text        : option.text,
+                            value       : option.id,
+                            description : 'Immade Scription'
+                        } );
+                    } );
+
+                    this.options = res;
+                } } ), document.getElementById( 'react--multiple--desc' ) );
         </script>
     </body>
 </html>
