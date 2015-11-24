@@ -33,7 +33,6 @@
             <span style="width:150px;margin-top:15px;display:inline-block;">Vanilla from Div (multiple, no-tags, desciption)</span>
             <div style="display:inline-block;" id="vanilla--multiple--desc"></div>
         </div>
-        vanilla--input--desc
         <div>
             <span style="width:150px;margin-top:15px;display:inline-block;">React from Div</span>
             <div style="display:inline-block;" id="react--div"></div>
@@ -43,8 +42,8 @@
             <div style="display:inline-block;" id="react--multiple--tags"></div>
         </div>
         <div>
-            <span style="width:150px;margin-top:15px;display:inline-block;">React from Div (multiple, no-tags)</span>
-            <div style="display:inline-block;" id="react--multiple"></div>
+            <span style="width:150px;margin-top:15px;display:inline-block;">React from Span (multiple, no-tags)</span>
+            <span style="display:inline-block;" id="react--multiple"></span>
         </div>
         <div>
             <span style="width:150px;margin-top:15px;display:inline-block;">React from Div (multiple, no-tags, desciption)</span>
@@ -53,190 +52,5 @@
 
         <script type="text/javascript" src="../dist/flounder.js"></script>
         <script type="text/javascript" src="../demo/demoDist.js"></script>
-
-        <script type="text/javascript">
-
-            var options = [
-                {
-                    cssClass    : 'select-filters',
-                    id          : 'All',
-                    isTaxonomy  : true,
-                    text        : 'All'
-                },
-                {
-                    cssClass    : 'category',
-                    id          : 'category',
-                    isTaxonomy  : true,
-                    text        : 'Categories'
-                },
-                {
-                    cssClass    : 'tag',
-                    id          : 'tag',
-                    isTaxonomy  : true,
-                    text        : 'Tags'
-                },
-                {
-                    cssClass    : 'month',
-                    id          : 'month',
-                    isTaxonomy  : true,
-                    text        : 'Month'
-                }
-            ];
-
-            var flounder = function( target, options )
-            {
-                return new Flounder( target, options );
-            };
-
-            flounder( document.getElementById( 'vanilla--input--tags' ), {
-                default             : 'placeholders!',
-
-                init                : function()
-                {
-                    var res = [];
-                    options.forEach( function( option )
-                    {
-                        res.push( {
-                            text        : option.text,
-                            value       : option.id
-                        } );
-                    } );
-
-                    this.options = res;
-                },
-
-                multiple            : true } );
-
-
-            flounder( document.getElementById( 'vanilla--input' ), {
-                default             : 'placeholders!',
-
-                init                : function()
-                {
-                    var res = [];
-                    options.forEach( function( option )
-                    {
-                        res.push( {
-                            text        : option.text,
-                            value       : option.id
-                        } );
-                    } );
-
-                    this.options = res;
-                },
-
-                multiple            : true,
-
-                multipleTags        : false } );
-
-
-            flounder( document.getElementById( 'vanilla--select' ), {
-                default             : 'placeholders!' } );
-
-
-            flounder( document.getElementById( 'vanilla--multiple--desc' ), {
-                default             : 'placeholders!',
-
-                init                : function()
-                {
-                    var res = [];
-                    options.forEach( function( option )
-                    {
-                        res.push( {
-                            text        : option.text,
-                            value       : option.id,
-                            description : option.text + ' - ' + option.text
-                        } );
-                    } );
-
-                    this.options = res;
-                },
-
-                multiple            : true } );
-
-
-            ReactDOM.render( React.createElement( FlounderReact, {
-                default             : 'placeholders!',
-
-                init                : function()
-                {
-                    var res = [];
-                    options.forEach( function( option )
-                    {
-                        res.push( {
-                            text        : option.text,
-                            value       : option.id
-                        } );
-                    } );
-
-                    this.options = res;
-                } } ), document.getElementById( 'react--div' ) );
-
-
-            ReactDOM.render( React.createElement( FlounderReact, {
-                default             : 'placeholders!',
-
-                multiple            : true,
-
-                init                : function()
-                {
-                    var res = [];
-                    options.forEach( function( option )
-                    {
-                        res.push( {
-                            text        : option.text,
-                            value       : option.id
-                        } );
-                    } );
-
-                    this.options = res;
-                } } ), document.getElementById( 'react--multiple--tags' ) );
-
-
-            ReactDOM.render( React.createElement( FlounderReact, {
-                default             : 'placeholders!',
-
-                multiple            : true,
-
-                multipleTags        : false,
-
-                init                : function()
-                {
-                    var res = [];
-                    options.forEach( function( option )
-                    {
-                        res.push( {
-                            text        : option.text,
-                            value       : option.id
-                        } );
-                    } );
-
-                    this.options = res;
-                } } ), document.getElementById( 'react--multiple' ) );
-
-
-
-            ReactDOM.render( React.createElement( FlounderReact, {
-                default             : 'placeholders!',
-
-                multiple            : true,
-
-                multipleTags        : false,
-
-                init                : function()
-                {
-                    var res = [];
-                    options.forEach( function( option )
-                    {
-                        res.push( {
-                            text        : option.text,
-                            value       : option.id,
-                            description : 'Immade Scription'
-                        } );
-                    } );
-
-                    this.options = res;
-                } } ), document.getElementById( 'react--multiple--desc' ) );
-        </script>
     </body>
 </html>

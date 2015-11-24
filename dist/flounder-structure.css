@@ -223,12 +223,17 @@
 
 
 /* -------------------------------------------------------------------------- */
-/* FLOUNDER - description                                                    */
+/* FLOUNDER - description                                                     */
 /* -------------------------------------------------------------------------- */
+.flounder__option > span, .flounder__option > div
+{
+    pointer-events:                 none;
+}
+
+
 .flounder__option--description
 {
     font-size:                      0.7em;
     font-weight:                    200;
     color:                          #aaa;
-    pointer-events:                 none;
 }

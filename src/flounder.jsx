@@ -304,9 +304,9 @@ class Flounder
         {
             if ( this.cancelFunc )
             {
-                this.cancelFunc();
+                this.cancelFunc( e );
             }
-            this.toggleList();
+            this.toggleList( e );
         }
     }
 
@@ -383,7 +383,7 @@ class Flounder
 
         if ( !this.multiple || !e[ this.multiSelect ] )
         {
-            this.toggleList();
+            this.toggleList( e );
         }
     }
 
@@ -487,7 +487,7 @@ class Flounder
 
             if ( this.componentDidMountFunc )
             {
-                this.componentDidMountFunc();
+                this.componentDidMountFunc( e );
             }
 
             this.refs.select.flounder = this.refs.selected.flounder = this.target.flounder = this;
@@ -899,7 +899,7 @@ class Flounder
 
             if ( !self.multiple )
             {
-                self.toggleList( 'close' );
+                self.toggleList( e, 'close' );
             }
         };
 
@@ -1007,7 +1007,7 @@ class Flounder
 
         if ( this.selectFunc )
         {
-            this.selectFunc()
+            this.selectFunc( e );
         }
     };
 
@@ -1191,7 +1191,7 @@ class Flounder
         {
             case 13:
             case 27:
-                this.toggleList();
+                this.toggleList( e );
                 return;
             case 38:
                 e.preventDefault();
@@ -1300,7 +1300,7 @@ class Flounder
 
         if ( this.selectFunc )
         {
-            this.selectFunc();
+            this.selectFunc( e );
         }
     }
 
@@ -1379,7 +1379,7 @@ class Flounder
      *
      * @return _Void_
      */
-    toggleList( force )
+    toggleList( e, force )
     {
 
         let refs        = this.refs;
@@ -1407,7 +1407,7 @@ class Flounder
 
             if ( this.openFunc )
             {
-                this.openFunc();
+                this.openFunc( e );
             }
         }
         else if ( force === 'close' || optionsList.className.indexOf( 'flounder--hidden' ) === -1 )
@@ -1431,7 +1431,7 @@ class Flounder
 
             if ( this.closeFunc )
             {
-                this.closeFunc();
+                this.closeFunc( e );
             }
         }
     }

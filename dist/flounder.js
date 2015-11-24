@@ -301,9 +301,9 @@ var Flounder = (function () {
         value: function catchBodyClick(e) {
             if (!this.checkClickTarget(e)) {
                 if (this.cancelFunc) {
-                    this.cancelFunc();
+                    this.cancelFunc(e);
                 }
-                this.toggleList();
+                this.toggleList(e);
             }
         }
 
@@ -371,7 +371,7 @@ var Flounder = (function () {
             this.setSelectValue({}, e);
 
             if (!this.multiple || !e[this.multiSelect]) {
-                this.toggleList();
+                this.toggleList(e);
             }
         }
 
@@ -472,7 +472,7 @@ var Flounder = (function () {
             this.onRender();
 
             if (this.componentDidMountFunc) {
-                this.componentDidMountFunc();
+                this.componentDidMountFunc(e);
             }
 
             this.refs.select.flounder = this.refs.selected.flounder = this.target.flounder = this;
@@ -860,7 +860,7 @@ var Flounder = (function () {
                 self.setSelectValue(_e);
 
                 if (!self.multiple) {
-                    self.toggleList('close');
+                    self.toggleList(e, 'close');
                 }
             };
 
@@ -955,7 +955,7 @@ var Flounder = (function () {
             selected.setAttribute('data-value', value);
 
             if (this.selectFunc) {
-                this.selectFunc();
+                this.selectFunc(e);
             }
         }
     }, {
@@ -1128,7 +1128,7 @@ var Flounder = (function () {
             switch (e.keyCode) {
                 case 13:
                 case 27:
-                    this.toggleList();
+                    this.toggleList(e);
                     return;
                 case 38:
                     e.preventDefault();
@@ -1229,7 +1229,7 @@ var Flounder = (function () {
             this.displaySelected(refs.selected, refs);
 
             if (this.selectFunc) {
-                this.selectFunc();
+                this.selectFunc(e);
             }
         }
 
@@ -1306,7 +1306,7 @@ var Flounder = (function () {
          */
     }, {
         key: 'toggleList',
-        value: function toggleList(force) {
+        value: function toggleList(e, force) {
 
             var refs = this.refs;
             var optionsList = refs.optionsListWrapper;
@@ -1329,7 +1329,7 @@ var Flounder = (function () {
                 }
 
                 if (this.openFunc) {
-                    this.openFunc();
+                    this.openFunc(e);
                 }
             } else if (force === 'close' || optionsList.className.indexOf('flounder--hidden') === -1) {
                 this.hideElement(optionsList);
@@ -1349,7 +1349,7 @@ var Flounder = (function () {
                 refs.select.blur();
 
                 if (this.closeFunc) {
-                    this.closeFunc();
+                    this.closeFunc(e);
                 }
             }
         }
