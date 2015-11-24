@@ -168,6 +168,7 @@ react flounder can only be attached to container elements (div, span, etc)
 
 
 The result of either of these is shown here (only styled with the structural css)
+
 ![closed](https://d1ro8r1rbfn3jf.cloudfront.net/ms_16133/Vu591qbeROU9QezI1cXQ1XkYoQEkhP/Flounder%2Bdemo%2B2015-11-23%2B23-26-41.jpg?Expires=1448404005&Signature=Rj~Hm6GmMgBCFkwr4~BnhmYyrcHDzMYGS9GGIg4kPHgCc7GhMmIStXlFJouWAEny4BeMXKHMZu-ruXTQwRCeVeZf2oL098kTyScHEVLsyZr-JZ6z6mnPP-ikgMlvc78xZJcZsdIjDEihaVm3NmJWRmfq~kKH3BvVQaLgUt7NyZV6IxuRhYfxUFkBlHOg6moHTibrehy-Yvni8fllz8BekBX-oVibZ6ezgmBQvOrOOCGRjp39mn4-QJU8jpNO41RW3iG2osAXJMxlmJhG8cL6X7trpM1VWQP7M462PrtnGt6~j4BjammY8hldEaDp8LpjsCI-2AGOm48FqGH5VAVLPw__&Key-Pair-Id=APKAJHEJJBIZWFB73RSA)
 
 ![open menu](https://d1ro8r1rbfn3jf.cloudfront.net/ms_16133/MfbfkOAmsRGZHKfONjpntVYHRLzaUF/Flounder%2Bdemo%2B2015-11-23%2B23-26-20.jpg?Expires=1448403987&Signature=bxaazMlR6YnSqY4-mm8wZ5ZaeiiyHSIcYoptQLlk96DZB3cWM9JRUH6cuvVdbgEpuAwViJgBQPeeDyRBEfql5IS3WJXWPTlFCv-dOwvKT-7VboFDbjPv5-JD1TmBNr4ElcdWGTK8TsISv~8Bo0p35vnXnwUx7LBUTj86z3Z4hEP8-YMkU8vLVaYoqEDy6jSYDtptfTZvMxH3x4Nv2gNOeRLt-RYH9vhQtt1Vqv4YsOF29lNe2EmrvV5VDahdOviuPMwJ4K5HyggGZ4qsO84DM~~KhAS4ff50SCk069cfWRVARYwW1JGm71D-ccmPYQzM70pT1pAMIaqWkFjpFAy8CA__&Key-Pair-Id=APKAJHEJJBIZWFB73RSA)
