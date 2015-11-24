@@ -487,7 +487,7 @@ class Flounder
 
             if ( this.componentDidMountFunc )
             {
-                this.componentDidMountFunc( e );
+                this.componentDidMountFunc();
             }
 
             this.refs.select.flounder = this.refs.selected.flounder = this.target.flounder = this;
