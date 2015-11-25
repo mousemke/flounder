@@ -156,7 +156,7 @@ class FlounderReact extends Component
 
         return (
             <div ref="wrapper" className="flounder-wrapper  flounder__input--select">
-                <div ref="flounder" className={'flounder' + ( props.className ? '  ' + props.className : '' )}>
+                <div ref="flounder" tabIndex="0" className={'flounder' + ( props.className ? '  ' + props.className : '' )}>
                     <div ref="selected" className="flounder__option--selected--displayed" data-value={_default.value}>
                         {_default.text}
                     </div>
@@ -190,7 +190,7 @@ class FlounderReact extends Component
                     </div>
                     { props.search ? <input ref="search" type="text" className="flounder__input--search" /> : null }
                 </div>
-                <select ref="select" className="flounder--select--tag  flounder--hidden" multiple={props.multiple}>
+                <select ref="select" className="flounder--select--tag  flounder--hidden" tabIndex="-1" multiple={props.multiple}>
                 {
                     options.map( ( _option, i ) =>
                     {
@@ -216,12 +216,13 @@ class FlounderReact extends Component
 FlounderReact.prototype.bindThis                = Flounder.prototype.bindThis;
 FlounderReact.prototype.catchBodyClick          = Flounder.prototype.catchBodyClick;
 FlounderReact.prototype.checkClickTarget        = Flounder.prototype.checkClickTarget;
+FlounderReact.prototype.checkFlounderKeypress   = Flounder.prototype.checkFlounderKeypress
 FlounderReact.prototype.checkPlaceholder        = Flounder.prototype.checkPlaceholder;
 FlounderReact.prototype.clickSet                = Flounder.prototype.clickSet;
 FlounderReact.prototype.displayMultipleTags     = Flounder.prototype.displayMultipleTags;
 FlounderReact.prototype.fuzzySearch             = Flounder.prototype.fuzzySearch;
 FlounderReact.prototype.removeMultiTag          = Flounder.prototype.removeMultiTag;
-FlounderReact.prototype.setSelectArrows         = Flounder.prototype.setSelectArrows;
+FlounderReact.prototype.setKeypress             = Flounder.prototype.setKeypress;
 FlounderReact.prototype.setSelectValue          = Flounder.prototype.setSelectValue;
 FlounderReact.prototype.toggleClass             = Flounder.prototype.toggleClass;
 FlounderReact.prototype.toggleList              = Flounder.prototype.toggleList;

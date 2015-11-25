@@ -88,7 +88,7 @@ class Flounder
     {
         let select = this.refs.select;
         select.addEventListener( 'keyup', this.setSelectValue );
-        select.addEventListener( 'keydown', this.setSelectArrows );
+        select.addEventListener( 'keydown', this.setKeypress );
         select.focus();
     }
 
@@ -132,12 +132,13 @@ class Flounder
         this.attachAttributes      = this.attachAttributes.bind( this );
         this.catchBodyClick        = this.catchBodyClick.bind( this );
         this.checkClickTarget      = this.checkClickTarget.bind( this );
+        this.checkFlounderKeypress = this.checkFlounderKeypress.bind( this );
         this.checkPlaceholder      = this.checkPlaceholder.bind( this );
         this.clickSet              = this.clickSet.bind( this );
         this.displayMultipleTags   = this.displayMultipleTags.bind( this );
         this.fuzzySearch           = this.fuzzySearch.bind( this );
         this.removeMultiTag        = this.removeMultiTag.bind( this );
-        this.setSelectArrows       = this.setSelectArrows.bind( this );
+        this.setKeypress           = this.setKeypress.bind( this );
         this.setSelectValue        = this.setSelectValue.bind( this );
         this.toggleClass           = this.toggleClass.bind( this );
         this.toggleList            = this.toggleList.bind( this );
@@ -161,10 +162,11 @@ class Flounder
 
         let flounderClass       = 'flounder' + ( this.props.className ? '  ' + this.props.className : '' );
         let flounder            = constructElement( { className : flounderClass } );
+        flounder.tabIndex       = 0;
         wrapper.appendChild( flounder );
 
         let select              = this.initSelectBox( wrapper );
-
+        select.tabIndex         = -1;
         if ( this.multiple === true )
         {
             select.setAttribute( 'multiple', '' );
@@ -239,7 +241,7 @@ class Flounder
             }
 
             let escapedText = this.escapeHTML( _option.text );
-            let extraClass  = i === _default ? '  ' + this.selectedClass : '';
+            let extraClass  = i === _default.index ? '  ' + this.selectedClass : '';
 
             let res = {
                 className       : 'flounder__option' + extraClass,
@@ -273,6 +275,11 @@ class Flounder
                                             value       :  _option.value } );
                 selectOptions[ i ].innerHTML = escapedText;
                 select.appendChild( selectOptions[ i ] );
+
+                if ( i === _default.index )
+                {
+                    selectOptions[ i ].selected = true;
+                }
             }
             else
             {
@@ -378,7 +385,6 @@ class Flounder
      */
     clickSet( e )
     {
-
         this.setSelectValue( {}, e );
 
         if ( !this.multiple || !e[ this.multiSelect ] )
@@ -465,7 +471,8 @@ class Flounder
             if ( target.tagName === 'INPUT' )
             {
                 this.addClass( target, 'flounder--hidden' );
-                target = target.parentNode;
+                target.tabIndex = -1;
+                target          = target.parentNode;
             }
 
             this.target     = target;
@@ -666,7 +673,7 @@ class Flounder
         }
         else
         {
-            this.setSelectArrows( e );
+            this.setKeypress( e );
             this.setSelectValue( e );
         }
     }
@@ -788,12 +795,22 @@ class Flounder
         this.componentDidMountFunc  = props.componentDidMount   !== undefined ? props.componentDidMount : false;
         this.multiple               = props.multiple            !== undefined ? props.multiple        : false;
         this.multipleTags           = props.multipleTags        !== undefined ? props.multipleTags    : true;
+
+        if ( !this.multiple )
+        {
+            this.multipleTags = false;
+        }
+
         this.multipleMessage        = props.multipleMessage     !== undefined ? props.multipleMessage : '(Multiple Items Selected)';
         this.hiddenClass            = props.hiddenClass         !== undefined ? props.hiddenClass     : 'flounder--hidden';
         this.defaultTextIndent      = props.defaultTextIndent   !== undefined ? props.defaultTextIndent : 0;
         this.options                = props.options             !== undefined ? props.options         : [];
+        this.selectedClass          = props.selectedClass       !== undefined ? props.selectedClass     : 'flounder__option--selected';
 
-        this.selectedClass          = this.multipleTags ? 'flounder__option--selected--hidden'          : 'flounder__option--selected';
+        if ( this.multipleTags )
+        {
+            this.selectedClass += '  flounder__option--selected--hidden';
+        }
 
         this._default    = '';
         if ( props._default || props._default === 0 )
@@ -904,8 +921,6 @@ class Flounder
         };
 
 
-
-
         refs.select.addEventListener( 'change', _divertTarget  );
 
         options.forEach( ( option, i ) =>
@@ -916,6 +931,7 @@ class Flounder
             }
         } );
 
+        refs.flounder.addEventListener( 'keydown', this.checkFlounderKeypress );
         refs.selected.addEventListener( 'click', this.toggleList );
 
         if ( props.search )
@@ -925,6 +941,15 @@ class Flounder
             search.addEventListener( 'keyup', this.fuzzySearch );
             search.addEventListener( 'focus', this.checkPlaceholder );
             search.addEventListener( 'blur', this.checkPlaceholder );
+        }
+    }
+
+
+    checkFlounderKeypress( e )
+    {
+        if ( e.keyCode === 13 || e.keyCode === 32 )
+        {
+            this.toggleList( e );
         }
     }
 
@@ -984,6 +1009,7 @@ class Flounder
         let selectedOptions = _slice.call( this.getSelectedOptions( select ) );
 
         this.removeClass( refs.options[ index ], 'flounder__option--selected--hidden' );
+        this.removeClass( refs.options[ index ], 'flounder__option--selected' );
 
         let span = target.parentNode;
         span.parentNode.removeChild( span );
@@ -1059,48 +1085,6 @@ class Flounder
 
 
     /**
-     * ## scrollMultiple
-     *
-     * handles up and down scroll indicators on multi select boxes
-     *
-     * @param {Integer} _indexModifier +1 or 1
-     *
-     * @return _Void_
-     */
-    scrollMultiple( _indexModifier )
-    {
-        let options     = this.refs.options;
-        let $options    = $( options );
-        let $visible     = $options.filter( '*:not(.flounder--hidden,.flounder__option--selected--hidden)' );
-        let $selected    = $visible.filter( '.flounder__multi--selected' );
-        let selected;
-
-        if ( _indexModifier === -26 ) // enter
-        {
-            $selected.removeClass( 'flounder__multi--selected' ).click();
-        }
-        else
-        {
-            if ( $visible.length !== 0 )
-            {
-                if ( $selected.length === 1 )
-                {
-                    let index = $selected.index() + _indexModifier;
-                    $visible.removeClass( 'flounder__multi--selected' );
-                    this.addClass( selected = $visible.get( index ), 'flounder__multi--selected' );
-                }
-                else
-                {
-                    selected = $visible.first().addClass( 'flounder__multi--selected' )[0];
-                }
-
-                this.scrollTo( selected );
-            }
-        }
-    }
-
-
-    /**
      * ## scrollTo
      *
      * checks if an option is visible and, if it is not, scrolls it into view
@@ -1144,7 +1128,8 @@ class Flounder
 
         if ( typeof defaultProp === 'number' )
         {
-            _default = options[ defaultProp ];
+            _default        = options[ defaultProp ];
+            _default.index  = defaultProp;
         }
         else if ( typeof defaultProp === 'string' )
         {
@@ -1175,7 +1160,7 @@ class Flounder
 
 
     /**
-     * ## setSelectArrows
+     * ## setKeypress
      *
      * handles arrow key selection
      *
@@ -1183,14 +1168,16 @@ class Flounder
      *
      * @return _Void_
      */
-    setSelectArrows( e )
+    setKeypress( e )
     {
+        e.preventDefault();
         let increment = 0;
 
         switch( e.keyCode )
         {
             case 13:
             case 27:
+            case 32:
                 this.toggleList( e );
                 return;
             case 38:
@@ -1232,7 +1219,7 @@ class Flounder
         if ( optionClassName.indexOf( 'flounder--hidden' ) !== -1 &&
              optionClassName.indexOf( 'flounder__option--selected--hidden' ) !== -1 )
         {
-            this.setSelectArrows( e );
+            this.setKeypress( e );
         }
     }
 
@@ -1280,7 +1267,7 @@ class Flounder
         }
         else // button press
         {
-            if ( this.multiple )
+            if ( this.multipleTags )
             {
                 obj.preventDefault();
                 obj.stopPropagation();
@@ -1290,7 +1277,10 @@ class Flounder
 
             this.removeSelectedClass( options );
 
-            selectedOption = options[ this.getSelectedOptions( select )[ 0 ].index ];
+            let optionsArray = this.getSelectedOptions( select );
+            let baseOption = optionsArray[ 0 ] || refs.selectOptions[ 0 ];
+            selectedOption = options[ baseOption.index ];
+
             _addClass( selectedOption, selectedClass );
 
             this.scrollTo( selectedOption );
@@ -1427,7 +1417,7 @@ class Flounder
 
             optionsList.blur();
             refs.optionsList.blur();
-            refs.select.blur();
+            refs.flounder.focus();
 
             if ( this.closeFunc )
             {

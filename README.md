@@ -47,6 +47,7 @@ React.render( <FlounderReact option1="" option2="">, target );
     open                : function( e ){},
     options             : dataObject,
     search              : true,
+    selectedClass       : 'class-to-denote-selected-option',
     select              : function( e ){}
 }
 ```

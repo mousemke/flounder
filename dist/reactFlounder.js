@@ -3354,6 +3354,7 @@ var HTMLDOMPropertyConfig = {
     multiple: MUST_USE_PROPERTY | HAS_BOOLEAN_VALUE,
     muted: MUST_USE_PROPERTY | HAS_BOOLEAN_VALUE,
     name: null,
+    nonce: MUST_USE_ATTRIBUTE,
     noValidate: HAS_BOOLEAN_VALUE,
     open: HAS_BOOLEAN_VALUE,
     optimum: null,
@@ -3365,6 +3366,7 @@ var HTMLDOMPropertyConfig = {
     readOnly: MUST_USE_PROPERTY | HAS_BOOLEAN_VALUE,
     rel: null,
     required: HAS_BOOLEAN_VALUE,
+    reversed: HAS_BOOLEAN_VALUE,
     role: MUST_USE_ATTRIBUTE,
     rows: MUST_USE_ATTRIBUTE | HAS_POSITIVE_NUMERIC_VALUE,
     rowSpan: null,
@@ -3810,6 +3812,7 @@ assign(React, {
 });
 
 React.__SECRET_DOM_DO_NOT_USE_OR_YOU_WILL_BE_FIRED = ReactDOM;
+React.__SECRET_DOM_SERVER_DO_NOT_USE_OR_YOU_WILL_BE_FIRED = ReactDOMServer;
 
 module.exports = React;
 },{"./Object.assign":24,"./ReactDOM":37,"./ReactDOMServer":47,"./ReactIsomorphic":65,"./deprecated":108}],27:[function(require,module,exports){
@@ -14018,7 +14021,7 @@ module.exports = ReactUpdates;
 
 'use strict';
 
-module.exports = '0.14.2';
+module.exports = '0.14.3';
 },{}],87:[function(require,module,exports){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -19111,7 +19114,7 @@ var Flounder = (function () {
         value: function addSelectKeyListener() {
             var select = this.refs.select;
             select.addEventListener('keyup', this.setSelectValue);
-            select.addEventListener('keydown', this.setSelectArrows);
+            select.addEventListener('keydown', this.setKeypress);
             select.focus();
         }
 
@@ -19151,12 +19154,13 @@ var Flounder = (function () {
             this.attachAttributes = this.attachAttributes.bind(this);
             this.catchBodyClick = this.catchBodyClick.bind(this);
             this.checkClickTarget = this.checkClickTarget.bind(this);
+            this.checkFlounderKeypress = this.checkFlounderKeypress.bind(this);
             this.checkPlaceholder = this.checkPlaceholder.bind(this);
             this.clickSet = this.clickSet.bind(this);
             this.displayMultipleTags = this.displayMultipleTags.bind(this);
             this.fuzzySearch = this.fuzzySearch.bind(this);
             this.removeMultiTag = this.removeMultiTag.bind(this);
-            this.setSelectArrows = this.setSelectArrows.bind(this);
+            this.setKeypress = this.setKeypress.bind(this);
             this.setSelectValue = this.setSelectValue.bind(this);
             this.toggleClass = this.toggleClass.bind(this);
             this.toggleList = this.toggleList.bind(this);
@@ -19180,10 +19184,11 @@ var Flounder = (function () {
 
             var flounderClass = 'flounder' + (this.props.className ? '  ' + this.props.className : '');
             var flounder = constructElement({ className: flounderClass });
+            flounder.tabIndex = 0;
             wrapper.appendChild(flounder);
 
             var select = this.initSelectBox(wrapper);
-
+            select.tabIndex = -1;
             if (this.multiple === true) {
                 select.setAttribute('multiple', '');
             }
@@ -19260,7 +19265,7 @@ var Flounder = (function () {
                 }
 
                 var escapedText = _this.escapeHTML(_option.text);
-                var extraClass = i === _default ? '  ' + _this.selectedClass : '';
+                var extraClass = i === _default.index ? '  ' + _this.selectedClass : '';
 
                 var res = {
                     className: 'flounder__option' + extraClass,
@@ -19290,6 +19295,10 @@ var Flounder = (function () {
                         value: _option.value });
                     selectOptions[i].innerHTML = escapedText;
                     select.appendChild(selectOptions[i]);
+
+                    if (i === _default.index) {
+                        selectOptions[i].selected = true;
+                    }
                 } else {
                     selectOptions[i] = select.children[i];
                 }
@@ -19382,7 +19391,6 @@ var Flounder = (function () {
     }, {
         key: 'clickSet',
         value: function clickSet(e) {
-
             this.setSelectValue({}, e);
 
             if (!this.multiple || !e[this.multiSelect]) {
@@ -19467,10 +19475,12 @@ var Flounder = (function () {
 
             if (target.tagName === 'INPUT') {
                 this.addClass(target, 'flounder--hidden');
+                target.tabIndex = -1;
                 target = target.parentNode;
             }
 
             this.target = target;
+            this.isOpen = false;
 
             this.bindThis();
 
@@ -19487,7 +19497,7 @@ var Flounder = (function () {
             this.onRender();
 
             if (this.componentDidMountFunc) {
-                this.componentDidMountFunc(e);
+                this.componentDidMountFunc();
             }
 
             this.refs.select.flounder = this.refs.selected.flounder = this.target.flounder = this;
@@ -19648,7 +19658,7 @@ var Flounder = (function () {
                     });
                 })();
             } else {
-                this.setSelectArrows(e);
+                this.setKeypress(e);
                 this.setSelectValue(e);
             }
         }
@@ -19762,12 +19772,20 @@ var Flounder = (function () {
             this.componentDidMountFunc = props.componentDidMount !== undefined ? props.componentDidMount : false;
             this.multiple = props.multiple !== undefined ? props.multiple : false;
             this.multipleTags = props.multipleTags !== undefined ? props.multipleTags : true;
+
+            if (!this.multiple) {
+                this.multipleTags = false;
+            }
+
             this.multipleMessage = props.multipleMessage !== undefined ? props.multipleMessage : '(Multiple Items Selected)';
             this.hiddenClass = props.hiddenClass !== undefined ? props.hiddenClass : 'flounder--hidden';
             this.defaultTextIndent = props.defaultTextIndent !== undefined ? props.defaultTextIndent : 0;
             this.options = props.options !== undefined ? props.options : [];
+            this.selectedClass = props.selectedClass !== undefined ? props.selectedClass : 'flounder__option--selected';
 
-            this.selectedClass = this.multipleTags ? 'flounder__option--selected--hidden' : 'flounder__option--selected';
+            if (this.multipleTags) {
+                this.selectedClass += '  flounder__option--selected--hidden';
+            }
 
             this._default = '';
             if (props._default || props._default === 0) {
@@ -19887,6 +19905,7 @@ var Flounder = (function () {
                 }
             });
 
+            refs.flounder.addEventListener('keydown', this.checkFlounderKeypress);
             refs.selected.addEventListener('click', this.toggleList);
 
             if (props.search) {
@@ -19895,6 +19914,13 @@ var Flounder = (function () {
                 search.addEventListener('keyup', this.fuzzySearch);
                 search.addEventListener('focus', this.checkPlaceholder);
                 search.addEventListener('blur', this.checkPlaceholder);
+            }
+        }
+    }, {
+        key: 'checkFlounderKeypress',
+        value: function checkFlounderKeypress(e) {
+            if (e.keyCode === 13 || e.keyCode === 32) {
+                this.toggleList(e);
             }
         }
 
@@ -19952,6 +19978,7 @@ var Flounder = (function () {
             var selectedOptions = _slice.call(this.getSelectedOptions(select));
 
             this.removeClass(refs.options[index], 'flounder__option--selected--hidden');
+            this.removeClass(refs.options[index], 'flounder__option--selected');
 
             var span = target.parentNode;
             span.parentNode.removeChild(span);
@@ -20023,42 +20050,6 @@ var Flounder = (function () {
         }
 
         /**
-         * ## scrollMultiple
-         *
-         * handles up and down scroll indicators on multi select boxes
-         *
-         * @param {Integer} _indexModifier +1 or 1
-         *
-         * @return _Void_
-         */
-    }, {
-        key: 'scrollMultiple',
-        value: function scrollMultiple(_indexModifier) {
-            var options = this.refs.options;
-            var $options = $(options);
-            var $visible = $options.filter('*:not(.flounder--hidden,.flounder__option--selected--hidden)');
-            var $selected = $visible.filter('.flounder__multi--selected');
-            var selected = undefined;
-
-            if (_indexModifier === -26) // enter
-                {
-                    $selected.removeClass('flounder__multi--selected').click();
-                } else {
-                if ($visible.length !== 0) {
-                    if ($selected.length === 1) {
-                        var index = $selected.index() + _indexModifier;
-                        $visible.removeClass('flounder__multi--selected');
-                        this.addClass(selected = $visible.get(index), 'flounder__multi--selected');
-                    } else {
-                        selected = $visible.first().addClass('flounder__multi--selected')[0];
-                    }
-
-                    this.scrollTo(selected);
-                }
-            }
-        }
-
-        /**
          * ## scrollTo
          *
          * checks if an option is visible and, if it is not, scrolls it into view
@@ -20100,6 +20091,7 @@ var Flounder = (function () {
 
             if (typeof defaultProp === 'number') {
                 _default = options[defaultProp];
+                _default.index = defaultProp;
             } else if (typeof defaultProp === 'string') {
                 _default = {
                     text: defaultProp,
@@ -20127,7 +20119,7 @@ var Flounder = (function () {
         }
 
         /**
-         * ## setSelectArrows
+         * ## setKeypress
          *
          * handles arrow key selection
          *
@@ -20136,13 +20128,15 @@ var Flounder = (function () {
          * @return _Void_
          */
     }, {
-        key: 'setSelectArrows',
-        value: function setSelectArrows(e) {
+        key: 'setKeypress',
+        value: function setKeypress(e) {
+            e.preventDefault();
             var increment = 0;
 
             switch (e.keyCode) {
                 case 13:
                 case 27:
+                case 32:
                     this.toggleList(e);
                     return;
                 case 38:
@@ -20179,7 +20173,7 @@ var Flounder = (function () {
             var optionClassName = options[index].className;
 
             if (optionClassName.indexOf('flounder--hidden') !== -1 && optionClassName.indexOf('flounder__option--selected--hidden') !== -1) {
-                this.setSelectArrows(e);
+                this.setKeypress(e);
             }
         }
 
@@ -20226,7 +20220,8 @@ var Flounder = (function () {
                     selectedOption = this.getSelectedOptions(select);
                 } else // button press
                 {
-                    if (this.multiple) {
+                    console.log(this.isOpen);
+                    if (this.multipleTags) {
                         obj.preventDefault();
                         obj.stopPropagation();
 
@@ -20235,7 +20230,10 @@ var Flounder = (function () {
 
                     this.removeSelectedClass(options);
 
-                    selectedOption = options[this.getSelectedOptions(select)[0].index];
+                    var optionsArray = this.getSelectedOptions(select);
+                    var baseOption = optionsArray[0] || refs.selectOptions[0];
+                    selectedOption = options[baseOption.index];
+
                     _addClass(selectedOption, selectedClass);
 
                     this.scrollTo(selectedOption);
@@ -20343,6 +20341,8 @@ var Flounder = (function () {
                     refs.search.focus();
                 }
 
+                this.isOpen = true;
+
                 if (this.openFunc) {
                     this.openFunc(e);
                 }
@@ -20361,7 +20361,9 @@ var Flounder = (function () {
 
                 optionsList.blur();
                 refs.optionsList.blur();
-                refs.select.blur();
+                refs.flounder.focus();
+
+                this.isOpen = false;
 
                 if (this.closeFunc) {
                     this.closeFunc(e);
@@ -20565,7 +20567,7 @@ var FlounderReact = (function (_Component) {
                 { ref: 'wrapper', className: 'flounder-wrapper  flounder__input--select' },
                 _react2['default'].createElement(
                     'div',
-                    { ref: 'flounder', className: 'flounder' + (props.className ? '  ' + props.className : '') },
+                    { ref: 'flounder', tabIndex: '0', className: 'flounder' + (props.className ? '  ' + props.className : '') },
                     _react2['default'].createElement(
                         'div',
                         { ref: 'selected', className: 'flounder__option--selected--displayed', 'data-value': _default.value },
@@ -20604,7 +20606,7 @@ var FlounderReact = (function (_Component) {
                 ),
                 _react2['default'].createElement(
                     'select',
-                    { ref: 'select', className: 'flounder--select--tag  flounder--hidden', multiple: props.multiple },
+                    { ref: 'select', className: 'flounder--select--tag  flounder--hidden', tabIndex: '-1', multiple: props.multiple },
                     options.map(function (_option, i) {
                         var extraClass = i === _default ? '  ' + _this2.selectedClass : '';
 
@@ -20630,12 +20632,13 @@ var FlounderReact = (function (_Component) {
 FlounderReact.prototype.bindThis = _flounderJsx2['default'].prototype.bindThis;
 FlounderReact.prototype.catchBodyClick = _flounderJsx2['default'].prototype.catchBodyClick;
 FlounderReact.prototype.checkClickTarget = _flounderJsx2['default'].prototype.checkClickTarget;
+FlounderReact.prototype.checkFlounderKeypress = _flounderJsx2['default'].prototype.checkFlounderKeypress;
 FlounderReact.prototype.checkPlaceholder = _flounderJsx2['default'].prototype.checkPlaceholder;
 FlounderReact.prototype.clickSet = _flounderJsx2['default'].prototype.clickSet;
 FlounderReact.prototype.displayMultipleTags = _flounderJsx2['default'].prototype.displayMultipleTags;
 FlounderReact.prototype.fuzzySearch = _flounderJsx2['default'].prototype.fuzzySearch;
 FlounderReact.prototype.removeMultiTag = _flounderJsx2['default'].prototype.removeMultiTag;
-FlounderReact.prototype.setSelectArrows = _flounderJsx2['default'].prototype.setSelectArrows;
+FlounderReact.prototype.setKeypress = _flounderJsx2['default'].prototype.setKeypress;
 FlounderReact.prototype.setSelectValue = _flounderJsx2['default'].prototype.setSelectValue;
 FlounderReact.prototype.toggleClass = _flounderJsx2['default'].prototype.toggleClass;
 FlounderReact.prototype.toggleList = _flounderJsx2['default'].prototype.toggleList;

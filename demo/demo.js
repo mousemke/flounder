@@ -66,7 +66,7 @@ new Flounder( document.getElementById( 'vanilla--input--tags' ), {
  * vanilla Flounder attached to an input
  */
 new Flounder( document.getElementById( 'vanilla--input' ), {
-    _default             : 'placeholders!',
+    _default             : 2,
 
     init                : function()
     {
