@@ -462,7 +462,6 @@ var Flounder = (function () {
             }
 
             this.target = target;
-            this.isOpen = false;
 
             this.bindThis();
 
@@ -823,6 +822,14 @@ var Flounder = (function () {
 
             return select;
         }
+
+        /**
+         * ## iosVersion
+         *
+         * checks and returns the ios version
+         *
+         * @return _Void_:
+         */
     }, {
         key: 'iosVersion',
         value: function iosVersion() {
@@ -898,10 +905,19 @@ var Flounder = (function () {
                 search.addEventListener('blur', this.checkPlaceholder);
             }
         }
+
+        /**
+         * ## checkFlounderKeypress
+         *
+         * checks flounder focused keypresses and filters all but space and enter
+         *
+         * @return _Void_
+         */
     }, {
         key: 'checkFlounderKeypress',
         value: function checkFlounderKeypress(e) {
             if (e.keyCode === 13 || e.keyCode === 32) {
+                e.preventDefault();
                 this.toggleList(e);
             }
         }
@@ -1181,13 +1197,14 @@ var Flounder = (function () {
             var selectedClass = this.selectedClass;
             var _addClass = this.addClass;
             var _toggleClass = this.toggleClass;
+            var _multiple = this.multiple;
 
             var index = undefined,
                 selectedOption = undefined;
 
             if (e) // click
                 {
-                    if (!this.multiple || this.multiple && !this.multipleTags && !e[this.multiSelect]) {
+                    if (!_multiple || _multiple && !this.multipleTags && !e[this.multiSelect]) {
                         this.removeSelectedClass(options);
                         this.removeSelectedValue(options);
                     }
@@ -1202,7 +1219,6 @@ var Flounder = (function () {
                     selectedOption = this.getSelectedOptions(select);
                 } else // button press
                 {
-                    console.log(this.isOpen);
                     if (this.multipleTags) {
                         obj.preventDefault();
                         obj.stopPropagation();
@@ -1323,8 +1339,6 @@ var Flounder = (function () {
                     refs.search.focus();
                 }
 
-                this.isOpen = true;
-
                 if (this.openFunc) {
                     this.openFunc(e);
                 }
@@ -1344,8 +1358,6 @@ var Flounder = (function () {
                 optionsList.blur();
                 refs.optionsList.blur();
                 refs.flounder.focus();
-
-                this.isOpen = false;
 
                 if (this.closeFunc) {
                     this.closeFunc(e);

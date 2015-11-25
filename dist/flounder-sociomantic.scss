@@ -9,12 +9,18 @@
 
 .flounder
 {
+    outline:                        0;
     border-radius:                  2px;
     border-color:                   $mid--soft--grey;
 
     &:hover
     {
         border-color:               $blue;
+    }
+
+    &:focus
+    {
+        border-color:               #289BC8;
     }
 }
 

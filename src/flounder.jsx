@@ -868,6 +868,13 @@ class Flounder
     }
 
 
+    /**
+     * ## iosVersion
+     *
+     * checks and returns the ios version
+     *
+     * @return _Void_:
+     */
     iosVersion()
     {
 
@@ -945,10 +952,18 @@ class Flounder
     }
 
 
+    /**
+     * ## checkFlounderKeypress
+     *
+     * checks flounder focused keypresses and filters all but space and enter
+     *
+     * @return _Void_
+     */
     checkFlounderKeypress( e )
     {
         if ( e.keyCode === 13 || e.keyCode === 32 )
         {
+            e.preventDefault();
             this.toggleList( e );
         }
     }
@@ -1245,12 +1260,13 @@ class Flounder
         let selectedClass   = this.selectedClass;
         let _addClass       = this.addClass;
         let _toggleClass    = this.toggleClass;
+        let _multiple       = this.multiple;
 
         let index, selectedOption;
 
         if ( e ) // click
         {
-            if ( !this.multiple || ( this.multiple && !this.multipleTags && !e[ this.multiSelect ] ) )
+            if ( !_multiple || ( _multiple && !this.multipleTags && !e[ this.multiSelect ] ) )
             {
                 this.removeSelectedClass( options );
                 this.removeSelectedValue( options );
