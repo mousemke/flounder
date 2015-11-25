@@ -1185,6 +1185,7 @@ class Flounder
      */
     setKeypress( e )
     {
+        console.log( 'keypress' );
         e.preventDefault();
         let increment = 0;
 
@@ -1254,6 +1255,7 @@ class Flounder
      */
     setSelectValue( obj, e )
     {
+        console.log( 'value' );
         let refs            = this.refs;
         let options         = refs.options;
         let select          = refs.select;
@@ -1293,13 +1295,17 @@ class Flounder
 
             this.removeSelectedClass( options );
 
-            let optionsArray = this.getSelectedOptions( select );
-            let baseOption = optionsArray[ 0 ] || refs.selectOptions[ 0 ];
-            selectedOption = options[ baseOption.index ];
+            let optionsArray    = this.getSelectedOptions( select );
+            let baseOption      = optionsArray[ 0 ];
 
-            _addClass( selectedOption, selectedClass );
+            if ( baseOption )
+            {
+                selectedOption  = options[ baseOption.index ];
 
-            this.scrollTo( selectedOption );
+                _addClass( selectedOption, selectedClass );
+
+                this.scrollTo( selectedOption );
+            }
         }
 
         this.displaySelected( refs.selected, refs );
@@ -1387,7 +1393,6 @@ class Flounder
      */
     toggleList( e, force )
     {
-
         let refs        = this.refs;
         let optionsList = refs.optionsListWrapper;
         let wrapper     = refs.wrapper;

@@ -20143,6 +20143,7 @@ var Flounder = (function () {
     }, {
         key: 'setKeypress',
         value: function setKeypress(e) {
+            console.log('keypress');
             e.preventDefault();
             var increment = 0;
 
@@ -20206,6 +20207,7 @@ var Flounder = (function () {
     }, {
         key: 'setSelectValue',
         value: function setSelectValue(obj, e) {
+            console.log('value');
             var refs = this.refs;
             var options = refs.options;
             var select = refs.select;
@@ -20244,12 +20246,15 @@ var Flounder = (function () {
                     this.removeSelectedClass(options);
 
                     var optionsArray = this.getSelectedOptions(select);
-                    var baseOption = optionsArray[0] || refs.selectOptions[0];
-                    selectedOption = options[baseOption.index];
+                    var baseOption = optionsArray[0];
 
-                    _addClass(selectedOption, selectedClass);
+                    if (baseOption) {
+                        selectedOption = options[baseOption.index];
 
-                    this.scrollTo(selectedOption);
+                        _addClass(selectedOption, selectedClass);
+
+                        this.scrollTo(selectedOption);
+                    }
                 }
 
             this.displaySelected(refs.selected, refs);
@@ -20333,7 +20338,6 @@ var Flounder = (function () {
     }, {
         key: 'toggleList',
         value: function toggleList(e, force) {
-
             var refs = this.refs;
             var optionsList = refs.optionsListWrapper;
             var wrapper = refs.wrapper;
