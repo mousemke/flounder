@@ -33,7 +33,7 @@
 .open .flounder
 {
     @include black-box-shadow;
-    border-color:                   $blue;
+    border-bottom-color:            $white;
 
     &:hover
     {
