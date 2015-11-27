@@ -20,7 +20,12 @@
 
     &:focus
     {
-        border-color:               #289BC8;
+        border-color:               $blue;
+    }
+
+    &:focus > .flounder__option--selected--displayed
+    {
+        background-color:            $white;
     }
 }
 
@@ -28,6 +33,7 @@
 .open .flounder
 {
     @include black-box-shadow;
+    border-color:                   $blue;
 
     &:hover
     {

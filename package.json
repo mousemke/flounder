@@ -27,7 +27,7 @@
   "bugs": {
     "url": "https://github.com/sociomantic/flounder/issues"
   },
-  "homepage": "https://github.com/sociomantic/flounder#readme",
+  "homepage": "https://github.com/sociomantic/flounder",
   "devDependencies": {
     "babelify": "^6.3.0",
     "browserify": "^11.2.0",

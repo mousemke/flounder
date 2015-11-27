@@ -224,6 +224,8 @@ FlounderReact.prototype.fuzzySearch             = Flounder.prototype.fuzzySearch
 FlounderReact.prototype.removeMultiTag          = Flounder.prototype.removeMultiTag;
 FlounderReact.prototype.setKeypress             = Flounder.prototype.setKeypress;
 FlounderReact.prototype.setSelectValue          = Flounder.prototype.setSelectValue;
+FlounderReact.prototype.setSelectValueButton    = Flounder.prototype.setSelectValueButton;
+FlounderReact.prototype.setSelectValueClick     = Flounder.prototype.setSelectValueClick;
 FlounderReact.prototype.toggleClass             = Flounder.prototype.toggleClass;
 FlounderReact.prototype.toggleList              = Flounder.prototype.toggleList;
 

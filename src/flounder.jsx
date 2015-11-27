@@ -167,6 +167,7 @@ class Flounder
 
         let select              = this.initSelectBox( wrapper );
         select.tabIndex         = -1;
+
         if ( this.multiple === true )
         {
             select.setAttribute( 'multiple', '' );
@@ -1185,28 +1186,32 @@ class Flounder
      */
     setKeypress( e )
     {
-        console.log( 'keypress' );
         e.preventDefault();
-        let increment = 0;
 
-        switch( e.keyCode )
+        let increment   = 0;
+        let keyCode     = e.keyCode;
+
+        if ( this.multipleTags )
         {
-            case 13:
-            case 27:
-            case 32:
-                this.toggleList( e );
-                return;
-            case 38:
-                e.preventDefault();
-                increment--;
-                break;
-            case 40:
-                e.preventDefault();
-                increment++;
-                break;
-            default:
-                return;
+            return false;
         }
+
+        if ( keyCode === 13 || keyCode === 27 || keyCode === 32 )
+        {
+            this.toggleList( e );
+            return;
+        }
+        else if ( keyCode === 38 )
+        {
+            e.preventDefault();
+            increment--;
+        }
+        else if ( keyCode === 40 )
+        {
+            e.preventDefault();
+            increment++;
+        }
+
 
         if ( !!window.sidebar ) // ff
         {
@@ -1255,35 +1260,13 @@ class Flounder
      */
     setSelectValue( obj, e )
     {
-        console.log( 'value' );
         let refs            = this.refs;
-        let options         = refs.options;
-        let select          = refs.select;
-        let selectedClass   = this.selectedClass;
-        let _addClass       = this.addClass;
-        let _toggleClass    = this.toggleClass;
-        let _multiple       = this.multiple;
-
-        let index, selectedOption;
 
         if ( e ) // click
         {
-            if ( !_multiple || ( _multiple && !this.multipleTags && !e[ this.multiSelect ] ) )
-            {
-                this.removeSelectedClass( options );
-                this.removeSelectedValue( options );
-            }
-            let target              = e.target;
-
-            _toggleClass( target, selectedClass );
-            index                   = target.getAttribute( 'data-index' );
-
-            selectedOption          = refs.selectOptions[ index ];
-
-            selectedOption.selected = selectedOption.selected === true ? false : true;
-            selectedOption          = this.getSelectedOptions( select );
+            this.setSelectValueClick( e );
         }
-        else // button press
+        else // keypress
         {
             if ( this.multipleTags )
             {
@@ -1293,19 +1276,7 @@ class Flounder
                 return false;
             }
 
-            this.removeSelectedClass( options );
-
-            let optionsArray    = this.getSelectedOptions( select );
-            let baseOption      = optionsArray[ 0 ];
-
-            if ( baseOption )
-            {
-                selectedOption  = options[ baseOption.index ];
-
-                _addClass( selectedOption, selectedClass );
-
-                this.scrollTo( selectedOption );
-            }
+            this.setSelectValueButton( obj );
         }
 
         this.displaySelected( refs.selected, refs );
@@ -1314,6 +1285,70 @@ class Flounder
         {
             this.selectFunc( e );
         }
+    }
+
+
+    /**
+     * ## setSelectValueButton
+     *
+     * processes the setting of a value after a keypress event
+     *
+     * @return _Void_
+     */
+    setSelectValueButton()
+    {
+        let refs            = this.refs;
+        let options         = refs.options;
+        let select          = refs.select;
+        let selectedClass   = this.selectedClass;
+
+        let selectedOption;
+
+        this.removeSelectedClass( options );
+
+        let optionsArray    = this.getSelectedOptions( select );
+        let baseOption      = optionsArray[ 0 ];
+
+        if ( baseOption )
+        {
+            selectedOption  = options[ baseOption.index ];
+
+            this.addClass( selectedOption, selectedClass );
+
+            this.scrollTo( selectedOption );
+        }
+    }
+
+    /**
+     * ## setSelectValueClick
+     *
+     * processes the setting of a value after a click event
+     *
+     * @param {Object} e event object
+     *
+     * @return _Void_
+     */
+    setSelectValueClick( e )
+    {
+        let _multiple       = this.multiple;
+        let refs            = this.refs;
+        let options         = refs.options;
+        let selectedClass   = this.selectedClass;
+        let index, selectedOption;
+
+        if ( !_multiple || ( _multiple && !this.multipleTags && !e[ this.multiSelect ] ) )
+        {
+            this.removeSelectedClass( options );
+            this.removeSelectedValue( options );
+        }
+        let target              = e.target;
+
+        this.toggleClass( target, selectedClass );
+        index                   = target.getAttribute( 'data-index' );
+
+        selectedOption          = refs.selectOptions[ index ];
+
+        selectedOption.selected = selectedOption.selected === true ? false : true;
     }
 
 
@@ -1433,11 +1468,8 @@ class Flounder
             if ( this.props.search )
             {
                 this.fuzzySearchReset();
-                refs.search.blur();
             }
 
-            optionsList.blur();
-            refs.optionsList.blur();
             refs.flounder.focus();
 
             if ( this.closeFunc )
@@ -1447,6 +1479,7 @@ class Flounder
         }
     }
 }
+
 
 if ( window )
 {
