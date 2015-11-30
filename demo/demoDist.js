@@ -45,7 +45,7 @@ var options = [{
 new _srcReactFlounderJsx.Flounder(document.getElementById('vanilla--input--tags'), {
     _default: 'placeholders!',
 
-    init: function init() {
+    onInit: function onInit() {
         var res = [];
         options.forEach(function (option) {
             res.push({
@@ -66,7 +66,7 @@ new _srcReactFlounderJsx.Flounder(document.getElementById('vanilla--input--tags'
 new _srcReactFlounderJsx.Flounder(document.getElementById('vanilla--input'), {
     _default: 2,
 
-    init: function init() {
+    onInit: function onInit() {
         var res = [];
         options.forEach(function (option) {
             res.push({
@@ -96,7 +96,7 @@ new _srcReactFlounderJsx.Flounder(document.getElementById('vanilla--select'), {
 new _srcReactFlounderJsx.Flounder(document.getElementById('vanilla--multiple--desc'), {
     _default: 'placeholders!',
 
-    init: function init() {
+    onInit: function onInit() {
         var res = [];
         options.forEach(function (option) {
             res.push({
@@ -119,7 +119,7 @@ new _srcReactFlounderJsx.Flounder(document.getElementById('vanilla--multiple--de
 _srcReactFlounderJsx.ReactDOM.render(_srcReactFlounderJsx.React.createElement(_srcReactFlounderJsx.FlounderReact, {
     _default: 'placeholders!',
 
-    init: function init() {
+    onInit: function onInit() {
         var res = [];
         options.forEach(function (option) {
             res.push({
@@ -139,7 +139,7 @@ _srcReactFlounderJsx.ReactDOM.render(_srcReactFlounderJsx.React.createElement(_s
 
     multiple: true,
 
-    init: function init() {
+    onInit: function onInit() {
         var res = [];
         options.forEach(function (option) {
             res.push({
@@ -161,7 +161,7 @@ _srcReactFlounderJsx.ReactDOM.render(_srcReactFlounderJsx.React.createElement(_s
 
     multipleTags: false,
 
-    init: function init() {
+    onInit: function onInit() {
         var res = [];
         options.forEach(function (option) {
             res.push({
@@ -183,7 +183,7 @@ _srcReactFlounderJsx.ReactDOM.render(_srcReactFlounderJsx.React.createElement(_s
 
     multipleTags: false,
 
-    init: function init() {
+    onInit: function onInit() {
         var res = [];
         options.forEach(function (option) {
             res.push({
@@ -19962,12 +19962,12 @@ var Flounder = (function () {
         value: function initialzeOptions() {
             this.props = this.props || {};
             var props = this.props;
-            this.initFunc = props.init !== undefined ? props.init : false;
-            this.openFunc = props.open !== undefined ? props.open : false;
-            this.selectFunc = props.select !== undefined ? props.select : false;
-            this.cancelFunc = props.cancel !== undefined ? props.cancel : false;
-            this.closeFunc = props.close !== undefined ? props.close : false;
-            this.componentDidMountFunc = props.componentDidMount !== undefined ? props.componentDidMount : false;
+            this.initFunc = props.onInit !== undefined ? props.onInit : false;
+            this.openFunc = props.onOpen !== undefined ? props.onOpen : false;
+            this.selectFunc = props.onSelect !== undefined ? props.onSelect : false;
+            this.cancelFunc = props.onCancel !== undefined ? props.onCancel : false;
+            this.closeFunc = props.onClose !== undefined ? props.onClose : false;
+            this.componentDidMountFunc = props.onComponentDidMount !== undefined ? props.onComponentDidMount : false;
             this.multiple = props.multiple !== undefined ? props.multiple : false;
             this.multipleTags = props.multipleTags !== undefined ? props.multipleTags : true;
 

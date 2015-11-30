@@ -1,5 +1,5 @@
-Flounder.js
-===========
+Flounder.js 0.1.0
+=================
 
 Flounder is a styled select box replacement aimed at being easily configurable while conforming to native functionality and accessibility standards.
 
@@ -35,20 +35,20 @@ React.render( <FlounderReact option1="" option2="">, target );
 ```
 {
     _default            : defaultValue,
-    cancel              : function( e ){},
     className           : 'extra--class',
-    close               : function( e ){},
-    componentDidMount   : function(){},
     hiddenClass         : 'class--to--denote--hidden',
-    init                : function(){},
     multiple            : false,
     multipleTags        : true,
     multipleMessage     : '(Multiple Items Selected)',
-    open                : function( e ){},
+    onCancel            : function( e ){},
+    onClose             : function( e ){},
+    onComponentDidMount : function(){},
+    onInit              : function(){},
+    onOpen              : function( e ){},
+    onSelect            : function( e ){}
     options             : dataObject,
     search              : true,
-    selectedClass       : 'class-to-denote-selected-option',
-    select              : function( e ){}
+    selectedClass       : 'class-to-denote-selected-option'
 }
 ```
 
@@ -120,9 +120,9 @@ flounder can be attached to basically anything
 ```
 
     new flounder( document.getElementById( 'example' ), {
-        default             : 'placeholders!',
+        _default            : 'placeholders!',
 
-        init                : function()
+        onInit              : function()
         {
             var res = [];
             options.forEach( function( option )
@@ -147,11 +147,11 @@ react flounder can only be attached to container elements (div, span, etc)
 ```
 
     ReactDOM.render( React.createElement( FlounderReact, {
-        _default             : 'placeholders!',
+        _default            : 'placeholders!',
 
         multiple            : true,
 
-        init                : function()
+        onInit              : function()
         {
             var res = [];
             options.forEach( function( option )
@@ -177,3 +177,11 @@ The result of either of these is shown here (only styled with the structural css
 ![1 selected](https://d1ro8r1rbfn3jf.cloudfront.net/ms_16133/mL3upXVlwnB4pkC4jN5QCE4ZIdiQ8F/Flounder%2Bdemo%2B2015-11-23%2B23-26-57.jpg?Expires=1448404020&Signature=bWFxIgxc-0DQWqSAWXCNzGI5R9LiCho7EfuHgUp0wheeDl85cui3OcnOcw~HSYR6sSJ6XcQPHeVE5FAet1suEFR2q0fe9p--tuq8G9T0wK0Mp6fLYi49OGs6mTftFzQy3zgUVlPKY58nIejzAl6N-fT67NjUqKBhfUltjssc-OZvD3TZf7nAS0erQwuiM5QH6y9sFscavZWHDrsV1ReXkYqMbRXtbykM~JNPP-2Pr9ZvRwpcA7wdFpTpIF4OH0SsR-hem-xnnZ1ZHvJELARqzp2Q6OLWapRdaHHg~9OTnIDY7~lbz-2XcmrP6wMLJqZ6bqVuoWfCdtLk8VK6xQdIEg__&Key-Pair-Id=APKAJHEJJBIZWFB73RSA)
 
 See more examples on the [demo page](./demo/index.html)
+
+Change Log
+==========
+
+0.1.0
+-----
+
++ all callback functions all start with `on` for clarity (`init becomes `onInit`)

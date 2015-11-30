@@ -788,12 +788,12 @@ class Flounder
     {
         this.props                  = this.props || {};
         let props                   = this.props;
-        this.initFunc               = props.init                !== undefined ? props.init            : false;
-        this.openFunc               = props.open                !== undefined ? props.open            : false;
-        this.selectFunc             = props.select              !== undefined ? props.select          : false;
-        this.cancelFunc             = props.cancel              !== undefined ? props.cancel          : false;
-        this.closeFunc              = props.close               !== undefined ? props.close           : false;
-        this.componentDidMountFunc  = props.componentDidMount   !== undefined ? props.componentDidMount : false;
+        this.initFunc               = props.onInit              !== undefined ? props.onInit            : false;
+        this.openFunc               = props.onOpen              !== undefined ? props.onOpen            : false;
+        this.selectFunc             = props.onSelect            !== undefined ? props.onSelect          : false;
+        this.cancelFunc             = props.onCancel            !== undefined ? props.onCancel          : false;
+        this.closeFunc              = props.onClose             !== undefined ? props.onClose           : false;
+        this.componentDidMountFunc  = props.onComponentDidMount !== undefined ? props.onComponentDidMount : false;
         this.multiple               = props.multiple            !== undefined ? props.multiple        : false;
         this.multipleTags           = props.multipleTags        !== undefined ? props.multipleTags    : true;
 

@@ -44,7 +44,7 @@ var options = [
 new Flounder( document.getElementById( 'vanilla--input--tags' ), {
     _default             : 'placeholders!',
 
-    init                : function()
+    onInit               : function()
     {
         var res = [];
         options.forEach( function( option )
@@ -68,7 +68,7 @@ new Flounder( document.getElementById( 'vanilla--input--tags' ), {
 new Flounder( document.getElementById( 'vanilla--input' ), {
     _default             : 2,
 
-    init                : function()
+    onInit               : function()
     {
         var res = [];
         options.forEach( function( option )
@@ -102,7 +102,7 @@ new Flounder( document.getElementById( 'vanilla--select' ), {
 new Flounder( document.getElementById( 'vanilla--multiple--desc' ), {
     _default             : 'placeholders!',
 
-    init                : function()
+    onInit               : function()
     {
         var res = [];
         options.forEach( function( option )
@@ -128,7 +128,7 @@ new Flounder( document.getElementById( 'vanilla--multiple--desc' ), {
 ReactDOM.render( React.createElement( FlounderReact, {
     _default             : 'placeholders!',
 
-    init                : function()
+    onInit               : function()
     {
         var res = [];
         options.forEach( function( option )
@@ -148,11 +148,11 @@ ReactDOM.render( React.createElement( FlounderReact, {
  * react amulti-Flounder with tags attached to an div
  */
 ReactDOM.render( React.createElement( FlounderReact, {
-    _default             : 'placeholders!',
+    _default            : 'placeholders!',
 
     multiple            : true,
 
-    init                : function()
+    onInit              : function()
     {
         var res = [];
         options.forEach( function( option )
@@ -172,13 +172,13 @@ ReactDOM.render( React.createElement( FlounderReact, {
  * react amulti-Flounder without tags attached to an div
  */
 ReactDOM.render( React.createElement( FlounderReact, {
-    _default             : 'placeholders!',
+    _default            : 'placeholders!',
 
     multiple            : true,
 
     multipleTags        : false,
 
-    init                : function()
+    onInit              : function()
     {
         var res = [];
         options.forEach( function( option )
@@ -198,13 +198,13 @@ ReactDOM.render( React.createElement( FlounderReact, {
  * react amulti-Flounder with description attached to div
  */
 ReactDOM.render( React.createElement( FlounderReact, {
-    _default             : 'placeholders!',
+    _default            : 'placeholders!',
 
     multiple            : true,
 
     multipleTags        : false,
 
-    init                : function()
+    onInit              : function()
     {
         var res = [];
         options.forEach( function( option )
