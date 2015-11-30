@@ -19387,6 +19387,7 @@ var Flounder = (function () {
 
             var select = this.initSelectBox(wrapper);
             select.tabIndex = -1;
+
             if (this.multiple === true) {
                 select.setAttribute('multiple', '');
             }
