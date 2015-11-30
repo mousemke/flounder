@@ -19179,7 +19179,7 @@ var Flounder = (function () {
 
             var wrapper = constructElement({ className: 'flounder-wrapper  flounder__input--select' });
 
-            var flounderClass = 'flounder' + (this.props.className ? '  ' + this.props.className : '');
+            var flounderClass = 'flounder' + this.containerClass;
             var flounder = constructElement({ className: flounderClass });
             flounder.tabIndex = 0;
             wrapper.appendChild(flounder);
@@ -19774,11 +19774,13 @@ var Flounder = (function () {
                 this.multipleTags = false;
             }
 
+            this.containerClass = props['class'] && props['class'].container !== undefined ? ' ' + props['class'].container : '';
+            this.hiddenClass = props['class'] && props['class'].hidden !== undefined ? props['class'].hidden : 'flounder--hidden';
+            this.selectedClass = props['class'] && props['class'].selected !== undefined ? props['class'].selected : 'flounder__option--selected';
+
             this.multipleMessage = props.multipleMessage !== undefined ? props.multipleMessage : '(Multiple Items Selected)';
-            this.hiddenClass = props.hiddenClass !== undefined ? props.hiddenClass : 'flounder--hidden';
             this.defaultTextIndent = props.defaultTextIndent !== undefined ? props.defaultTextIndent : 0;
             this.options = props.options !== undefined ? props.options : [];
-            this.selectedClass = props.selectedClass !== undefined ? props.selectedClass : 'flounder__option--selected';
 
             if (this.multipleTags) {
                 this.selectedClass += '  flounder__option--selected--hidden';
@@ -20598,6 +20600,7 @@ var FlounderReact = (function (_Component) {
             var handleChange = this.handleChange.bind(this);
             var multiple = props.multiple;
             var _default = this._default = this.setDefaultOption(props._default || this._default, options);
+            var containerClass = this.containerClass;
 
             var _stateModifier = this.state.modifier;
             _stateModifier = _stateModifier.length > 0 ? '--' + _stateModifier : '';
@@ -20607,7 +20610,7 @@ var FlounderReact = (function (_Component) {
                 { ref: 'wrapper', className: 'flounder-wrapper  flounder__input--select' },
                 _react2['default'].createElement(
                     'div',
-                    { ref: 'flounder', tabIndex: '0', className: 'flounder' + (props.className ? '  ' + props.className : '') },
+                    { ref: 'flounder', tabIndex: '0', className: 'flounder' + containerClass },
                     _react2['default'].createElement(
                         'div',
                         { ref: 'selected', className: 'flounder__option--selected--displayed', 'data-value': _default.value },

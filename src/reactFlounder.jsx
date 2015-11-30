@@ -150,13 +150,14 @@ class FlounderReact extends Component
         let handleChange    = this.handleChange.bind( this );
         let multiple        = props.multiple;
         let _default        = this._default = this.setDefaultOption( props._default || this._default, options );
+        let containerClass  = this.containerClass;
 
         let _stateModifier  = this.state.modifier;
         _stateModifier = _stateModifier.length > 0 ? '--' + _stateModifier : '';
 
         return (
             <div ref="wrapper" className="flounder-wrapper  flounder__input--select">
-                <div ref="flounder" tabIndex="0" className={'flounder' + ( props.className ? '  ' + props.className : '' )}>
+                <div ref="flounder" tabIndex="0" className={'flounder' + containerClass}>
                     <div ref="selected" className="flounder__option--selected--displayed" data-value={_default.value}>
                         {_default.text}
                     </div>

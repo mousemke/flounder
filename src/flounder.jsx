@@ -160,7 +160,7 @@ class Flounder
 
         let wrapper             = constructElement( { className : 'flounder-wrapper  flounder__input--select' } );
 
-        let flounderClass       = 'flounder' + ( this.props.className ? '  ' + this.props.className : '' );
+        let flounderClass       = 'flounder' + this.containerClass;
         let flounder            = constructElement( { className : flounderClass } );
         flounder.tabIndex       = 0;
         wrapper.appendChild( flounder );
@@ -226,10 +226,10 @@ class Flounder
      */
     buildOptions( _default, _options, optionsList, select )
     {
-        let options             = [];
-        let selectOptions       = [];
-        let constructElement    = this.constructElement;
-        let addOptionDescription      = this.addOptionDescription;
+        let options                 = [];
+        let selectOptions           = [];
+        let constructElement        = this.constructElement;
+        let addOptionDescription    = this.addOptionDescription;
 
         _options.forEach( ( _option, i ) =>
         {
@@ -802,11 +802,13 @@ class Flounder
             this.multipleTags = false;
         }
 
+        this.containerClass         = props.class && props.class.container  !== undefined ? ' ' + props.class.container   : '';
+        this.hiddenClass            = props.class && props.class.hidden     !== undefined ? props.class.hidden      : 'flounder--hidden';
+        this.selectedClass          = props.class && props.class.selected   !== undefined ? props.class.selected    : 'flounder__option--selected';
+
         this.multipleMessage        = props.multipleMessage     !== undefined ? props.multipleMessage : '(Multiple Items Selected)';
-        this.hiddenClass            = props.hiddenClass         !== undefined ? props.hiddenClass     : 'flounder--hidden';
         this.defaultTextIndent      = props.defaultTextIndent   !== undefined ? props.defaultTextIndent : 0;
         this.options                = props.options             !== undefined ? props.options         : [];
-        this.selectedClass          = props.selectedClass       !== undefined ? props.selectedClass     : 'flounder__option--selected';
 
         if ( this.multipleTags )
         {

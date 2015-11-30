@@ -35,8 +35,11 @@ React.render( <FlounderReact option1="" option2="">, target );
 ```
 {
     _default            : defaultValue,
-    className           : 'extra--class',
-    hiddenClass         : 'class--to--denote--hidden',
+    classes             : {
+        container       : 'extra--class',
+        hidden          : 'class--to--denote--hidden',
+        selected        : 'class-to-denote-selected-option'
+    },
     multiple            : false,
     multipleTags        : true,
     multipleMessage     : '(Multiple Items Selected)',
@@ -47,8 +50,7 @@ React.render( <FlounderReact option1="" option2="">, target );
     onOpen              : function( e ){},
     onSelect            : function( e ){}
     options             : dataObject,
-    search              : true,
-    selectedClass       : 'class-to-denote-selected-option'
+    search              : true
 }
 ```
 
