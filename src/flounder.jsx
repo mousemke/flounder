@@ -1285,7 +1285,6 @@ class Flounder
 
         if ( this.selectFunc )
         {
-            console.log( e || obj );
             this.selectFunc( e || obj );
         }
     }
