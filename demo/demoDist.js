@@ -20428,7 +20428,6 @@ var Flounder = (function () {
             this.displaySelected(refs.selected, refs);
 
             if (this.selectFunc) {
-                console.log(e || obj);
                 this.selectFunc(e || obj);
             }
         }
