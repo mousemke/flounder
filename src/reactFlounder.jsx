@@ -255,6 +255,8 @@ FlounderReact.prototype.setDefaultOption        = Flounder.prototype.setDefaultO
 FlounderReact.prototype.setPlatform             = Flounder.prototype.setPlatform;
 FlounderReact.prototype.setTextMultiTagIndent   = Flounder.prototype.setTextMultiTagIndent;
 FlounderReact.prototype.showElement             = Flounder.prototype.showElement;
+FlounderReact.prototype.toggleClosed            = Flounder.prototype.toggleClosed;
+FlounderReact.prototype.toggleOpen              = Flounder.prototype.toggleOpen;
 
 
 if ( window )

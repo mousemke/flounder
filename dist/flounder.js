@@ -1357,62 +1357,93 @@ var Flounder = (function () {
             var refs = this.refs;
             var optionsList = refs.optionsListWrapper;
             var wrapper = refs.wrapper;
-            var isIos = this.isIos;
 
             if (force === 'open' || force !== 'close' && optionsList.className.indexOf('flounder--hidden') !== -1) {
-                this.addSelectKeyListener();
-
-                if (!isIos || this.multipleTags === true && this.multiple === true) {
-                    this.showElement(optionsList);
-                    this.addClass(wrapper, 'open');
-
-                    document.querySelector('html').addEventListener('click', this.catchBodyClick);
-                    document.querySelector('html').addEventListener('touchend', this.catchBodyClick);
-                }
-
-                if (!this.multiple) {
-                    var index = refs.select.selectedIndex;
-                    var selectedDiv = refs.options[index];
-
-                    if (selectedDiv) {
-                        this.scrollTo(selectedDiv);
-                    }
-                }
-
-                if (this.props.search) {
-                    refs.search.focus();
-                }
-
-                if (this.openFunc) {
-                    this.openFunc(e);
-                }
+                this.toggleOpen(e, optionsList, refs, wrapper);
             } else if (force === 'close' || optionsList.className.indexOf('flounder--hidden') === -1) {
-                this.hideElement(optionsList);
-                this.removeSelectKeyListener();
-                this.removeClass(wrapper, 'open');
+                this.toggleClosed(e, optionsList, refs, wrapper);
+            }
+        }
 
-                document.querySelector('html').removeEventListener('click', this.catchBodyClick);
-                document.querySelector('html').removeEventListener('touchend', this.catchBodyClick);
+        /**
+         * ## toggleOpen
+         *
+         * post toggleList, this runs it the list should be opened
+         *
+         * @param {Object} e event object
+         * @param {DOMElement} optionsList the options list
+         * @param {Object} refs contains the references of the elements in flounder
+         * @param {DOMElement} wrapper wrapper of flounder
+         *
+         * @return _Void_
+         */
+    }, {
+        key: 'toggleOpen',
+        value: function toggleOpen(e, optionsList, refs, wrapper) {
+            this.addSelectKeyListener();
 
-                if (this.props.search) {
-                    this.fuzzySearchReset();
+            if (!this.isIos || this.multipleTags === true && this.multiple === true) {
+                this.showElement(optionsList);
+                this.addClass(wrapper, 'open');
+
+                document.querySelector('html').addEventListener('click', this.catchBodyClick);
+                document.querySelector('html').addEventListener('touchend', this.catchBodyClick);
+            }
+
+            if (!this.multiple) {
+                var index = refs.select.selectedIndex;
+                var selectedDiv = refs.options[index];
+
+                if (selectedDiv) {
+                    this.scrollTo(selectedDiv);
                 }
+            }
 
-                refs.flounder.focus();
+            if (this.props.search) {
+                refs.search.focus();
+            }
 
-                if (this.closeFunc) {
-                    this.closeFunc(e);
-                }
+            if (this.openFunc) {
+                this.openFunc(e);
+            }
+        }
+
+        /**
+         * ## toggleClosed
+         *
+         * post toggleList, this runs it the list should be closed
+         *
+         * @param {Object} e event object
+         * @param {DOMElement} optionsList the options list
+         * @param {Object} refs contains the references of the elements in flounder
+         * @param {DOMElement} wrapper wrapper of flounder
+         *
+         * @return _Void_
+         */
+    }, {
+        key: 'toggleClosed',
+        value: function toggleClosed(e, optionsList, refs, wrapper) {
+            this.hideElement(optionsList);
+            this.removeSelectKeyListener();
+            this.removeClass(wrapper, 'open');
+
+            document.querySelector('html').removeEventListener('click', this.catchBodyClick);
+            document.querySelector('html').removeEventListener('touchend', this.catchBodyClick);
+
+            if (this.props.search) {
+                this.fuzzySearchReset();
+            }
+
+            refs.flounder.focus();
+
+            if (this.closeFunc) {
+                this.closeFunc(e);
             }
         }
     }]);
 
     return Flounder;
 })();
-
-if (window) {
-    window.Flounder = Flounder;
-}
 
 exports['default'] = Flounder;
 module.exports = exports['default'];

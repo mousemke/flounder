@@ -1433,71 +1433,100 @@ class Flounder
         let refs        = this.refs;
         let optionsList = refs.optionsListWrapper;
         let wrapper     = refs.wrapper;
-        let isIos       = this.isIos
 
         if ( force === 'open' || force !== 'close' && optionsList.className.indexOf( 'flounder--hidden' ) !== -1 )
         {
-            this.addSelectKeyListener();
-
-            if ( !isIos || ( this.multipleTags === true && this.multiple === true ) )
-            {
-                this.showElement( optionsList );
-                this.addClass( wrapper, 'open' );
-
-                document.querySelector( 'html' ).addEventListener( 'click', this.catchBodyClick );
-                document.querySelector( 'html' ).addEventListener( 'touchend', this.catchBodyClick );
-            }
-
-
-            if ( !this.multiple )
-            {
-                let index       = refs.select.selectedIndex;
-                let selectedDiv = refs.options[ index ];
-
-                if ( selectedDiv )
-                {
-                    this.scrollTo( selectedDiv  );
-                }
-            }
-
-            if ( this.props.search )
-            {
-                refs.search.focus();
-            }
-
-            if ( this.openFunc )
-            {
-                this.openFunc( e );
-            }
+            this.toggleOpen( e, optionsList, refs, wrapper );
         }
         else if ( force === 'close' || optionsList.className.indexOf( 'flounder--hidden' ) === -1 )
         {
-            this.hideElement( optionsList );
-            this.removeSelectKeyListener();
-            this.removeClass( wrapper, 'open' );
-
-            document.querySelector( 'html' ).removeEventListener( 'click', this.catchBodyClick );
-            document.querySelector( 'html' ).removeEventListener( 'touchend', this.catchBodyClick );
-
-            if ( this.props.search )
-            {
-                this.fuzzySearchReset();
-            }
-
-            refs.flounder.focus();
-
-            if ( this.closeFunc )
-            {
-                this.closeFunc( e );
-            }
+            this.toggleClosed( e, optionsList, refs, wrapper );
         }
     }
-}
 
 
-if ( window )
-{
-    window.Flounder = Flounder;
+    /**
+     * ## toggleOpen
+     *
+     * post toggleList, this runs it the list should be opened
+     *
+     * @param {Object} e event object
+     * @param {DOMElement} optionsList the options list
+     * @param {Object} refs contains the references of the elements in flounder
+     * @param {DOMElement} wrapper wrapper of flounder
+     *
+     * @return _Void_
+     */
+    toggleOpen( e, optionsList, refs, wrapper )
+    {
+        this.addSelectKeyListener();
+
+        if ( !this.isIos || ( this.multipleTags === true && this.multiple === true ) )
+        {
+            this.showElement( optionsList );
+            this.addClass( wrapper, 'open' );
+
+            document.querySelector( 'html' ).addEventListener( 'click', this.catchBodyClick );
+            document.querySelector( 'html' ).addEventListener( 'touchend', this.catchBodyClick );
+        }
+
+
+        if ( !this.multiple )
+        {
+            let index       = refs.select.selectedIndex;
+            let selectedDiv = refs.options[ index ];
+
+            if ( selectedDiv )
+            {
+                this.scrollTo( selectedDiv  );
+            }
+        }
+
+        if ( this.props.search )
+        {
+            refs.search.focus();
+        }
+
+        if ( this.openFunc )
+        {
+            this.openFunc( e );
+        }
+    }
+
+
+    /**
+     * ## toggleClosed
+     *
+     * post toggleList, this runs it the list should be closed
+     *
+     * @param {Object} e event object
+     * @param {DOMElement} optionsList the options list
+     * @param {Object} refs contains the references of the elements in flounder
+     * @param {DOMElement} wrapper wrapper of flounder
+     *
+     * @return _Void_
+     */
+    toggleClosed( e, optionsList, refs, wrapper )
+    {
+        this.hideElement( optionsList );
+        this.removeSelectKeyListener();
+        this.removeClass( wrapper, 'open' );
+
+        document.querySelector( 'html' ).removeEventListener( 'click', this.catchBodyClick );
+        document.querySelector( 'html' ).removeEventListener( 'touchend', this.catchBodyClick );
+
+        if ( this.props.search )
+        {
+            this.fuzzySearchReset();
+        }
+
+        refs.flounder.focus();
+
+        if ( this.closeFunc )
+        {
+            this.closeFunc( e );
+        }
+    }
 }
 
 export default Flounder;
