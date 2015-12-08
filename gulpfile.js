@@ -31,7 +31,16 @@ gulp.task( 'react', function()
 } );
 
 
+gulp.task( 'common', function()
+{
+    browserify( './src/commonFlounder.jsx' )
+        .transform( babelify, { stage : 0 } )
+        .bundle()
+        .pipe( fs.createWriteStream( __dirname + '/dist/commonFlounder.js' ) );
+} );
+
+
 gulp.task( 'default', [], function()
 {
-    gulp.start( [ 'vanilla', 'react', 'demo' ] );
+    gulp.start( [ 'vanilla', 'react', 'common',  'demo' ] );
 } );

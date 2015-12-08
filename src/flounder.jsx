@@ -466,7 +466,7 @@ class Flounder
         if ( target && target.length !== 0 )
         {
             this.props  = props;
-            target      = target.jquery ? target[0] : target;
+            target      = target.jquery || target.isMicrobe ? target[0] : target;
             target      = target.nodeType === 1 ? target : document.querySelector( target );
 
             if ( target.tagName === 'INPUT' )
@@ -534,7 +534,7 @@ class Flounder
      */
     displayMultipleTags( selectedOptions, multiTagWrapper )
     {
-        let _span, _a, refs = this.refs;
+        let _span, _a;
 
         let removeMultiTag = this.removeMultiTag
 
@@ -1285,7 +1285,8 @@ class Flounder
 
         if ( this.selectFunc )
         {
-            this.selectFunc( e );
+            console.log( e || obj );
+            this.selectFunc( e || obj );
         }
     }
 
@@ -1446,6 +1447,18 @@ class Flounder
 
                 document.querySelector( 'html' ).addEventListener( 'click', this.catchBodyClick );
                 document.querySelector( 'html' ).addEventListener( 'touchend', this.catchBodyClick );
+            }
+
+
+            if ( !this.multiple )
+            {
+                let index       = refs.select.selectedIndex;
+                let selectedDiv = refs.options[ index ];
+
+                if ( selectedDiv )
+                {
+                    this.scrollTo( selectedDiv  );
+                }
             }
 
             if ( this.props.search )

@@ -3,6 +3,21 @@
 /* jshint globalstrict: true */
 'use strict';
 
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _flounderJsx = require('./flounder.jsx');
+
+var _flounderJsx2 = _interopRequireDefault(_flounderJsx);
+
+define(function (require) {
+    return _flounderJsx2['default'];
+});
+
+},{"./flounder.jsx":2}],2:[function(require,module,exports){
+
+/* jshint globalstrict: true */
+'use strict';
+
 Object.defineProperty(exports, '__esModule', {
     value: true
 });

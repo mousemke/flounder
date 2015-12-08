@@ -1,4 +1,4 @@
-Flounder.js 0.1.0
+Flounder.js 0.1.3
 =================
 
 Flounder is a styled select box replacement aimed at being easily configurable while conforming to native functionality and accessibility standards.
@@ -182,6 +182,13 @@ See more examples on the [demo page](./demo/index.html)
 
 Change Log
 ==========
+
+0.1.3
+-----
+
++ fresh opening a menu now scrolls to selected (non-multiple)
++ events in setValue are now normalized
+
 
 0.1.0
 -----
