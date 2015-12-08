@@ -214,6 +214,7 @@ class FlounderReact extends Component
 }
 
 
+// these get rebound to this
 FlounderReact.prototype.bindThis                = Flounder.prototype.bindThis;
 FlounderReact.prototype.catchBodyClick          = Flounder.prototype.catchBodyClick;
 FlounderReact.prototype.checkClickTarget        = Flounder.prototype.checkClickTarget;
@@ -230,6 +231,8 @@ FlounderReact.prototype.setSelectValueClick     = Flounder.prototype.setSelectVa
 FlounderReact.prototype.toggleClass             = Flounder.prototype.toggleClass;
 FlounderReact.prototype.toggleList              = Flounder.prototype.toggleList;
 
+
+// just your every day, run of the mill functions
 FlounderReact.prototype.addClass                = Flounder.prototype.addClass;
 FlounderReact.prototype.addSearch               = Flounder.prototype.addSearch;
 FlounderReact.prototype.addSelectKeyListener    = Flounder.prototype.addSelectKeyListener;
@@ -257,12 +260,6 @@ FlounderReact.prototype.setTextMultiTagIndent   = Flounder.prototype.setTextMult
 FlounderReact.prototype.showElement             = Flounder.prototype.showElement;
 FlounderReact.prototype.toggleClosed            = Flounder.prototype.toggleClosed;
 FlounderReact.prototype.toggleOpen              = Flounder.prototype.toggleOpen;
-
-
-if ( window )
-{
-    window.FlounderReact = FlounderReact;
-}
 
 export default { React, Component, ReactDOM, FlounderReact, Flounder };
 

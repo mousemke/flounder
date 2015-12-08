@@ -1,4 +1,4 @@
-Flounder.js 0.1.3
+Flounder.js 0.1.4
 =================
 
 Flounder is a styled select box replacement aimed at being easily configurable while conforming to native functionality and accessibility standards.
@@ -182,6 +182,12 @@ See more examples on the [demo page](./demo/index.html)
 
 Change Log
 ==========
+
+0.1.4
+-----
+
++ flounder now detroys itself properly
+
 
 0.1.3
 -----

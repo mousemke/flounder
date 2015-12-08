@@ -5,12 +5,17 @@ Object.defineProperty(exports, '__esModule', {
     value: true
 });
 
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactDom = require('react-dom');
+
+var _reactDom2 = _interopRequireDefault(_reactDom);
+
 var _srcReactFlounderJsx = require('../src/reactFlounder.jsx');
-
-window.React = _srcReactFlounderJsx.React;
-
-window.Component = _srcReactFlounderJsx.Component;
-window.ReactDOM = _srcReactFlounderJsx.ReactDOM;
 
 /**
  * example options object
@@ -63,7 +68,7 @@ new _srcReactFlounderJsx.Flounder(document.getElementById('vanilla--input--tags'
 /**
  * vanilla Flounder attached to an input
  */
-var a = new _srcReactFlounderJsx.Flounder(document.getElementById('vanilla--input'), {
+new _srcReactFlounderJsx.Flounder(document.getElementById('vanilla--input'), {
     _default: 2,
 
     onInit: function onInit() {
@@ -83,7 +88,6 @@ var a = new _srcReactFlounderJsx.Flounder(document.getElementById('vanilla--inpu
     multipleTags: false
 });
 
-console.log(a, _srcReactFlounderJsx.Flounder, options);
 /**
  * vanilla Flounder attached pre built select box
  */
@@ -117,7 +121,7 @@ new _srcReactFlounderJsx.Flounder(document.getElementById('vanilla--multiple--de
 /**
  * react Flounder attached to a div
  */
-_srcReactFlounderJsx.ReactDOM.render(_srcReactFlounderJsx.React.createElement(_srcReactFlounderJsx.FlounderReact, {
+_reactDom2['default'].render(_react2['default'].createElement(_srcReactFlounderJsx.FlounderReact, {
     _default: 'placeholders!',
 
     onInit: function onInit() {
@@ -135,7 +139,7 @@ _srcReactFlounderJsx.ReactDOM.render(_srcReactFlounderJsx.React.createElement(_s
 /**
  * react amulti-Flounder with tags attached to an div
  */
-_srcReactFlounderJsx.ReactDOM.render(_srcReactFlounderJsx.React.createElement(_srcReactFlounderJsx.FlounderReact, {
+_reactDom2['default'].render(_react2['default'].createElement(_srcReactFlounderJsx.FlounderReact, {
     _default: 'placeholders!',
 
     multiple: true,
@@ -155,7 +159,7 @@ _srcReactFlounderJsx.ReactDOM.render(_srcReactFlounderJsx.React.createElement(_s
 /**
  * react amulti-Flounder without tags attached to an div
  */
-_srcReactFlounderJsx.ReactDOM.render(_srcReactFlounderJsx.React.createElement(_srcReactFlounderJsx.FlounderReact, {
+_reactDom2['default'].render(_react2['default'].createElement(_srcReactFlounderJsx.FlounderReact, {
     _default: 'placeholders!',
 
     multiple: true,
@@ -177,7 +181,7 @@ _srcReactFlounderJsx.ReactDOM.render(_srcReactFlounderJsx.React.createElement(_s
 /**
  * react amulti-Flounder with description attached to div
  */
-_srcReactFlounderJsx.ReactDOM.render(_srcReactFlounderJsx.React.createElement(_srcReactFlounderJsx.FlounderReact, {
+_reactDom2['default'].render(_react2['default'].createElement(_srcReactFlounderJsx.FlounderReact, {
     _default: 'placeholders!',
 
     multiple: true,
@@ -197,10 +201,10 @@ _srcReactFlounderJsx.ReactDOM.render(_srcReactFlounderJsx.React.createElement(_s
         this.options = res;
     } }), document.getElementById('react--multiple--desc'));
 
-exports['default'] = { React: _srcReactFlounderJsx.React, Component: _srcReactFlounderJsx.Component, ReactDOM: _srcReactFlounderJsx.ReactDOM, FlounderReact: _srcReactFlounderJsx.FlounderReact, Flounder: _srcReactFlounderJsx.Flounder };
+exports['default'] = { React: _react2['default'], Component: _react.Component, ReactDOM: _reactDom2['default'], FlounderReact: _srcReactFlounderJsx.FlounderReact, Flounder: _srcReactFlounderJsx.Flounder };
 module.exports = exports['default'];
 
-},{"../src/reactFlounder.jsx":161}],2:[function(require,module,exports){
+},{"../src/reactFlounder.jsx":161,"react":159,"react-dom":3}],2:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -19702,7 +19706,7 @@ var Flounder = (function () {
             }
 
             this.refs.select.flounder = this.refs.selected.flounder = this.target.flounder = this;
-            console.log(this);
+
             return this;
         }
     }
@@ -20780,6 +20784,8 @@ var FlounderReact = (function (_Component) {
         };
     }
 
+    // these get rebound to this
+
     /**
      * Callback to handle change.
      *
@@ -20941,6 +20947,7 @@ FlounderReact.prototype.setSelectValueClick = _flounderJsx2['default'].prototype
 FlounderReact.prototype.toggleClass = _flounderJsx2['default'].prototype.toggleClass;
 FlounderReact.prototype.toggleList = _flounderJsx2['default'].prototype.toggleList;
 
+// just your every day, run of the mill functions
 FlounderReact.prototype.addClass = _flounderJsx2['default'].prototype.addClass;
 FlounderReact.prototype.addSearch = _flounderJsx2['default'].prototype.addSearch;
 FlounderReact.prototype.addSelectKeyListener = _flounderJsx2['default'].prototype.addSelectKeyListener;
@@ -20968,10 +20975,6 @@ FlounderReact.prototype.setTextMultiTagIndent = _flounderJsx2['default'].prototy
 FlounderReact.prototype.showElement = _flounderJsx2['default'].prototype.showElement;
 FlounderReact.prototype.toggleClosed = _flounderJsx2['default'].prototype.toggleClosed;
 FlounderReact.prototype.toggleOpen = _flounderJsx2['default'].prototype.toggleOpen;
-
-if (window) {
-    window.FlounderReact = FlounderReact;
-}
 
 exports['default'] = { React: _react2['default'], Component: _react.Component, ReactDOM: _reactDom2['default'], FlounderReact: FlounderReact, Flounder: _flounderJsx2['default'] };
 module.exports = exports['default'];

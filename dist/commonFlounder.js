@@ -500,7 +500,7 @@ var Flounder = (function () {
             }
 
             this.refs.select.flounder = this.refs.selected.flounder = this.target.flounder = this;
-            console.log(this);
+
             return this;
         }
     }

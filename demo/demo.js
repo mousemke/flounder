@@ -1,9 +1,6 @@
-import { React, Component, ReactDOM, FlounderReact, Flounder } from '../src/reactFlounder.jsx';
-
-window.React        = React;
-
-window.Component    = Component;
-window.ReactDOM     = ReactDOM;
+import React, { Component }             from 'react';
+import ReactDOM                         from 'react-dom';
+import { FlounderReact, Flounder }      from '../src/reactFlounder.jsx';
 
 /**
  * example options object
@@ -65,7 +62,7 @@ new Flounder( document.getElementById( 'vanilla--input--tags' ), {
 /**
  * vanilla Flounder attached to an input
  */
-var a = new Flounder( document.getElementById( 'vanilla--input' ), {
+new Flounder( document.getElementById( 'vanilla--input' ), {
     _default             : 2,
 
     onInit               : function()
@@ -87,7 +84,7 @@ var a = new Flounder( document.getElementById( 'vanilla--input' ), {
     multipleTags        : false
 } );
 
-console.log( a, Flounder, options );
+
 /**
  * vanilla Flounder attached pre built select box
  */
