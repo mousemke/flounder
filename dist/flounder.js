@@ -456,6 +456,8 @@ var Flounder = (function () {
             target = target.jquery || target.isMicrobe ? target[0] : target;
             target = target.nodeType === 1 ? target : document.querySelector(target);
 
+            this.originalTarget = target;
+
             if (target.tagName === 'INPUT') {
                 this.addClass(target, 'flounder--hidden');
                 target.tabIndex = -1;
@@ -483,7 +485,7 @@ var Flounder = (function () {
             }
 
             this.refs.select.flounder = this.refs.selected.flounder = this.target.flounder = this;
-
+            console.log(this);
             return this;
         }
     }
@@ -500,8 +502,17 @@ var Flounder = (function () {
         key: 'destroy',
         value: function destroy() {
             this.componentWillUnmount();
-            var target = this.target;
-            target.parentNode.removeChild(target);
+            var originalTarget = this.originalTarget;
+
+            if (originalTarget.tagName === 'INPUT' || originalTarget.tagName === 'SELECT') {
+                var target = originalTarget.nextElementSibling;
+                target.parentNode.removeChild(target);
+                originalTarget.tabIndex = 0;
+                this.removeClass(originalTarget, 'flounder--hidden');
+            } else {
+                var target = this.target;
+                target.innerHTML = '';
+            }
         }
 
         /**
@@ -1427,8 +1438,9 @@ var Flounder = (function () {
             this.removeSelectKeyListener();
             this.removeClass(wrapper, 'open');
 
-            document.querySelector('html').removeEventListener('click', this.catchBodyClick);
-            document.querySelector('html').removeEventListener('touchend', this.catchBodyClick);
+            var qsHTML = document.querySelector('html');
+            qsHTML.removeEventListener('click', this.catchBodyClick);
+            qsHTML.removeEventListener('touchend', this.catchBodyClick);
 
             if (this.props.search) {
                 this.fuzzySearchReset();

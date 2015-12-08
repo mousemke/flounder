@@ -65,7 +65,7 @@ new Flounder( document.getElementById( 'vanilla--input--tags' ), {
 /**
  * vanilla Flounder attached to an input
  */
-new Flounder( document.getElementById( 'vanilla--input' ), {
+var a = new Flounder( document.getElementById( 'vanilla--input' ), {
     _default             : 2,
 
     onInit               : function()
@@ -87,7 +87,7 @@ new Flounder( document.getElementById( 'vanilla--input' ), {
     multipleTags        : false
 } );
 
-
+console.log( a, Flounder, options );
 /**
  * vanilla Flounder attached pre built select box
  */

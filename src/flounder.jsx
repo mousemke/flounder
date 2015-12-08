@@ -469,6 +469,8 @@ class Flounder
             target      = target.jquery || target.isMicrobe ? target[0] : target;
             target      = target.nodeType === 1 ? target : document.querySelector( target );
 
+            this.originalTarget = target;
+
             if ( target.tagName === 'INPUT' )
             {
                 this.addClass( target, 'flounder--hidden' );
@@ -499,7 +501,7 @@ class Flounder
             }
 
             this.refs.select.flounder = this.refs.selected.flounder = this.target.flounder = this;
-
+console.log( this );
             return this;
         }
 
@@ -517,8 +519,20 @@ class Flounder
     destroy()
     {
         this.componentWillUnmount();
-        let target = this.target;
-        target.parentNode.removeChild( target );
+        let originalTarget  = this.originalTarget;
+
+        if ( originalTarget.tagName === 'INPUT' || originalTarget.tagName === 'SELECT' )
+        {
+            let target = originalTarget.nextElementSibling;
+            target.parentNode.removeChild( target );
+            originalTarget.tabIndex = 0;
+            this.removeClass( originalTarget, 'flounder--hidden' );
+        }
+        else
+        {
+            let target          = this.target;
+            target.innerHTML    = '';
+        }
     }
 
 
@@ -1512,8 +1526,9 @@ class Flounder
         this.removeSelectKeyListener();
         this.removeClass( wrapper, 'open' );
 
-        document.querySelector( 'html' ).removeEventListener( 'click', this.catchBodyClick );
-        document.querySelector( 'html' ).removeEventListener( 'touchend', this.catchBodyClick );
+        let qsHTML = document.querySelector( 'html' );
+        qsHTML.removeEventListener( 'click', this.catchBodyClick );
+        qsHTML.removeEventListener( 'touchend', this.catchBodyClick );
 
         if ( this.props.search )
         {
