@@ -253,7 +253,7 @@ class Flounder
 
         _options.forEach( ( _option, i ) =>
         {
-            if ( typeof _option === 'string' )
+            if ( typeof _option !== 'object' )
             {
                 _option = {
                     text    : _option,
@@ -1031,7 +1031,17 @@ class Flounder
     {
         let refs = this.refs;
         this.removeOptionsListeners();
-        this.buildOptions( this._default, _options, refs.optionsList, refs.select );
+
+        refs.select.innerHTML       = '';
+        refs.optionsList.innerHTML  = '';
+        let _select                 = refs.select;
+        refs.select                 = false;
+
+        [ refs.options, refs.selectOptions ] = this.buildOptions( this._default, _options, refs.optionsList, _select );
+
+        refs.select                 = _select;
+
+        this.addOptionsListeners();
     }
 
 

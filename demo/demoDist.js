@@ -81,11 +81,23 @@ new _srcReactFlounderJsx.Flounder(document.getElementById('vanilla--input'), {
         });
 
         this.options = res;
+        console.log(this);
     },
 
     multiple: true,
 
-    multipleTags: false
+    multipleTags: false,
+
+    onSelect: function onSelect(e) {
+        var rand = function rand() {
+            return Math.ceil(Math.random() * 10);
+        };
+
+        var _o = new Array(5).fill(0);
+        _o = _o.map(rand);
+
+        this.rebuildOptions(_o);
+    }
 });
 
 /**
@@ -19279,6 +19291,25 @@ var Flounder = (function () {
         }
 
         /**
+         * ## addOptionsListeners
+         *
+         * adds listeners to the options
+         *
+         * @return _Void_
+         */
+    }, {
+        key: 'addOptionsListeners',
+        value: function addOptionsListeners() {
+            var _this = this;
+
+            this.refs.options.forEach(function (_option, i) {
+                if (_option.tagName === 'DIV') {
+                    _option.addEventListener('click', _this.clickSet);
+                }
+            });
+        }
+
+        /**
          * ## addSearch
          *
          * checks if a search box is required and attaches it or not
@@ -19402,7 +19433,7 @@ var Flounder = (function () {
             var _default = this._default = this.setDefaultOption(this._default, _options);
 
             var selected = constructElement({ className: 'flounder__option--selected--displayed',
-                'data-value': _default.value });
+                'data-value': _default.value, 'data-index': _default.index || -1 });
             selected.innerHTML = _default.text;
 
             var multiTagWrapper = this.props.multiple ? constructElement({ className: 'multi--tag--list' }) : null;
@@ -19453,23 +19484,24 @@ var Flounder = (function () {
     }, {
         key: 'buildOptions',
         value: function buildOptions(_default, _options, optionsList, select) {
-            var _this = this;
+            var _this2 = this;
 
+            _options = _options || [];
             var options = [];
             var selectOptions = [];
             var constructElement = this.constructElement;
             var addOptionDescription = this.addOptionDescription;
 
             _options.forEach(function (_option, i) {
-                if (typeof _option === 'string') {
+                if (typeof _option !== 'object') {
                     _option = {
                         text: _option,
                         value: _option
                     };
                 }
 
-                var escapedText = _this.escapeHTML(_option.text);
-                var extraClass = i === _default.index ? '  ' + _this.selectedClass : '';
+                var escapedText = _this2.escapeHTML(_option.text);
+                var extraClass = i === _default.index ? '  ' + _this2.selectedClass : '';
 
                 var res = {
                     className: 'flounder__option' + extraClass,
@@ -19493,7 +19525,7 @@ var Flounder = (function () {
                     addOptionDescription(options[i], description);
                 }
 
-                if (!_this.refs.select) {
+                if (!_this2.refs.select) {
                     selectOptions[i] = constructElement({ tagname: 'option',
                         className: 'flounder--option--tag',
                         value: _option.value });
@@ -19508,7 +19540,7 @@ var Flounder = (function () {
                 }
 
                 if (selectOptions[i].getAttribute('disabled')) {
-                    _this.addClass(options[i], 'flounder--disabled');
+                    _this2.addClass(options[i], 'flounder--disabled');
                 }
             });
 
@@ -19557,6 +19589,22 @@ var Flounder = (function () {
             }
 
             return this.checkClickTarget(e, target.parentNode);
+        }
+
+        /**
+         * ## checkFlounderKeypress
+         *
+         * checks flounder focused keypresses and filters all but space and enter
+         *
+         * @return _Void_
+         */
+    }, {
+        key: 'checkFlounderKeypress',
+        value: function checkFlounderKeypress(e) {
+            if (e.keyCode === 13 || e.keyCode === 32) {
+                e.preventDefault();
+                this.toggleList(e);
+            }
         }
 
         /**
@@ -19612,8 +19660,6 @@ var Flounder = (function () {
     }, {
         key: 'componentWillUnmount',
         value: function componentWillUnmount() {
-            var _this2 = this;
-
             var props = this.props;
             var refs = this.refs;
 
@@ -19624,11 +19670,7 @@ var Flounder = (function () {
                 _div.removeEventListener(_event, _events[_event]);
             }
 
-            refs.options.forEach(function (_option) {
-                if (_option.tagName === 'DIV') {
-                    _option.removeEventListener('click', _this2.clickSet);
-                }
-            });
+            this.removeOptionsListeners();
 
             refs.selected.removeEventListener('click', this.toggleList);
 
@@ -19714,7 +19756,7 @@ var Flounder = (function () {
     /**
      * ## destroy
      *
-     * removes flounder and all it'S events from the dom
+     * removes flounder and all it's events from the dom
      *
      * @return _Void_
      */
@@ -19794,17 +19836,20 @@ var Flounder = (function () {
         key: 'displaySelected',
         value: function displaySelected(selected, refs) {
             var value = [];
+            var index = -1;
 
             var selectedOption = _slice.call(this.getSelectedOptions(refs.select));
-            var selectedLength = selectedOption.length;
-            var multiple = this.multiple;
 
-            if (!multiple || !this.multipleTags && selectedLength === 1) {
+            var selectedLength = selectedOption.length;
+
+            if (!this.multiple || !this.multipleTags && selectedLength === 1) {
+                index = selectedOption[0].index;
                 selected.innerHTML = selectedOption[0].innerHTML;
                 value = selectedOption[0].value;
             } else if (selectedLength === 0) {
                 var _default = this._default;
 
+                index = _default.index || -1;
                 selected.innerHTML = _default.text;
                 value = _default.value;
             } else {
@@ -19815,12 +19860,17 @@ var Flounder = (function () {
                     selected.innerHTML = this.multipleMessage;
                 }
 
+                index = selectedOption.map(function (option) {
+                    return option.index;
+                });
+
                 value = selectedOption.map(function (option) {
                     return option.value;
                 });
             }
 
             selected.setAttribute('data-value', value);
+            selected.setAttribute('data-index', index);
         }
 
         /**
@@ -19919,6 +19969,23 @@ var Flounder = (function () {
             }
 
             return _el.offsetWidth + parseInt(style['margin-left']) + parseInt(style['margin-right']);
+        }
+
+        /**
+         * ## getOption
+         *
+         * returns the option and div tags related to an option
+         *
+         * @param {Number} _i index to return
+         *
+         * @return _Object_ option and div tage
+         */
+    }, {
+        key: 'getOption',
+        value: function getOption(_i) {
+            var refs = this.refs;
+
+            return { option: refs.selectOptions[_i], div: refs.options[_i] };
         }
 
         /**
@@ -20094,8 +20161,6 @@ var Flounder = (function () {
     }, {
         key: 'onRender',
         value: function onRender() {
-            var _this7 = this;
-
             var props = this.props;
             var refs = this.refs;
             var options = refs.options;
@@ -20122,11 +20187,7 @@ var Flounder = (function () {
 
             refs.select.addEventListener('change', _divertTarget);
 
-            options.forEach(function (option, i) {
-                if (option.tagName === 'DIV') {
-                    option.addEventListener('click', _this7.clickSet);
-                }
-            });
+            this.addOptionsListeners();
 
             refs.flounder.addEventListener('keydown', this.checkFlounderKeypress);
             refs.selected.addEventListener('click', this.toggleList);
@@ -20141,19 +20202,35 @@ var Flounder = (function () {
         }
 
         /**
-         * ## checkFlounderKeypress
+         * ## rebuildOptions
          *
-         * checks flounder focused keypresses and filters all but space and enter
+         * after editing the options, this can be used to rebuild only the options
+         *
+         * @param {Array} _options array with optino information
          *
          * @return _Void_
          */
     }, {
-        key: 'checkFlounderKeypress',
-        value: function checkFlounderKeypress(e) {
-            if (e.keyCode === 13 || e.keyCode === 32) {
-                e.preventDefault();
-                this.toggleList(e);
-            }
+        key: 'rebuildOptions',
+        value: function rebuildOptions(_options) {
+            var refs = this.refs;
+            this.removeOptionsListeners();
+
+            refs.select.innerHTML = '';
+            refs.optionsList.innerHTML = '';
+            var _select = refs.select;
+            refs.select = false;
+
+            var _buildOptions3 = this.buildOptions(this._default, _options, refs.optionsList, _select);
+
+            var _buildOptions32 = _slicedToArray(_buildOptions3, 2);
+
+            refs.options = _buildOptions32[0];
+            refs.selectOptions = _buildOptions32[1];
+
+            refs.select = _select;
+
+            this.addOptionsListeners();
         }
 
         /**
@@ -20185,6 +20262,25 @@ var Flounder = (function () {
         }
 
         /**
+         * ## removeOptionsListeners
+         *
+         * removes event listeners on the options divs
+         *
+         * @return _Void_
+         */
+    }, {
+        key: 'removeOptionsListeners',
+        value: function removeOptionsListeners() {
+            var _this7 = this;
+
+            this.refs.options.forEach(function (_option) {
+                if (_option.tagName === 'DIV') {
+                    _option.removeEventListener('click', _this7.clickSet);
+                }
+            });
+        }
+
+        /**
          * ## removeMultiTag
          *
          * removes a multi selection tag on click; fixes all references to value and state
@@ -20200,40 +20296,46 @@ var Flounder = (function () {
             e.stopPropagation();
 
             var value = undefined;
+            var index = undefined;
             var refs = this.refs;
             var select = refs.select;
             var selected = refs.selected;
             var target = e.target;
-            var index = target.getAttribute('data-index');
-            select[index].selected = false;
+            var _default = this._default;
+            var targetIndex = target.getAttribute('data-index');
+            select[targetIndex].selected = false;
 
             var selectedOptions = _slice.call(this.getSelectedOptions(select));
 
-            this.removeClass(refs.options[index], 'flounder__option--selected--hidden');
-            this.removeClass(refs.options[index], 'flounder__option--selected');
+            this.removeClass(refs.options[targetIndex], 'flounder__option--selected--hidden');
+            this.removeClass(refs.options[targetIndex], 'flounder__option--selected');
 
             var span = target.parentNode;
             span.parentNode.removeChild(span);
 
             if (selectedOptions.length === 0) {
-                selected.innerHTML = this._default.text;
-                value = this._default.value;
+                index = _default.index || -1;
+                selected.innerHTML = _default.text;
+                value = _default.value;
             } else {
                 value = selectedOptions.map(function (option) {
                     return option.value;
+                });
+
+                index = selectedOptions.map(function (option) {
+                    return option.index;
                 });
             }
 
             this.setTextMultiTagIndent();
 
             selected.setAttribute('data-value', value);
+            selected.setAttribute('data-index', index);
 
             if (this.selectFunc) {
                 this.selectFunc(e);
             }
         }
-    }, {
-        key: 'removeSelectKeyListener',
 
         /**
          * ## removeSelectKeyListener
@@ -20242,6 +20344,8 @@ var Flounder = (function () {
          *
          * @return _Void_
          */
+    }, {
+        key: 'removeSelectKeyListener',
         value: function removeSelectKeyListener() {
             var select = this.refs.select;
             select.removeEventListener('keyup', this.setSelectValue);
@@ -20528,7 +20632,8 @@ var Flounder = (function () {
             var offset = this.defaultTextIndent;
 
             if (search) {
-                $('.flounder__multiple--select--tag').each(function (i, e) {
+                var _els = document.getElementsByClassName('flounder__multiple--select--tag');
+                _els.each(function (i, e) {
                     offset += _this10.getActualWidth(e);
                 });
 
@@ -20949,6 +21054,7 @@ FlounderReact.prototype.toggleList = _flounderJsx2['default'].prototype.toggleLi
 
 // just your every day, run of the mill functions
 FlounderReact.prototype.addClass = _flounderJsx2['default'].prototype.addClass;
+FlounderReact.prototype.addOptionsListeners = _flounderJsx2['default'].prototype.addOptionsListeners;
 FlounderReact.prototype.addSearch = _flounderJsx2['default'].prototype.addSearch;
 FlounderReact.prototype.addSelectKeyListener = _flounderJsx2['default'].prototype.addSelectKeyListener;
 FlounderReact.prototype.attachAttributes = _flounderJsx2['default'].prototype.attachAttributes;
@@ -20958,12 +21064,15 @@ FlounderReact.prototype.displaySelected = _flounderJsx2['default'].prototype.dis
 FlounderReact.prototype.escapeHTML = _flounderJsx2['default'].prototype.escapeHTML;
 FlounderReact.prototype.fuzzySearchReset = _flounderJsx2['default'].prototype.fuzzySearchReset;
 FlounderReact.prototype.getActualWidth = _flounderJsx2['default'].prototype.getActualWidth;
+FlounderReact.prototype.getOption = _flounderJsx2['default'].prototype.getOption;
 FlounderReact.prototype.getSelectedOptions = _flounderJsx2['default'].prototype.getSelectedOptions;
 FlounderReact.prototype.hideElement = _flounderJsx2['default'].prototype.hideElement;
 FlounderReact.prototype.initialzeOptions = _flounderJsx2['default'].prototype.initialzeOptions;
 FlounderReact.prototype.iosVersion = _flounderJsx2['default'].prototype.iosVersion;
 FlounderReact.prototype.onRender = _flounderJsx2['default'].prototype.onRender;
+FlounderReact.prototype.rebuildOptions = _flounderJsx2['default'].prototype.rebuildOptions;
 FlounderReact.prototype.removeClass = _flounderJsx2['default'].prototype.removeClass;
+FlounderReact.prototype.removeOptionsListeners = _flounderJsx2['default'].prototype.removeOptionsListeners;
 FlounderReact.prototype.removeSelectKeyListener = _flounderJsx2['default'].prototype.removeSelectKeyListener;
 FlounderReact.prototype.removeSelectedClass = _flounderJsx2['default'].prototype.removeSelectedClass;
 FlounderReact.prototype.removeSelectedValue = _flounderJsx2['default'].prototype.removeSelectedValue;

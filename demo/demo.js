@@ -67,7 +67,7 @@ new Flounder( document.getElementById( 'vanilla--input' ), {
 
     onInit               : function()
     {
-        var res = [];
+        var res     = [];
         options.forEach( function( option )
         {
             res.push( {
@@ -81,7 +81,20 @@ new Flounder( document.getElementById( 'vanilla--input' ), {
 
     multiple            : true,
 
-    multipleTags        : false
+    multipleTags        : false,
+
+    onSelect            : function( e )
+    {
+        var rand = function()
+        {
+            return Math.ceil( Math.random() * 10 );
+        };
+
+        var _o  = new Array( 5 ).fill( 0 );
+        _o      = _o.map( rand );
+
+        this.rebuildOptions( _o );
+    }
 } );
 
 

@@ -183,6 +183,13 @@ See more examples on the [demo page](./demo/index.html)
 Change Log
 ==========
 
+0.1.5
+-----
+
++ added rebuildOption and getOptions
++ added dynamic options
+
+
 0.1.4
 -----
 
