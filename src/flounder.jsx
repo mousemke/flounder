@@ -197,7 +197,7 @@ class Flounder
         let _default            = this._default = this.setDefaultOption( this._default, _options );
 
         let selected            = constructElement( { className : 'flounder__option--selected--displayed',
-                                        'data-value' : _default.value  } );
+                                        'data-value' : _default.value, 'data-index' : _default.index || -1  } );
             selected.innerHTML  = _default.text;
 
         let multiTagWrapper     = this.props.multiple ? constructElement( { className : 'multi--tag--list' } ) : null;
@@ -535,8 +535,6 @@ class Flounder
 
             return this;
         }
-
-
     }
 
 
@@ -627,13 +625,15 @@ class Flounder
     displaySelected( selected, refs )
     {
         let value = [];
+        let index = -1;
 
         let selectedOption  = _slice.call( this.getSelectedOptions( refs.select ) );
-        let selectedLength  = selectedOption.length;
-        let multiple        = this.multiple
 
-        if ( !multiple || ( !this.multipleTags && selectedLength ===  1 ) )
+        let selectedLength  = selectedOption.length;
+
+        if ( !this.multiple || ( !this.multipleTags && selectedLength ===  1 ) )
         {
+            index               = selectedOption[0].index;
             selected.innerHTML  = selectedOption[0].innerHTML;
             value               = selectedOption[0].value;
         }
@@ -641,6 +641,7 @@ class Flounder
         {
             let _default = this._default;
 
+            index               = _default.index || -1;
             selected.innerHTML  = _default.text;
             value               = _default.value;
         }
@@ -656,6 +657,11 @@ class Flounder
                 selected.innerHTML  = this.multipleMessage;
             }
 
+            index = selectedOption.map( function( option )
+            {
+                return option.index;
+            } );
+
             value = selectedOption.map( function( option )
             {
                 return option.value;
@@ -663,6 +669,7 @@ class Flounder
         }
 
         selected.setAttribute( 'data-value', value );
+        selected.setAttribute( 'data-index', index );
     }
 
 
@@ -1092,25 +1099,28 @@ class Flounder
         e.stopPropagation();
 
         let value;
+        let index;
         let refs            = this.refs;
         let select          = refs.select;
         let selected        = refs.selected;
         let target          = e.target;
-        let index           = target.getAttribute( 'data-index' );
-        select[ index ].selected = false;
+        let _default        = this._default
+        let targetIndex           = target.getAttribute( 'data-index' );
+        select[ targetIndex ].selected = false;
 
         let selectedOptions = _slice.call( this.getSelectedOptions( select ) );
 
-        this.removeClass( refs.options[ index ], 'flounder__option--selected--hidden' );
-        this.removeClass( refs.options[ index ], 'flounder__option--selected' );
+        this.removeClass( refs.options[ targetIndex ], 'flounder__option--selected--hidden' );
+        this.removeClass( refs.options[ targetIndex ], 'flounder__option--selected' );
 
         let span = target.parentNode;
         span.parentNode.removeChild( span );
 
         if ( selectedOptions.length === 0 )
         {
-            selected.innerHTML  = this._default.text;
-            value               = this._default.value;
+            index               = _default.index || -1;
+            selected.innerHTML  = _default.text;
+            value               = _default.value;
         }
         else
         {
@@ -1118,17 +1128,23 @@ class Flounder
             {
                 return option.value;
             } );
+
+            index = selectedOptions.map( function( option )
+            {
+                return option.index;
+            } );
         }
 
         this.setTextMultiTagIndent();
 
         selected.setAttribute( 'data-value', value );
+        selected.setAttribute( 'data-index', index );
 
         if ( this.selectFunc )
         {
             this.selectFunc( e );
         }
-    };
+    }
 
 
     /**
