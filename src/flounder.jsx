@@ -50,6 +50,25 @@ class Flounder
 
 
     /**
+     * ## addOptionsListeners
+     *
+     * adds listeners to the options
+     *
+     * @return _Void_
+     */
+    addOptionsListeners()
+    {
+        this.refs.options.forEach( ( _option, i ) =>
+        {
+            if ( _option.tagName === 'DIV' )
+            {
+                _option.addEventListener( 'click', this.clickSet );
+            }
+        } );
+    }
+
+
+    /**
      * ## addSearch
      *
      * checks if a search box is required and attaches it or not
@@ -226,6 +245,7 @@ class Flounder
      */
     buildOptions( _default, _options, optionsList, select )
     {
+        _options                    = _options || [];
         let options                 = [];
         let selectOptions           = [];
         let constructElement        = this.constructElement;
@@ -347,6 +367,23 @@ class Flounder
 
 
     /**
+     * ## checkFlounderKeypress
+     *
+     * checks flounder focused keypresses and filters all but space and enter
+     *
+     * @return _Void_
+     */
+    checkFlounderKeypress( e )
+    {
+        if ( e.keyCode === 13 || e.keyCode === 32 )
+        {
+            e.preventDefault();
+            this.toggleList( e );
+        }
+    }
+
+
+    /**
      * ## checkPlaceholder
      *
      * clears or readds the placeholder
@@ -415,13 +452,7 @@ class Flounder
             _div.removeEventListener( _event, _events[ _event ] );
         }
 
-        refs.options.forEach( _option =>
-        {
-            if ( _option.tagName === 'DIV' )
-            {
-                _option.removeEventListener( 'click', this.clickSet );
-            }
-        } );
+        this.removeOptionsListeners();
 
         refs.selected.removeEventListener( 'click', this.toggleList );
 
@@ -512,7 +543,7 @@ class Flounder
     /**
      * ## destroy
      *
-     * removes flounder and all it'S events from the dom
+     * removes flounder and all it's events from the dom
      *
      * @return _Void_
      */
@@ -744,6 +775,23 @@ class Flounder
 
 
     /**
+     * ## getOption
+     *
+     * returns the option and div tags related to an option
+     *
+     * @param {Number} _i index to return
+     *
+     * @return _Object_ option and div tage
+     */
+    getOption( _i )
+    {
+        let refs = this.refs;
+
+        return { option : refs.selectOptions[ _i ], div : refs.options[ _i ] };
+    }
+
+
+    /**
      * ## getSelectedOptions
      *
      * returns the currently selected otions of a SELECT box
@@ -947,13 +995,7 @@ class Flounder
 
         refs.select.addEventListener( 'change', _divertTarget  );
 
-        options.forEach( ( option, i ) =>
-        {
-            if ( option.tagName === 'DIV' )
-            {
-                option.addEventListener( 'click', this.clickSet );
-            }
-        } );
+        this.addOptionsListeners();
 
         refs.flounder.addEventListener( 'keydown', this.checkFlounderKeypress );
         refs.selected.addEventListener( 'click', this.toggleList );
@@ -970,19 +1012,19 @@ class Flounder
 
 
     /**
-     * ## checkFlounderKeypress
+     * ## rebuildOptions
      *
-     * checks flounder focused keypresses and filters all but space and enter
+     * after editing the options, this can be used to rebuild only the options
+     *
+     * @param {Array} _options array with optino information
      *
      * @return _Void_
      */
-    checkFlounderKeypress( e )
+    rebuildOptions( _options )
     {
-        if ( e.keyCode === 13 || e.keyCode === 32 )
-        {
-            e.preventDefault();
-            this.toggleList( e );
-        }
+        let refs = this.refs;
+        this.removeOptionsListeners();
+        this.buildOptions( this._default, _options, refs.optionsList, refs.select );
     }
 
 
@@ -1013,6 +1055,25 @@ class Flounder
         }
 
         _el.className =  _el.className.trim();
+    }
+
+
+    /**
+     * ## removeOptionsListeners
+     *
+     * removes event listeners on the options divs
+     *
+     * @return _Void_
+     */
+    removeOptionsListeners()
+    {
+        this.refs.options.forEach( _option =>
+        {
+            if ( _option.tagName === 'DIV' )
+            {
+                _option.removeEventListener( 'click', this.clickSet );
+            }
+        } );
     }
 
 
@@ -1335,6 +1396,7 @@ class Flounder
         }
     }
 
+
     /**
      * ## setSelectValueClick
      *
@@ -1382,7 +1444,8 @@ class Flounder
 
         if ( search )
         {
-            $( '.flounder__multiple--select--tag' ).each( ( i, e ) =>
+            let _els = document.getElementsByClassName( 'flounder__multiple--select--tag' );
+            _els.each( ( i, e ) =>
             {
                 offset += this.getActualWidth( e );
             } );

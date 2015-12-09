@@ -234,6 +234,7 @@ FlounderReact.prototype.toggleList              = Flounder.prototype.toggleList;
 
 // just your every day, run of the mill functions
 FlounderReact.prototype.addClass                = Flounder.prototype.addClass;
+FlounderReact.prototype.addOptionsListeners     = Flounder.prototype.addOptionsListeners;
 FlounderReact.prototype.addSearch               = Flounder.prototype.addSearch;
 FlounderReact.prototype.addSelectKeyListener    = Flounder.prototype.addSelectKeyListener;
 FlounderReact.prototype.attachAttributes        = Flounder.prototype.attachAttributes;
@@ -243,12 +244,15 @@ FlounderReact.prototype.displaySelected         = Flounder.prototype.displaySele
 FlounderReact.prototype.escapeHTML              = Flounder.prototype.escapeHTML;
 FlounderReact.prototype.fuzzySearchReset        = Flounder.prototype.fuzzySearchReset;
 FlounderReact.prototype.getActualWidth          = Flounder.prototype.getActualWidth;
+FlounderReact.prototype.getOption               = Flounder.prototype.getOption;
 FlounderReact.prototype.getSelectedOptions      = Flounder.prototype.getSelectedOptions;
 FlounderReact.prototype.hideElement             = Flounder.prototype.hideElement;
 FlounderReact.prototype.initialzeOptions        = Flounder.prototype.initialzeOptions;
 FlounderReact.prototype.iosVersion              = Flounder.prototype.iosVersion;
 FlounderReact.prototype.onRender                = Flounder.prototype.onRender;
+FlounderReact.prototype.rebuildOptions          = Flounder.prototype.rebuildOptions;
 FlounderReact.prototype.removeClass             = Flounder.prototype.removeClass;
+FlounderReact.prototype.removeOptionsListeners  = Flounder.prototype.removeOptionsListeners;
 FlounderReact.prototype.removeSelectKeyListener = Flounder.prototype.removeSelectKeyListener;
 FlounderReact.prototype.removeSelectedClass     = Flounder.prototype.removeSelectedClass;
 FlounderReact.prototype.removeSelectedValue     = Flounder.prototype.removeSelectedValue;
