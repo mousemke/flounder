@@ -352,7 +352,7 @@ class Flounder
     checkClickTarget( e, target )
     {
         target = target || e.target;
-
+console.log( target.className );
         if ( target === document )
         {
             return false;
@@ -363,6 +363,34 @@ class Flounder
         }
 
         return this.checkClickTarget( e, target.parentNode );
+    }
+
+
+    /**
+     * ## checkSelect
+     *
+     * checks if a keypress is a selection
+     */
+    checkSelect( e )
+    {
+        if ( !this.toggleList.justOpened )
+        {
+            switch ( e.keyCode )
+            {
+                case 13:
+                case 27:
+                case 32:
+                case 38:
+                case 40:
+                    return true;
+            }
+        }
+        else
+        {
+            this.toggleList.justOpened = false;
+        }
+
+        return false;
     }
 
 
@@ -627,7 +655,7 @@ class Flounder
         let value = [];
         let index = -1;
 
-        let selectedOption  = _slice.call( this.getSelectedOptions( refs.select ) );
+        let selectedOption  = this.getSelectedOptions();
 
         let selectedLength  = selectedOption.length;
 
@@ -801,15 +829,17 @@ class Flounder
     /**
      * ## getSelectedOptions
      *
-     * returns the currently selected otions of a SELECT box
+     * returns the currently selected options of a SELECT box
      *
      * @param {Object} _el select box
      */
-    getSelectedOptions( _el )
+    getSelectedOptions()
     {
+        let _el = this.refs.select;
+
         if ( _el.selectedOptions )
         {
-            return _el.selectedOptions;
+            return _slice.call( _el.selectedOptions );
         }
         else
         {
@@ -1034,13 +1064,16 @@ class Flounder
 
         refs.select.innerHTML       = '';
         refs.optionsList.innerHTML  = '';
+
         let _select                 = refs.select;
         refs.select                 = false;
-
         [ refs.options, refs.selectOptions ] = this.buildOptions( this._default, _options, refs.optionsList, _select );
-
         refs.select                 = _select;
 
+        let selected = this.getSelectedOptions();
+        selected.map( el =>
+        {
+        } );
         this.addOptionsListeners();
     }
 
@@ -1118,7 +1151,7 @@ class Flounder
         let targetIndex           = target.getAttribute( 'data-index' );
         select[ targetIndex ].selected = false;
 
-        let selectedOptions = _slice.call( this.getSelectedOptions( select ) );
+        let selectedOptions = this.getSelectedOptions();
 
         this.removeClass( refs.options[ targetIndex ], 'flounder__option--selected--hidden' );
         this.removeClass( refs.options[ targetIndex ], 'flounder__option--selected' );
@@ -1290,7 +1323,6 @@ class Flounder
     setKeypress( e )
     {
         e.preventDefault();
-
         let increment   = 0;
         let keyCode     = e.keyCode;
 
@@ -1302,7 +1334,7 @@ class Flounder
         if ( keyCode === 13 || keyCode === 27 || keyCode === 32 )
         {
             this.toggleList( e );
-            return;
+            return false;
         }
         else if ( keyCode === 38 )
         {
@@ -1363,14 +1395,18 @@ class Flounder
      */
     setSelectValue( obj, e )
     {
-        let refs            = this.refs;
+        let refs        = this.refs;
+        let selection;
 
         if ( e ) // click
         {
             this.setSelectValueClick( e );
+            selection = true;
         }
         else // keypress
         {
+            e = obj;
+
             if ( this.multipleTags )
             {
                 obj.preventDefault();
@@ -1379,14 +1415,22 @@ class Flounder
                 return false;
             }
 
-            this.setSelectValueButton( obj );
+            selection = this.checkSelect( e );
+
+            if ( selection )
+            {
+                this.setSelectValueButton( obj );
+            }
         }
 
-        this.displaySelected( refs.selected, refs );
-
-        if ( this.selectFunc )
+        if ( selection )
         {
-            this.selectFunc( e || obj );
+            this.displaySelected( refs.selected, refs );
+
+            if ( this.selectFunc )
+            {
+                this.selectFunc( e );
+            }
         }
     }
 
@@ -1409,7 +1453,7 @@ class Flounder
 
         this.removeSelectedClass( options );
 
-        let optionsArray    = this.getSelectedOptions( select );
+        let optionsArray    = this.getSelectedOptions();
         let baseOption      = optionsArray[ 0 ];
 
         if ( baseOption )
@@ -1539,10 +1583,12 @@ class Flounder
 
         if ( force === 'open' || force !== 'close' && optionsList.className.indexOf( 'flounder--hidden' ) !== -1 )
         {
+            this.toggleList.justOpened = true;
             this.toggleOpen( e, optionsList, refs, wrapper );
         }
         else if ( force === 'close' || optionsList.className.indexOf( 'flounder--hidden' ) === -1 )
         {
+            this.toggleList.justOpened = false;
             this.toggleClosed( e, optionsList, refs, wrapper );
         }
     }

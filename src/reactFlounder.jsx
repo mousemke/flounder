@@ -239,6 +239,7 @@ FlounderReact.prototype.addSearch               = Flounder.prototype.addSearch;
 FlounderReact.prototype.addSelectKeyListener    = Flounder.prototype.addSelectKeyListener;
 FlounderReact.prototype.attachAttributes        = Flounder.prototype.attachAttributes;
 FlounderReact.prototype.checkClickTarget        = Flounder.prototype.checkClickTarget;
+FlounderReact.prototype.checkSelect             = Flounder.prototype.checkSelect;
 FlounderReact.prototype.componentWillUnmount    = Flounder.prototype.componentWillUnmount;
 FlounderReact.prototype.displaySelected         = Flounder.prototype.displaySelected;
 FlounderReact.prototype.escapeHTML              = Flounder.prototype.escapeHTML;

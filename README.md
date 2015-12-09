@@ -70,6 +70,17 @@ options must be passed as an array of objects
 ]
 ```
 
+or an array.
+```
+[
+    'option 1',
+    'option 2',
+    'option 3'
+]
+```
+in the case of an array, the passed text will be both the description and the value.
+
+
 all extra properties passed that are not shown here will be added as data attributes for the sake of reference later.  The options can be accessed in the init (before building) as this.options if they need reformatting or filtering.
 
 
@@ -188,6 +199,8 @@ Change Log
 
 + added rebuildOption and getOptions
 + added dynamic options
++ added getSelected
++ fixes in keypress handlers
 
 
 0.1.4

@@ -81,7 +81,6 @@ new _srcReactFlounderJsx.Flounder(document.getElementById('vanilla--input'), {
         });
 
         this.options = res;
-        console.log(this);
     },
 
     multiple: true,
@@ -19581,7 +19580,7 @@ var Flounder = (function () {
         key: 'checkClickTarget',
         value: function checkClickTarget(e, target) {
             target = target || e.target;
-
+            console.log(target.className);
             if (target === document) {
                 return false;
             } else if (target === this.refs.flounder) {
@@ -19589,6 +19588,30 @@ var Flounder = (function () {
             }
 
             return this.checkClickTarget(e, target.parentNode);
+        }
+
+        /**
+         * ## checkSelect
+         *
+         * checks if a keypress is a selection
+         */
+    }, {
+        key: 'checkSelect',
+        value: function checkSelect(e) {
+            if (!this.toggleList.justOpened) {
+                switch (e.keyCode) {
+                    case 13:
+                    case 27:
+                    case 32:
+                    case 38:
+                    case 40:
+                        return true;
+                }
+            } else {
+                this.toggleList.justOpened = false;
+            }
+
+            return false;
         }
 
         /**
@@ -19838,7 +19861,7 @@ var Flounder = (function () {
             var value = [];
             var index = -1;
 
-            var selectedOption = _slice.call(this.getSelectedOptions(refs.select));
+            var selectedOption = this.getSelectedOptions();
 
             var selectedLength = selectedOption.length;
 
@@ -19991,15 +20014,17 @@ var Flounder = (function () {
         /**
          * ## getSelectedOptions
          *
-         * returns the currently selected otions of a SELECT box
+         * returns the currently selected options of a SELECT box
          *
          * @param {Object} _el select box
          */
     }, {
         key: 'getSelectedOptions',
-        value: function getSelectedOptions(_el) {
+        value: function getSelectedOptions() {
+            var _el = this.refs.select;
+
             if (_el.selectedOptions) {
-                return _el.selectedOptions;
+                return _slice.call(_el.selectedOptions);
             } else {
                 var opts = [],
                     opt;
@@ -20218,6 +20243,7 @@ var Flounder = (function () {
 
             refs.select.innerHTML = '';
             refs.optionsList.innerHTML = '';
+
             var _select = refs.select;
             refs.select = false;
 
@@ -20230,6 +20256,8 @@ var Flounder = (function () {
 
             refs.select = _select;
 
+            var selected = this.getSelectedOptions();
+            selected.map(function (el) {});
             this.addOptionsListeners();
         }
 
@@ -20305,7 +20333,7 @@ var Flounder = (function () {
             var targetIndex = target.getAttribute('data-index');
             select[targetIndex].selected = false;
 
-            var selectedOptions = _slice.call(this.getSelectedOptions(select));
+            var selectedOptions = this.getSelectedOptions();
 
             this.removeClass(refs.options[targetIndex], 'flounder__option--selected--hidden');
             this.removeClass(refs.options[targetIndex], 'flounder__option--selected');
@@ -20467,7 +20495,6 @@ var Flounder = (function () {
         key: 'setKeypress',
         value: function setKeypress(e) {
             e.preventDefault();
-
             var increment = 0;
             var keyCode = e.keyCode;
 
@@ -20477,7 +20504,7 @@ var Flounder = (function () {
 
             if (keyCode === 13 || keyCode === 27 || keyCode === 32) {
                 this.toggleList(e);
-                return;
+                return false;
             } else if (keyCode === 38) {
                 e.preventDefault();
                 increment--;
@@ -20529,12 +20556,16 @@ var Flounder = (function () {
         key: 'setSelectValue',
         value: function setSelectValue(obj, e) {
             var refs = this.refs;
+            var selection = undefined;
 
             if (e) // click
                 {
                     this.setSelectValueClick(e);
+                    selection = true;
                 } else // keypress
                 {
+                    e = obj;
+
                     if (this.multipleTags) {
                         obj.preventDefault();
                         obj.stopPropagation();
@@ -20542,13 +20573,19 @@ var Flounder = (function () {
                         return false;
                     }
 
-                    this.setSelectValueButton(obj);
+                    selection = this.checkSelect(e);
+
+                    if (selection) {
+                        this.setSelectValueButton(obj);
+                    }
                 }
 
-            this.displaySelected(refs.selected, refs);
+            if (selection) {
+                this.displaySelected(refs.selected, refs);
 
-            if (this.selectFunc) {
-                this.selectFunc(e || obj);
+                if (this.selectFunc) {
+                    this.selectFunc(e);
+                }
             }
         }
 
@@ -20571,7 +20608,7 @@ var Flounder = (function () {
 
             this.removeSelectedClass(options);
 
-            var optionsArray = this.getSelectedOptions(select);
+            var optionsArray = this.getSelectedOptions();
             var baseOption = optionsArray[0];
 
             if (baseOption) {
@@ -20696,8 +20733,10 @@ var Flounder = (function () {
             var wrapper = refs.wrapper;
 
             if (force === 'open' || force !== 'close' && optionsList.className.indexOf('flounder--hidden') !== -1) {
+                this.toggleList.justOpened = true;
                 this.toggleOpen(e, optionsList, refs, wrapper);
             } else if (force === 'close' || optionsList.className.indexOf('flounder--hidden') === -1) {
+                this.toggleList.justOpened = false;
                 this.toggleClosed(e, optionsList, refs, wrapper);
             }
         }
@@ -21059,6 +21098,7 @@ FlounderReact.prototype.addSearch = _flounderJsx2['default'].prototype.addSearch
 FlounderReact.prototype.addSelectKeyListener = _flounderJsx2['default'].prototype.addSelectKeyListener;
 FlounderReact.prototype.attachAttributes = _flounderJsx2['default'].prototype.attachAttributes;
 FlounderReact.prototype.checkClickTarget = _flounderJsx2['default'].prototype.checkClickTarget;
+FlounderReact.prototype.checkSelect = _flounderJsx2['default'].prototype.checkSelect;
 FlounderReact.prototype.componentWillUnmount = _flounderJsx2['default'].prototype.componentWillUnmount;
 FlounderReact.prototype.displaySelected = _flounderJsx2['default'].prototype.displaySelected;
 FlounderReact.prototype.escapeHTML = _flounderJsx2['default'].prototype.escapeHTML;

@@ -58,6 +58,25 @@ var Flounder = (function () {
         }
 
         /**
+         * ## addOptionsListeners
+         *
+         * adds listeners to the options
+         *
+         * @return _Void_
+         */
+    }, {
+        key: 'addOptionsListeners',
+        value: function addOptionsListeners() {
+            var _this = this;
+
+            this.refs.options.forEach(function (_option, i) {
+                if (_option.tagName === 'DIV') {
+                    _option.addEventListener('click', _this.clickSet);
+                }
+            });
+        }
+
+        /**
          * ## addSearch
          *
          * checks if a search box is required and attaches it or not
@@ -181,7 +200,7 @@ var Flounder = (function () {
             var _default = this._default = this.setDefaultOption(this._default, _options);
 
             var selected = constructElement({ className: 'flounder__option--selected--displayed',
-                'data-value': _default.value });
+                'data-value': _default.value, 'data-index': _default.index || -1 });
             selected.innerHTML = _default.text;
 
             var multiTagWrapper = this.props.multiple ? constructElement({ className: 'multi--tag--list' }) : null;
@@ -232,23 +251,24 @@ var Flounder = (function () {
     }, {
         key: 'buildOptions',
         value: function buildOptions(_default, _options, optionsList, select) {
-            var _this = this;
+            var _this2 = this;
 
+            _options = _options || [];
             var options = [];
             var selectOptions = [];
             var constructElement = this.constructElement;
             var addOptionDescription = this.addOptionDescription;
 
             _options.forEach(function (_option, i) {
-                if (typeof _option === 'string') {
+                if (typeof _option !== 'object') {
                     _option = {
                         text: _option,
                         value: _option
                     };
                 }
 
-                var escapedText = _this.escapeHTML(_option.text);
-                var extraClass = i === _default.index ? '  ' + _this.selectedClass : '';
+                var escapedText = _this2.escapeHTML(_option.text);
+                var extraClass = i === _default.index ? '  ' + _this2.selectedClass : '';
 
                 var res = {
                     className: 'flounder__option' + extraClass,
@@ -272,7 +292,7 @@ var Flounder = (function () {
                     addOptionDescription(options[i], description);
                 }
 
-                if (!_this.refs.select) {
+                if (!_this2.refs.select) {
                     selectOptions[i] = constructElement({ tagname: 'option',
                         className: 'flounder--option--tag',
                         value: _option.value });
@@ -287,7 +307,7 @@ var Flounder = (function () {
                 }
 
                 if (selectOptions[i].getAttribute('disabled')) {
-                    _this.addClass(options[i], 'flounder--disabled');
+                    _this2.addClass(options[i], 'flounder--disabled');
                 }
             });
 
@@ -328,7 +348,7 @@ var Flounder = (function () {
         key: 'checkClickTarget',
         value: function checkClickTarget(e, target) {
             target = target || e.target;
-
+            console.log(target.className);
             if (target === document) {
                 return false;
             } else if (target === this.refs.flounder) {
@@ -336,6 +356,46 @@ var Flounder = (function () {
             }
 
             return this.checkClickTarget(e, target.parentNode);
+        }
+
+        /**
+         * ## checkSelect
+         *
+         * checks if a keypress is a selection
+         */
+    }, {
+        key: 'checkSelect',
+        value: function checkSelect(e) {
+            if (!this.toggleList.justOpened) {
+                switch (e.keyCode) {
+                    case 13:
+                    case 27:
+                    case 32:
+                    case 38:
+                    case 40:
+                        return true;
+                }
+            } else {
+                this.toggleList.justOpened = false;
+            }
+
+            return false;
+        }
+
+        /**
+         * ## checkFlounderKeypress
+         *
+         * checks flounder focused keypresses and filters all but space and enter
+         *
+         * @return _Void_
+         */
+    }, {
+        key: 'checkFlounderKeypress',
+        value: function checkFlounderKeypress(e) {
+            if (e.keyCode === 13 || e.keyCode === 32) {
+                e.preventDefault();
+                this.toggleList(e);
+            }
         }
 
         /**
@@ -391,8 +451,6 @@ var Flounder = (function () {
     }, {
         key: 'componentWillUnmount',
         value: function componentWillUnmount() {
-            var _this2 = this;
-
             var props = this.props;
             var refs = this.refs;
 
@@ -403,11 +461,7 @@ var Flounder = (function () {
                 _div.removeEventListener(_event, _events[_event]);
             }
 
-            refs.options.forEach(function (_option) {
-                if (_option.tagName === 'DIV') {
-                    _option.removeEventListener('click', _this2.clickSet);
-                }
-            });
+            this.removeOptionsListeners();
 
             refs.selected.removeEventListener('click', this.toggleList);
 
@@ -493,7 +547,7 @@ var Flounder = (function () {
     /**
      * ## destroy
      *
-     * removes flounder and all it'S events from the dom
+     * removes flounder and all it's events from the dom
      *
      * @return _Void_
      */
@@ -573,17 +627,20 @@ var Flounder = (function () {
         key: 'displaySelected',
         value: function displaySelected(selected, refs) {
             var value = [];
+            var index = -1;
 
-            var selectedOption = _slice.call(this.getSelectedOptions(refs.select));
+            var selectedOption = this.getSelectedOptions();
+
             var selectedLength = selectedOption.length;
-            var multiple = this.multiple;
 
-            if (!multiple || !this.multipleTags && selectedLength === 1) {
+            if (!this.multiple || !this.multipleTags && selectedLength === 1) {
+                index = selectedOption[0].index;
                 selected.innerHTML = selectedOption[0].innerHTML;
                 value = selectedOption[0].value;
             } else if (selectedLength === 0) {
                 var _default = this._default;
 
+                index = _default.index || -1;
                 selected.innerHTML = _default.text;
                 value = _default.value;
             } else {
@@ -594,12 +651,17 @@ var Flounder = (function () {
                     selected.innerHTML = this.multipleMessage;
                 }
 
+                index = selectedOption.map(function (option) {
+                    return option.index;
+                });
+
                 value = selectedOption.map(function (option) {
                     return option.value;
                 });
             }
 
             selected.setAttribute('data-value', value);
+            selected.setAttribute('data-index', index);
         }
 
         /**
@@ -701,17 +763,36 @@ var Flounder = (function () {
         }
 
         /**
+         * ## getOption
+         *
+         * returns the option and div tags related to an option
+         *
+         * @param {Number} _i index to return
+         *
+         * @return _Object_ option and div tage
+         */
+    }, {
+        key: 'getOption',
+        value: function getOption(_i) {
+            var refs = this.refs;
+
+            return { option: refs.selectOptions[_i], div: refs.options[_i] };
+        }
+
+        /**
          * ## getSelectedOptions
          *
-         * returns the currently selected otions of a SELECT box
+         * returns the currently selected options of a SELECT box
          *
          * @param {Object} _el select box
          */
     }, {
         key: 'getSelectedOptions',
-        value: function getSelectedOptions(_el) {
+        value: function getSelectedOptions() {
+            var _el = this.refs.select;
+
             if (_el.selectedOptions) {
-                return _el.selectedOptions;
+                return _slice.call(_el.selectedOptions);
             } else {
                 var opts = [],
                     opt;
@@ -873,8 +954,6 @@ var Flounder = (function () {
     }, {
         key: 'onRender',
         value: function onRender() {
-            var _this7 = this;
-
             var props = this.props;
             var refs = this.refs;
             var options = refs.options;
@@ -901,11 +980,7 @@ var Flounder = (function () {
 
             refs.select.addEventListener('change', _divertTarget);
 
-            options.forEach(function (option, i) {
-                if (option.tagName === 'DIV') {
-                    option.addEventListener('click', _this7.clickSet);
-                }
-            });
+            this.addOptionsListeners();
 
             refs.flounder.addEventListener('keydown', this.checkFlounderKeypress);
             refs.selected.addEventListener('click', this.toggleList);
@@ -920,19 +995,38 @@ var Flounder = (function () {
         }
 
         /**
-         * ## checkFlounderKeypress
+         * ## rebuildOptions
          *
-         * checks flounder focused keypresses and filters all but space and enter
+         * after editing the options, this can be used to rebuild only the options
+         *
+         * @param {Array} _options array with optino information
          *
          * @return _Void_
          */
     }, {
-        key: 'checkFlounderKeypress',
-        value: function checkFlounderKeypress(e) {
-            if (e.keyCode === 13 || e.keyCode === 32) {
-                e.preventDefault();
-                this.toggleList(e);
-            }
+        key: 'rebuildOptions',
+        value: function rebuildOptions(_options) {
+            var refs = this.refs;
+            this.removeOptionsListeners();
+
+            refs.select.innerHTML = '';
+            refs.optionsList.innerHTML = '';
+
+            var _select = refs.select;
+            refs.select = false;
+
+            var _buildOptions3 = this.buildOptions(this._default, _options, refs.optionsList, _select);
+
+            var _buildOptions32 = _slicedToArray(_buildOptions3, 2);
+
+            refs.options = _buildOptions32[0];
+            refs.selectOptions = _buildOptions32[1];
+
+            refs.select = _select;
+
+            var selected = this.getSelectedOptions();
+            selected.map(function (el) {});
+            this.addOptionsListeners();
         }
 
         /**
@@ -964,6 +1058,25 @@ var Flounder = (function () {
         }
 
         /**
+         * ## removeOptionsListeners
+         *
+         * removes event listeners on the options divs
+         *
+         * @return _Void_
+         */
+    }, {
+        key: 'removeOptionsListeners',
+        value: function removeOptionsListeners() {
+            var _this7 = this;
+
+            this.refs.options.forEach(function (_option) {
+                if (_option.tagName === 'DIV') {
+                    _option.removeEventListener('click', _this7.clickSet);
+                }
+            });
+        }
+
+        /**
          * ## removeMultiTag
          *
          * removes a multi selection tag on click; fixes all references to value and state
@@ -979,40 +1092,46 @@ var Flounder = (function () {
             e.stopPropagation();
 
             var value = undefined;
+            var index = undefined;
             var refs = this.refs;
             var select = refs.select;
             var selected = refs.selected;
             var target = e.target;
-            var index = target.getAttribute('data-index');
-            select[index].selected = false;
+            var _default = this._default;
+            var targetIndex = target.getAttribute('data-index');
+            select[targetIndex].selected = false;
 
-            var selectedOptions = _slice.call(this.getSelectedOptions(select));
+            var selectedOptions = this.getSelectedOptions();
 
-            this.removeClass(refs.options[index], 'flounder__option--selected--hidden');
-            this.removeClass(refs.options[index], 'flounder__option--selected');
+            this.removeClass(refs.options[targetIndex], 'flounder__option--selected--hidden');
+            this.removeClass(refs.options[targetIndex], 'flounder__option--selected');
 
             var span = target.parentNode;
             span.parentNode.removeChild(span);
 
             if (selectedOptions.length === 0) {
-                selected.innerHTML = this._default.text;
-                value = this._default.value;
+                index = _default.index || -1;
+                selected.innerHTML = _default.text;
+                value = _default.value;
             } else {
                 value = selectedOptions.map(function (option) {
                     return option.value;
+                });
+
+                index = selectedOptions.map(function (option) {
+                    return option.index;
                 });
             }
 
             this.setTextMultiTagIndent();
 
             selected.setAttribute('data-value', value);
+            selected.setAttribute('data-index', index);
 
             if (this.selectFunc) {
                 this.selectFunc(e);
             }
         }
-    }, {
-        key: 'removeSelectKeyListener',
 
         /**
          * ## removeSelectKeyListener
@@ -1021,6 +1140,8 @@ var Flounder = (function () {
          *
          * @return _Void_
          */
+    }, {
+        key: 'removeSelectKeyListener',
         value: function removeSelectKeyListener() {
             var select = this.refs.select;
             select.removeEventListener('keyup', this.setSelectValue);
@@ -1142,7 +1263,6 @@ var Flounder = (function () {
         key: 'setKeypress',
         value: function setKeypress(e) {
             e.preventDefault();
-
             var increment = 0;
             var keyCode = e.keyCode;
 
@@ -1152,7 +1272,7 @@ var Flounder = (function () {
 
             if (keyCode === 13 || keyCode === 27 || keyCode === 32) {
                 this.toggleList(e);
-                return;
+                return false;
             } else if (keyCode === 38) {
                 e.preventDefault();
                 increment--;
@@ -1204,12 +1324,16 @@ var Flounder = (function () {
         key: 'setSelectValue',
         value: function setSelectValue(obj, e) {
             var refs = this.refs;
+            var selection = undefined;
 
             if (e) // click
                 {
                     this.setSelectValueClick(e);
+                    selection = true;
                 } else // keypress
                 {
+                    e = obj;
+
                     if (this.multipleTags) {
                         obj.preventDefault();
                         obj.stopPropagation();
@@ -1217,13 +1341,19 @@ var Flounder = (function () {
                         return false;
                     }
 
-                    this.setSelectValueButton(obj);
+                    selection = this.checkSelect(e);
+
+                    if (selection) {
+                        this.setSelectValueButton(obj);
+                    }
                 }
 
-            this.displaySelected(refs.selected, refs);
+            if (selection) {
+                this.displaySelected(refs.selected, refs);
 
-            if (this.selectFunc) {
-                this.selectFunc(e || obj);
+                if (this.selectFunc) {
+                    this.selectFunc(e);
+                }
             }
         }
 
@@ -1246,7 +1376,7 @@ var Flounder = (function () {
 
             this.removeSelectedClass(options);
 
-            var optionsArray = this.getSelectedOptions(select);
+            var optionsArray = this.getSelectedOptions();
             var baseOption = optionsArray[0];
 
             if (baseOption) {
@@ -1307,7 +1437,8 @@ var Flounder = (function () {
             var offset = this.defaultTextIndent;
 
             if (search) {
-                $('.flounder__multiple--select--tag').each(function (i, e) {
+                var _els = document.getElementsByClassName('flounder__multiple--select--tag');
+                _els.each(function (i, e) {
                     offset += _this10.getActualWidth(e);
                 });
 
@@ -1370,8 +1501,10 @@ var Flounder = (function () {
             var wrapper = refs.wrapper;
 
             if (force === 'open' || force !== 'close' && optionsList.className.indexOf('flounder--hidden') !== -1) {
+                this.toggleList.justOpened = true;
                 this.toggleOpen(e, optionsList, refs, wrapper);
             } else if (force === 'close' || optionsList.className.indexOf('flounder--hidden') === -1) {
+                this.toggleList.justOpened = false;
                 this.toggleClosed(e, optionsList, refs, wrapper);
             }
         }
