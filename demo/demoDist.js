@@ -17,6 +17,10 @@ var _reactDom2 = _interopRequireDefault(_reactDom);
 
 var _srcReactFlounderJsx = require('../src/reactFlounder.jsx');
 
+var _srcFlounderJsx = require('../src/flounder.jsx');
+
+var _srcFlounderJsx2 = _interopRequireDefault(_srcFlounderJsx);
+
 /**
  * example options object
  *
@@ -47,7 +51,7 @@ var options = [{
 /**
  * vanilla amulti-Flounder with tags attached to an input
  */
-new _srcReactFlounderJsx.Flounder(document.getElementById('vanilla--input--tags'), {
+new _srcFlounderJsx2['default'](document.getElementById('vanilla--input--tags'), {
     _default: 'placeholders!',
 
     onInit: function onInit() {
@@ -68,7 +72,7 @@ new _srcReactFlounderJsx.Flounder(document.getElementById('vanilla--input--tags'
 /**
  * vanilla Flounder attached to an input
  */
-new _srcReactFlounderJsx.Flounder(document.getElementById('vanilla--input'), {
+new _srcFlounderJsx2['default'](document.getElementById('vanilla--input'), {
     _default: 2,
 
     onInit: function onInit() {
@@ -102,14 +106,14 @@ new _srcReactFlounderJsx.Flounder(document.getElementById('vanilla--input'), {
 /**
  * vanilla Flounder attached pre built select box
  */
-new _srcReactFlounderJsx.Flounder(document.getElementById('vanilla--select'), {
+new _srcFlounderJsx2['default'](document.getElementById('vanilla--select'), {
     _default: 'placeholders!'
 });
 
 /**
  * vanilla amulti-Flounder with descriptions attached to an input
  */
-new _srcReactFlounderJsx.Flounder(document.getElementById('vanilla--multiple--desc'), {
+new _srcFlounderJsx2['default'](document.getElementById('vanilla--multiple--desc'), {
     _default: 'placeholders!',
 
     onInit: function onInit() {
@@ -212,10 +216,38 @@ _reactDom2['default'].render(_react2['default'].createElement(_srcReactFlounderJ
         this.options = res;
     } }), document.getElementById('react--multiple--desc'));
 
-exports['default'] = { React: _react2['default'], Component: _react.Component, ReactDOM: _reactDom2['default'], FlounderReact: _srcReactFlounderJsx.FlounderReact, Flounder: _srcReactFlounderJsx.Flounder };
+requirejs.config({
+    paths: {
+        flounder: '../dist/amdFlounder'
+    }
+});
+
+/**
+ * vanilla Flounder with descriptions attached to a div
+ */
+requirejs(['flounder'], function (Flounder) {
+    new Flounder(document.getElementById('AMD--desc'), {
+        _default: 'placeholders!',
+
+        onInit: function onInit() {
+            var res = [];
+            options.forEach(function (option) {
+                res.push({
+                    text: option.text,
+                    value: option.id,
+                    description: option.text + ' - ' + option.text
+                });
+            });
+
+            this.options = res;
+        }
+    });
+});
+
+exports['default'] = { React: _react2['default'], Component: _react.Component, ReactDOM: _reactDom2['default'], FlounderReact: _srcReactFlounderJsx.FlounderReact, Flounder: _srcFlounderJsx2['default'] };
 module.exports = exports['default'];
 
-},{"../src/reactFlounder.jsx":161,"react":159,"react-dom":3}],2:[function(require,module,exports){
+},{"../src/flounder.jsx":160,"../src/reactFlounder.jsx":161,"react":159,"react-dom":3}],2:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};

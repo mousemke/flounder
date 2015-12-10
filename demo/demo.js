@@ -1,6 +1,7 @@
-import React, { Component }             from 'react';
-import ReactDOM                         from 'react-dom';
-import { FlounderReact, Flounder }      from '../src/reactFlounder.jsx';
+import React, { Component }     from 'react';
+import ReactDOM                 from 'react-dom';
+import { FlounderReact }        from '../src/reactFlounder.jsx';
+import Flounder                 from '../src/flounder.jsx';
 
 /**
  * example options object
@@ -229,5 +230,37 @@ ReactDOM.render( React.createElement( FlounderReact, {
         this.options = res;
     } } ), document.getElementById( 'react--multiple--desc' )
 );
+
+
+requirejs.config( {
+    paths : {
+        flounder : '../dist/amdFlounder'
+    }
+} );
+
+/**
+ * vanilla Flounder with descriptions attached to a div
+ */
+requirejs( [ 'flounder' ], function( Flounder )
+{
+    new Flounder( document.getElementById( 'AMD--desc' ), {
+        _default             : 'placeholders!',
+
+        onInit               : function()
+        {
+            var res = [];
+            options.forEach( function( option )
+            {
+                res.push( {
+                    text        : option.text,
+                    value       : option.id,
+                    description : option.text + ' - ' + option.text
+                } );
+            } );
+
+            this.options = res;
+        }
+     } );
+} );
 
 export default { React, Component, ReactDOM, FlounderReact, Flounder };

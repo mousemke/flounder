@@ -31,16 +31,16 @@ gulp.task( 'react', function()
 } );
 
 
-gulp.task( 'common', function()
+gulp.task( 'amd', function()
 {
-    browserify( './src/commonFlounder.jsx' )
+    browserify( './src/amdFlounder.jsx' )
         .transform( babelify, { stage : 0 } )
         .bundle()
-        .pipe( fs.createWriteStream( __dirname + '/dist/commonFlounder.js' ) );
+        .pipe( fs.createWriteStream( __dirname + '/dist/amdFlounder.js' ) );
 } );
 
 
 gulp.task( 'default', [], function()
 {
-    gulp.start( [ 'vanilla', 'react', 'common',  'demo' ] );
+    gulp.start( [ 'vanilla', 'react', 'amd',  'demo' ] );
 } );

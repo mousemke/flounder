@@ -4,7 +4,4 @@
 
 import Flounder from './flounder.jsx';
 
-define( function ( require )
-{
-    return Flounder;
-} );
+define( 'flounder', [], function(){ return Flounder; } );

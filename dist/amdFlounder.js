@@ -9,8 +9,8 @@ var _flounderJsx = require('./flounder.jsx');
 
 var _flounderJsx2 = _interopRequireDefault(_flounderJsx);
 
-define(function (require) {
-    return _flounderJsx2['default'];
+define('flounder', [], function () {
+  return _flounderJsx2['default'];
 });
 
 },{"./flounder.jsx":2}],2:[function(require,module,exports){
