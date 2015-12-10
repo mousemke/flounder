@@ -201,6 +201,9 @@ Change Log
 + added dynamic options
 + added getSelected
 + fixes in keypress handlers
++ added support for AMD loaders
++ added a jquery plugin wrapper
++ added a microbe plugin wrapper
 
 
 0.1.4

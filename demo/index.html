@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
+    <meta charset="utf-8">
         <title>Flounder demo</title>
         <link rel="stylesheet" href="../dist/flounder-structure.css">
         <style type="text/css">
@@ -36,14 +37,6 @@
             </select>
         </div>
         <div>
-            <span class="demo--label">Vanilla from Div (multiple, no-tags, desciption)</span>
-            <div style="display:inline-block;" id="vanilla--multiple--desc"></div>
-        </div>
-        <div>
-            <span class="demo--label">React from Div</span>
-            <div style="display:inline-block;" id="react--div"></div>
-        </div>
-        <div>
             <span class="demo--label">React from Div (multiple, tags)</span>
             <div style="display:inline-block;" id="react--multiple--tags"></div>
         </div>
@@ -59,7 +52,19 @@
             <span class="demo--label">AMD required vanilla from Div (desciption)</span>
             <div style="display:inline-block;" id="AMD--desc"></div>
         </div>
+        <div>
+            <span class="demo--label">Microbe plugin from Div (multiple, no-tags, desciption)</span>
+            <div style="display:inline-block;" id="microbe--multiple--desc"></div>
+        </div>
+        <div>
+            <span class="demo--label">jQuery plugin from Div</span>
+            <div style="display:inline-block;" id="jquery--div"></div>
+        </div>
 
+        <script type="text/javascript" src="./vendor/jquery.js"></script>
+        <script type="text/javascript" src="../dist/jqueryFlounder.js"></script>
+        <script type="text/javascript" src="./vendor/microbe.js"></script>
+        <script type="text/javascript" src="../dist/microbeFlounder.js"></script>
         <script type="text/javascript" data-main="../demo/demoDist.js" src="../node_modules/requirejs/require.js"></script>
     </body>
 </html>

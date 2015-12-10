@@ -108,54 +108,6 @@ new Flounder( document.getElementById( 'vanilla--select' ), {
 
 
 /**
- * vanilla amulti-Flounder with descriptions attached to an input
- */
-new Flounder( document.getElementById( 'vanilla--multiple--desc' ), {
-    _default             : 'placeholders!',
-
-    onInit               : function()
-    {
-        var res = [];
-        options.forEach( function( option )
-        {
-            res.push( {
-                text        : option.text,
-                value       : option.id,
-                description : option.text + ' - ' + option.text
-            } );
-        } );
-
-        this.options = res;
-    },
-
-    multiple            : true,
-    multipleTags        : false
- } );
-
-
-/**
- * react Flounder attached to a div
- */
-ReactDOM.render( React.createElement( FlounderReact, {
-    _default             : 'placeholders!',
-
-    onInit               : function()
-    {
-        var res = [];
-        options.forEach( function( option )
-        {
-            res.push( {
-                text        : option.text,
-                value       : option.id
-            } );
-        } );
-
-        this.options = res;
-    } } ), document.getElementById( 'react--div' )
-);
-
-
-/**
  * react amulti-Flounder with tags attached to an div
  */
 ReactDOM.render( React.createElement( FlounderReact, {
@@ -262,5 +214,53 @@ requirejs( [ 'flounder' ], function( Flounder )
         }
      } );
 } );
+
+
+/**
+ * microbe multi-Flounder with descriptions attached to an input
+ */
+µ( '#microbe--multiple--desc' ).flounder( {
+    _default             : 'placeholders!',
+
+    onInit               : function()
+    {
+        var res = [];
+        options.forEach( function( option )
+        {
+            res.push( {
+                text        : option.text,
+                value       : option.id,
+                description : option.text + ' - ' + option.text
+            } );
+        } );
+
+        this.options = res;
+    },
+
+    multiple            : true,
+    multipleTags        : false
+ } );
+
+
+/**
+ * jquery Flounder attached to a div
+ */
+ $( '#jquery--div' ).flounder( {
+    _default             : 'placeholders!',
+
+    onInit               : function()
+    {
+        var res = [];
+        options.forEach( function( option )
+        {
+            res.push( {
+                text        : option.text,
+                value       : option.id
+            } );
+        } );
+
+        this.options = res;
+    } } );
+
 
 export default { React, Component, ReactDOM, FlounderReact, Flounder };

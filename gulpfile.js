@@ -40,7 +40,25 @@ gulp.task( 'amd', function()
 } );
 
 
+gulp.task( 'jquery', function()
+{
+    browserify( './src/jqueryFlounder.jsx' )
+        .transform( babelify, { stage : 0 } )
+        .bundle()
+        .pipe( fs.createWriteStream( __dirname + '/dist/jqueryFlounder.js' ) );
+} );
+
+
+gulp.task( 'microbe', function()
+{
+    browserify( './src/microbeFlounder.jsx' )
+        .transform( babelify, { stage : 0 } )
+        .bundle()
+        .pipe( fs.createWriteStream( __dirname + '/dist/microbeFlounder.js' ) );
+} );
+
+
 gulp.task( 'default', [], function()
 {
-    gulp.start( [ 'vanilla', 'react', 'amd',  'demo' ] );
+    gulp.start( [ 'vanilla', 'react', 'amd', 'jquery', 'microbe', 'demo' ] );
 } );

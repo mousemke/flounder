@@ -111,47 +111,6 @@ new _srcFlounderJsx2['default'](document.getElementById('vanilla--select'), {
 });
 
 /**
- * vanilla amulti-Flounder with descriptions attached to an input
- */
-new _srcFlounderJsx2['default'](document.getElementById('vanilla--multiple--desc'), {
-    _default: 'placeholders!',
-
-    onInit: function onInit() {
-        var res = [];
-        options.forEach(function (option) {
-            res.push({
-                text: option.text,
-                value: option.id,
-                description: option.text + ' - ' + option.text
-            });
-        });
-
-        this.options = res;
-    },
-
-    multiple: true,
-    multipleTags: false
-});
-
-/**
- * react Flounder attached to a div
- */
-_reactDom2['default'].render(_react2['default'].createElement(_srcReactFlounderJsx.FlounderReact, {
-    _default: 'placeholders!',
-
-    onInit: function onInit() {
-        var res = [];
-        options.forEach(function (option) {
-            res.push({
-                text: option.text,
-                value: option.id
-            });
-        });
-
-        this.options = res;
-    } }), document.getElementById('react--div'));
-
-/**
  * react amulti-Flounder with tags attached to an div
  */
 _reactDom2['default'].render(_react2['default'].createElement(_srcReactFlounderJsx.FlounderReact, {
@@ -243,6 +202,47 @@ requirejs(['flounder'], function (Flounder) {
         }
     });
 });
+
+/**
+ * microbe multi-Flounder with descriptions attached to an input
+ */
+µ('#microbe--multiple--desc').flounder({
+    _default: 'placeholders!',
+
+    onInit: function onInit() {
+        var res = [];
+        options.forEach(function (option) {
+            res.push({
+                text: option.text,
+                value: option.id,
+                description: option.text + ' - ' + option.text
+            });
+        });
+
+        this.options = res;
+    },
+
+    multiple: true,
+    multipleTags: false
+});
+
+/**
+ * jquery Flounder attached to a div
+ */
+$('#jquery--div').flounder({
+    _default: 'placeholders!',
+
+    onInit: function onInit() {
+        var res = [];
+        options.forEach(function (option) {
+            res.push({
+                text: option.text,
+                value: option.id
+            });
+        });
+
+        this.options = res;
+    } });
 
 exports['default'] = { React: _react2['default'], Component: _react.Component, ReactDOM: _reactDom2['default'], FlounderReact: _srcReactFlounderJsx.FlounderReact, Flounder: _srcFlounderJsx2['default'] };
 module.exports = exports['default'];
