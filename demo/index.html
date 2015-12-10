@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-    <meta charset="utf-8">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
         <title>Flounder demo</title>
         <link rel="stylesheet" href="../dist/flounder-structure.css">
         <style type="text/css">
@@ -66,5 +66,79 @@
         <script type="text/javascript" src="./vendor/microbe.js"></script>
         <script type="text/javascript" src="../dist/microbeFlounder.js"></script>
         <script type="text/javascript" data-main="../demo/demoDist.js" src="../node_modules/requirejs/require.js"></script>
+
+        <script type="text/javascript">
+            var options = [
+                {
+                    cssClass    : 'select-filters',
+                    id          : 'All',
+                    isTaxonomy  : true,
+                    text        : 'All'
+                },
+                {
+                    cssClass    : 'category',
+                    id          : 'category',
+                    isTaxonomy  : true,
+                    text        : 'Categories'
+                },
+                {
+                    cssClass    : 'tag',
+                    id          : 'tag',
+                    isTaxonomy  : true,
+                    text        : 'Tags'
+                },
+                {
+                    cssClass    : 'month',
+                    id          : 'month',
+                    isTaxonomy  : true,
+                    text        : 'Month'
+                }
+            ];
+
+            /**
+             * microbe multi-Flounder with descriptions attached to an input
+             */
+            µ( '#microbe--multiple--desc' ).flounder( {
+                _default             : 'placeholders!',
+
+                onInit               : function()
+                {
+                    var res = [];
+                    options.forEach( function( option )
+                    {
+                        res.push( {
+                            text        : option.text,
+                            value       : option.id,
+                            description : option.text + ' - ' + option.text
+                        } );
+                    } );
+
+                    this.options = res;
+                },
+
+                multiple            : true,
+                multipleTags        : false
+             } );
+
+
+            /**
+             * jquery Flounder attached to a div
+             */
+             $( '#jquery--div' ).flounder( {
+                _default             : 'placeholders!',
+
+                onInit               : function()
+                {
+                    var res = [];
+                    options.forEach( function( option )
+                    {
+                        res.push( {
+                            text        : option.text,
+                            value       : option.id
+                        } );
+                    } );
+
+                    this.options = res;
+                } } );</script>
     </body>
 </html>

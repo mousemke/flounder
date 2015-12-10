@@ -260,6 +260,7 @@ class Flounder
                     value   : _option
                 };
             }
+            _option.index   = i;
 
             let escapedText = this.escapeHTML( _option.text );
             let extraClass  = i === _default.index ? '  ' + this.selectedClass : '';
@@ -279,7 +280,7 @@ class Flounder
 
             options[ i ] = constructElement( res );
 
-            options[ i ].innerHTML = escapedText;
+            options[ i ].innerHTML  = escapedText;
             optionsList.appendChild( options[ i ] );
 
             let description = _option.description;
@@ -835,29 +836,21 @@ console.log( target.className );
      */
     getSelectedOptions()
     {
-        let _el = this.refs.select;
+        let _el         = this.refs.select;
+        let opts        = [], opt;
+        let _options    = _el.options;
 
-        if ( _el.selectedOptions )
+        for ( let i = 0, len = _options.length; i < len; i++ )
         {
-            return _slice.call( _el.selectedOptions );
-        }
-        else
-        {
-            var opts        = [], opt;
-            var _options    = _el.options;
+            opt = _options[ i ];
 
-            for ( var i = 0, len = _options.length; i < len; i++ )
+            if ( opt.selected )
             {
-                opt = _options[ i ];
-
-                if ( opt.selected )
-                {
-                    opts.push( opt );
-                }
+                opts.push( opt );
             }
-
-            return opts;
         }
+
+        return opts;
     }
 
 
@@ -1059,7 +1052,9 @@ console.log( target.className );
      */
     rebuildOptions( _options )
     {
-        let refs = this.refs;
+        let refs        = this.refs;
+        let selected    = refs.select.selectedOptions;
+        selected        = _slice.call( selected ).map( function( e ){ return e.value; } );
         this.removeOptionsListeners();
 
         refs.select.innerHTML       = '';
@@ -1070,10 +1065,21 @@ console.log( target.className );
         [ refs.options, refs.selectOptions ] = this.buildOptions( this._default, _options, refs.optionsList, _select );
         refs.select                 = _select;
 
-        let selected = this.getSelectedOptions();
-        selected.map( el =>
+        this.removeSelectedValue();
+        this.removeSelectedClass();
+
+        refs.selectOptions.forEach( ( el, i ) =>
         {
+            let valuePosition = selected.indexOf( el.value );
+
+            if ( valuePosition !== -1 )
+            {
+                selected.splice( valuePosition, 1 );
+                el.selected = true;
+                this.addClass( refs.options[ i ], this.selectedClass );
+            }
         } );
+
         this.addOptionsListeners();
     }
 
@@ -1213,6 +1219,8 @@ console.log( target.className );
      */
     removeSelectedClass( options )
     {
+        options = options || this.refs.options;
+
         options.forEach( ( _option, i ) =>
         {
             this.removeClass( _option, this.selectedClass );
@@ -1229,6 +1237,8 @@ console.log( target.className );
      */
     removeSelectedValue( options )
     {
+        options = options || this.refs.options;
+
         options.forEach( ( _option, i ) =>
         {
             this.refs.select[ i ].selected = false;
@@ -1486,8 +1496,8 @@ console.log( target.className );
 
         if ( !_multiple || ( _multiple && !this.multipleTags && !e[ this.multiSelect ] ) )
         {
-            this.removeSelectedClass( options );
-            this.removeSelectedValue( options );
+            this.removeSelectedClass();
+            this.removeSelectedValue();
         }
         let target              = e.target;
 

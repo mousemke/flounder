@@ -6,7 +6,7 @@
  * Released under the MIT license
  * http://m.icro.be/license
  *
- * Date: Tue Dec 08 2015
+ * Date: Thu Dec 10 2015
  */
 !function(e){if("object"==typeof exports&&"undefined"!=typeof module)module.exports=e();else if("function"==typeof define&&define.amd)define([],e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.µ=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 /**
@@ -1722,13 +1722,13 @@ Promise.all = function (arr) {
 }
 
 Promise.reject = function (value) {
-  return new Promise(function (resolve, reject) {
+  return new Promise(function (resolve, reject) { 
     reject(value);
   });
 }
 
 Promise.race = function (values) {
-  return new Promise(function (resolve, reject) {
+  return new Promise(function (resolve, reject) { 
     values.forEach(function(value){
       Promise.resolve(value).then(resolve, reject);
     })
@@ -2657,7 +2657,7 @@ module.exports = function( Microbe )
            return _getHtml( _value );
         }
 
-        if ( _value || _value === '' || _value === 0 )
+        if ( _value || _value === '' || _value === 0 )
         {
             var _setHtml = function( _elm )
             {
@@ -2845,7 +2845,7 @@ module.exports = function( Microbe )
             }
         };
 
-        if ( _value || _value === '' ||_value === 0 )
+        if ( _value || _value === '' || _value === 0 )
         {
             this.each( _setText );
 
@@ -3675,7 +3675,7 @@ module.exports = function( Microbe )
         _el.innerHTML = css;
 
         Microbe.__customCSSRules[ _s ] = Microbe.__customCSSRules[ _s ] || {};
-        Microbe.__customCSSRules[ _s ][ media ] = { el: _el, obj: cssObj };
+        Microbe.__customCSSRules[ _s ][ media ] = { el: _el, obj: cssObj };
 
         return _el;
     };
@@ -4384,7 +4384,7 @@ module.exports = {
  *
  * @return {boolean}
  */
-const _includes = function()
+var _includes = function()
 {
     var elemToSearch = arguments[0];
     var indexToStart = arguments[1] >> 0;
@@ -4859,7 +4859,7 @@ module.exports = function( Microbe )
     Microbe.core.siblingsFlat = function( selector )
     {
         var i = 0, siblingsArray = [];
-        var isSiblingConnector = ( selector === '+' ||selector === '~' );
+        var isSiblingConnector = ( selector === '+' || selector === '~' );
 
         var _siblingsFlat = function( _el )
         {

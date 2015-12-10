@@ -19281,6 +19281,7 @@ var Flounder = (function () {
                         value: _option
                     };
                 }
+                _option.index = i;
 
                 var escapedText = _this2.escapeHTML(_option.text);
                 var extraClass = i === _default.index ? '  ' + _this2.selectedClass : '';
@@ -19805,24 +19806,19 @@ var Flounder = (function () {
         key: 'getSelectedOptions',
         value: function getSelectedOptions() {
             var _el = this.refs.select;
+            var opts = [],
+                opt = undefined;
+            var _options = _el.options;
 
-            if (_el.selectedOptions) {
-                return _slice.call(_el.selectedOptions);
-            } else {
-                var opts = [],
-                    opt;
-                var _options = _el.options;
+            for (var i = 0, len = _options.length; i < len; i++) {
+                opt = _options[i];
 
-                for (var i = 0, len = _options.length; i < len; i++) {
-                    opt = _options[i];
-
-                    if (opt.selected) {
-                        opts.push(opt);
-                    }
+                if (opt.selected) {
+                    opts.push(opt);
                 }
-
-                return opts;
             }
+
+            return opts;
         }
 
         /**
@@ -20021,7 +20017,13 @@ var Flounder = (function () {
     }, {
         key: 'rebuildOptions',
         value: function rebuildOptions(_options) {
+            var _this7 = this;
+
             var refs = this.refs;
+            var selected = refs.select.selectedOptions;
+            selected = _slice.call(selected).map(function (e) {
+                return e.value;
+            });
             this.removeOptionsListeners();
 
             refs.select.innerHTML = '';
@@ -20039,8 +20041,19 @@ var Flounder = (function () {
 
             refs.select = _select;
 
-            var selected = this.getSelectedOptions();
-            selected.map(function (el) {});
+            this.removeSelectedValue();
+            this.removeSelectedClass();
+
+            refs.selectOptions.forEach(function (el, i) {
+                var valuePosition = selected.indexOf(el.value);
+
+                if (valuePosition !== -1) {
+                    selected.splice(valuePosition, 1);
+                    el.selected = true;
+                    _this7.addClass(refs.options[i], _this7.selectedClass);
+                }
+            });
+
             this.addOptionsListeners();
         }
 
@@ -20082,11 +20095,11 @@ var Flounder = (function () {
     }, {
         key: 'removeOptionsListeners',
         value: function removeOptionsListeners() {
-            var _this7 = this;
+            var _this8 = this;
 
             this.refs.options.forEach(function (_option) {
                 if (_option.tagName === 'DIV') {
-                    _option.removeEventListener('click', _this7.clickSet);
+                    _option.removeEventListener('click', _this8.clickSet);
                 }
             });
         }
@@ -20172,10 +20185,12 @@ var Flounder = (function () {
     }, {
         key: 'removeSelectedClass',
         value: function removeSelectedClass(options) {
-            var _this8 = this;
+            var _this9 = this;
+
+            options = options || this.refs.options;
 
             options.forEach(function (_option, i) {
-                _this8.removeClass(_option, _this8.selectedClass);
+                _this9.removeClass(_option, _this9.selectedClass);
             });
         }
 
@@ -20189,10 +20204,12 @@ var Flounder = (function () {
     }, {
         key: 'removeSelectedValue',
         value: function removeSelectedValue(options) {
-            var _this9 = this;
+            var _this10 = this;
+
+            options = options || this.refs.options;
 
             options.forEach(function (_option, i) {
-                _this9.refs.select[i].selected = false;
+                _this10.refs.select[i].selected = false;
             });
         }
 
@@ -20423,8 +20440,8 @@ var Flounder = (function () {
                 selectedOption = undefined;
 
             if (!_multiple || _multiple && !this.multipleTags && !e[this.multiSelect]) {
-                this.removeSelectedClass(options);
-                this.removeSelectedValue(options);
+                this.removeSelectedClass();
+                this.removeSelectedValue();
             }
             var target = e.target;
 
@@ -20446,7 +20463,7 @@ var Flounder = (function () {
     }, {
         key: 'setTextMultiTagIndent',
         value: function setTextMultiTagIndent() {
-            var _this10 = this;
+            var _this11 = this;
 
             var search = this.refs.search;
             var offset = this.defaultTextIndent;
@@ -20454,7 +20471,7 @@ var Flounder = (function () {
             if (search) {
                 var _els = document.getElementsByClassName('flounder__multiple--select--tag');
                 _els.each(function (i, e) {
-                    offset += _this10.getActualWidth(e);
+                    offset += _this11.getActualWidth(e);
                 });
 
                 search.style.textIndent = offset + 'px';

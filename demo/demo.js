@@ -86,14 +86,23 @@ new Flounder( document.getElementById( 'vanilla--input' ), {
 
     onSelect            : function( e )
     {
-        var rand = function()
+        var selected = this.refs.select.selectedIndex;
+
+        var rand = function( option, i )
         {
-            return Math.ceil( Math.random() * 10 );
+            if ( selected === i )
+            {
+                return option;
+            }
+            else
+            {
+                var value = Math.ceil( Math.random() * 10 );
+                return { text : value, value : value, index : i };
+            }
         };
 
-        var _o  = new Array( 5 ).fill( 0 );
-        _o      = _o.map( rand );
-
+        let _o          = this.options.map( rand );
+        this.options    = _o;
         this.rebuildOptions( _o );
     }
 } );
@@ -214,53 +223,6 @@ requirejs( [ 'flounder' ], function( Flounder )
         }
      } );
 } );
-
-
-/**
- * microbe multi-Flounder with descriptions attached to an input
- */
-µ( '#microbe--multiple--desc' ).flounder( {
-    _default             : 'placeholders!',
-
-    onInit               : function()
-    {
-        var res = [];
-        options.forEach( function( option )
-        {
-            res.push( {
-                text        : option.text,
-                value       : option.id,
-                description : option.text + ' - ' + option.text
-            } );
-        } );
-
-        this.options = res;
-    },
-
-    multiple            : true,
-    multipleTags        : false
- } );
-
-
-/**
- * jquery Flounder attached to a div
- */
- $( '#jquery--div' ).flounder( {
-    _default             : 'placeholders!',
-
-    onInit               : function()
-    {
-        var res = [];
-        options.forEach( function( option )
-        {
-            res.push( {
-                text        : option.text,
-                value       : option.id
-            } );
-        } );
-
-        this.options = res;
-    } } );
 
 
 export default { React, Component, ReactDOM, FlounderReact, Flounder };
