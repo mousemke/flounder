@@ -19363,8 +19363,8 @@ var Flounder = (function () {
     }, {
         key: 'checkClickTarget',
         value: function checkClickTarget(e, target) {
-            target = target || e.target;
-            console.log(target.className);
+            target = target || this.refs.options[e.target.getAttribute('data-index')] || e.target;
+
             if (target === document) {
                 return false;
             } else if (target === this.refs.flounder) {
@@ -19453,6 +19453,7 @@ var Flounder = (function () {
             this.setSelectValue({}, e);
 
             if (!this.multiple || !e[this.multiSelect]) {
+
                 this.toggleList(e);
             }
         }
@@ -20008,7 +20009,7 @@ var Flounder = (function () {
         /**
          * ## rebuildOptions
          *
-         * after editing the options, this can be used to rebuild only the options
+         * after editing the options, this can be used to rebuild them
          *
          * @param {Array} _options array with optino information
          *
@@ -20443,6 +20444,7 @@ var Flounder = (function () {
                 this.removeSelectedClass();
                 this.removeSelectedValue();
             }
+
             var target = e.target;
 
             this.toggleClass(target, selectedClass);

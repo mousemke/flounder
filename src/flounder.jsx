@@ -352,8 +352,8 @@ class Flounder
      */
     checkClickTarget( e, target )
     {
-        target = target || e.target;
-console.log( target.className );
+        target = target || this.refs.options[ e.target.getAttribute( 'data-index' ) ] || e.target;
+
         if ( target === document )
         {
             return false;
@@ -362,6 +362,7 @@ console.log( target.className );
         {
             return true;
         }
+
 
         return this.checkClickTarget( e, target.parentNode );
     }
@@ -456,6 +457,7 @@ console.log( target.className );
 
         if ( !this.multiple || !e[ this.multiSelect ] )
         {
+
             this.toggleList( e );
         }
     }
@@ -1044,7 +1046,7 @@ console.log( target.className );
     /**
      * ## rebuildOptions
      *
-     * after editing the options, this can be used to rebuild only the options
+     * after editing the options, this can be used to rebuild them
      *
      * @param {Array} _options array with optino information
      *
@@ -1499,6 +1501,7 @@ console.log( target.className );
             this.removeSelectedClass();
             this.removeSelectedValue();
         }
+
         let target              = e.target;
 
         this.toggleClass( target, selectedClass );

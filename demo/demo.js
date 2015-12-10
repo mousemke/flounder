@@ -3,6 +3,7 @@ import ReactDOM                 from 'react-dom';
 import { FlounderReact }        from '../src/reactFlounder.jsx';
 import Flounder                 from '../src/flounder.jsx';
 
+var _slice = Array.prototype.slice;
 /**
  * example options object
  *
@@ -86,11 +87,12 @@ new Flounder( document.getElementById( 'vanilla--input' ), {
 
     onSelect            : function( e )
     {
-        var selected = this.refs.select.selectedIndex;
+        var selected    = _slice.call( this.refs.select.selectedOptions );
+        selected        = selected.map( el => el.index );
 
         var rand = function( option, i )
         {
-            if ( selected === i )
+            if ( selected.indexOf( i ) !== -1 )
             {
                 return option;
             }

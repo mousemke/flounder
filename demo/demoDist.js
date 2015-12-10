@@ -21,6 +21,7 @@ var _srcFlounderJsx = require('../src/flounder.jsx');
 
 var _srcFlounderJsx2 = _interopRequireDefault(_srcFlounderJsx);
 
+var _slice = Array.prototype.slice;
 /**
  * example options object
  *
@@ -92,10 +93,13 @@ new _srcFlounderJsx2['default'](document.getElementById('vanilla--input'), {
     multipleTags: false,
 
     onSelect: function onSelect(e) {
-        var selected = this.refs.select.selectedIndex;
+        var selected = _slice.call(this.refs.select.selectedOptions);
+        selected = selected.map(function (el) {
+            return el.index;
+        });
 
         var rand = function rand(option, i) {
-            if (selected === i) {
+            if (selected.indexOf(i) !== -1) {
                 return option;
             } else {
                 var value = Math.ceil(Math.random() * 10);
@@ -19577,8 +19581,8 @@ var Flounder = (function () {
     }, {
         key: 'checkClickTarget',
         value: function checkClickTarget(e, target) {
-            target = target || e.target;
-            console.log(target.className);
+            target = target || this.refs.options[e.target.getAttribute('data-index')] || e.target;
+
             if (target === document) {
                 return false;
             } else if (target === this.refs.flounder) {
@@ -19667,6 +19671,7 @@ var Flounder = (function () {
             this.setSelectValue({}, e);
 
             if (!this.multiple || !e[this.multiSelect]) {
+
                 this.toggleList(e);
             }
         }
@@ -20222,7 +20227,7 @@ var Flounder = (function () {
         /**
          * ## rebuildOptions
          *
-         * after editing the options, this can be used to rebuild only the options
+         * after editing the options, this can be used to rebuild them
          *
          * @param {Array} _options array with optino information
          *
@@ -20657,6 +20662,7 @@ var Flounder = (function () {
                 this.removeSelectedClass();
                 this.removeSelectedValue();
             }
+
             var target = e.target;
 
             this.toggleClass(target, selectedClass);

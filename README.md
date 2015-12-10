@@ -204,6 +204,7 @@ Change Log
 + added support for AMD loaders
 + added a jquery plugin wrapper
 + added a microbe plugin wrapper
++ fixed multi-select with dynamic options
 
 
 0.1.4
