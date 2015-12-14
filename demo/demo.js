@@ -54,7 +54,8 @@ new Flounder( '.vanilla--input--tags', {
         {
             res.push( {
                 text        : option.text,
-                value       : option.id
+                value       : option.id,
+                extraClass  : 'vantar' + Math.ceil( Math.random() * 10 )
             } );
         } );
 

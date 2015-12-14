@@ -78,8 +78,8 @@ select options must be passed as an array of objects
     {
         text        : 'probably the string you want to see',
         value       : 'return value',
-        description : 'a longer description of this option' // optional
-        classname   : 'extra--classname' // optional
+        description : 'a longer description of this option', // optional
+        extraClass  : 'extra--classname' // optional
     }
 ]
 ```
@@ -92,10 +92,12 @@ or an array.
     'option 3'
 ]
 ```
+
 in the case of an array, the passed text will be both the text and the value.  There would be no description in this case
 
 
 all extra properties passed that are not shown here will be added as data attributes for the sake of reference later.  The options can be accessed in the init (before building) as this.options if they need reformatting or filtering.
+
 
 API
 ===

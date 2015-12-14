@@ -19308,6 +19308,12 @@ var Flounder = (function () {
                     addOptionDescription(options[i], description);
                 }
 
+                var uniqueExtraClass = _option.extraClass;
+
+                if (uniqueExtraClass) {
+                    options[i].className += '  ' + uniqueExtraClass;
+                }
+
                 if (!_this2.refs.select) {
                     selectOptions[i] = constructElement({ tagname: 'option',
                         className: 'flounder--option--tag',
@@ -19558,6 +19564,8 @@ var Flounder = (function () {
             this.refs.select.flounder = this.refs.selected.flounder = this.target.flounder = this;
 
             return this;
+        } else if (!target && !props) {
+            return this.constructor;
         }
     }
 

@@ -290,6 +290,13 @@ class Flounder
                 addOptionDescription( options[ i ], description );
             }
 
+            let uniqueExtraClass    = _option.extraClass;
+
+            if ( uniqueExtraClass )
+            {
+                options[ i ].className += '  ' + uniqueExtraClass;
+            }
+
             if ( ! this.refs.select )
             {
                 selectOptions[ i ] = constructElement( { tagname : 'option',

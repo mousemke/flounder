@@ -62,7 +62,8 @@ new _srcFlounderJsx2['default']('.vanilla--input--tags', {
         options.forEach(function (option) {
             res.push({
                 text: option.text,
-                value: option.id
+                value: option.id,
+                extraClass: 'vantar' + Math.ceil(Math.random() * 10)
             });
         });
 
@@ -19526,6 +19527,12 @@ var Flounder = (function () {
 
                 if (description) {
                     addOptionDescription(options[i], description);
+                }
+
+                var uniqueExtraClass = _option.extraClass;
+
+                if (uniqueExtraClass) {
+                    options[i].className += '  ' + uniqueExtraClass;
                 }
 
                 if (!_this2.refs.select) {
