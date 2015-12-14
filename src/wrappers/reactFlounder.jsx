@@ -149,7 +149,7 @@ class FlounderReact extends Component
         let options         = this.options = this.prepOptions( props.options || this.options );
         let handleChange    = this.handleChange.bind( this );
         let multiple        = props.multiple;
-        let _default        = this._default = this.setDefaultOption( props._default || this._default, options );
+        let defaultValue    = this.defaultValue = this.setDefaultOption( props.defaultValue || this.defaultValue, options );
         let containerClass  = this.containerClass;
 
         let _stateModifier  = this.state.modifier;
@@ -158,8 +158,8 @@ class FlounderReact extends Component
         return (
             <div ref="wrapper" className="flounder-wrapper  flounder__input--select">
                 <div ref="flounder" tabIndex="0" className={'flounder' + containerClass}>
-                    <div ref="selected" className="flounder__option--selected--displayed" data-value={_default.value}>
-                        {_default.text}
+                    <div ref="selected" className="flounder__option--selected--displayed" data-value={defaultValue.value}>
+                        {defaultValue.text}
                     </div>
                     { props.multiple ? <div ref="multiTagWrapper" className="multi--tag--list"  multiple></div> : null }
                     <div ref="arrow" className="flounder__arrow"></div>
@@ -168,7 +168,7 @@ class FlounderReact extends Component
                         {
                             options.map( ( _option, i ) =>
                             {
-                                let extraClass = i === props._default ? '  flounder__option--selected' : '';
+                                let extraClass = i === props.defaultValue ? '  flounder__option--selected' : '';
                                 extraClass += _option.disabled ? '  flounder--disabled' : '';
 
                                 if ( typeof _option === 'string' )
@@ -195,7 +195,7 @@ class FlounderReact extends Component
                 {
                     options.map( ( _option, i ) =>
                     {
-                        let extraClass  = i === _default ? '  ' + this.selectedClass : '';
+                        let extraClass  = i === defaultValue ? '  ' + this.selectedClass : '';
 
                         let res = {
                             className       : 'flounder__option' + extraClass,

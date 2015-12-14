@@ -1,4 +1,4 @@
-Flounder.js 0.1.6
+Flounder.js 0.2.0
 =================
 
 (for modern browsers and ie9+)
@@ -47,7 +47,7 @@ $( '.example--class' ).flounder( configOptions );
 
 ```
 {
-    _default            : defaultValue,
+    defaultValue        : defaultValue,
     classes             : {
         container       : 'extra--class',
         hidden          : 'class--to--denote--hidden',
@@ -56,12 +56,11 @@ $( '.example--class' ).flounder( configOptions );
     multiple            : false,
     multipleTags        : true,
     multipleMessage     : '(Multiple Items Selected)',
-    onCancel            : function( e ){},
-    onClose             : function( e ){},
+    onClose             : function( e, valueArray ){},
     onComponentDidMount : function(){},
     onInit              : function(){},
-    onOpen              : function( e ){},
-    onSelect            : function( e ){}
+    onOpen              : function( e, valueArray ){},
+    onSelect            : function( e, valueArray ){}
     options             : dataObject,
     search              : true
 }
@@ -107,6 +106,7 @@ These functions are intended for use in the user provided event callbacks
 destroy()
 getOption( num )
 getSelectedOptions()
+getSelectedValues()
 rebuildOptions( options )
 disable( bool )
 ```
@@ -161,7 +161,7 @@ flounder can be attached to basically anything
 ```
 
     new flounder( document.getElementById( 'example' ), {
-        _default            : 'placeholders!',
+        defaultValue        : 'placeholders!',
 
         onInit              : function()
         {
@@ -188,7 +188,7 @@ react flounder can only be attached to container elements (div, span, etc)
 ```
 
     ReactDOM.render( React.createElement( FlounderReact, {
-        _default            : 'placeholders!',
+        defaultValue        : 'placeholders!',
 
         multiple            : true,
 
@@ -234,6 +234,16 @@ Public API
 
 Change Log
 ==========
+
+0.2.0
+-----
+
++ user callbacks now keep their name internally for dynamic changes
++ some users callback now give the array of selected values (see examples)
++ _default is now defaultValue
++ the constructor now accepts µ and $ objects and returns an array of flounders
++ a call to the constructor without and arguments now returns the constructor
+
 
 0.1.5
 -----

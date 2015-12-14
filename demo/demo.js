@@ -45,7 +45,7 @@ var options = [
  * vanilla multi-Flounder with tags attached to an input
  */
 new Flounder( '.vanilla--input--tags', {
-    _default             : 'placeholders!',
+    defaultValue         : 'placeholders!',
 
     onInit               : function()
     {
@@ -60,6 +60,7 @@ new Flounder( '.vanilla--input--tags', {
         } );
 
         this.options = res;
+        console.log( this );
     },
 
     multiple            : true
@@ -70,7 +71,7 @@ new Flounder( '.vanilla--input--tags', {
  * vanilla Flounder attached to an input
  */
 new Flounder( document.getElementById( 'vanilla--input' ), {
-    _default             : 2,
+    defaultValue         : 2,
 
     onInit               : function()
     {
@@ -119,7 +120,7 @@ new Flounder( document.getElementById( 'vanilla--input' ), {
  * vanilla Flounder attached pre built select box
  */
 new Flounder( document.getElementById( 'vanilla--select' ), {
-    _default             : 'placeholders!'
+    defaultValue         : 'placeholders!'
 } );
 
 
@@ -127,7 +128,7 @@ new Flounder( document.getElementById( 'vanilla--select' ), {
  * react amulti-Flounder with tags attached to an div
  */
 ReactDOM.render( React.createElement( FlounderReact, {
-    _default            : 'placeholders!',
+    defaultValue        : 'placeholders!',
 
     multiple            : true,
 
@@ -151,7 +152,7 @@ ReactDOM.render( React.createElement( FlounderReact, {
  * react amulti-Flounder without tags attached to an div
  */
 ReactDOM.render( React.createElement( FlounderReact, {
-    _default            : 'placeholders!',
+    defaultValue        : 'placeholders!',
 
     multiple            : true,
 
@@ -177,7 +178,7 @@ ReactDOM.render( React.createElement( FlounderReact, {
  * react amulti-Flounder with description attached to div
  */
 ReactDOM.render( React.createElement( FlounderReact, {
-    _default            : 'placeholders!',
+    defaultValue        : 'placeholders!',
 
     multiple            : true,
 
@@ -212,7 +213,7 @@ requirejs.config( {
 requirejs( [ 'flounder' ], function( Flounder )
 {
     new Flounder( document.getElementById( 'AMD--desc' ), {
-        _default             : 'placeholders!',
+        defaultValue         : 'placeholders!',
 
         onInit               : function()
         {

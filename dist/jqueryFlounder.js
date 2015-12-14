@@ -197,11 +197,11 @@ var Flounder = (function () {
 
             var _options = this.options;
 
-            var _default = this._default = this.setDefaultOption(this._default, _options);
+            var defaultValue = this.defaultValue = this.setDefaultOption(this.defaultValue, _options);
 
             var selected = constructElement({ className: 'flounder__option--selected--displayed',
-                'data-value': _default.value, 'data-index': _default.index || -1 });
-            selected.innerHTML = _default.text;
+                'data-value': defaultValue.value, 'data-index': defaultValue.index || -1 });
+            selected.innerHTML = defaultValue.text;
 
             var multiTagWrapper = this.props.multiple ? constructElement({ className: 'multi--tag--list' }) : null;
 
@@ -222,7 +222,7 @@ var Flounder = (function () {
 
             var search = this.addSearch(flounder);
 
-            var _buildOptions = this.buildOptions(_default, _options, optionsList, select);
+            var _buildOptions = this.buildOptions(defaultValue, _options, optionsList, select);
 
             var _buildOptions2 = _slicedToArray(_buildOptions, 2);
 
@@ -241,7 +241,7 @@ var Flounder = (function () {
          * builds both the div and select based options. will skip the select box
          * if it already exists
          *
-         * @param {Mixed} _default default entry (string or number)
+         * @param {Mixed} defaultValue default entry (string or number)
          * @param {Array} _options array with optino information
          * @param {Object} optionsList reference to the div option wrapper
          * @param {Object} select reference to the select box
@@ -250,7 +250,7 @@ var Flounder = (function () {
          */
     }, {
         key: 'buildOptions',
-        value: function buildOptions(_default, _options, optionsList, select) {
+        value: function buildOptions(defaultValue, _options, optionsList, select) {
             var _this2 = this;
 
             _options = _options || [];
@@ -269,7 +269,7 @@ var Flounder = (function () {
                 _option.index = i;
 
                 var escapedText = _this2.escapeHTML(_option.text);
-                var extraClass = i === _default.index ? '  ' + _this2.selectedClass : '';
+                var extraClass = i === defaultValue.index ? '  ' + _this2.selectedClass : '';
 
                 var res = {
                     className: 'flounder__option' + extraClass,
@@ -306,7 +306,7 @@ var Flounder = (function () {
                     selectOptions[i].innerHTML = escapedText;
                     select.appendChild(selectOptions[i]);
 
-                    if (i === _default.index) {
+                    if (i === defaultValue.index) {
                         selectOptions[i].selected = true;
                     }
                 } else {
@@ -334,8 +334,8 @@ var Flounder = (function () {
         key: 'catchBodyClick',
         value: function catchBodyClick(e) {
             if (!this.checkClickTarget(e)) {
-                if (this.cancelFunc) {
-                    this.cancelFunc(e);
+                if (this.onCancel) {
+                    this.onCancel(e);
                 }
                 this.toggleList(e);
             }
@@ -424,7 +424,7 @@ var Flounder = (function () {
                 refs.selected.innerHTML = '';
             } else {
                 if (refs.multiTagWrapper && refs.multiTagWrapper.children.length === 0) {
-                    this.refs.selected.innerHTML = this._default.text;
+                    this.refs.selected.innerHTML = this.defaultValue.text;
                 }
             }
         }
@@ -514,8 +514,17 @@ var Flounder = (function () {
         };
 
         if (target && target.length !== 0) {
+            if (target.jquery) {
+                return target.map(function (i, _el) {
+                    return new _this3.constructor(_el, props);
+                });
+            } else if (target.isMicrobe) {
+                return target.map(function (_el) {
+                    return new _this3.constructor(_el, props);
+                });
+            }
+
             this.props = props;
-            target = target.jquery || target.isMicrobe ? target[0] : target;
             target = target.nodeType === 1 ? target : document.querySelector(target);
 
             this.originalTarget = target;
@@ -532,8 +541,8 @@ var Flounder = (function () {
 
             this.initialzeOptions();
 
-            if (this.initFunc) {
-                this.initFunc();
+            if (this.onInit) {
+                this.onInit();
             }
 
             this.buildDom();
@@ -542,8 +551,8 @@ var Flounder = (function () {
 
             this.onRender();
 
-            if (this.componentDidMountFunc) {
-                this.componentDidMountFunc();
+            if (this.onComponentDidMount) {
+                this.onComponentDidMount();
             }
 
             this.refs.select.flounder = this.refs.selected.flounder = this.target.flounder = this;
@@ -648,11 +657,11 @@ var Flounder = (function () {
                 selected.innerHTML = selectedOption[0].innerHTML;
                 value = selectedOption[0].value;
             } else if (selectedLength === 0) {
-                var _default = this._default;
+                var defaultValue = this.defaultValue;
 
-                index = _default.index || -1;
-                selected.innerHTML = _default.text;
-                value = _default.value;
+                index = defaultValue.index || -1;
+                selected.innerHTML = defaultValue.text;
+                value = defaultValue.value;
             } else {
                 if (this.multipleTags) {
                     selected.innerHTML = '';
@@ -794,7 +803,7 @@ var Flounder = (function () {
          *
          * returns the currently selected options of a SELECT box
          *
-         * @param {Object} _el select box
+         * @return _Void_
          */
     }, {
         key: 'getSelectedOptions',
@@ -813,6 +822,21 @@ var Flounder = (function () {
             }
 
             return opts;
+        }
+
+        /**
+         * ## getSelectedValues
+         *
+         * returns the values of the currently selected options
+         *
+         * @return _Void_
+         */
+    }, {
+        key: 'getSelectedValues',
+        value: function getSelectedValues() {
+            return this.getSelectedOptions().map(function (_v) {
+                return _v.value;
+            });
         }
 
         /**
@@ -842,12 +866,11 @@ var Flounder = (function () {
         value: function initialzeOptions() {
             this.props = this.props || {};
             var props = this.props;
-            this.initFunc = props.onInit !== undefined ? props.onInit : false;
-            this.openFunc = props.onOpen !== undefined ? props.onOpen : false;
-            this.selectFunc = props.onSelect !== undefined ? props.onSelect : false;
-            this.cancelFunc = props.onCancel !== undefined ? props.onCancel : false;
-            this.closeFunc = props.onClose !== undefined ? props.onClose : false;
-            this.componentDidMountFunc = props.onComponentDidMount !== undefined ? props.onComponentDidMount : false;
+            this.onInit = props.onInit !== undefined ? props.onInit : false;
+            this.onOpen = props.onOpen !== undefined ? props.onOpen : false;
+            this.onSelect = props.onSelect !== undefined ? props.onSelect : false;
+            this.onClose = props.onClose !== undefined ? props.onClose : false;
+            this.onComponentDidMount = props.onComponentDidMount !== undefined ? props.onComponentDidMount : false;
             this.multiple = props.multiple !== undefined ? props.multiple : false;
             this.multipleTags = props.multipleTags !== undefined ? props.multipleTags : true;
 
@@ -867,9 +890,9 @@ var Flounder = (function () {
                 this.selectedClass += '  flounder__option--selected--hidden';
             }
 
-            this._default = '';
-            if (props._default || props._default === 0) {
-                this._default = props._default;
+            this.defaultValue = '';
+            if (props.defaultValue || props.defaultValue === 0) {
+                this.defaultValue = props.defaultValue;
             }
         }
 
@@ -1026,7 +1049,7 @@ var Flounder = (function () {
             var _select = refs.select;
             refs.select = false;
 
-            var _buildOptions3 = this.buildOptions(this._default, _options, refs.optionsList, _select);
+            var _buildOptions3 = this.buildOptions(this.defaultValue, _options, refs.optionsList, _select);
 
             var _buildOptions32 = _slicedToArray(_buildOptions3, 2);
 
@@ -1119,7 +1142,7 @@ var Flounder = (function () {
             var select = refs.select;
             var selected = refs.selected;
             var target = e.target;
-            var _default = this._default;
+            var defaultValue = this.defaultValue;
             var targetIndex = target.getAttribute('data-index');
             select[targetIndex].selected = false;
 
@@ -1132,9 +1155,9 @@ var Flounder = (function () {
             span.parentNode.removeChild(span);
 
             if (selectedOptions.length === 0) {
-                index = _default.index || -1;
-                selected.innerHTML = _default.text;
-                value = _default.value;
+                index = defaultValue.index || -1;
+                selected.innerHTML = defaultValue.text;
+                value = defaultValue.value;
             } else {
                 value = selectedOptions.map(function (option) {
                     return option.value;
@@ -1150,8 +1173,8 @@ var Flounder = (function () {
             selected.setAttribute('data-value', value);
             selected.setAttribute('data-index', index);
 
-            if (this.selectFunc) {
-                this.selectFunc(e);
+            if (this.onSelect) {
+                this.onSelect(e, this.getSelectedValues());
             }
         }
 
@@ -1245,19 +1268,19 @@ var Flounder = (function () {
     }, {
         key: 'setDefaultOption',
         value: function setDefaultOption(defaultProp, options) {
-            var _default = '';
+            var defaultValue = '';
 
             if (typeof defaultProp === 'number') {
-                _default = options[defaultProp];
-                _default.index = defaultProp;
+                defaultValue = options[defaultProp];
+                defaultValue.index = defaultProp;
             } else if (typeof defaultProp === 'string') {
-                _default = {
+                defaultValue = {
                     text: defaultProp,
                     value: defaultProp
                 };
             }
 
-            return _default;
+            return defaultValue;
         }
 
         /**
@@ -1377,8 +1400,8 @@ var Flounder = (function () {
             if (selection) {
                 this.displaySelected(refs.selected, refs);
 
-                if (this.selectFunc) {
-                    this.selectFunc(e);
+                if (this.onSelect) {
+                    this.onSelect(e, this.getSelectedValues());
                 }
             }
         }
@@ -1574,8 +1597,8 @@ var Flounder = (function () {
                 refs.search.focus();
             }
 
-            if (this.openFunc) {
-                this.openFunc(e);
+            if (this.onOpen) {
+                this.onOpen(e, this.getSelectedValues());
             }
         }
 
@@ -1608,8 +1631,8 @@ var Flounder = (function () {
 
             refs.flounder.focus();
 
-            if (this.closeFunc) {
-                this.closeFunc(e);
+            if (this.onClose) {
+                this.onClose(e, this.getSelectedValues());
             }
         }
     }]);
