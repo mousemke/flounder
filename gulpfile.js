@@ -15,7 +15,7 @@ gulp.task( 'demo', function()
 
 gulp.task( 'vanilla', function()
 {
-    browserify( './src/flounder.jsx' )
+    browserify( './src/core/flounder.jsx' )
         .transform( babelify, { stage : 0 } )
         .bundle()
         .pipe( fs.createWriteStream( __dirname + '/dist/flounder.js' ) );
@@ -24,7 +24,7 @@ gulp.task( 'vanilla', function()
 
 gulp.task( 'react', function()
 {
-    browserify( './src/reactFlounder.jsx' )
+    browserify( './src/wrappers/reactFlounder.jsx' )
         .transform( babelify, { stage : 0 } )
         .bundle()
         .pipe( fs.createWriteStream( __dirname + '/dist/reactFlounder.js' ) );
@@ -33,7 +33,7 @@ gulp.task( 'react', function()
 
 gulp.task( 'amd', function()
 {
-    browserify( './src/amdFlounder.jsx' )
+    browserify( './src/wrappers/amdFlounder.jsx' )
         .transform( babelify, { stage : 0 } )
         .bundle()
         .pipe( fs.createWriteStream( __dirname + '/dist/amdFlounder.js' ) );
@@ -42,7 +42,7 @@ gulp.task( 'amd', function()
 
 gulp.task( 'jquery', function()
 {
-    browserify( './src/jqueryFlounder.jsx' )
+    browserify( './src/wrappers/jqueryFlounder.jsx' )
         .transform( babelify, { stage : 0 } )
         .bundle()
         .pipe( fs.createWriteStream( __dirname + '/dist/jqueryFlounder.js' ) );
@@ -51,7 +51,7 @@ gulp.task( 'jquery', function()
 
 gulp.task( 'microbe', function()
 {
-    browserify( './src/microbeFlounder.jsx' )
+    browserify( './src/wrappers/microbeFlounder.jsx' )
         .transform( babelify, { stage : 0 } )
         .bundle()
         .pipe( fs.createWriteStream( __dirname + '/dist/microbeFlounder.js' ) );
