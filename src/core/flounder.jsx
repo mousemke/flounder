@@ -177,10 +177,13 @@ class Flounder
 
         let constructElement    = this.constructElement;
 
-        let wrapper             = constructElement( { className : 'flounder-wrapper  flounder__input--select' } );
+        let wrapperClass        = 'flounder-wrapper  flounder__input--select';
+        let wrapper             = constructElement( { className : this.wrapperClass ?
+                                    wrapperClass + ' ' + this.wrapperClass : wrapperClass } );
+        let flounderClass       = 'flounder';
+        let flounder            = constructElement( { className : this.flounderClass ?
+                                    flounderClass + '  ' + this.flounderClass : flounderClass } );
 
-        let flounderClass       = 'flounder' + this.containerClass;
-        let flounder            = constructElement( { className : flounderClass } );
         flounder.tabIndex       = 0;
         wrapper.appendChild( flounder );
 
@@ -927,9 +930,11 @@ class Flounder
             this.multipleTags = false;
         }
 
-        this.containerClass         = props.class && props.class.container  !== undefined ? ' ' + props.class.container   : '';
-        this.hiddenClass            = props.class && props.class.hidden     !== undefined ? props.class.hidden      : 'flounder--hidden';
-        this.selectedClass          = props.class && props.class.selected   !== undefined ? props.class.selected    : 'flounder__option--selected';
+        let propsClass              = props.classes;
+        this.wrapperClass           = propsClass && propsClass.wrapper      !== undefined ? ' ' + propsClass.wrapper   : '';
+        this.flounderClass          = propsClass && propsClass.flounder     !== undefined ? ' ' + propsClass.flounder   : '';
+        this.hiddenClass            = propsClass && propsClass.hidden       !== undefined ? propsClass.hidden      : 'flounder--hidden';
+        this.selectedClass          = propsClass && propsClass.selected     !== undefined ? propsClass.selected    : 'flounder__option--selected';
 
         this.multipleMessage        = props.multipleMessage     !== undefined ? props.multipleMessage : '(Multiple Items Selected)';
         this.defaultTextIndent      = props.defaultTextIndent   !== undefined ? props.defaultTextIndent : 0;

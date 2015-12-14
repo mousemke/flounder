@@ -4,7 +4,7 @@
 
 import React, { Component } from 'react';
 import ReactDOM             from 'react-dom';
-import Flounder             from './flounder.jsx';
+import Flounder             from '../core/flounder.jsx';
 
 const slice = Array.prototype.slice;
 
@@ -150,14 +150,15 @@ class FlounderReact extends Component
         let handleChange    = this.handleChange.bind( this );
         let multiple        = props.multiple;
         let defaultValue    = this.defaultValue = this.setDefaultOption( props.defaultValue || this.defaultValue, options );
-        let containerClass  = this.containerClass;
+        let wrapperClass    = this.wrapperClass ? '  ' + this.wrapperClass : '';
+        let flounderClass   = this.flounderClass ? '  ' + this.flounderClass : '';
 
         let _stateModifier  = this.state.modifier;
         _stateModifier = _stateModifier.length > 0 ? '--' + _stateModifier : '';
 
         return (
-            <div ref="wrapper" className="flounder-wrapper  flounder__input--select">
-                <div ref="flounder" tabIndex="0" className={'flounder' + containerClass}>
+            <div ref="wrapper" className={'flounder-wrapper  flounder__input--select' + wrapperClass}>
+                <div ref="flounder" tabIndex="0" className={'flounder' + flounderClass}>
                     <div ref="selected" className="flounder__option--selected--displayed" data-value={defaultValue.value}>
                         {defaultValue.text}
                     </div>

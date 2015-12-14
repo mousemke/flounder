@@ -3,21 +3,6 @@
 /* jshint globalstrict: true */
 'use strict';
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-var _flounderJsx = require('./flounder.jsx');
-
-var _flounderJsx2 = _interopRequireDefault(_flounderJsx);
-
-define('flounder', [], function () {
-  return _flounderJsx2['default'];
-});
-
-},{"./flounder.jsx":2}],2:[function(require,module,exports){
-
-/* jshint globalstrict: true */
-'use strict';
-
 Object.defineProperty(exports, '__esModule', {
     value: true
 });
@@ -196,10 +181,11 @@ var Flounder = (function () {
 
             var constructElement = this.constructElement;
 
-            var wrapper = constructElement({ className: 'flounder-wrapper  flounder__input--select' });
+            var wrapperClass = 'flounder-wrapper  flounder__input--select';
+            var wrapper = constructElement({ className: this.wrapperClass ? wrapperClass + ' ' + this.wrapperClass : wrapperClass });
+            var flounderClass = 'flounder';
+            var flounder = constructElement({ className: this.flounderClass ? flounderClass + '  ' + this.flounderClass : flounderClass });
 
-            var flounderClass = 'flounder' + this.containerClass;
-            var flounder = constructElement({ className: flounderClass });
             flounder.tabIndex = 0;
             wrapper.appendChild(flounder);
 
@@ -893,9 +879,11 @@ var Flounder = (function () {
                 this.multipleTags = false;
             }
 
-            this.containerClass = props['class'] && props['class'].container !== undefined ? ' ' + props['class'].container : '';
-            this.hiddenClass = props['class'] && props['class'].hidden !== undefined ? props['class'].hidden : 'flounder--hidden';
-            this.selectedClass = props['class'] && props['class'].selected !== undefined ? props['class'].selected : 'flounder__option--selected';
+            var propsClass = props.classes;
+            this.wrapperClass = propsClass && propsClass.wrapper !== undefined ? ' ' + propsClass.wrapper : '';
+            this.flounderClass = propsClass && propsClass.flounder !== undefined ? ' ' + propsClass.flounder : '';
+            this.hiddenClass = propsClass && propsClass.hidden !== undefined ? propsClass.hidden : 'flounder--hidden';
+            this.selectedClass = propsClass && propsClass.selected !== undefined ? propsClass.selected : 'flounder__option--selected';
 
             this.multipleMessage = props.multipleMessage !== undefined ? props.multipleMessage : '(Multiple Items Selected)';
             this.defaultTextIndent = props.defaultTextIndent !== undefined ? props.defaultTextIndent : 0;
@@ -1658,4 +1646,19 @@ var Flounder = (function () {
 exports['default'] = Flounder;
 module.exports = exports['default'];
 
-},{}]},{},[1]);
+},{}],2:[function(require,module,exports){
+
+/* jshint globalstrict: true */
+'use strict';
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _coreFlounderJsx = require('../core/flounder.jsx');
+
+var _coreFlounderJsx2 = _interopRequireDefault(_coreFlounderJsx);
+
+define('flounder', [], function () {
+  return _coreFlounderJsx2['default'];
+});
+
+},{"../core/flounder.jsx":1}]},{},[2]);

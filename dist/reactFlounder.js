@@ -19196,10 +19196,11 @@ var Flounder = (function () {
 
             var constructElement = this.constructElement;
 
-            var wrapper = constructElement({ className: 'flounder-wrapper  flounder__input--select' });
+            var wrapperClass = 'flounder-wrapper  flounder__input--select';
+            var wrapper = constructElement({ className: this.wrapperClass ? wrapperClass + ' ' + this.wrapperClass : wrapperClass });
+            var flounderClass = 'flounder';
+            var flounder = constructElement({ className: this.flounderClass ? flounderClass + '  ' + this.flounderClass : flounderClass });
 
-            var flounderClass = 'flounder' + this.containerClass;
-            var flounder = constructElement({ className: flounderClass });
             flounder.tabIndex = 0;
             wrapper.appendChild(flounder);
 
@@ -19893,9 +19894,11 @@ var Flounder = (function () {
                 this.multipleTags = false;
             }
 
-            this.containerClass = props['class'] && props['class'].container !== undefined ? ' ' + props['class'].container : '';
-            this.hiddenClass = props['class'] && props['class'].hidden !== undefined ? props['class'].hidden : 'flounder--hidden';
-            this.selectedClass = props['class'] && props['class'].selected !== undefined ? props['class'].selected : 'flounder__option--selected';
+            var propsClass = props.classes;
+            this.wrapperClass = propsClass && propsClass.wrapper !== undefined ? ' ' + propsClass.wrapper : '';
+            this.flounderClass = propsClass && propsClass.flounder !== undefined ? ' ' + propsClass.flounder : '';
+            this.hiddenClass = propsClass && propsClass.hidden !== undefined ? propsClass.hidden : 'flounder--hidden';
+            this.selectedClass = propsClass && propsClass.selected !== undefined ? propsClass.selected : 'flounder__option--selected';
 
             this.multipleMessage = props.multipleMessage !== undefined ? props.multipleMessage : '(Multiple Items Selected)';
             this.defaultTextIndent = props.defaultTextIndent !== undefined ? props.defaultTextIndent : 0;
@@ -20685,9 +20688,9 @@ var _reactDom = require('react-dom');
 
 var _reactDom2 = _interopRequireDefault(_reactDom);
 
-var _flounderJsx = require('./flounder.jsx');
+var _coreFlounderJsx = require('../core/flounder.jsx');
 
-var _flounderJsx2 = _interopRequireDefault(_flounderJsx);
+var _coreFlounderJsx2 = _interopRequireDefault(_coreFlounderJsx);
 
 var slice = Array.prototype.slice;
 
@@ -20836,17 +20839,18 @@ var FlounderReact = (function (_Component) {
             var handleChange = this.handleChange.bind(this);
             var multiple = props.multiple;
             var defaultValue = this.defaultValue = this.setDefaultOption(props.defaultValue || this.defaultValue, options);
-            var containerClass = this.containerClass;
+            var wrapperClass = this.wrapperClass ? '  ' + this.wrapperClass : '';
+            var flounderClass = this.flounderClass ? '  ' + this.flounderClass : '';
 
             var _stateModifier = this.state.modifier;
             _stateModifier = _stateModifier.length > 0 ? '--' + _stateModifier : '';
 
             return _react2['default'].createElement(
                 'div',
-                { ref: 'wrapper', className: 'flounder-wrapper  flounder__input--select' },
+                { ref: 'wrapper', className: 'flounder-wrapper  flounder__input--select' + wrapperClass },
                 _react2['default'].createElement(
                     'div',
-                    { ref: 'flounder', tabIndex: '0', className: 'flounder' + containerClass },
+                    { ref: 'flounder', tabIndex: '0', className: 'flounder' + flounderClass },
                     _react2['default'].createElement(
                         'div',
                         { ref: 'selected', className: 'flounder__option--selected--displayed', 'data-value': defaultValue.value },
@@ -20908,57 +20912,57 @@ var FlounderReact = (function (_Component) {
     return FlounderReact;
 })(_react.Component);
 
-FlounderReact.prototype.bindThis = _flounderJsx2['default'].prototype.bindThis;
-FlounderReact.prototype.catchBodyClick = _flounderJsx2['default'].prototype.catchBodyClick;
-FlounderReact.prototype.checkClickTarget = _flounderJsx2['default'].prototype.checkClickTarget;
-FlounderReact.prototype.checkFlounderKeypress = _flounderJsx2['default'].prototype.checkFlounderKeypress;
-FlounderReact.prototype.checkPlaceholder = _flounderJsx2['default'].prototype.checkPlaceholder;
-FlounderReact.prototype.clickSet = _flounderJsx2['default'].prototype.clickSet;
-FlounderReact.prototype.displayMultipleTags = _flounderJsx2['default'].prototype.displayMultipleTags;
-FlounderReact.prototype.fuzzySearch = _flounderJsx2['default'].prototype.fuzzySearch;
-FlounderReact.prototype.removeMultiTag = _flounderJsx2['default'].prototype.removeMultiTag;
-FlounderReact.prototype.setKeypress = _flounderJsx2['default'].prototype.setKeypress;
-FlounderReact.prototype.setSelectValue = _flounderJsx2['default'].prototype.setSelectValue;
-FlounderReact.prototype.setSelectValueButton = _flounderJsx2['default'].prototype.setSelectValueButton;
-FlounderReact.prototype.setSelectValueClick = _flounderJsx2['default'].prototype.setSelectValueClick;
-FlounderReact.prototype.toggleClass = _flounderJsx2['default'].prototype.toggleClass;
-FlounderReact.prototype.toggleList = _flounderJsx2['default'].prototype.toggleList;
+FlounderReact.prototype.bindThis = _coreFlounderJsx2['default'].prototype.bindThis;
+FlounderReact.prototype.catchBodyClick = _coreFlounderJsx2['default'].prototype.catchBodyClick;
+FlounderReact.prototype.checkClickTarget = _coreFlounderJsx2['default'].prototype.checkClickTarget;
+FlounderReact.prototype.checkFlounderKeypress = _coreFlounderJsx2['default'].prototype.checkFlounderKeypress;
+FlounderReact.prototype.checkPlaceholder = _coreFlounderJsx2['default'].prototype.checkPlaceholder;
+FlounderReact.prototype.clickSet = _coreFlounderJsx2['default'].prototype.clickSet;
+FlounderReact.prototype.displayMultipleTags = _coreFlounderJsx2['default'].prototype.displayMultipleTags;
+FlounderReact.prototype.fuzzySearch = _coreFlounderJsx2['default'].prototype.fuzzySearch;
+FlounderReact.prototype.removeMultiTag = _coreFlounderJsx2['default'].prototype.removeMultiTag;
+FlounderReact.prototype.setKeypress = _coreFlounderJsx2['default'].prototype.setKeypress;
+FlounderReact.prototype.setSelectValue = _coreFlounderJsx2['default'].prototype.setSelectValue;
+FlounderReact.prototype.setSelectValueButton = _coreFlounderJsx2['default'].prototype.setSelectValueButton;
+FlounderReact.prototype.setSelectValueClick = _coreFlounderJsx2['default'].prototype.setSelectValueClick;
+FlounderReact.prototype.toggleClass = _coreFlounderJsx2['default'].prototype.toggleClass;
+FlounderReact.prototype.toggleList = _coreFlounderJsx2['default'].prototype.toggleList;
 
 // just your every day, run of the mill functions
-FlounderReact.prototype.addClass = _flounderJsx2['default'].prototype.addClass;
-FlounderReact.prototype.addOptionsListeners = _flounderJsx2['default'].prototype.addOptionsListeners;
-FlounderReact.prototype.addSearch = _flounderJsx2['default'].prototype.addSearch;
-FlounderReact.prototype.addSelectKeyListener = _flounderJsx2['default'].prototype.addSelectKeyListener;
-FlounderReact.prototype.attachAttributes = _flounderJsx2['default'].prototype.attachAttributes;
-FlounderReact.prototype.checkClickTarget = _flounderJsx2['default'].prototype.checkClickTarget;
-FlounderReact.prototype.checkSelect = _flounderJsx2['default'].prototype.checkSelect;
-FlounderReact.prototype.componentWillUnmount = _flounderJsx2['default'].prototype.componentWillUnmount;
-FlounderReact.prototype.displaySelected = _flounderJsx2['default'].prototype.displaySelected;
-FlounderReact.prototype.escapeHTML = _flounderJsx2['default'].prototype.escapeHTML;
-FlounderReact.prototype.fuzzySearchReset = _flounderJsx2['default'].prototype.fuzzySearchReset;
-FlounderReact.prototype.getActualWidth = _flounderJsx2['default'].prototype.getActualWidth;
-FlounderReact.prototype.getOption = _flounderJsx2['default'].prototype.getOption;
-FlounderReact.prototype.getSelectedOptions = _flounderJsx2['default'].prototype.getSelectedOptions;
-FlounderReact.prototype.hideElement = _flounderJsx2['default'].prototype.hideElement;
-FlounderReact.prototype.initialzeOptions = _flounderJsx2['default'].prototype.initialzeOptions;
-FlounderReact.prototype.iosVersion = _flounderJsx2['default'].prototype.iosVersion;
-FlounderReact.prototype.onRender = _flounderJsx2['default'].prototype.onRender;
-FlounderReact.prototype.rebuildOptions = _flounderJsx2['default'].prototype.rebuildOptions;
-FlounderReact.prototype.removeClass = _flounderJsx2['default'].prototype.removeClass;
-FlounderReact.prototype.removeOptionsListeners = _flounderJsx2['default'].prototype.removeOptionsListeners;
-FlounderReact.prototype.removeSelectKeyListener = _flounderJsx2['default'].prototype.removeSelectKeyListener;
-FlounderReact.prototype.removeSelectedClass = _flounderJsx2['default'].prototype.removeSelectedClass;
-FlounderReact.prototype.removeSelectedValue = _flounderJsx2['default'].prototype.removeSelectedValue;
-FlounderReact.prototype.scrollMultiple = _flounderJsx2['default'].prototype.scrollMultiple;
-FlounderReact.prototype.scrollTo = _flounderJsx2['default'].prototype.scrollTo;
-FlounderReact.prototype.setDefaultOption = _flounderJsx2['default'].prototype.setDefaultOption;
-FlounderReact.prototype.setPlatform = _flounderJsx2['default'].prototype.setPlatform;
-FlounderReact.prototype.setTextMultiTagIndent = _flounderJsx2['default'].prototype.setTextMultiTagIndent;
-FlounderReact.prototype.showElement = _flounderJsx2['default'].prototype.showElement;
-FlounderReact.prototype.toggleClosed = _flounderJsx2['default'].prototype.toggleClosed;
-FlounderReact.prototype.toggleOpen = _flounderJsx2['default'].prototype.toggleOpen;
+FlounderReact.prototype.addClass = _coreFlounderJsx2['default'].prototype.addClass;
+FlounderReact.prototype.addOptionsListeners = _coreFlounderJsx2['default'].prototype.addOptionsListeners;
+FlounderReact.prototype.addSearch = _coreFlounderJsx2['default'].prototype.addSearch;
+FlounderReact.prototype.addSelectKeyListener = _coreFlounderJsx2['default'].prototype.addSelectKeyListener;
+FlounderReact.prototype.attachAttributes = _coreFlounderJsx2['default'].prototype.attachAttributes;
+FlounderReact.prototype.checkClickTarget = _coreFlounderJsx2['default'].prototype.checkClickTarget;
+FlounderReact.prototype.checkSelect = _coreFlounderJsx2['default'].prototype.checkSelect;
+FlounderReact.prototype.componentWillUnmount = _coreFlounderJsx2['default'].prototype.componentWillUnmount;
+FlounderReact.prototype.displaySelected = _coreFlounderJsx2['default'].prototype.displaySelected;
+FlounderReact.prototype.escapeHTML = _coreFlounderJsx2['default'].prototype.escapeHTML;
+FlounderReact.prototype.fuzzySearchReset = _coreFlounderJsx2['default'].prototype.fuzzySearchReset;
+FlounderReact.prototype.getActualWidth = _coreFlounderJsx2['default'].prototype.getActualWidth;
+FlounderReact.prototype.getOption = _coreFlounderJsx2['default'].prototype.getOption;
+FlounderReact.prototype.getSelectedOptions = _coreFlounderJsx2['default'].prototype.getSelectedOptions;
+FlounderReact.prototype.hideElement = _coreFlounderJsx2['default'].prototype.hideElement;
+FlounderReact.prototype.initialzeOptions = _coreFlounderJsx2['default'].prototype.initialzeOptions;
+FlounderReact.prototype.iosVersion = _coreFlounderJsx2['default'].prototype.iosVersion;
+FlounderReact.prototype.onRender = _coreFlounderJsx2['default'].prototype.onRender;
+FlounderReact.prototype.rebuildOptions = _coreFlounderJsx2['default'].prototype.rebuildOptions;
+FlounderReact.prototype.removeClass = _coreFlounderJsx2['default'].prototype.removeClass;
+FlounderReact.prototype.removeOptionsListeners = _coreFlounderJsx2['default'].prototype.removeOptionsListeners;
+FlounderReact.prototype.removeSelectKeyListener = _coreFlounderJsx2['default'].prototype.removeSelectKeyListener;
+FlounderReact.prototype.removeSelectedClass = _coreFlounderJsx2['default'].prototype.removeSelectedClass;
+FlounderReact.prototype.removeSelectedValue = _coreFlounderJsx2['default'].prototype.removeSelectedValue;
+FlounderReact.prototype.scrollMultiple = _coreFlounderJsx2['default'].prototype.scrollMultiple;
+FlounderReact.prototype.scrollTo = _coreFlounderJsx2['default'].prototype.scrollTo;
+FlounderReact.prototype.setDefaultOption = _coreFlounderJsx2['default'].prototype.setDefaultOption;
+FlounderReact.prototype.setPlatform = _coreFlounderJsx2['default'].prototype.setPlatform;
+FlounderReact.prototype.setTextMultiTagIndent = _coreFlounderJsx2['default'].prototype.setTextMultiTagIndent;
+FlounderReact.prototype.showElement = _coreFlounderJsx2['default'].prototype.showElement;
+FlounderReact.prototype.toggleClosed = _coreFlounderJsx2['default'].prototype.toggleClosed;
+FlounderReact.prototype.toggleOpen = _coreFlounderJsx2['default'].prototype.toggleOpen;
 
-exports['default'] = { React: _react2['default'], Component: _react.Component, ReactDOM: _reactDom2['default'], FlounderReact: FlounderReact, Flounder: _flounderJsx2['default'] };
+exports['default'] = { React: _react2['default'], Component: _react.Component, ReactDOM: _reactDom2['default'], FlounderReact: FlounderReact, Flounder: _coreFlounderJsx2['default'] };
 module.exports = exports['default'];
 
-},{"./flounder.jsx":159,"react":158,"react-dom":2}]},{},[160]);
+},{"../core/flounder.jsx":159,"react":158,"react-dom":2}]},{},[160]);

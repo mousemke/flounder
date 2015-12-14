@@ -120,7 +120,11 @@ new Flounder( document.getElementById( 'vanilla--input' ), {
  * vanilla Flounder attached pre built select box
  */
 new Flounder( document.getElementById( 'vanilla--select' ), {
-    defaultValue         : 'placeholders!'
+    defaultValue         : 'placeholders!',
+    classes : {
+        container : 'moon',
+        wrapper : 'doge'
+    }
 } );
 
 

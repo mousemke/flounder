@@ -49,9 +49,10 @@ $( '.example--class' ).flounder( configOptions );
 {
     defaultValue        : defaultValue,
     classes             : {
-        container       : 'extra--class',
+        flounder        : 'class--to--give--the--main--flounder--element',
         hidden          : 'class--to--denote--hidden',
-        selected        : 'class-to-denote-selected-option'
+        selected        : 'class--to--denote--selected--option',
+        wrapper         : 'additional--class--to--give--the--wrapper'
     },
     multiple            : false,
     multipleTags        : true,
@@ -243,6 +244,11 @@ Change Log
 + _default is now defaultValue
 + the constructor now accepts µ and $ objects and returns an array of flounders
 + a call to the constructor without and arguments now returns the constructor
++ added getSelectedValues() to API
++ added the ability to give options unique classes
++ added wrapper to the class options
++ changed the flounder class optoin from container to flounder
++ moved files to be sorted a bit better
 
 
 0.1.5

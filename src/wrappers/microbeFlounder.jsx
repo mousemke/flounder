@@ -2,7 +2,7 @@
 /* jshint globalstrict: true */
 'use strict';
 
-import Flounder from './flounder.jsx';
+import Flounder from '../core/flounder.jsx';
 
 ( function( µ ) {
 
