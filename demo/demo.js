@@ -5,6 +5,8 @@ import Flounder                 from '../src/flounder.jsx';
 window.Flounder = Flounder;
 
 
+window.Flounder = Flounder;
+
 var _slice = Array.prototype.slice;
 /**
  * example options object
