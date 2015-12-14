@@ -228,6 +228,7 @@ Public API
     destroy()
     getOptions( num )
     getSelectedOptions()
+    getSelectedValues()
     rebuildOptions( options )
     disable( bool )
 ```
