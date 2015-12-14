@@ -24,37 +24,37 @@ gulp.task( 'vanilla', function()
 
 gulp.task( 'react', function()
 {
-    browserify( './src/wrappers/reactFlounder.jsx' )
+    browserify( './src/wrappers/flounder.react.jsx' )
         .transform( babelify, { stage : 0 } )
         .bundle()
-        .pipe( fs.createWriteStream( __dirname + '/dist/reactFlounder.js' ) );
+        .pipe( fs.createWriteStream( __dirname + '/dist/flounder.react.jsx' ) );
 } );
 
 
 gulp.task( 'amd', function()
 {
-    browserify( './src/wrappers/amdFlounder.jsx' )
+    browserify( './src/wrappers/flounder.amd.jsx' )
         .transform( babelify, { stage : 0 } )
         .bundle()
-        .pipe( fs.createWriteStream( __dirname + '/dist/amdFlounder.js' ) );
+        .pipe( fs.createWriteStream( __dirname + '/dist/flounder.amd.js' ) );
 } );
 
 
 gulp.task( 'jquery', function()
 {
-    browserify( './src/wrappers/jqueryFlounder.jsx' )
+    browserify( './src/wrappers/flounder.jquery.jsx' )
         .transform( babelify, { stage : 0 } )
         .bundle()
-        .pipe( fs.createWriteStream( __dirname + '/dist/jqueryFlounder.js' ) );
+        .pipe( fs.createWriteStream( __dirname + '/dist/flounder.jquery.js' ) );
 } );
 
 
 gulp.task( 'microbe', function()
 {
-    browserify( './src/wrappers/microbeFlounder.jsx' )
+    browserify( './src/wrappers/flounder.microbe.jsx' )
         .transform( babelify, { stage : 0 } )
         .bundle()
-        .pipe( fs.createWriteStream( __dirname + '/dist/microbeFlounder.js' ) );
+        .pipe( fs.createWriteStream( __dirname + '/dist/flounder.microbe.js' ) );
 } );
 
 

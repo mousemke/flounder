@@ -1,9 +1,7 @@
 import React, { Component }     from 'react';
 import ReactDOM                 from 'react-dom';
-import { FlounderReact }        from '../src/reactFlounder.jsx';
-import Flounder                 from '../src/flounder.jsx';
-window.Flounder = Flounder;
-
+import { FlounderReact }        from '../src/wrappers/flounder.react.jsx';
+import Flounder                 from '../src/core/flounder.jsx';
 
 window.Flounder = Flounder;
 
@@ -207,7 +205,7 @@ ReactDOM.render( React.createElement( FlounderReact, {
 
 requirejs.config( {
     paths : {
-        flounder : '../dist/amdFlounder'
+        flounder : '../dist/flounder.amd'
     }
 } );
 

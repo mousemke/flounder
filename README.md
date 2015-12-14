@@ -248,7 +248,7 @@ Change Log
 + added the ability to give options unique classes
 + added wrapper to the class options
 + changed the flounder class optoin from container to flounder
-+ moved files to be sorted a bit better
++ restructured folders and files
 
 
 0.1.5
