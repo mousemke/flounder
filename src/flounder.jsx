@@ -566,6 +566,10 @@ class Flounder
 
             return this;
         }
+        else if ( !target && !props )
+        {
+            return this.constructor;
+        }
     }
 
 

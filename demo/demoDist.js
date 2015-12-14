@@ -21,6 +21,8 @@ var _srcFlounderJsx = require('../src/flounder.jsx');
 
 var _srcFlounderJsx2 = _interopRequireDefault(_srcFlounderJsx);
 
+window.Flounder = _srcFlounderJsx2['default'];
+
 var _slice = Array.prototype.slice;
 /**
  * example options object
@@ -50,9 +52,9 @@ var options = [{
 }];
 
 /**
- * vanilla amulti-Flounder with tags attached to an input
+ * vanilla multi-Flounder with tags attached to an input
  */
-new _srcFlounderJsx2['default'](document.getElementById('vanilla--input--tags'), {
+new _srcFlounderJsx2['default']('.vanilla--input--tags', {
     _default: 'placeholders!',
 
     onInit: function onInit() {
@@ -19776,6 +19778,8 @@ var Flounder = (function () {
             this.refs.select.flounder = this.refs.selected.flounder = this.target.flounder = this;
 
             return this;
+        } else if (!target && !props) {
+            return this.constructor;
         }
     }
 

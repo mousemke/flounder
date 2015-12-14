@@ -1,5 +1,7 @@
-Flounder.js 0.1.5
+Flounder.js 0.1.6
 =================
+
+(for modern browsers and ie9+)
 
 Flounder is a styled select box replacement aimed at being easily configurable while conforming to native functionality and accessibility standards.
 
@@ -19,18 +21,29 @@ Flounder can be used in vanilla js or with react.
 
 ```
 // vanilla
-new Flounder( target, options );
+new Flounder( target, configOptions );
 
 // react
-ReactDOM.render( React.createElement( FlounderReact, options ), target );
+ReactDOM.render( React.createElement( FlounderReact, configOptions ), target );
 
 // react (JSX)
 React.render( <FlounderReact option1="" option2="">, target );
+
+// requirejs
+requirejs( [ 'flounder' ], function( Flounder )
+{
+    new Flounder( target, configOptions );
+} );
+
+// jQuery plugin
+$( '.example--class' ).flounder( configOptions );
+
+// microbe plugin
+µ( '.example--class' ).flounder( configOptions )
 ```
 
 
-###Available options
-
+###Available config options
 
 ```
 {
@@ -58,7 +71,7 @@ React.render( <FlounderReact option1="" option2="">, target );
 Building the select box
 =======================
 
-options must be passed as an array of objects
+select options must be passed as an array of objects
 
 ```
 [
@@ -66,6 +79,7 @@ options must be passed as an array of objects
         text        : 'probably the string you want to see',
         value       : 'return value',
         description : 'a longer description of this option' // optional
+        classname   : 'extra--classname' // optional
     }
 ]
 ```
@@ -78,10 +92,22 @@ or an array.
     'option 3'
 ]
 ```
-in the case of an array, the passed text will be both the description and the value.
+in the case of an array, the passed text will be both the text and the value.  There would be no description in this case
 
 
 all extra properties passed that are not shown here will be added as data attributes for the sake of reference later.  The options can be accessed in the init (before building) as this.options if they need reformatting or filtering.
+
+API
+===
+
+These functions are intended for use in the user provided event callbacks
+```
+destroy()
+getOption( num )
+getSelectedOptions()
+rebuildOptions( options )
+disable( bool )
+```
 
 
 Contributing
@@ -190,6 +216,19 @@ The result of either of these is shown here (only styled with the structural css
 ![1 selected](https://d1ro8r1rbfn3jf.cloudfront.net/ms_16133/mL3upXVlwnB4pkC4jN5QCE4ZIdiQ8F/Flounder%2Bdemo%2B2015-11-23%2B23-26-57.jpg?Expires=1448404020&Signature=bWFxIgxc-0DQWqSAWXCNzGI5R9LiCho7EfuHgUp0wheeDl85cui3OcnOcw~HSYR6sSJ6XcQPHeVE5FAet1suEFR2q0fe9p--tuq8G9T0wK0Mp6fLYi49OGs6mTftFzQy3zgUVlPKY58nIejzAl6N-fT67NjUqKBhfUltjssc-OZvD3TZf7nAS0erQwuiM5QH6y9sFscavZWHDrsV1ReXkYqMbRXtbykM~JNPP-2Pr9ZvRwpcA7wdFpTpIF4OH0SsR-hem-xnnZ1ZHvJELARqzp2Q6OLWapRdaHHg~9OTnIDY7~lbz-2XcmrP6wMLJqZ6bqVuoWfCdtLk8VK6xQdIEg__&Key-Pair-Id=APKAJHEJJBIZWFB73RSA)
 
 See more examples on the [demo page](./demo/index.html)
+
+
+Public API
+==========
+
+```
+    destroy()
+    getOptions( num )
+    getSelectedOptions()
+    rebuildOptions( options )
+    disable( bool )
+```
+
 
 Change Log
 ==========

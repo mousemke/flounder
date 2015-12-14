@@ -2,6 +2,7 @@ import React, { Component }     from 'react';
 import ReactDOM                 from 'react-dom';
 import { FlounderReact }        from '../src/reactFlounder.jsx';
 import Flounder                 from '../src/flounder.jsx';
+window.Flounder = Flounder;
 
 var _slice = Array.prototype.slice;
 /**
@@ -38,9 +39,9 @@ var options = [
 
 
 /**
- * vanilla amulti-Flounder with tags attached to an input
+ * vanilla multi-Flounder with tags attached to an input
  */
-new Flounder( document.getElementById( 'vanilla--input--tags' ), {
+new Flounder( '.vanilla--input--tags', {
     _default             : 'placeholders!',
 
     onInit               : function()
