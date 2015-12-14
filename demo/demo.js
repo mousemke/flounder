@@ -1,7 +1,9 @@
 import React, { Component }     from 'react';
 import ReactDOM                 from 'react-dom';
-import { FlounderReact }        from '../src/wrappers/reactFlounder.jsx';
+import { FlounderReact }        from '../src/wrappers/flounder.react.jsx';
 import Flounder                 from '../src/core/flounder.jsx';
+
+window.Flounder = Flounder;
 
 var _slice = Array.prototype.slice;
 /**
@@ -38,10 +40,10 @@ var options = [
 
 
 /**
- * vanilla amulti-Flounder with tags attached to an input
+ * vanilla multi-Flounder with tags attached to an input
  */
-new Flounder( document.getElementById( 'vanilla--input--tags' ), {
-    _default             : 'placeholders!',
+new Flounder( '.vanilla--input--tags', {
+    defaultValue         : 'placeholders!',
 
     onInit               : function()
     {
@@ -50,7 +52,8 @@ new Flounder( document.getElementById( 'vanilla--input--tags' ), {
         {
             res.push( {
                 text        : option.text,
-                value       : option.id
+                value       : option.id,
+                extraClass  : 'vantar' + Math.ceil( Math.random() * 10 )
             } );
         } );
 
@@ -65,7 +68,7 @@ new Flounder( document.getElementById( 'vanilla--input--tags' ), {
  * vanilla Flounder attached to an input
  */
 new Flounder( document.getElementById( 'vanilla--input' ), {
-    _default             : 2,
+    defaultValue         : 2,
 
     onInit               : function()
     {
@@ -114,7 +117,12 @@ new Flounder( document.getElementById( 'vanilla--input' ), {
  * vanilla Flounder attached pre built select box
  */
 new Flounder( document.getElementById( 'vanilla--select' ), {
-    _default             : 'placeholders!'
+    defaultValue         : 'placeholders!',
+
+    classes : {
+        container : 'moon',
+        wrapper : 'doge'
+    }
 } );
 
 
@@ -122,7 +130,7 @@ new Flounder( document.getElementById( 'vanilla--select' ), {
  * react amulti-Flounder with tags attached to an div
  */
 ReactDOM.render( React.createElement( FlounderReact, {
-    _default            : 'placeholders!',
+    defaultValue        : 'placeholders!',
 
     multiple            : true,
 
@@ -146,7 +154,7 @@ ReactDOM.render( React.createElement( FlounderReact, {
  * react amulti-Flounder without tags attached to an div
  */
 ReactDOM.render( React.createElement( FlounderReact, {
-    _default            : 'placeholders!',
+    defaultValue        : 'placeholders!',
 
     multiple            : true,
 
@@ -172,7 +180,7 @@ ReactDOM.render( React.createElement( FlounderReact, {
  * react amulti-Flounder with description attached to div
  */
 ReactDOM.render( React.createElement( FlounderReact, {
-    _default            : 'placeholders!',
+    defaultValue        : 'placeholders!',
 
     multiple            : true,
 
@@ -197,7 +205,7 @@ ReactDOM.render( React.createElement( FlounderReact, {
 
 requirejs.config( {
     paths : {
-        flounder : '../dist/amdFlounder'
+        flounder : '../dist/flounder.amd'
     }
 } );
 
@@ -207,7 +215,7 @@ requirejs.config( {
 requirejs( [ 'flounder' ], function( Flounder )
 {
     new Flounder( document.getElementById( 'AMD--desc' ), {
-        _default             : 'placeholders!',
+        defaultValue         : 'placeholders!',
 
         onInit               : function()
         {

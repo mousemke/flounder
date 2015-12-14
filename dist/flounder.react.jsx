@@ -19196,10 +19196,11 @@ var Flounder = (function () {
 
             var constructElement = this.constructElement;
 
-            var wrapper = constructElement({ className: 'flounder-wrapper  flounder__input--select' });
+            var wrapperClass = 'flounder-wrapper  flounder__input--select';
+            var wrapper = constructElement({ className: this.wrapperClass ? wrapperClass + ' ' + this.wrapperClass : wrapperClass });
+            var flounderClass = 'flounder';
+            var flounder = constructElement({ className: this.flounderClass ? flounderClass + '  ' + this.flounderClass : flounderClass });
 
-            var flounderClass = 'flounder' + this.containerClass;
-            var flounder = constructElement({ className: flounderClass });
             flounder.tabIndex = 0;
             wrapper.appendChild(flounder);
 
@@ -19212,11 +19213,11 @@ var Flounder = (function () {
 
             var _options = this.options;
 
-            var _default = this._default = this.setDefaultOption(this._default, _options);
+            var defaultValue = this.defaultValue = this.setDefaultOption(this.defaultValue, _options);
 
             var selected = constructElement({ className: 'flounder__option--selected--displayed',
-                'data-value': _default.value, 'data-index': _default.index || -1 });
-            selected.innerHTML = _default.text;
+                'data-value': defaultValue.value, 'data-index': defaultValue.index || -1 });
+            selected.innerHTML = defaultValue.text;
 
             var multiTagWrapper = this.props.multiple ? constructElement({ className: 'multi--tag--list' }) : null;
 
@@ -19237,7 +19238,7 @@ var Flounder = (function () {
 
             var search = this.addSearch(flounder);
 
-            var _buildOptions = this.buildOptions(_default, _options, optionsList, select);
+            var _buildOptions = this.buildOptions(defaultValue, _options, optionsList, select);
 
             var _buildOptions2 = _slicedToArray(_buildOptions, 2);
 
@@ -19256,7 +19257,7 @@ var Flounder = (function () {
          * builds both the div and select based options. will skip the select box
          * if it already exists
          *
-         * @param {Mixed} _default default entry (string or number)
+         * @param {Mixed} defaultValue default entry (string or number)
          * @param {Array} _options array with optino information
          * @param {Object} optionsList reference to the div option wrapper
          * @param {Object} select reference to the select box
@@ -19265,7 +19266,7 @@ var Flounder = (function () {
          */
     }, {
         key: 'buildOptions',
-        value: function buildOptions(_default, _options, optionsList, select) {
+        value: function buildOptions(defaultValue, _options, optionsList, select) {
             var _this2 = this;
 
             _options = _options || [];
@@ -19284,7 +19285,7 @@ var Flounder = (function () {
                 _option.index = i;
 
                 var escapedText = _this2.escapeHTML(_option.text);
-                var extraClass = i === _default.index ? '  ' + _this2.selectedClass : '';
+                var extraClass = i === defaultValue.index ? '  ' + _this2.selectedClass : '';
 
                 var res = {
                     className: 'flounder__option' + extraClass,
@@ -19308,6 +19309,12 @@ var Flounder = (function () {
                     addOptionDescription(options[i], description);
                 }
 
+                var uniqueExtraClass = _option.extraClass;
+
+                if (uniqueExtraClass) {
+                    options[i].className += '  ' + uniqueExtraClass;
+                }
+
                 if (!_this2.refs.select) {
                     selectOptions[i] = constructElement({ tagname: 'option',
                         className: 'flounder--option--tag',
@@ -19315,7 +19322,7 @@ var Flounder = (function () {
                     selectOptions[i].innerHTML = escapedText;
                     select.appendChild(selectOptions[i]);
 
-                    if (i === _default.index) {
+                    if (i === defaultValue.index) {
                         selectOptions[i].selected = true;
                     }
                 } else {
@@ -19343,8 +19350,8 @@ var Flounder = (function () {
         key: 'catchBodyClick',
         value: function catchBodyClick(e) {
             if (!this.checkClickTarget(e)) {
-                if (this.cancelFunc) {
-                    this.cancelFunc(e);
+                if (this.onCancel) {
+                    this.onCancel(e);
                 }
                 this.toggleList(e);
             }
@@ -19433,7 +19440,7 @@ var Flounder = (function () {
                 refs.selected.innerHTML = '';
             } else {
                 if (refs.multiTagWrapper && refs.multiTagWrapper.children.length === 0) {
-                    this.refs.selected.innerHTML = this._default.text;
+                    this.refs.selected.innerHTML = this.defaultValue.text;
                 }
             }
         }
@@ -19523,8 +19530,17 @@ var Flounder = (function () {
         };
 
         if (target && target.length !== 0) {
+            if (target.jquery) {
+                return target.map(function (i, _el) {
+                    return new _this3.constructor(_el, props);
+                });
+            } else if (target.isMicrobe) {
+                return target.map(function (_el) {
+                    return new _this3.constructor(_el, props);
+                });
+            }
+
             this.props = props;
-            target = target.jquery || target.isMicrobe ? target[0] : target;
             target = target.nodeType === 1 ? target : document.querySelector(target);
 
             this.originalTarget = target;
@@ -19541,8 +19557,8 @@ var Flounder = (function () {
 
             this.initialzeOptions();
 
-            if (this.initFunc) {
-                this.initFunc();
+            if (this.onInit) {
+                this.onInit();
             }
 
             this.buildDom();
@@ -19551,13 +19567,15 @@ var Flounder = (function () {
 
             this.onRender();
 
-            if (this.componentDidMountFunc) {
-                this.componentDidMountFunc();
+            if (this.onComponentDidMount) {
+                this.onComponentDidMount();
             }
 
             this.refs.select.flounder = this.refs.selected.flounder = this.target.flounder = this;
 
             return this;
+        } else if (!target && !props) {
+            return this.constructor;
         }
     }
 
@@ -19655,11 +19673,11 @@ var Flounder = (function () {
                 selected.innerHTML = selectedOption[0].innerHTML;
                 value = selectedOption[0].value;
             } else if (selectedLength === 0) {
-                var _default = this._default;
+                var defaultValue = this.defaultValue;
 
-                index = _default.index || -1;
-                selected.innerHTML = _default.text;
-                value = _default.value;
+                index = defaultValue.index || -1;
+                selected.innerHTML = defaultValue.text;
+                value = defaultValue.value;
             } else {
                 if (this.multipleTags) {
                     selected.innerHTML = '';
@@ -19801,7 +19819,7 @@ var Flounder = (function () {
          *
          * returns the currently selected options of a SELECT box
          *
-         * @param {Object} _el select box
+         * @return _Void_
          */
     }, {
         key: 'getSelectedOptions',
@@ -19820,6 +19838,21 @@ var Flounder = (function () {
             }
 
             return opts;
+        }
+
+        /**
+         * ## getSelectedValues
+         *
+         * returns the values of the currently selected options
+         *
+         * @return _Void_
+         */
+    }, {
+        key: 'getSelectedValues',
+        value: function getSelectedValues() {
+            return this.getSelectedOptions().map(function (_v) {
+                return _v.value;
+            });
         }
 
         /**
@@ -19849,12 +19882,11 @@ var Flounder = (function () {
         value: function initialzeOptions() {
             this.props = this.props || {};
             var props = this.props;
-            this.initFunc = props.onInit !== undefined ? props.onInit : false;
-            this.openFunc = props.onOpen !== undefined ? props.onOpen : false;
-            this.selectFunc = props.onSelect !== undefined ? props.onSelect : false;
-            this.cancelFunc = props.onCancel !== undefined ? props.onCancel : false;
-            this.closeFunc = props.onClose !== undefined ? props.onClose : false;
-            this.componentDidMountFunc = props.onComponentDidMount !== undefined ? props.onComponentDidMount : false;
+            this.onInit = props.onInit !== undefined ? props.onInit : false;
+            this.onOpen = props.onOpen !== undefined ? props.onOpen : false;
+            this.onSelect = props.onSelect !== undefined ? props.onSelect : false;
+            this.onClose = props.onClose !== undefined ? props.onClose : false;
+            this.onComponentDidMount = props.onComponentDidMount !== undefined ? props.onComponentDidMount : false;
             this.multiple = props.multiple !== undefined ? props.multiple : false;
             this.multipleTags = props.multipleTags !== undefined ? props.multipleTags : true;
 
@@ -19862,9 +19894,11 @@ var Flounder = (function () {
                 this.multipleTags = false;
             }
 
-            this.containerClass = props['class'] && props['class'].container !== undefined ? ' ' + props['class'].container : '';
-            this.hiddenClass = props['class'] && props['class'].hidden !== undefined ? props['class'].hidden : 'flounder--hidden';
-            this.selectedClass = props['class'] && props['class'].selected !== undefined ? props['class'].selected : 'flounder__option--selected';
+            var propsClass = props.classes;
+            this.wrapperClass = propsClass && propsClass.wrapper !== undefined ? ' ' + propsClass.wrapper : '';
+            this.flounderClass = propsClass && propsClass.flounder !== undefined ? ' ' + propsClass.flounder : '';
+            this.hiddenClass = propsClass && propsClass.hidden !== undefined ? propsClass.hidden : 'flounder--hidden';
+            this.selectedClass = propsClass && propsClass.selected !== undefined ? propsClass.selected : 'flounder__option--selected';
 
             this.multipleMessage = props.multipleMessage !== undefined ? props.multipleMessage : '(Multiple Items Selected)';
             this.defaultTextIndent = props.defaultTextIndent !== undefined ? props.defaultTextIndent : 0;
@@ -19874,9 +19908,9 @@ var Flounder = (function () {
                 this.selectedClass += '  flounder__option--selected--hidden';
             }
 
-            this._default = '';
-            if (props._default || props._default === 0) {
-                this._default = props._default;
+            this.defaultValue = '';
+            if (props.defaultValue || props.defaultValue === 0) {
+                this.defaultValue = props.defaultValue;
             }
         }
 
@@ -20033,7 +20067,7 @@ var Flounder = (function () {
             var _select = refs.select;
             refs.select = false;
 
-            var _buildOptions3 = this.buildOptions(this._default, _options, refs.optionsList, _select);
+            var _buildOptions3 = this.buildOptions(this.defaultValue, _options, refs.optionsList, _select);
 
             var _buildOptions32 = _slicedToArray(_buildOptions3, 2);
 
@@ -20126,7 +20160,7 @@ var Flounder = (function () {
             var select = refs.select;
             var selected = refs.selected;
             var target = e.target;
-            var _default = this._default;
+            var defaultValue = this.defaultValue;
             var targetIndex = target.getAttribute('data-index');
             select[targetIndex].selected = false;
 
@@ -20139,9 +20173,9 @@ var Flounder = (function () {
             span.parentNode.removeChild(span);
 
             if (selectedOptions.length === 0) {
-                index = _default.index || -1;
-                selected.innerHTML = _default.text;
-                value = _default.value;
+                index = defaultValue.index || -1;
+                selected.innerHTML = defaultValue.text;
+                value = defaultValue.value;
             } else {
                 value = selectedOptions.map(function (option) {
                     return option.value;
@@ -20157,8 +20191,8 @@ var Flounder = (function () {
             selected.setAttribute('data-value', value);
             selected.setAttribute('data-index', index);
 
-            if (this.selectFunc) {
-                this.selectFunc(e);
+            if (this.onSelect) {
+                this.onSelect(e, this.getSelectedValues());
             }
         }
 
@@ -20252,19 +20286,19 @@ var Flounder = (function () {
     }, {
         key: 'setDefaultOption',
         value: function setDefaultOption(defaultProp, options) {
-            var _default = '';
+            var defaultValue = '';
 
             if (typeof defaultProp === 'number') {
-                _default = options[defaultProp];
-                _default.index = defaultProp;
+                defaultValue = options[defaultProp];
+                defaultValue.index = defaultProp;
             } else if (typeof defaultProp === 'string') {
-                _default = {
+                defaultValue = {
                     text: defaultProp,
                     value: defaultProp
                 };
             }
 
-            return _default;
+            return defaultValue;
         }
 
         /**
@@ -20384,8 +20418,8 @@ var Flounder = (function () {
             if (selection) {
                 this.displaySelected(refs.selected, refs);
 
-                if (this.selectFunc) {
-                    this.selectFunc(e);
+                if (this.onSelect) {
+                    this.onSelect(e, this.getSelectedValues());
                 }
             }
         }
@@ -20581,8 +20615,8 @@ var Flounder = (function () {
                 refs.search.focus();
             }
 
-            if (this.openFunc) {
-                this.openFunc(e);
+            if (this.onOpen) {
+                this.onOpen(e, this.getSelectedValues());
             }
         }
 
@@ -20615,8 +20649,8 @@ var Flounder = (function () {
 
             refs.flounder.focus();
 
-            if (this.closeFunc) {
-                this.closeFunc(e);
+            if (this.onClose) {
+                this.onClose(e, this.getSelectedValues());
             }
         }
     }]);
@@ -20654,9 +20688,9 @@ var _reactDom = require('react-dom');
 
 var _reactDom2 = _interopRequireDefault(_reactDom);
 
-var _flounderJsx = require('./flounder.jsx');
+var _coreFlounderJsx = require('../core/flounder.jsx');
 
-var _flounderJsx2 = _interopRequireDefault(_flounderJsx);
+var _coreFlounderJsx2 = _interopRequireDefault(_coreFlounderJsx);
 
 var slice = Array.prototype.slice;
 
@@ -20706,8 +20740,8 @@ var FlounderReact = (function (_Component) {
 
             this.onRender();
 
-            if (this.componentDidMountFunc) {
-                this.componentDidMountFunc();
+            if (this.onComponentDidMount) {
+                this.onComponentDidMount();
             }
 
             this.setPlatform();
@@ -20781,7 +20815,6 @@ var FlounderReact = (function (_Component) {
          *
          * REACT FLOUNDER CAN NOT MOUNT TO INPUT OR SELECT TAGS.
          *
-         * <div class="flounder  multi-filter"><div class="flounder__option--selected--displayed" data-value="https://kraken.sociomantic.com/blog/category/external-media/"></div><div class="multi--tag--list" style="text-indent: 7px;"><span class="flounder__multiple--select--tag"><a class="flounder__multiple__tag__close" data-index="2"></a>External Media</span></div><div class="flounder__arrow"></div><div class="flounder__list-wrapper  flounder--hidden"><div class="flounder__list"><div class="flounder__option" data-index="0" data-value="https://kraken.sociomantic.com/blog/category/case-study/" data-cssclass="category">Case Study</div><div class="flounder__option" data-index="1" data-value="https://kraken.sociomantic.com/blog/category/events/" data-cssclass="category">Events</div><div class="flounder__option  flounder__option--selected--hidden" data-index="2" data-value="https://kraken.sociomantic.com/blog/category/external-media/" data-cssclass="category">External Media</div><div class="flounder__option" data-index="3" data-value="https://kraken.sociomantic.com/blog/category/general/" data-cssclass="category">General</div><div class="flounder__option" data-index="4" data-value="https://kraken.sociomantic.com/blog/category/infographic/" data-cssclass="category">Infographic</div><div class="flounder__option" data-index="5" data-value="https://kraken.sociomantic.com/blog/category/news/" data-cssclass="category">News</div><div class="flounder__option" data-index="6" data-value="https://kraken.sociomantic.com/blog/category/presentation/" data-cssclass="category">Presentation</div><div class="flounder__option" data-index="7" data-value="https://kraken.sociomantic.com/blog/category/press-release/" data-cssclass="category">Press Release</div><div class="flounder__option" data-index="8" data-value="https://kraken.sociomantic.com/blog/category/rtb-blog/" data-cssclass="category">RTB Blog</div><div class="flounder__option" data-index="9" data-value="https://kraken.sociomantic.com/blog/category/the-labs/" data-cssclass="category">The Labs</div><div class="flounder__option" data-index="10" data-value="https://kraken.sociomantic.com/blog/category/white-paper/" data-cssclass="category">White-Paper</div><div class="flounder__option" data-index="11" data-value="https://kraken.sociomantic.com/blog/category/whitepaper/" data-cssclass="category">Whitepaper</div><div class="flounder__option" data-index="12" data-value="tag/dream-team/" data-cssclass="tag">#dreamteam</div><div class="flounder__option" data-index="13" data-value="tag/agency/" data-cssclass="tag">agency</div><div class="flounder__option" data-index="14" data-value="tag/airlines/" data-cssclass="tag">airlines</div><div class="flounder__option" data-index="15" data-value="tag/asia-pacific/" data-cssclass="tag">APAC</div><div class="flounder__option" data-index="16" data-value="tag/beauty/" data-cssclass="tag">beauty</div><div class="flounder__option" data-index="17" data-value="tag/big-data/" data-cssclass="tag">big data</div><div class="flounder__option" data-index="18" data-value="tag/branding/" data-cssclass="tag">branding</div><div class="flounder__option" data-index="19" data-value="tag/brazil-russia-india-china/" data-cssclass="tag">BRIC</div><div class="flounder__option" data-index="20" data-value="tag/cee/" data-cssclass="tag">CEE</div><div class="flounder__option" data-index="21" data-value="tag/classifieds/" data-cssclass="tag">classifieds</div><div class="flounder__option" data-index="22" data-value="tag/conference/" data-cssclass="tag">conference</div><div class="flounder__option" data-index="23" data-value="tag/crm/" data-cssclass="tag">CRM</div><div class="flounder__option" data-index="24" data-value="tag/cross-device/" data-cssclass="tag">cross-device</div><div class="flounder__option" data-index="25" data-value="tag/customer-lifetime-value/" data-cssclass="tag">customer lifetime value</div><div class="flounder__option" data-index="26" data-value="tag/demand-side-platform/" data-cssclass="tag">demand-side platform</div><div class="flounder__option" data-index="27" data-value="tag/digital/" data-cssclass="tag">digital</div><div class="flounder__option" data-index="28" data-value="tag/digital-marketing/" data-cssclass="tag">digital marketing</div><div class="flounder__option" data-index="29" data-value="tag/digital-strategy/" data-cssclass="tag">digital strategy</div><div class="flounder__option" data-index="30" data-value="tag/display-advertising/" data-cssclass="tag">display advertising</div><div class="flounder__option" data-index="31" data-value="tag/dlang/" data-cssclass="tag">dlang</div><div class="flounder__option" data-index="32" data-value="tag/dynamic-creative-optimization/" data-cssclass="tag">dynamic creative optimization</div><div class="flounder__option" data-index="33" data-value="tag/ecommerce/" data-cssclass="tag">ecommerce</div><div class="flounder__option" data-index="34" data-value="tag/europe-middle-east-africa/" data-cssclass="tag">EMEA</div><div class="flounder__option" data-index="35" data-value="tag/facebook-exchange/" data-cssclass="tag">Facebook Exchange</div><div class="flounder__option" data-index="36" data-value="tag/fashion/" data-cssclass="tag">fashion</div><div class="flounder__option" data-index="37" data-value="tag/finance/" data-cssclass="tag">finance</div><div class="flounder__option" data-index="38" data-value="tag/first-party-data/" data-cssclass="tag">first-party data</div><div class="flounder__option" data-index="39" data-value="tag/growth-stories/" data-cssclass="tag">growth stories</div><div class="flounder__option" data-index="40" data-value="tag/holiday/" data-cssclass="tag">holiday</div><div class="flounder__option" data-index="41" data-value="tag/html5/" data-cssclass="tag">HTML5</div><div class="flounder__option" data-index="42" data-value="tag/latin-america/" data-cssclass="tag">LATAM</div><div class="flounder__option" data-index="43" data-value="tag/loyalty/" data-cssclass="tag">loyalty</div><div class="flounder__option" data-index="44" data-value="tag/mariusz-pawelczyk/" data-cssclass="tag">Mariusz Pawelczyk</div><div class="flounder__option" data-index="45" data-value="tag/mobile/" data-cssclass="tag">mobile</div><div class="flounder__option" data-index="46" data-value="tag/nordics/" data-cssclass="tag">Nordics</div><div class="flounder__option" data-index="47" data-value="tag/north-america/" data-cssclass="tag">North America</div><div class="flounder__option" data-index="48" data-value="tag/performance-marketing/" data-cssclass="tag">performance marketing</div><div class="flounder__option" data-index="49" data-value="tag/personalization/" data-cssclass="tag">personalization</div><div class="flounder__option" data-index="50" data-value="tag/presentations/" data-cssclass="tag">presentations</div><div class="flounder__option" data-index="51" data-value="tag/programmatic/" data-cssclass="tag">programmatic</div><div class="flounder__option" data-index="52" data-value="tag/programmatic-display/" data-cssclass="tag">programmatic display</div><div class="flounder__option" data-index="53" data-value="tag/real-time-bidding/" data-cssclass="tag">real-time bidding</div><div class="flounder__option" data-index="54" data-value="tag/retail/" data-cssclass="tag">retail</div><div class="flounder__option" data-index="55" data-value="tag/retail-and-shopping/" data-cssclass="tag">retail and shopping</div><div class="flounder__option" data-index="56" data-value="tag/retargeting/" data-cssclass="tag">retargeting</div><div class="flounder__option" data-index="57" data-value="tag/romania/" data-cssclass="tag">Romania</div><div class="flounder__option" data-index="58" data-value="tag/segmentation/" data-cssclass="tag">segmentation</div><div class="flounder__option" data-index="59" data-value="tag/shopping-clubs/" data-cssclass="tag">shopping clubs</div><div class="flounder__option" data-index="60" data-value="tag/sociomantic/" data-cssclass="tag">Sociomantic</div><div class="flounder__option" data-index="61" data-value="tag/software-development/" data-cssclass="tag">software development</div><div class="flounder__option" data-index="62" data-value="tag/startup/" data-cssclass="tag">startup</div><div class="flounder__option" data-index="63" data-value="tag/stream-technology/" data-cssclass="tag">stream technology</div><div class="flounder__option" data-index="64" data-value="tag/tag1/" data-cssclass="tag">tag1</div><div class="flounder__option" data-index="65" data-value="tag/tech-talk/" data-cssclass="tag">tech talk</div><div class="flounder__option" data-index="66" data-value="tag/telecommunications/" data-cssclass="tag">telecom</div><div class="flounder__option" data-index="67" data-value="tag/trade-show/" data-cssclass="tag">trade show</div><div class="flounder__option" data-index="68" data-value="tag/transparency/" data-cssclass="tag">transparency</div><div class="flounder__option" data-index="69" data-value="tag/travel/" data-cssclass="tag">travel</div><div class="flounder__option" data-index="70" data-value="tag/tutorial/" data-cssclass="tag">tutorial</div><div class="flounder__option" data-index="71" data-value="tag/web-development/" data-cssclass="tag">web development</div><div class="flounder__option" data-index="72" data-value="https://kraken.sociomantic.com/blog/2015/08/" data-cssclass="month"> August 2015 </div><div class="flounder__option" data-index="73" data-value="https://kraken.sociomantic.com/blog/2015/03/" data-cssclass="month"> March 2015 </div><div class="flounder__option" data-index="74" data-value="https://kraken.sociomantic.com/blog/2015/02/" data-cssclass="month"> February 2015 </div><div class="flounder__option" data-index="75" data-value="https://kraken.sociomantic.com/blog/2014/11/" data-cssclass="month"> November 2014 </div><div class="flounder__option" data-index="76" data-value="https://kraken.sociomantic.com/blog/2014/05/" data-cssclass="month"> May 2014 </div><div class="flounder__option" data-index="77" data-value="https://kraken.sociomantic.com/blog/2014/04/" data-cssclass="month"> April 2014 </div><div class="flounder__option" data-index="78" data-value="https://kraken.sociomantic.com/blog/2014/02/" data-cssclass="month"> February 2014 </div><div class="flounder__option" data-index="79" data-value="https://kraken.sociomantic.com/blog/2014/01/" data-cssclass="month"> January 2014 </div><div class="flounder__option" data-index="80" data-value="https://kraken.sociomantic.com/blog/2013/12/" data-cssclass="month"> December 2013 </div><div class="flounder__option" data-index="81" data-value="https://kraken.sociomantic.com/blog/2013/11/" data-cssclass="month"> November 2013 </div><div class="flounder__option" data-index="82" data-value="https://kraken.sociomantic.com/blog/2013/10/" data-cssclass="month"> October 2013 </div><div class="flounder__option" data-index="83" data-value="https://kraken.sociomantic.com/blog/2013/09/" data-cssclass="month"> September 2013 </div><div class="flounder__option" data-index="84" data-value="https://kraken.sociomantic.com/blog/2013/08/" data-cssclass="month"> August 2013 </div><div class="flounder__option" data-index="85" data-value="https://kraken.sociomantic.com/blog/2013/06/" data-cssclass="month"> June 2013 </div><div class="flounder__option" data-index="86" data-value="https://kraken.sociomantic.com/blog/2013/05/" data-cssclass="month"> May 2013 </div><div class="flounder__option" data-index="87" data-value="https://kraken.sociomantic.com/blog/2013/04/" data-cssclass="month"> April 2013 </div><div class="flounder__option" data-index="88" data-value="https://kraken.sociomantic.com/blog/2013/03/" data-cssclass="month"> March 2013 </div><div class="flounder__option" data-index="89" data-value="https://kraken.sociomantic.com/blog/2013/02/" data-cssclass="month"> February 2013 </div><div class="flounder__option" data-index="90" data-value="https://kraken.sociomantic.com/blog/2013/01/" data-cssclass="month"> January 2013 </div><div class="flounder__option" data-index="91" data-value="https://kraken.sociomantic.com/blog/2012/12/" data-cssclass="month"> December 2012 </div><div class="flounder__option" data-index="92" data-value="https://kraken.sociomantic.com/blog/2012/11/" data-cssclass="month"> November 2012 </div><div class="flounder__option" data-index="93" data-value="https://kraken.sociomantic.com/blog/2012/10/" data-cssclass="month"> October 2012 </div><div class="flounder__option" data-index="94" data-value="https://kraken.sociomantic.com/blog/2012/09/" data-cssclass="month"> September 2012 </div><div class="flounder__option" data-index="95" data-value="https://kraken.sociomantic.com/blog/2012/06/" data-cssclass="month"> June 2012 </div><div class="flounder__option" data-index="96" data-value="https://kraken.sociomantic.com/blog/2012/02/" data-cssclass="month"> February 2012 </div><div class="flounder__option" data-index="97" data-value="https://kraken.sociomantic.com/blog/2012/01/" data-cssclass="month"> January 2012 </div><div class="flounder__option" data-index="98" data-value="https://kraken.sociomantic.com/blog/2011/10/" data-cssclass="month"> October 2011 </div><div class="flounder__option" data-index="99" data-value="https://kraken.sociomantic.com/blog/2011/09/" data-cssclass="month"> September 2011 </div><div class="flounder__option" data-index="100" data-value="https://kraken.sociomantic.com/blog/2011/06/" data-cssclass="month"> June 2011 </div><div class="flounder__option" data-index="101" data-value="https://kraken.sociomantic.com/blog/2011/05/" data-cssclass="month"> May 2011 </div><div class="flounder__option" data-index="102" data-value="https://kraken.sociomantic.com/blog/2011/04/" data-cssclass="month"> April 2011 </div><div class="flounder__option" data-index="103" data-value="https://kraken.sociomantic.com/blog/2011/03/" data-cssclass="month"> March 2011 </div><div class="flounder__option" data-index="104" data-value="https://kraken.sociomantic.com/blog/2011/02/" data-cssclass="month"> February 2011 </div><div class="flounder__option" data-index="105" data-value="https://kraken.sociomantic.com/blog/2011/01/" data-cssclass="month"> January 2011 </div><div class="flounder__option" data-index="106" data-value="https://kraken.sociomantic.com/blog/2010/12/" data-cssclass="month"> December 2010 </div><div class="flounder__option" data-index="107" data-value="https://kraken.sociomantic.com/blog/2010/11/" data-cssclass="month"> November 2010 </div><div class="flounder__option" data-index="108" data-value="https://kraken.sociomantic.com/blog/2010/10/" data-cssclass="month"> October 2010 </div><div class="flounder__option" data-index="109" data-value="https://kraken.sociomantic.com/blog/2010/09/" data-cssclass="month"> September 2010 </div><div class="flounder__option" data-index="110" data-value="https://kraken.sociomantic.com/blog/2010/08/" data-cssclass="month"> August 2010 </div><div class="flounder__option" data-index="111" data-value="https://kraken.sociomantic.com/blog/2010/07/" data-cssclass="month"> July 2010 </div><div class="flounder__option" data-index="112" data-value="https://kraken.sociomantic.com/blog/2010/06/" data-cssclass="month"> June 2010 </div><div class="flounder__option" data-index="113" data-value="https://kraken.sociomantic.com/blog/2010/05/" data-cssclass="month"> May 2010 </div><div class="flounder__option" data-index="114" data-value="https://kraken.sociomantic.com/blog/2010/04/" data-cssclass="month"> April 2010 </div><div class="flounder__option" data-index="115" data-value="https://kraken.sociomantic.com/blog/2010/01/" data-cssclass="month"> January 2010 </div><div class="flounder__option" data-index="116" data-value="https://kraken.sociomantic.com/blog/author/Brian_Ferrario/" data-cssclass="author">Brian Ferrario</div><div class="flounder__option" data-index="117" data-value="https://kraken.sociomantic.com/blog/author/Erika_Soliven/" data-cssclass="author">Erika Soliven</div><div class="flounder__option" data-index="118" data-value="https://kraken.sociomantic.com/blog/author/Jason_Kelly/" data-cssclass="author">Jason Kelly</div><div class="flounder__option" data-index="119" data-value="https://kraken.sociomantic.com/blog/author/Laura/" data-cssclass="author">Laura</div><div class="flounder__option" data-index="120" data-value="https://kraken.sociomantic.com/blog/author/Leandro_Lucarella/" data-cssclass="author">Leandro Lucarella</div><div class="flounder__option" data-index="121" data-value="https://kraken.sociomantic.com/blog/author/Lothar_Krause/" data-cssclass="author">Lothar Krause</div><div class="flounder__option" data-index="122" data-value="https://kraken.sociomantic.com/blog/author/Sarah_Joy_Murray/" data-cssclass="author">Sarah Joy Murray</div><div class="flounder__option" data-index="123" data-value="https://kraken.sociomantic.com/blog/author/Sonja_Dreher/" data-cssclass="author">Sonja Dreher</div><div class="flounder__option" data-index="124" data-value="https://kraken.sociomantic.com/blog/author/Thomas_Brandhoff/" data-cssclass="author">Thomas Brandhoff</div><div class="flounder__option" data-index="125" data-value="https://kraken.sociomantic.com/blog/author/Thomas_Nicolai/" data-cssclass="author">Thomas Nicolai</div><div class="flounder__option" data-index="126" data-value="https://kraken.sociomantic.com/blog/author/david/" data-cssclass="author">david</div><div class="flounder__option" data-index="127" data-value="https://kraken.sociomantic.com/blog/author/dilkrom/" data-cssclass="author">dilkrom</div><div class="flounder__option" data-index="128" data-value="https://kraken.sociomantic.com/blog/author/gavinnorman/" data-cssclass="author">gavinnorman</div><div class="flounder__option" data-index="129" data-value="https://kraken.sociomantic.com/blog/author/josh/" data-cssclass="author">josh</div><div class="flounder__option" data-index="130" data-value="https://kraken.sociomantic.com/blog/author/kristo/" data-cssclass="author">kristo</div><div class="flounder__option" data-index="131" data-value="https://kraken.sociomantic.com/blog/author/lars/" data-cssclass="author">lars</div><div class="flounder__option" data-index="132" data-value="https://kraken.sociomantic.com/blog/author/maciej/" data-cssclass="author">maciej</div><div class="flounder__option" data-index="133" data-value="https://kraken.sociomantic.com/blog/author/mouse/" data-cssclass="author">mouse</div></div></div><input type="text" class="flounder__input--search" style="text-indent: 109px;"></div>
          */
     }, {
         key: 'render',
@@ -20792,8 +20825,8 @@ var FlounderReact = (function (_Component) {
 
             this.initialzeOptions();
 
-            if (this.initFunc) {
-                this.initFunc();
+            if (this.onInit) {
+                this.onInit();
             }
 
             var optionsCollection = [];
@@ -20802,24 +20835,26 @@ var FlounderReact = (function (_Component) {
             var escapeHTML = this.escapeHTML;
             var props = this.props;
             var options = this.options = this.prepOptions(props.options || this.options);
+
             var handleChange = this.handleChange.bind(this);
             var multiple = props.multiple;
-            var _default = this._default = this.setDefaultOption(props._default || this._default, options);
-            var containerClass = this.containerClass;
+            var defaultValue = this.defaultValue = this.setDefaultOption(props.defaultValue || this.defaultValue, options);
+            var wrapperClass = this.wrapperClass ? '  ' + this.wrapperClass : '';
+            var flounderClass = this.flounderClass ? '  ' + this.flounderClass : '';
 
             var _stateModifier = this.state.modifier;
             _stateModifier = _stateModifier.length > 0 ? '--' + _stateModifier : '';
 
             return _react2['default'].createElement(
                 'div',
-                { ref: 'wrapper', className: 'flounder-wrapper  flounder__input--select' },
+                { ref: 'wrapper', className: 'flounder-wrapper  flounder__input--select' + wrapperClass },
                 _react2['default'].createElement(
                     'div',
-                    { ref: 'flounder', tabIndex: '0', className: 'flounder' + containerClass },
+                    { ref: 'flounder', tabIndex: '0', className: 'flounder' + flounderClass },
                     _react2['default'].createElement(
                         'div',
-                        { ref: 'selected', className: 'flounder__option--selected--displayed', 'data-value': _default.value },
-                        _default.text
+                        { ref: 'selected', className: 'flounder__option--selected--displayed', 'data-value': defaultValue.value },
+                        defaultValue.text
                     ),
                     props.multiple ? _react2['default'].createElement('div', { ref: 'multiTagWrapper', className: 'multi--tag--list', multiple: true }) : null,
                     _react2['default'].createElement('div', { ref: 'arrow', className: 'flounder__arrow' }),
@@ -20830,7 +20865,7 @@ var FlounderReact = (function (_Component) {
                             'div',
                             { ref: 'optionsList', className: 'flounder__list' },
                             options.map(function (_option, i) {
-                                var extraClass = i === props._default ? '  flounder__option--selected' : '';
+                                var extraClass = i === props.defaultValue ? '  flounder__option--selected' : '';
                                 extraClass += _option.disabled ? '  flounder--disabled' : '';
 
                                 if (typeof _option === 'string') {
@@ -20856,7 +20891,7 @@ var FlounderReact = (function (_Component) {
                     'select',
                     { ref: 'select', className: 'flounder--select--tag  flounder--hidden', tabIndex: '-1', multiple: props.multiple },
                     options.map(function (_option, i) {
-                        var extraClass = i === _default ? '  ' + _this2.selectedClass : '';
+                        var extraClass = i === defaultValue ? '  ' + _this2.selectedClass : '';
 
                         var res = {
                             className: 'flounder__option' + extraClass,
@@ -20877,57 +20912,57 @@ var FlounderReact = (function (_Component) {
     return FlounderReact;
 })(_react.Component);
 
-FlounderReact.prototype.bindThis = _flounderJsx2['default'].prototype.bindThis;
-FlounderReact.prototype.catchBodyClick = _flounderJsx2['default'].prototype.catchBodyClick;
-FlounderReact.prototype.checkClickTarget = _flounderJsx2['default'].prototype.checkClickTarget;
-FlounderReact.prototype.checkFlounderKeypress = _flounderJsx2['default'].prototype.checkFlounderKeypress;
-FlounderReact.prototype.checkPlaceholder = _flounderJsx2['default'].prototype.checkPlaceholder;
-FlounderReact.prototype.clickSet = _flounderJsx2['default'].prototype.clickSet;
-FlounderReact.prototype.displayMultipleTags = _flounderJsx2['default'].prototype.displayMultipleTags;
-FlounderReact.prototype.fuzzySearch = _flounderJsx2['default'].prototype.fuzzySearch;
-FlounderReact.prototype.removeMultiTag = _flounderJsx2['default'].prototype.removeMultiTag;
-FlounderReact.prototype.setKeypress = _flounderJsx2['default'].prototype.setKeypress;
-FlounderReact.prototype.setSelectValue = _flounderJsx2['default'].prototype.setSelectValue;
-FlounderReact.prototype.setSelectValueButton = _flounderJsx2['default'].prototype.setSelectValueButton;
-FlounderReact.prototype.setSelectValueClick = _flounderJsx2['default'].prototype.setSelectValueClick;
-FlounderReact.prototype.toggleClass = _flounderJsx2['default'].prototype.toggleClass;
-FlounderReact.prototype.toggleList = _flounderJsx2['default'].prototype.toggleList;
+FlounderReact.prototype.bindThis = _coreFlounderJsx2['default'].prototype.bindThis;
+FlounderReact.prototype.catchBodyClick = _coreFlounderJsx2['default'].prototype.catchBodyClick;
+FlounderReact.prototype.checkClickTarget = _coreFlounderJsx2['default'].prototype.checkClickTarget;
+FlounderReact.prototype.checkFlounderKeypress = _coreFlounderJsx2['default'].prototype.checkFlounderKeypress;
+FlounderReact.prototype.checkPlaceholder = _coreFlounderJsx2['default'].prototype.checkPlaceholder;
+FlounderReact.prototype.clickSet = _coreFlounderJsx2['default'].prototype.clickSet;
+FlounderReact.prototype.displayMultipleTags = _coreFlounderJsx2['default'].prototype.displayMultipleTags;
+FlounderReact.prototype.fuzzySearch = _coreFlounderJsx2['default'].prototype.fuzzySearch;
+FlounderReact.prototype.removeMultiTag = _coreFlounderJsx2['default'].prototype.removeMultiTag;
+FlounderReact.prototype.setKeypress = _coreFlounderJsx2['default'].prototype.setKeypress;
+FlounderReact.prototype.setSelectValue = _coreFlounderJsx2['default'].prototype.setSelectValue;
+FlounderReact.prototype.setSelectValueButton = _coreFlounderJsx2['default'].prototype.setSelectValueButton;
+FlounderReact.prototype.setSelectValueClick = _coreFlounderJsx2['default'].prototype.setSelectValueClick;
+FlounderReact.prototype.toggleClass = _coreFlounderJsx2['default'].prototype.toggleClass;
+FlounderReact.prototype.toggleList = _coreFlounderJsx2['default'].prototype.toggleList;
 
 // just your every day, run of the mill functions
-FlounderReact.prototype.addClass = _flounderJsx2['default'].prototype.addClass;
-FlounderReact.prototype.addOptionsListeners = _flounderJsx2['default'].prototype.addOptionsListeners;
-FlounderReact.prototype.addSearch = _flounderJsx2['default'].prototype.addSearch;
-FlounderReact.prototype.addSelectKeyListener = _flounderJsx2['default'].prototype.addSelectKeyListener;
-FlounderReact.prototype.attachAttributes = _flounderJsx2['default'].prototype.attachAttributes;
-FlounderReact.prototype.checkClickTarget = _flounderJsx2['default'].prototype.checkClickTarget;
-FlounderReact.prototype.checkSelect = _flounderJsx2['default'].prototype.checkSelect;
-FlounderReact.prototype.componentWillUnmount = _flounderJsx2['default'].prototype.componentWillUnmount;
-FlounderReact.prototype.displaySelected = _flounderJsx2['default'].prototype.displaySelected;
-FlounderReact.prototype.escapeHTML = _flounderJsx2['default'].prototype.escapeHTML;
-FlounderReact.prototype.fuzzySearchReset = _flounderJsx2['default'].prototype.fuzzySearchReset;
-FlounderReact.prototype.getActualWidth = _flounderJsx2['default'].prototype.getActualWidth;
-FlounderReact.prototype.getOption = _flounderJsx2['default'].prototype.getOption;
-FlounderReact.prototype.getSelectedOptions = _flounderJsx2['default'].prototype.getSelectedOptions;
-FlounderReact.prototype.hideElement = _flounderJsx2['default'].prototype.hideElement;
-FlounderReact.prototype.initialzeOptions = _flounderJsx2['default'].prototype.initialzeOptions;
-FlounderReact.prototype.iosVersion = _flounderJsx2['default'].prototype.iosVersion;
-FlounderReact.prototype.onRender = _flounderJsx2['default'].prototype.onRender;
-FlounderReact.prototype.rebuildOptions = _flounderJsx2['default'].prototype.rebuildOptions;
-FlounderReact.prototype.removeClass = _flounderJsx2['default'].prototype.removeClass;
-FlounderReact.prototype.removeOptionsListeners = _flounderJsx2['default'].prototype.removeOptionsListeners;
-FlounderReact.prototype.removeSelectKeyListener = _flounderJsx2['default'].prototype.removeSelectKeyListener;
-FlounderReact.prototype.removeSelectedClass = _flounderJsx2['default'].prototype.removeSelectedClass;
-FlounderReact.prototype.removeSelectedValue = _flounderJsx2['default'].prototype.removeSelectedValue;
-FlounderReact.prototype.scrollMultiple = _flounderJsx2['default'].prototype.scrollMultiple;
-FlounderReact.prototype.scrollTo = _flounderJsx2['default'].prototype.scrollTo;
-FlounderReact.prototype.setDefaultOption = _flounderJsx2['default'].prototype.setDefaultOption;
-FlounderReact.prototype.setPlatform = _flounderJsx2['default'].prototype.setPlatform;
-FlounderReact.prototype.setTextMultiTagIndent = _flounderJsx2['default'].prototype.setTextMultiTagIndent;
-FlounderReact.prototype.showElement = _flounderJsx2['default'].prototype.showElement;
-FlounderReact.prototype.toggleClosed = _flounderJsx2['default'].prototype.toggleClosed;
-FlounderReact.prototype.toggleOpen = _flounderJsx2['default'].prototype.toggleOpen;
+FlounderReact.prototype.addClass = _coreFlounderJsx2['default'].prototype.addClass;
+FlounderReact.prototype.addOptionsListeners = _coreFlounderJsx2['default'].prototype.addOptionsListeners;
+FlounderReact.prototype.addSearch = _coreFlounderJsx2['default'].prototype.addSearch;
+FlounderReact.prototype.addSelectKeyListener = _coreFlounderJsx2['default'].prototype.addSelectKeyListener;
+FlounderReact.prototype.attachAttributes = _coreFlounderJsx2['default'].prototype.attachAttributes;
+FlounderReact.prototype.checkClickTarget = _coreFlounderJsx2['default'].prototype.checkClickTarget;
+FlounderReact.prototype.checkSelect = _coreFlounderJsx2['default'].prototype.checkSelect;
+FlounderReact.prototype.componentWillUnmount = _coreFlounderJsx2['default'].prototype.componentWillUnmount;
+FlounderReact.prototype.displaySelected = _coreFlounderJsx2['default'].prototype.displaySelected;
+FlounderReact.prototype.escapeHTML = _coreFlounderJsx2['default'].prototype.escapeHTML;
+FlounderReact.prototype.fuzzySearchReset = _coreFlounderJsx2['default'].prototype.fuzzySearchReset;
+FlounderReact.prototype.getActualWidth = _coreFlounderJsx2['default'].prototype.getActualWidth;
+FlounderReact.prototype.getOption = _coreFlounderJsx2['default'].prototype.getOption;
+FlounderReact.prototype.getSelectedOptions = _coreFlounderJsx2['default'].prototype.getSelectedOptions;
+FlounderReact.prototype.hideElement = _coreFlounderJsx2['default'].prototype.hideElement;
+FlounderReact.prototype.initialzeOptions = _coreFlounderJsx2['default'].prototype.initialzeOptions;
+FlounderReact.prototype.iosVersion = _coreFlounderJsx2['default'].prototype.iosVersion;
+FlounderReact.prototype.onRender = _coreFlounderJsx2['default'].prototype.onRender;
+FlounderReact.prototype.rebuildOptions = _coreFlounderJsx2['default'].prototype.rebuildOptions;
+FlounderReact.prototype.removeClass = _coreFlounderJsx2['default'].prototype.removeClass;
+FlounderReact.prototype.removeOptionsListeners = _coreFlounderJsx2['default'].prototype.removeOptionsListeners;
+FlounderReact.prototype.removeSelectKeyListener = _coreFlounderJsx2['default'].prototype.removeSelectKeyListener;
+FlounderReact.prototype.removeSelectedClass = _coreFlounderJsx2['default'].prototype.removeSelectedClass;
+FlounderReact.prototype.removeSelectedValue = _coreFlounderJsx2['default'].prototype.removeSelectedValue;
+FlounderReact.prototype.scrollMultiple = _coreFlounderJsx2['default'].prototype.scrollMultiple;
+FlounderReact.prototype.scrollTo = _coreFlounderJsx2['default'].prototype.scrollTo;
+FlounderReact.prototype.setDefaultOption = _coreFlounderJsx2['default'].prototype.setDefaultOption;
+FlounderReact.prototype.setPlatform = _coreFlounderJsx2['default'].prototype.setPlatform;
+FlounderReact.prototype.setTextMultiTagIndent = _coreFlounderJsx2['default'].prototype.setTextMultiTagIndent;
+FlounderReact.prototype.showElement = _coreFlounderJsx2['default'].prototype.showElement;
+FlounderReact.prototype.toggleClosed = _coreFlounderJsx2['default'].prototype.toggleClosed;
+FlounderReact.prototype.toggleOpen = _coreFlounderJsx2['default'].prototype.toggleOpen;
 
-exports['default'] = { React: _react2['default'], Component: _react.Component, ReactDOM: _reactDom2['default'], FlounderReact: FlounderReact, Flounder: _flounderJsx2['default'] };
+exports['default'] = { React: _react2['default'], Component: _react.Component, ReactDOM: _reactDom2['default'], FlounderReact: FlounderReact, Flounder: _coreFlounderJsx2['default'] };
 module.exports = exports['default'];
 
-},{"./flounder.jsx":159,"react":158,"react-dom":2}]},{},[160]);
+},{"../core/flounder.jsx":159,"react":158,"react-dom":2}]},{},[160]);

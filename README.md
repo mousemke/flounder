@@ -1,5 +1,7 @@
-Flounder.js 0.1.5
+Flounder.js 0.2.0
 =================
+
+(for modern browsers and ie9+)
 
 Flounder is a styled select box replacement aimed at being easily configurable while conforming to native functionality and accessibility standards.
 
@@ -19,36 +21,47 @@ Flounder can be used in vanilla js or with react.
 
 ```
 // vanilla
-new Flounder( target, options );
+new Flounder( target, configOptions );
 
 // react
-ReactDOM.render( React.createElement( FlounderReact, options ), target );
+ReactDOM.render( React.createElement( FlounderReact, configOptions ), target );
 
 // react (JSX)
 React.render( <FlounderReact option1="" option2="">, target );
+
+// requirejs
+requirejs( [ 'flounder' ], function( Flounder )
+{
+    new Flounder( target, configOptions );
+} );
+
+// jQuery plugin
+$( '.example--class' ).flounder( configOptions );
+
+// microbe plugin
+µ( '.example--class' ).flounder( configOptions )
 ```
 
 
-###Available options
-
+###Available config options
 
 ```
 {
-    _default            : defaultValue,
+    defaultValue        : defaultValue,
     classes             : {
-        container       : 'extra--class',
+        flounder        : 'class--to--give--the--main--flounder--element',
         hidden          : 'class--to--denote--hidden',
-        selected        : 'class-to-denote-selected-option'
+        selected        : 'class--to--denote--selected--option',
+        wrapper         : 'additional--class--to--give--the--wrapper'
     },
     multiple            : false,
     multipleTags        : true,
     multipleMessage     : '(Multiple Items Selected)',
-    onCancel            : function( e ){},
-    onClose             : function( e ){},
+    onClose             : function( e, valueArray ){},
     onComponentDidMount : function(){},
     onInit              : function(){},
-    onOpen              : function( e ){},
-    onSelect            : function( e ){}
+    onOpen              : function( e, valueArray ){},
+    onSelect            : function( e, valueArray ){}
     options             : dataObject,
     search              : true
 }
@@ -58,14 +71,15 @@ React.render( <FlounderReact option1="" option2="">, target );
 Building the select box
 =======================
 
-options must be passed as an array of objects
+select options must be passed as an array of objects
 
 ```
 [
     {
         text        : 'probably the string you want to see',
         value       : 'return value',
-        description : 'a longer description of this option' // optional
+        description : 'a longer description of this option', // optional
+        extraClass  : 'extra--classname' // optional
     }
 ]
 ```
@@ -78,10 +92,25 @@ or an array.
     'option 3'
 ]
 ```
-in the case of an array, the passed text will be both the description and the value.
+
+in the case of an array, the passed text will be both the text and the value.  There would be no description in this case
 
 
 all extra properties passed that are not shown here will be added as data attributes for the sake of reference later.  The options can be accessed in the init (before building) as this.options if they need reformatting or filtering.
+
+
+API
+===
+
+These functions are intended for use in the user provided event callbacks
+```
+destroy()
+getOption( num )
+getSelectedOptions()
+getSelectedValues()
+rebuildOptions( options )
+disable( bool )
+```
 
 
 Contributing
@@ -133,7 +162,7 @@ flounder can be attached to basically anything
 ```
 
     new flounder( document.getElementById( 'example' ), {
-        _default            : 'placeholders!',
+        defaultValue        : 'placeholders!',
 
         onInit              : function()
         {
@@ -160,7 +189,7 @@ react flounder can only be attached to container elements (div, span, etc)
 ```
 
     ReactDOM.render( React.createElement( FlounderReact, {
-        _default            : 'placeholders!',
+        defaultValue        : 'placeholders!',
 
         multiple            : true,
 
@@ -191,8 +220,37 @@ The result of either of these is shown here (only styled with the structural css
 
 See more examples on the [demo page](./demo/index.html)
 
+
+Public API
+==========
+
+```
+    destroy()
+    getOptions( num )
+    getSelectedOptions()
+    getSelectedValues()
+    rebuildOptions( options )
+    disable( bool )
+```
+
+
 Change Log
 ==========
+
+0.2.0
+-----
+
++ user callbacks now keep their name internally for dynamic changes
++ some users callback now give the array of selected values (see examples)
++ _default is now defaultValue
++ the constructor now accepts µ and $ objects and returns an array of flounders
++ a call to the constructor without and arguments now returns the constructor
++ added getSelectedValues() to API
++ added the ability to give options unique classes
++ added wrapper to the class options
++ changed the flounder class optoin from container to flounder
++ restructured folders and files
+
 
 0.1.5
 -----

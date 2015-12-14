@@ -20,7 +20,7 @@
     <body>
         <div>
             <span class="demo--label">Vanilla from Input (multiple, tags)</span>
-            <input id="vanilla--input--tags" type="text">
+            <input class="vanilla--input--tags" id="vanilla--input--tags" type="text">
         </div>
         <div>
             <span class="demo--label">Vanilla from Input (multiple, no tags, dynamic options)</span>
@@ -62,9 +62,9 @@
         </div>
 
         <script type="text/javascript" src="./vendor/jquery.js"></script>
-        <script type="text/javascript" src="../dist/jqueryFlounder.js"></script>
+        <script type="text/javascript" src="../dist/flounder.jquery.js"></script>
         <script type="text/javascript" src="./vendor/microbe.js"></script>
-        <script type="text/javascript" src="../dist/microbeFlounder.js"></script>
+        <script type="text/javascript" src="../dist/flounder.microbe.js"></script>
         <script type="text/javascript" data-main="../demo/demoDist.js" src="../node_modules/requirejs/require.js"></script>
 
         <script type="text/javascript">
@@ -99,7 +99,7 @@
              * microbe multi-Flounder with descriptions attached to an input
              */
             µ( '#microbe--multiple--desc' ).flounder( {
-                _default             : 'placeholders!',
+                defaultValue         : 'placeholders!',
 
                 onInit               : function()
                 {
@@ -125,7 +125,7 @@
              * jquery Flounder attached to a div
              */
              $( '#jquery--div' ).flounder( {
-                _default             : 'placeholders!',
+                defaultValue         : 'placeholders!',
 
                 onInit               : function()
                 {
