@@ -119,6 +119,7 @@ new Flounder( document.getElementById( 'vanilla--input' ), {
  */
 new Flounder( document.getElementById( 'vanilla--select' ), {
     defaultValue         : 'placeholders!',
+
     classes : {
         container : 'moon',
         wrapper : 'doge'
