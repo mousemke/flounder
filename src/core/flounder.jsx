@@ -8,6 +8,68 @@ import classes from './classes';
 class Flounder
 {
     /**
+     * ## constructor
+     *
+     * main constuctor
+     *
+     * @param {DOMElement} target flounder mount point
+     * @param {Object} props passed options
+     *
+     * @return _Object_ new flounder object
+     */
+    constructor( target, props )
+    {
+        if ( target && target.length !== 0 )
+        {
+            if ( target.jquery )
+            {
+                return target.map( ( i, _el ) => new this.constructor( _el, props ) );
+            }
+            else if ( target.isMicrobe )
+            {
+                return target.map( ( _el ) => new this.constructor( _el, props ) );
+            }
+
+            this.props  = props;
+            target      = target.nodeType === 1 ? target : document.querySelector( target );
+
+            this.originalTarget = target;
+
+            if ( target.tagName === 'INPUT' )
+            {
+                this.addClass( target, 'flounder--hidden' );
+                target.tabIndex = -1;
+                target          = target.parentNode;
+            }
+
+            this.target     = target;
+
+            this.bindThis();
+
+            this.initialzeOptions();
+
+            this.onInit();
+
+            this.buildDom();
+
+            this.setPlatform();
+
+            this.onRender();
+
+            this.onComponentDidMount();
+
+            this.refs.select.flounder = this.refs.selected.flounder = this.target.flounder = this;
+
+            return this;
+        }
+        else if ( !target && !props )
+        {
+            return this.constructor;
+        }
+    }
+
+
+    /**
      * ## addClass
      *
      * on the quest to nuke jquery, a wild helper function appears
@@ -521,68 +583,6 @@ class Flounder
         this.attachAttributes( _el, _elObj );
 
         return _el;
-    }
-
-
-    /**
-     * ## constructor
-     *
-     * main constuctor
-     *
-     * @param {DOMElement} target flounder mount point
-     * @param {Object} props passed options
-     *
-     * @return _Object_ new flounder object
-     */
-    constructor( target, props )
-    {
-        if ( target && target.length !== 0 )
-        {
-            if ( target.jquery )
-            {
-                return target.map( ( i, _el ) => new this.constructor( _el, props ) );
-            }
-            else if ( target.isMicrobe )
-            {
-                return target.map( ( _el ) => new this.constructor( _el, props ) );
-            }
-
-            this.props  = props;
-            target      = target.nodeType === 1 ? target : document.querySelector( target );
-
-            this.originalTarget = target;
-
-            if ( target.tagName === 'INPUT' )
-            {
-                this.addClass( target, 'flounder--hidden' );
-                target.tabIndex = -1;
-                target          = target.parentNode;
-            }
-
-            this.target     = target;
-
-            this.bindThis();
-
-            this.initialzeOptions();
-
-            this.onInit();
-
-            this.buildDom();
-
-            this.setPlatform();
-
-            this.onRender();
-
-            this.onComponentDidMount();
-
-            this.refs.select.flounder = this.refs.selected.flounder = this.target.flounder = this;
-
-            return this;
-        }
-        else if ( !target && !props )
-        {
-            return this.constructor;
-        }
     }
 
 
