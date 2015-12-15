@@ -42,7 +42,7 @@ var options = [
 /**
  * vanilla multi-Flounder with tags attached to an input
  */
-console.log( new Flounder( '.vanilla--input--tags', {
+new Flounder( '.vanilla--input--tags', {
     defaultValue         : 'placeholders!',
 
     onInit               : function()
@@ -61,7 +61,7 @@ console.log( new Flounder( '.vanilla--input--tags', {
     },
 
     multiple            : true
-} ) );
+} );
 
 
 /**

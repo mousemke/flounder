@@ -19598,7 +19598,6 @@ var Flounder = (function () {
             this.setSelectValue({}, e);
 
             if (!this.multiple || !e[this.multiSelect]) {
-
                 this.toggleList(e);
             }
         }
@@ -19915,6 +19914,24 @@ var Flounder = (function () {
             return this.getSelectedOptions().map(function (_v) {
                 return _v.value;
             });
+        }
+
+        /**
+         * ## hasClass
+         *
+         * on the quest to nuke jquery, a wild helper function appears
+         *
+         * @param {DOMElement} _el target element
+         * @param {String} _class class to check
+         *
+         * @return _Void_
+         */
+    }, {
+        key: 'hasClass',
+        value: function hasClass(_el, _class) {
+            var _elClass = _el.className;
+            var regex = new RegExp('(^' + _class + ' )|( ' + _class + '$)|( ' + _class + ' )|(^' + _class + '$)');
+            return !!_elClass.match(regex);
         }
 
         /**
@@ -20424,16 +20441,6 @@ var Flounder = (function () {
                 this.setKeypress(e);
             }
         }
-    }, {
-        key: 'setValue',
-        value: function setValue(value) {
-            if (typeof value !== 'string' && value.length) {
-                var _setValue = this.setValue;
-                value.forEach(_setValue);
-            } else {
-                console.log(this.refs);
-            }
-        }
 
         /**
          * ## setSelectValue
@@ -20460,8 +20467,6 @@ var Flounder = (function () {
                     selection = true;
                 } else // keypress
                 {
-                    e = obj;
-
                     if (this.multipleTags) {
                         obj.preventDefault();
                         obj.stopPropagation();
@@ -20586,6 +20591,39 @@ var Flounder = (function () {
         key: 'showElement',
         value: function showElement(_el) {
             this.removeClass(_el, 'flounder--hidden');
+        }
+
+        /**
+         * ## setValue
+         *
+         * programatically sets the value by string or index.  If the value string
+         * is not matched to an element, nothing will be selected
+         *
+         * @param {Mixed} value value to set flounder to.  _String, Number, or Array with either/both_
+         *
+         * return _Void_
+         */
+    }, {
+        key: 'setValue',
+        value: function setValue(value) {
+            var refs = this.refs;
+
+            if (typeof value !== 'string' && value.length) {
+                var _setValue = this.setValue;
+                value.forEach(_setValue);
+            } else {
+                if (typeof value === 'string') {
+                    value = refs.select.querySelector('[value="' + value + '"]').index;
+                }
+
+                var el = refs.options[value];
+
+                if (el) {
+                    var isOpen = this.hasClass(refs.wrapper, 'open');
+                    this.toggleList(isOpen ? 'close' : 'open');
+                    el.click();
+                }
+            }
         }
 
         /**

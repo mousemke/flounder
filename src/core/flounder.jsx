@@ -529,7 +529,6 @@ class Flounder
 
         if ( !this.multiple || !e[ this.multiSelect ] )
         {
-
             this.toggleList( e );
         }
     }
@@ -882,6 +881,24 @@ class Flounder
     getSelectedValues()
     {
         return this.getSelectedOptions().map( ( _v ) => _v.value )
+    }
+
+
+    /**
+     * ## hasClass
+     *
+     * on the quest to nuke jquery, a wild helper function appears
+     *
+     * @param {DOMElement} _el target element
+     * @param {String} _class class to check
+     *
+     * @return _Void_
+     */
+    hasClass( _el, _class )
+    {
+        let _elClass    = _el.className;
+        let regex       = new RegExp( '(^' + _class + ' )|( ' + _class + '$)|( ' + _class + ' )|(^' + _class + '$)' );
+        return !!_elClass.match( regex );
     }
 
 
@@ -1414,20 +1431,6 @@ class Flounder
     }
 
 
-    setValue( value )
-    {
-        if ( typeof value !== 'string' && value.length )
-        {
-            let _setValue = this.setValue;
-            value.forEach( _setValue );
-        }
-        else
-        {
-            console.log( this.refs );
-        }
-    }
-
-
     /**
      * ## setSelectValue
      *
@@ -1453,8 +1456,6 @@ class Flounder
         }
         else // keypress
         {
-            e = obj;
-
             if ( this.multipleTags )
             {
                 obj.preventDefault();
@@ -1583,6 +1584,44 @@ class Flounder
     showElement( _el )
     {
         this.removeClass( _el, 'flounder--hidden' );
+    }
+
+
+    /**
+     * ## setValue
+     *
+     * programatically sets the value by string or index.  If the value string
+     * is not matched to an element, nothing will be selected
+     *
+     * @param {Mixed} value value to set flounder to.  _String, Number, or Array with either/both_
+     *
+     * return _Void_
+     */
+    setValue( value )
+    {
+        let refs = this.refs;
+
+        if ( typeof value !== 'string' && value.length )
+        {
+            let _setValue = this.setValue;
+            value.forEach( _setValue );
+        }
+        else
+        {
+            if ( typeof value === 'string' )
+            {
+                value = refs.select.querySelector( '[value="' + value + '"]' ).index;
+            }
+
+            var el = refs.options[ value ];
+
+            if ( el )
+            {
+                let isOpen = this.hasClass( refs.wrapper, 'open' );
+                this.toggleList( isOpen ? 'close' : 'open' );
+                el.click();
+            }
+        }
     }
 
 

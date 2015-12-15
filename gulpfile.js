@@ -8,7 +8,7 @@ var _package        = require( './package.json' );
 
 var now             = new Date();
 var liscenceLong    = '/*!\n' +
-                      ' * Flounder JavaScript Styled Selectbox v' + _package.version + '\n' +
+                      ' * Flounder JavaScript Styleable Selectbox v' + _package.version + '\n' +
                       ' * ' + _package.homepage + '\n' +
                       ' *\n' +
                       ' * Copyright 2015-' + now.getUTCFullYear() + ' Sociomantic Labs and other contributors\n' +

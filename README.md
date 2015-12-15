@@ -83,7 +83,7 @@ select options must be passed as an array of objects
     }
 ]
 ```
-
+ 
 or an array.
 ```
 [
@@ -106,12 +106,14 @@ These functions are intended for use in the user provided event callbacks
 
 ```
 this.destroy()                  // removes event listeners, then flounder
-this.disable( bool )
+this.disable( bool )            // NOT AVAILABLE YET
 this.getOption( num )
 this.getSelectedOptions()
 this.getSelectedValues()
 this.rebuildOptions( options )
 this.refs                       // contains references to all flounder elements
+this.setValue()                 // sets item with an index (number) or 
+                                // value (string)
 ```
 
 
@@ -223,21 +225,17 @@ The result of either of these is shown here (only styled with the structural css
 See more examples on the [demo page](./demo/index.html)
 
 
-Public API
-==========
-
-```
-    destroy()
-    getOptions( num )
-    getSelectedOptions()
-    getSelectedValues()
-    rebuildOptions( options )
-    disable( bool )
-```
-
-
 Change Log
 ==========
+
+0.2.1
+-----
+
++ added setValue
++ internal fixes
++ added hasClass
++ changed setValueClick
+
 
 0.2.0
 -----
