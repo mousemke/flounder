@@ -214,58 +214,61 @@ class FlounderReact extends Component
     }
 }
 
+let methods = [
+    'bindThis',
+    'catchBodyClick',
+    'checkClickTarget',
+    'checkFlounderKeypress',
+    'checkPlaceholder',
+    'clickSet',
+    'displayMultipleTags',
+    'fuzzySearch',
+    'removeMultiTag',
+    'setKeypress',
+    'setSelectValue',
+    'setSelectValueButton',
+    'setSelectValueClick',
+    'toggleClass',
+    'toggleList',
+    'addClass',
+    'addOptionsListeners',
+    'addSearch',
+    'addSelectKeyListener',
+    'attachAttributes',
+    'checkClickTarget',
+    'checkSelect',
+    'componentWillUnmount',
+    'displaySelected',
+    'escapeHTML',
+    'fuzzySearchReset',
+    'getActualWidth',
+    'getOption',
+    'getSelectedOptions',
+    'hideElement',
+    'initialzeOptions',
+    'iosVersion',
+    'onRender',
+    'rebuildOptions',
+    'removeClass',
+    'removeOptionsListeners',
+    'removeSelectKeyListener',
+    'removeSelectedClass',
+    'removeSelectedValue',
+    'scrollMultiple',
+    'scrollTo',
+    'setDefaultOption',
+    'setPlatform',
+    'setTextMultiTagIndent',
+    'showElement',
+    'toggleClosed',
+    'toggleOpen'
+];
 
-// these get rebound to this
-FlounderReact.prototype.bindThis                = Flounder.prototype.bindThis;
-FlounderReact.prototype.catchBodyClick          = Flounder.prototype.catchBodyClick;
-FlounderReact.prototype.checkClickTarget        = Flounder.prototype.checkClickTarget;
-FlounderReact.prototype.checkFlounderKeypress   = Flounder.prototype.checkFlounderKeypress
-FlounderReact.prototype.checkPlaceholder        = Flounder.prototype.checkPlaceholder;
-FlounderReact.prototype.clickSet                = Flounder.prototype.clickSet;
-FlounderReact.prototype.displayMultipleTags     = Flounder.prototype.displayMultipleTags;
-FlounderReact.prototype.fuzzySearch             = Flounder.prototype.fuzzySearch;
-FlounderReact.prototype.removeMultiTag          = Flounder.prototype.removeMultiTag;
-FlounderReact.prototype.setKeypress             = Flounder.prototype.setKeypress;
-FlounderReact.prototype.setSelectValue          = Flounder.prototype.setSelectValue;
-FlounderReact.prototype.setSelectValueButton    = Flounder.prototype.setSelectValueButton;
-FlounderReact.prototype.setSelectValueClick     = Flounder.prototype.setSelectValueClick;
-FlounderReact.prototype.toggleClass             = Flounder.prototype.toggleClass;
-FlounderReact.prototype.toggleList              = Flounder.prototype.toggleList;
 
-
-// just your every day, run of the mill functions
-FlounderReact.prototype.addClass                = Flounder.prototype.addClass;
-FlounderReact.prototype.addOptionsListeners     = Flounder.prototype.addOptionsListeners;
-FlounderReact.prototype.addSearch               = Flounder.prototype.addSearch;
-FlounderReact.prototype.addSelectKeyListener    = Flounder.prototype.addSelectKeyListener;
-FlounderReact.prototype.attachAttributes        = Flounder.prototype.attachAttributes;
-FlounderReact.prototype.checkClickTarget        = Flounder.prototype.checkClickTarget;
-FlounderReact.prototype.checkSelect             = Flounder.prototype.checkSelect;
-FlounderReact.prototype.componentWillUnmount    = Flounder.prototype.componentWillUnmount;
-FlounderReact.prototype.displaySelected         = Flounder.prototype.displaySelected;
-FlounderReact.prototype.escapeHTML              = Flounder.prototype.escapeHTML;
-FlounderReact.prototype.fuzzySearchReset        = Flounder.prototype.fuzzySearchReset;
-FlounderReact.prototype.getActualWidth          = Flounder.prototype.getActualWidth;
-FlounderReact.prototype.getOption               = Flounder.prototype.getOption;
-FlounderReact.prototype.getSelectedOptions      = Flounder.prototype.getSelectedOptions;
-FlounderReact.prototype.hideElement             = Flounder.prototype.hideElement;
-FlounderReact.prototype.initialzeOptions        = Flounder.prototype.initialzeOptions;
-FlounderReact.prototype.iosVersion              = Flounder.prototype.iosVersion;
-FlounderReact.prototype.onRender                = Flounder.prototype.onRender;
-FlounderReact.prototype.rebuildOptions          = Flounder.prototype.rebuildOptions;
-FlounderReact.prototype.removeClass             = Flounder.prototype.removeClass;
-FlounderReact.prototype.removeOptionsListeners  = Flounder.prototype.removeOptionsListeners;
-FlounderReact.prototype.removeSelectKeyListener = Flounder.prototype.removeSelectKeyListener;
-FlounderReact.prototype.removeSelectedClass     = Flounder.prototype.removeSelectedClass;
-FlounderReact.prototype.removeSelectedValue     = Flounder.prototype.removeSelectedValue;
-FlounderReact.prototype.scrollMultiple          = Flounder.prototype.scrollMultiple;
-FlounderReact.prototype.scrollTo                = Flounder.prototype.scrollTo;
-FlounderReact.prototype.setDefaultOption        = Flounder.prototype.setDefaultOption;
-FlounderReact.prototype.setPlatform             = Flounder.prototype.setPlatform;
-FlounderReact.prototype.setTextMultiTagIndent   = Flounder.prototype.setTextMultiTagIndent;
-FlounderReact.prototype.showElement             = Flounder.prototype.showElement;
-FlounderReact.prototype.toggleClosed            = Flounder.prototype.toggleClosed;
-FlounderReact.prototype.toggleOpen              = Flounder.prototype.toggleOpen;
+methods.forEach( function( method )
+{
+    FlounderReact.prototype[ method ] = Flounder.prototype[ method ]
+});
 
 export default { React, Component, ReactDOM, FlounderReact, Flounder };
 
