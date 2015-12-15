@@ -12,12 +12,13 @@ const defaultOptions = {
     multiple            : false,
     multipleTags        : true,
     multipleMessage     : '(Multiple Items Selected)',
+    onClose             : blankFunc,
     onInit              : blankFunc,
     onOpen              : blankFunc,
     onSelect            : blankFunc,
-    onClose             : blankFunc,
     onComponentDidMount : blankFunc,
-    options             : []
+    options             : [],
+    search              : false
 };
 
 export default defaultOptions;

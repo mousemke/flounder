@@ -103,13 +103,15 @@ API
 ===
 
 These functions are intended for use in the user provided event callbacks
+
 ```
-destroy()
-getOption( num )
-getSelectedOptions()
-getSelectedValues()
-rebuildOptions( options )
-disable( bool )
+this.destroy()                  // removes event listeners, then flounder
+this.disable( bool )
+this.getOption( num )
+this.getSelectedOptions()
+this.getSelectedValues()
+this.rebuildOptions( options )
+this.refs                       // contains references to all flounder elements
 ```
 
 
