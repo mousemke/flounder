@@ -1,4 +1,4 @@
-Flounder.js 0.2.0
+Flounder.js 0.2.1
 =================
 
 (for modern browsers and ie9+)
