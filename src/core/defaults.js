@@ -10,12 +10,13 @@ const defaults = {
     multiple            : false,
     multipleTags        : true,
     multipleMessage     : '(Multiple Items Selected)',
+    onClose             : function(){ },
+    onComponentDidMount : function(){ },
     onInit              : function(){ },
     onOpen              : function(){ },
     onSelect            : function(){ },
-    onClose             : function(){ },
-    onComponentDidMount : function(){ },
     options             : []
+    search              : false
 };
 
 export default defaults;
