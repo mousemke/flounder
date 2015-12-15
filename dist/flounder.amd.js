@@ -46,12 +46,13 @@ var defaults = {
     multiple: false,
     multipleTags: true,
     multipleMessage: '(Multiple Items Selected)',
+    onClose: function onClose() {},
+    onComponentDidMount: function onComponentDidMount() {},
     onInit: function onInit() {},
     onOpen: function onOpen() {},
     onSelect: function onSelect() {},
-    onClose: function onClose() {},
-    onComponentDidMount: function onComponentDidMount() {},
-    options: []
+    options: [],
+    search: false
 };
 
 exports['default'] = defaults;
@@ -83,19 +84,89 @@ var _classes2 = require('./classes');
 var _classes3 = _interopRequireDefault(_classes2);
 
 var Flounder = (function () {
+    /**
+     * ## constructor
+     *
+     * main constuctor
+     *
+     * @param {DOMElement} target flounder mount point
+     * @param {Object} props passed options
+     *
+     * @return _Object_ new flounder object
+     */
+
+    function Flounder(target, props) {
+        var _this = this;
+
+        _classCallCheck(this, Flounder);
+
+        this.constructElement = function (_elObj) {
+            var _el = document.createElement(_elObj.tagname || 'div');
+
+            _this.attachAttributes(_el, _elObj);
+
+            return _el;
+        };
+
+        if (target && target.length !== 0) {
+            if (target.jquery) {
+                return target.map(function (i, _el) {
+                    return new _this.constructor(_el, props);
+                });
+            } else if (target.isMicrobe) {
+                return target.map(function (_el) {
+                    return new _this.constructor(_el, props);
+                });
+            }
+
+            this.props = props;
+            target = target.nodeType === 1 ? target : document.querySelector(target);
+
+            this.originalTarget = target;
+
+            if (target.tagName === 'INPUT') {
+                this.addClass(target, 'flounder--hidden');
+                target.tabIndex = -1;
+                target = target.parentNode;
+            }
+
+            this.target = target;
+
+            this.bindThis();
+
+            this.initialzeOptions();
+
+            this.onInit();
+
+            this.buildDom();
+
+            this.setPlatform();
+
+            this.onRender();
+
+            this.onComponentDidMount();
+
+            this.refs.select.flounder = this.refs.selected.flounder = this.target.flounder = this;
+
+            return this;
+        } else if (!target && !props) {
+            return this.constructor;
+        }
+    }
+
+    /**
+     * ## addClass
+     *
+     * on the quest to nuke jquery, a wild helper function appears
+     *
+     * @param {DOMElement} _el target element
+     * @param {String} _class class to add
+     *
+     * @return _Void_
+     */
+
     _createClass(Flounder, [{
         key: 'addClass',
-
-        /**
-         * ## addClass
-         *
-         * on the quest to nuke jquery, a wild helper function appears
-         *
-         * @param {DOMElement} _el target element
-         * @param {String} _class class to add
-         *
-         * @return _Void_
-         */
         value: function addClass(_el, _class) {
             var _elClass = _el.className;
             var _elClassLength = _elClass.length;
@@ -134,11 +205,11 @@ var Flounder = (function () {
     }, {
         key: 'addOptionsListeners',
         value: function addOptionsListeners() {
-            var _this = this;
+            var _this2 = this;
 
             this.refs.options.forEach(function (_option, i) {
                 if (_option.tagName === 'DIV') {
-                    _option.addEventListener('click', _this.clickSet);
+                    _option.addEventListener('click', _this2.clickSet);
                 }
             });
         }
@@ -319,7 +390,7 @@ var Flounder = (function () {
     }, {
         key: 'buildOptions',
         value: function buildOptions(defaultValue, _options, optionsList, select) {
-            var _this2 = this;
+            var _this3 = this;
 
             _options = _options || [];
             var options = [];
@@ -336,8 +407,8 @@ var Flounder = (function () {
                 }
                 _option.index = i;
 
-                var escapedText = _this2.escapeHTML(_option.text);
-                var extraClass = i === defaultValue.index ? '  ' + _this2.selectedClass : '';
+                var escapedText = _this3.escapeHTML(_option.text);
+                var extraClass = i === defaultValue.index ? '  ' + _this3.selectedClass : '';
 
                 var res = {
                     className: 'flounder__option' + extraClass,
@@ -367,7 +438,7 @@ var Flounder = (function () {
                     options[i].className += '  ' + uniqueExtraClass;
                 }
 
-                if (!_this2.refs.select) {
+                if (!_this3.refs.select) {
                     selectOptions[i] = constructElement({ tagname: 'option',
                         className: 'flounder--option--tag',
                         value: _option.value });
@@ -378,11 +449,14 @@ var Flounder = (function () {
                         selectOptions[i].selected = true;
                     }
                 } else {
-                    selectOptions[i] = select.children[i];
+                    var selectChild = select.children[i];
+
+                    selectOptions[i] = selectChild;
+                    selectChild.setAttribute('value', selectChild.value);
                 }
 
                 if (selectOptions[i].getAttribute('disabled')) {
-                    _this2.addClass(options[i], 'flounder--disabled');
+                    _this3.addClass(options[i], 'flounder--disabled');
                 }
             });
 
@@ -402,9 +476,6 @@ var Flounder = (function () {
         key: 'catchBodyClick',
         value: function catchBodyClick(e) {
             if (!this.checkClickTarget(e)) {
-                if (this.onCancel) {
-                    this.onCancel(e);
-                }
                 this.toggleList(e);
             }
         }
@@ -555,88 +626,16 @@ var Flounder = (function () {
          *
          * @return _Element_
          */
-    }]);
-
-    /**
-     * ## constructor
-     *
-     * main constuctor
-     *
-     * @param {DOMElement} target flounder mount point
-     * @param {Object} props passed options
-     *
-     * @return _Object_ new flounder object
-     */
-
-    function Flounder(target, props) {
-        var _this3 = this;
-
-        _classCallCheck(this, Flounder);
-
-        this.constructElement = function (_elObj) {
-            var _el = document.createElement(_elObj.tagname || 'div');
-
-            _this3.attachAttributes(_el, _elObj);
-
-            return _el;
-        };
-
-        if (target && target.length !== 0) {
-            if (target.jquery) {
-                return target.map(function (i, _el) {
-                    return new _this3.constructor(_el, props);
-                });
-            } else if (target.isMicrobe) {
-                return target.map(function (_el) {
-                    return new _this3.constructor(_el, props);
-                });
-            }
-
-            this.props = props;
-            target = target.nodeType === 1 ? target : document.querySelector(target);
-
-            this.originalTarget = target;
-
-            if (target.tagName === 'INPUT') {
-                this.addClass(target, 'flounder--hidden');
-                target.tabIndex = -1;
-                target = target.parentNode;
-            }
-
-            this.target = target;
-
-            this.bindThis();
-
-            this.initialzeOptions();
-
-            this.onInit();
-
-            this.buildDom();
-
-            this.setPlatform();
-
-            this.onRender();
-
-            this.onComponentDidMount();
-
-            this.refs.select.flounder = this.refs.selected.flounder = this.target.flounder = this;
-
-            return this;
-        } else if (!target && !props) {
-            return this.constructor;
-        }
-    }
-
-    /**
-     * ## destroy
-     *
-     * removes flounder and all it's events from the dom
-     *
-     * @return _Void_
-     */
-
-    _createClass(Flounder, [{
+    }, {
         key: 'destroy',
+
+        /**
+         * ## destroy
+         *
+         * removes flounder and all it's events from the dom
+         *
+         * @return _Void_
+         */
         value: function destroy() {
             this.componentWillUnmount();
             var originalTarget = this.originalTarget;
@@ -1408,6 +1407,16 @@ var Flounder = (function () {
 
             if (optionClassName.indexOf('flounder--hidden') !== -1 && optionClassName.indexOf('flounder__option--selected--hidden') !== -1) {
                 this.setKeypress(e);
+            }
+        }
+    }, {
+        key: 'setValue',
+        value: function setValue(value) {
+            if (typeof value !== 'string' && value.length) {
+                var _setValue = this.setValue;
+                value.forEach(_setValue);
+            } else {
+                console.log(this.refs);
             }
         }
 

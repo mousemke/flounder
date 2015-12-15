@@ -15,8 +15,7 @@ const defaults = {
     onInit              : function(){ },
     onOpen              : function(){ },
     onSelect            : function(){ },
-    options             : []
-
+    options             : [],
     search              : false
 };
 

@@ -203,7 +203,7 @@ class FlounderReact extends Component
                             'data-index'    : i
                         };
 
-                        return ( <option key={i} className="flounder--option--tag" ref={'option' + i}>
+                        return ( <option key={i} value ={_option.value} className="flounder--option--tag" ref={'option' + i}>
                                     {_option.text}
                                 </option> );
                     } )

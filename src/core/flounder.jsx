@@ -378,7 +378,10 @@ class Flounder
             }
             else
             {
-                selectOptions[ i ] = select.children[ i ];
+                let selectChild = select.children[ i ];
+
+                selectOptions[ i ] = selectChild;
+                selectChild.setAttribute( 'value', selectChild.value );
             }
 
             if ( selectOptions[ i ].getAttribute( 'disabled' ) )
@@ -1407,6 +1410,20 @@ class Flounder
              optionClassName.indexOf( 'flounder__option--selected--hidden' ) !== -1 )
         {
             this.setKeypress( e );
+        }
+    }
+
+
+    setValue( value )
+    {
+        if ( typeof value !== 'string' && value.length )
+        {
+            let _setValue = this.setValue;
+            value.forEach( _setValue );
+        }
+        else
+        {
+            console.log( this.refs );
         }
     }
 
