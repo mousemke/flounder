@@ -214,60 +214,17 @@ class FlounderReact extends Component
     }
 }
 
-let methods = [
-    'bindThis',
-    'catchBodyClick',
-    'checkClickTarget',
-    'checkFlounderKeypress',
-    'checkPlaceholder',
-    'clickSet',
-    'displayMultipleTags',
-    'fuzzySearch',
-    'removeMultiTag',
-    'setKeypress',
-    'setSelectValue',
-    'setSelectValueButton',
-    'setSelectValueClick',
-    'toggleClass',
-    'toggleList',
-    'addClass',
-    'addOptionsListeners',
-    'addSearch',
-    'addSelectKeyListener',
-    'attachAttributes',
-    'checkClickTarget',
-    'checkSelect',
-    'componentWillUnmount',
-    'displaySelected',
-    'escapeHTML',
-    'fuzzySearchReset',
-    'getActualWidth',
-    'getOption',
-    'getSelectedOptions',
-    'hideElement',
-    'initialzeOptions',
-    'iosVersion',
-    'onRender',
-    'rebuildOptions',
-    'removeClass',
-    'removeOptionsListeners',
-    'removeSelectKeyListener',
-    'removeSelectedClass',
-    'removeSelectedValue',
-    'scrollMultiple',
-    'scrollTo',
-    'setDefaultOption',
-    'setPlatform',
-    'setTextMultiTagIndent',
-    'showElement',
-    'toggleClosed',
-    'toggleOpen'
-];
 
+let FlounderPrototype       = Flounder.prototype;
+let FlounderReactPrototype  = FlounderReact.prototype;
+let methods                 = Object.getOwnPropertyNames( FlounderPrototype );
 
 methods.forEach( function( method )
 {
-    FlounderReact.prototype[ method ] = Flounder.prototype[ method ]
+    if ( !FlounderReactPrototype[ method ] && !FlounderPrototype[ method ].propertyIsEnumerable() )
+    {
+        FlounderReactPrototype[ method ] = FlounderPrototype[ method ]
+    }
 });
 
 export default { React, Component, ReactDOM, FlounderReact, Flounder };

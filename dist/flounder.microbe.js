@@ -1,4 +1,35 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+    value: true
+});
+var blankFunc = function blankFunc() {};
+
+var defaultOptions = {
+    classes: {
+        flounder: '',
+        hidden: 'flounder--hidden',
+        selected: 'flounder__option--selected',
+        wrapper: ''
+    },
+    defaultTextIndent: 0,
+    defaultValue: '',
+    multiple: false,
+    multipleTags: true,
+    multipleMessage: '(Multiple Items Selected)',
+    onInit: blankFunc,
+    onOpen: blankFunc,
+    onSelect: blankFunc,
+    onClose: blankFunc,
+    onComponentDidMount: blankFunc,
+    options: []
+};
+
+exports['default'] = defaultOptions;
+module.exports = exports['default'];
+
+},{}],2:[function(require,module,exports){
 
 /* jshint globalstrict: true */
 'use strict';
@@ -11,7 +42,13 @@ var _slicedToArray = (function () { function sliceIterator(arr, i) { var _arr = 
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+var _flounderDefaultOptions = require('./flounder.defaultOptions');
+
+var _flounderDefaultOptions2 = _interopRequireDefault(_flounderDefaultOptions);
 
 var _slice = Array.prototype.slice;
 
@@ -542,9 +579,7 @@ var Flounder = (function () {
 
             this.initialzeOptions();
 
-            if (this.onInit) {
-                this.onInit();
-            }
+            this.onInit();
 
             this.buildDom();
 
@@ -552,9 +587,7 @@ var Flounder = (function () {
 
             this.onRender();
 
-            if (this.onComponentDidMount) {
-                this.onComponentDidMount();
-            }
+            this.onComponentDidMount();
 
             this.refs.select.flounder = this.refs.selected.flounder = this.target.flounder = this;
 
@@ -867,35 +900,26 @@ var Flounder = (function () {
         value: function initialzeOptions() {
             this.props = this.props || {};
             var props = this.props;
-            this.onInit = props.onInit !== undefined ? props.onInit : false;
-            this.onOpen = props.onOpen !== undefined ? props.onOpen : false;
-            this.onSelect = props.onSelect !== undefined ? props.onSelect : false;
-            this.onClose = props.onClose !== undefined ? props.onClose : false;
-            this.onComponentDidMount = props.onComponentDidMount !== undefined ? props.onComponentDidMount : false;
-            this.multiple = props.multiple !== undefined ? props.multiple : false;
-            this.multipleTags = props.multipleTags !== undefined ? props.multipleTags : true;
+
+            for (var _o in _flounderDefaultOptions2['default']) {
+                if (_flounderDefaultOptions2['default'].hasOwnProperty(_o) && _o !== 'classes') {
+                    this[_o] = props[_o] !== undefined ? props[_o] : _flounderDefaultOptions2['default'][_o];
+                } else if (_o === 'classes') {
+                    var classes = _flounderDefaultOptions2['default'][_o];
+                    var propsClasses = props.classes;
+
+                    for (var _c in classes) {
+                        this[_c + 'Class'] = propsClasses && propsClasses[_c] !== undefined ? propsClasses[_c] : classes[_c];
+                    }
+                }
+            }
 
             if (!this.multiple) {
                 this.multipleTags = false;
             }
 
-            var propsClass = props.classes;
-            this.wrapperClass = propsClass && propsClass.wrapper !== undefined ? ' ' + propsClass.wrapper : '';
-            this.flounderClass = propsClass && propsClass.flounder !== undefined ? ' ' + propsClass.flounder : '';
-            this.hiddenClass = propsClass && propsClass.hidden !== undefined ? propsClass.hidden : 'flounder--hidden';
-            this.selectedClass = propsClass && propsClass.selected !== undefined ? propsClass.selected : 'flounder__option--selected';
-
-            this.multipleMessage = props.multipleMessage !== undefined ? props.multipleMessage : '(Multiple Items Selected)';
-            this.defaultTextIndent = props.defaultTextIndent !== undefined ? props.defaultTextIndent : 0;
-            this.options = props.options !== undefined ? props.options : [];
-
             if (this.multipleTags) {
                 this.selectedClass += '  flounder__option--selected--hidden';
-            }
-
-            this.defaultValue = '';
-            if (props.defaultValue || props.defaultValue === 0) {
-                this.defaultValue = props.defaultValue;
             }
         }
 
@@ -1176,9 +1200,7 @@ var Flounder = (function () {
             selected.setAttribute('data-value', value);
             selected.setAttribute('data-index', index);
 
-            if (this.onSelect) {
-                this.onSelect(e, this.getSelectedValues());
-            }
+            this.onSelect(e, this.getSelectedValues());
         }
 
         /**
@@ -1403,9 +1425,7 @@ var Flounder = (function () {
             if (selection) {
                 this.displaySelected(refs.selected, refs);
 
-                if (this.onSelect) {
-                    this.onSelect(e, this.getSelectedValues());
-                }
+                this.onSelect(e, this.getSelectedValues());
             }
         }
 
@@ -1600,9 +1620,7 @@ var Flounder = (function () {
                 refs.search.focus();
             }
 
-            if (this.onOpen) {
-                this.onOpen(e, this.getSelectedValues());
-            }
+            this.onOpen(e, this.getSelectedValues());
         }
 
         /**
@@ -1634,9 +1652,7 @@ var Flounder = (function () {
 
             refs.flounder.focus();
 
-            if (this.onClose) {
-                this.onClose(e, this.getSelectedValues());
-            }
+            this.onClose(e, this.getSelectedValues());
         }
     }]);
 
@@ -1646,7 +1662,7 @@ var Flounder = (function () {
 exports['default'] = Flounder;
 module.exports = exports['default'];
 
-},{}],2:[function(require,module,exports){
+},{"./flounder.defaultOptions":1}],3:[function(require,module,exports){
 
 /* jshint globalstrict: true */
 'use strict';
@@ -1664,4 +1680,4 @@ var _coreFlounderJsx2 = _interopRequireDefault(_coreFlounderJsx);
     };
 })(µ);
 
-},{"../core/flounder.jsx":1}]},{},[2]);
+},{"../core/flounder.jsx":2}]},{},[3]);
