@@ -4,9 +4,37 @@
 Object.defineProperty(exports, '__esModule', {
     value: true
 });
-var blankFunc = function blankFunc() {};
+var classes = {
+    MAIN: 'flounder',
+    DESCRIPTION: 'flounder__option--description',
+    SELECTED: 'flounder__option--selected',
+    SELECTED_HIDDEN: 'flounder__option--selected--hidden',
+    SEARCH: 'flounder__input--search',
+    SEARCH_HIDDEN: 'flounder--search--hidden',
+    MAIN_WRAPPER: 'flounder-wrapper  flounder__input--select',
+    MULTI_TAG_LIST: 'multi--tag--list',
+    ARROW: 'flounder__arrow',
+    OPTIONS_WRAPPER: 'flounder__list-wrapper  flounder--hidden',
+    LIST: 'flounder__list',
+    OPTION_TAG: 'flounder--option--tag',
+    DISABLED: 'flounder--disabled',
+    HIDDEN: 'flounder--hidden',
+    HIDDEN_IOS: 'flounder--hidden--ios',
+    MULTIPLE_SELECT_TAG: 'flounder__multiple--select--tag',
+    MULTIPLE_TAG_CLOSE: 'flounder__multiple__tag__close',
+    SELECT_TAG: 'flounder--select--tag'
+};
 
-var defaultOptions = {
+exports['default'] = classes;
+module.exports = exports['default'];
+
+},{}],2:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+    value: true
+});
+var defaults = {
     classes: {
         flounder: '',
         hidden: 'flounder--hidden',
@@ -18,18 +46,18 @@ var defaultOptions = {
     multiple: false,
     multipleTags: true,
     multipleMessage: '(Multiple Items Selected)',
-    onInit: blankFunc,
-    onOpen: blankFunc,
-    onSelect: blankFunc,
-    onClose: blankFunc,
-    onComponentDidMount: blankFunc,
+    onInit: function onInit() {},
+    onOpen: function onOpen() {},
+    onSelect: function onSelect() {},
+    onClose: function onClose() {},
+    onComponentDidMount: function onComponentDidMount() {},
     options: []
 };
 
-exports['default'] = defaultOptions;
+exports['default'] = defaults;
 module.exports = exports['default'];
 
-},{}],2:[function(require,module,exports){
+},{}],3:[function(require,module,exports){
 
 /* jshint globalstrict: true */
 'use strict';
@@ -46,11 +74,13 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'd
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-var _flounderDefaultOptions = require('./flounder.defaultOptions');
+var _defaults = require('./defaults');
 
-var _flounderDefaultOptions2 = _interopRequireDefault(_flounderDefaultOptions);
+var _defaults2 = _interopRequireDefault(_defaults);
 
-var _slice = Array.prototype.slice;
+var _classes2 = require('./classes');
+
+var _classes3 = _interopRequireDefault(_classes2);
 
 var Flounder = (function () {
     _createClass(Flounder, [{
@@ -640,7 +670,7 @@ var Flounder = (function () {
 
             var removeMultiTag = this.removeMultiTag;
 
-            _slice.call(multiTagWrapper.children).forEach(function (el) {
+            Array.prototype.slice.call(multiTagWrapper.children).forEach(function (el) {
                 el.firstChild.removeEventListener('click', removeMultiTag);
             });
 
@@ -663,7 +693,7 @@ var Flounder = (function () {
 
             this.setTextMultiTagIndent();
 
-            _slice.call(multiTagWrapper.children).forEach(function (el) {
+            Array.prototype.slice.call(multiTagWrapper.children).forEach(function (el) {
                 el.firstChild.addEventListener('click', removeMultiTag);
             });
         }
@@ -901,15 +931,15 @@ var Flounder = (function () {
             this.props = this.props || {};
             var props = this.props;
 
-            for (var _o in _flounderDefaultOptions2['default']) {
-                if (_flounderDefaultOptions2['default'].hasOwnProperty(_o) && _o !== 'classes') {
-                    this[_o] = props[_o] !== undefined ? props[_o] : _flounderDefaultOptions2['default'][_o];
+            for (var _o in _defaults2['default']) {
+                if (_defaults2['default'].hasOwnProperty(_o) && _o !== 'classes') {
+                    this[_o] = props[_o] !== undefined ? props[_o] : _defaults2['default'][_o];
                 } else if (_o === 'classes') {
-                    var classes = _flounderDefaultOptions2['default'][_o];
+                    var _classes = _defaults2['default'][_o];
                     var propsClasses = props.classes;
 
-                    for (var _c in classes) {
-                        this[_c + 'Class'] = propsClasses && propsClasses[_c] !== undefined ? propsClasses[_c] : classes[_c];
+                    for (var _c in _classes) {
+                        this[_c + 'Class'] = propsClasses && propsClasses[_c] !== undefined ? propsClasses[_c] : _classes[_c];
                     }
                 }
             }
@@ -949,7 +979,7 @@ var Flounder = (function () {
 
                     var options = [],
                         selectOptions = [];
-                    _slice.apply(target.children).forEach(function (optionEl) {
+                    Array.prototype.slice.apply(target.children).forEach(function (optionEl) {
                         selectOptions.push(optionEl);
                         options.push({
                             text: optionEl.innerHTML,
@@ -1065,7 +1095,7 @@ var Flounder = (function () {
 
             var refs = this.refs;
             var selected = refs.select.selectedOptions;
-            selected = _slice.call(selected).map(function (e) {
+            selected = Array.prototype.slice.call(selected).map(function (e) {
                 return e.value;
             });
             this.removeOptionsListeners();
@@ -1662,4 +1692,4 @@ var Flounder = (function () {
 exports['default'] = Flounder;
 module.exports = exports['default'];
 
-},{"./flounder.defaultOptions":1}]},{},[2]);
+},{"./classes":1,"./defaults":2}]},{},[3]);
