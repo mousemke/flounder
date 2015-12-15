@@ -2,7 +2,9 @@
 /* jshint globalstrict: true */
 'use strict';
 
-const _slice = Array.prototype.slice;
+import defaultOptions from './flounder.defaultOptions';
+
+const _slice    = Array.prototype.slice;
 
 class Flounder
 {
@@ -564,10 +566,7 @@ class Flounder
 
             this.initialzeOptions();
 
-            if ( this.onInit )
-            {
-                this.onInit();
-            }
+            this.onInit();
 
             this.buildDom();
 
@@ -575,10 +574,7 @@ class Flounder
 
             this.onRender();
 
-            if ( this.onComponentDidMount )
-            {
-                this.onComponentDidMount();
-            }
+            this.onComponentDidMount();
 
             this.refs.select.flounder = this.refs.selected.flounder = this.target.flounder = this;
 
@@ -917,38 +913,33 @@ class Flounder
     {
         this.props                  = this.props || {};
         let props                   = this.props;
-        this.onInit                 = props.onInit              !== undefined ? props.onInit            : false;
-        this.onOpen                 = props.onOpen              !== undefined ? props.onOpen            : false;
-        this.onSelect               = props.onSelect            !== undefined ? props.onSelect          : false;
-        this.onClose                = props.onClose             !== undefined ? props.onClose           : false;
-        this.onComponentDidMount    = props.onComponentDidMount !== undefined ? props.onComponentDidMount : false;
-        this.multiple               = props.multiple            !== undefined ? props.multiple          : false;
-        this.multipleTags           = props.multipleTags        !== undefined ? props.multipleTags      : true;
+
+        for ( var _o in defaultOptions )
+        {
+            if ( defaultOptions.hasOwnProperty( _o ) && _o !== 'classes' )
+            {
+                this[ _o ] = props[ _o ] !== undefined ? props[ _o ] : defaultOptions[ _o ];
+            }
+            else if ( _o === 'classes' )
+            {
+                let classes         = defaultOptions[ _o ];
+                let propsClasses    = props.classes;
+
+                for ( var _c in classes )
+                {
+                    this[ _c + 'Class' ] = propsClasses && propsClasses[ _c ] !== undefined ? propsClasses[ _c ] : classes[ _c ];
+                }
+            }
+        }
 
         if ( !this.multiple )
         {
             this.multipleTags = false;
         }
 
-        let propsClass              = props.classes;
-        this.wrapperClass           = propsClass && propsClass.wrapper      !== undefined ? ' ' + propsClass.wrapper   : '';
-        this.flounderClass          = propsClass && propsClass.flounder     !== undefined ? ' ' + propsClass.flounder   : '';
-        this.hiddenClass            = propsClass && propsClass.hidden       !== undefined ? propsClass.hidden      : 'flounder--hidden';
-        this.selectedClass          = propsClass && propsClass.selected     !== undefined ? propsClass.selected    : 'flounder__option--selected';
-
-        this.multipleMessage        = props.multipleMessage     !== undefined ? props.multipleMessage : '(Multiple Items Selected)';
-        this.defaultTextIndent      = props.defaultTextIndent   !== undefined ? props.defaultTextIndent : 0;
-        this.options                = props.options             !== undefined ? props.options         : [];
-
         if ( this.multipleTags )
         {
             this.selectedClass += '  flounder__option--selected--hidden';
-        }
-
-        this.defaultValue    = '';
-        if ( props.defaultValue || props.defaultValue === 0 )
-        {
-            this.defaultValue = props.defaultValue;
         }
     }
 
@@ -1227,10 +1218,7 @@ class Flounder
         selected.setAttribute( 'data-value', value );
         selected.setAttribute( 'data-index', index );
 
-        if ( this.onSelect )
-        {
-            this.onSelect( e, this.getSelectedValues() );
-        }
+        this.onSelect( e, this.getSelectedValues() );
     }
 
 
@@ -1475,10 +1463,7 @@ class Flounder
         {
             this.displaySelected( refs.selected, refs );
 
-            if ( this.onSelect )
-            {
-                this.onSelect( e, this.getSelectedValues() );
-            }
+            this.onSelect( e, this.getSelectedValues() );
         }
     }
 
@@ -1685,10 +1670,7 @@ class Flounder
             refs.search.focus();
         }
 
-        if ( this.onOpen )
-        {
-            this.onOpen( e, this.getSelectedValues() );
-        }
+        this.onOpen( e, this.getSelectedValues() );
     }
 
 
@@ -1722,10 +1704,7 @@ class Flounder
 
         refs.flounder.focus();
 
-        if ( this.onClose )
-        {
-            this.onClose( e, this.getSelectedValues() );
-        }
+        this.onClose( e, this.getSelectedValues() );
     }
 }
 
