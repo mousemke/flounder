@@ -7,6 +7,9 @@
     "gulp": "./node_modules/.bin/gulp",
     "vanilla": "./node_modules/.bin/gulp vanilla",
     "react": "./node_modules/.bin/gulp react",
+    "microbe": "./node_modules/.bin/gulp microbe",
+    "jquery": "./node_modules/.bin/gulp jquery",
+    "amd": "./node_modules/.bin/gulp amd",
     "demo": "./node_modules/.bin/gulp demo"
   },
   "repository": {
@@ -32,6 +35,8 @@
     "babelify": "^6.3.0",
     "browserify": "^11.2.0",
     "gulp": "^3.9.0",
+    "gulp-header": "^1.7.1",
+    "gulp-uglify": "^1.5.1",
     "react": "^0.14.2",
     "react-dom": "^0.14.2",
     "requirejs": "^2.1.22"

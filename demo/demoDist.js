@@ -54,7 +54,7 @@ var options = [{
 /**
  * vanilla multi-Flounder with tags attached to an input
  */
-new _srcCoreFlounderJsx2['default']('.vanilla--input--tags', {
+console.log(new _srcCoreFlounderJsx2['default']('.vanilla--input--tags', {
     defaultValue: 'placeholders!',
 
     onInit: function onInit() {
@@ -71,7 +71,7 @@ new _srcCoreFlounderJsx2['default']('.vanilla--input--tags', {
     },
 
     multiple: true
-});
+}));
 
 /**
  * vanilla Flounder attached to an input
