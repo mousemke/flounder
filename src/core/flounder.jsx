@@ -2,9 +2,8 @@
 /* jshint globalstrict: true */
 'use strict';
 
-import defaultOptions from './flounder.defaultOptions';
-
-const _slice    = Array.prototype.slice;
+import defaultOptions from './defaults';
+import classes from './classes';
 
 class Flounder
 {
@@ -630,7 +629,7 @@ class Flounder
 
         let removeMultiTag = this.removeMultiTag
 
-        _slice.call( multiTagWrapper.children ).forEach( function( el )
+        Array.prototype.slice.call( multiTagWrapper.children ).forEach( function( el )
         {
             el.firstChild.removeEventListener( 'click', removeMultiTag );
         } );
@@ -655,7 +654,7 @@ class Flounder
 
         this.setTextMultiTagIndent();
 
-        _slice.call( multiTagWrapper.children ).forEach( function( el )
+        Array.prototype.slice.call( multiTagWrapper.children ).forEach( function( el )
         {
             el.firstChild.addEventListener( 'click', removeMultiTag );
         } );
@@ -966,7 +965,7 @@ class Flounder
             this.refs.select    = target;
 
             let options = [], selectOptions = [];
-            _slice.apply( target.children ).forEach( function( optionEl )
+            Array.prototype.slice.apply( target.children ).forEach( function( optionEl )
             {
                 selectOptions.push( optionEl );
                 options.push( {
@@ -1083,7 +1082,7 @@ class Flounder
     {
         let refs        = this.refs;
         let selected    = refs.select.selectedOptions;
-        selected        = _slice.call( selected ).map( function( e ){ return e.value; } );
+        selected        = Array.prototype.slice.call( selected ).map( function( e ){ return e.value; } );
         this.removeOptionsListeners();
 
         refs.select.innerHTML       = '';

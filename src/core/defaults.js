@@ -1,6 +1,4 @@
-const blankFunc = function(){};
-
-const defaultOptions = {
+const defaults = {
     classes : {
         flounder    : '',
         hidden      : 'flounder--hidden',
@@ -12,12 +10,12 @@ const defaultOptions = {
     multiple            : false,
     multipleTags        : true,
     multipleMessage     : '(Multiple Items Selected)',
-    onInit              : blankFunc,
-    onOpen              : blankFunc,
-    onSelect            : blankFunc,
-    onClose             : blankFunc,
-    onComponentDidMount : blankFunc,
+    onInit              : function(){ },
+    onOpen              : function(){ },
+    onSelect            : function(){ },
+    onClose             : function(){ },
+    onComponentDidMount : function(){ },
     options             : []
 };
 
-export default defaultOptions;
+export default defaults;
