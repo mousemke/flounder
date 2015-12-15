@@ -2,8 +2,8 @@
 /* jshint globalstrict: true */
 'use strict';
 
-import defaultOptions from './defaults';
-import classes from './classes';
+import defaultOptions   from './defaults';
+import classes          from './classes';
 
 class Flounder
 {
@@ -404,10 +404,6 @@ class Flounder
     {
         if ( ! this.checkClickTarget( e ) )
         {
-            if ( this.onCancel )
-            {
-                this.onCancel( e );
-            }
             this.toggleList( e );
         }
     }
