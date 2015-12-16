@@ -172,8 +172,10 @@ class Flounder
         this.displayMultipleTags    = this.displayMultipleTags.bind( this );
         this.fuzzySearch            = this.fuzzySearch.bind( this );
         this.removeMultiTag         = this.removeMultiTag.bind( this );
+        this.setIndex               = this.setIndex.bind( this );
         this.setKeypress            = this.setKeypress.bind( this );
         this.setSelectValue         = this.setSelectValue.bind( this );
+        this.setValue               = this.setValue.bind( this );
         this.toggleClass            = this.toggleClass.bind( this );
         this.toggleList             = this.toggleList.bind( this );
     }
@@ -520,6 +522,20 @@ class Flounder
 
 
     /**
+     * ## deselectAll
+     *
+     * deslects all options
+     *
+     * @return _Void_
+     */
+    deselectAll()
+    {
+        this.removeSelectedClass();
+        this.removeSelectedValue();
+    }
+
+
+    /**
      * ## destroy
      *
      * removes flounder and all it's events from the dom
@@ -637,6 +653,7 @@ class Flounder
      */
     displaySelected( selected, refs )
     {
+        console.log( this );
         let value = [];
         let index = -1;
 
@@ -1198,18 +1215,40 @@ class Flounder
 
 
     /**
-     * ## setPlatform
+     * ## setIndex
      *
-     * sets the platform to osx or not osx for the sake of the multi select key
+     * programatically sets the value by index.  If there are not enough elements
+     * to match the index, then nothing is selected.
      *
-     * @return _Void_
+     * @param {Mixed} index index to set flounder to.  _Number, or Array of numbers_
+     *
+     * return _Void_
      */
-    setPlatform()
+    setIndex( index, multiple )
     {
-        let _osx = this.isOsx = window.navigator.platform.indexOf( 'Mac' ) === -1 ? false : true;
+        let refs = this.refs;
 
-        this.isIos          = this.iosVersion();
-        this.multiSelect    = _osx ? 'metaKey' : 'ctrlKey';
+        if ( typeof index !== 'string' && index.length )
+        {
+            let _setIndex = this.setIndex;
+            return index.map( _setIndex );
+        }
+        else
+        {
+            var el = refs.options[ index ];
+
+            if ( el )
+            {
+                let isOpen = this.hasClass( refs.wrapper, 'open' );
+                this.toggleList( isOpen ? 'close' : 'open' );
+                this.___forceMultiple = multiple;
+                el.click();
+
+                return el;
+            }
+
+            return null;
+        }
     }
 
 
@@ -1278,6 +1317,22 @@ class Flounder
         {
             this.setKeypress( e );
         }
+    }
+
+
+    /**
+     * ## setPlatform
+     *
+     * sets the platform to osx or not osx for the sake of the multi select key
+     *
+     * @return _Void_
+     */
+    setPlatform()
+    {
+        let _osx = this.isOsx = window.navigator.platform.indexOf( 'Mac' ) === -1 ? false : true;
+
+        this.isIos          = this.iosVersion();
+        this.multiSelect    = _osx ? 'metaKey' : 'ctrlKey';
     }
 
 
@@ -1380,12 +1435,12 @@ class Flounder
         let selectedClass   = this.selectedClass;
         let index, selectedOption;
 
-        if ( !_multiple || ( _multiple && !this.multipleTags && !e[ this.multiSelect ] ) )
+        if ( ( !_multiple ||  _multiple && !this.multipleTags && !e[ this.multiSelect ] ) && !this.___forceMultiple )
         {
-            this.removeSelectedClass();
-            this.removeSelectedValue();
+            this.deselectAll();
         }
 
+        this.___forceMultiple   = false;
         let target              = e.target;
 
         this.toggleClass( target, selectedClass );
@@ -1423,6 +1478,31 @@ class Flounder
 
 
     /**
+     * ## setValue
+     *
+     * programatically sets the value by string.  If the value string
+     * is not matched to an element, nothing will be selected
+     *
+     * @param {Mixed} value value to set flounder to.  _Number, or Array of numbers_
+     *
+     * return _Void_
+     */
+    setValue( value, multiple )
+    {
+        if ( typeof value !== 'string' && value.length )
+        {
+            let _setValue = this.setValue;
+            return value.map( _setValue );
+        }
+        else
+        {
+            value = this.refs.select.querySelector( '[value="' + value + '"]' );
+            return value ? this.setIndex( value.index, multiple ) : null;
+        }
+    }
+
+
+    /**
      * ## showElement
      *
      * remove classes.HIDDEN from a given element
@@ -1434,44 +1514,6 @@ class Flounder
     showElement( _el )
     {
         this.removeClass( _el, classes.HIDDEN );
-    }
-
-
-    /**
-     * ## setValue
-     *
-     * programatically sets the value by string or index.  If the value string
-     * is not matched to an element, nothing will be selected
-     *
-     * @param {Mixed} value value to set flounder to.  _String, Number, or Array with either/both_
-     *
-     * return _Void_
-     */
-    setValue( value )
-    {
-        let refs = this.refs;
-
-        if ( typeof value !== 'string' && value.length )
-        {
-            let _setValue = this.setValue;
-            value.forEach( _setValue );
-        }
-        else
-        {
-            if ( typeof value === 'string' )
-            {
-                value = refs.select.querySelector( '[value="' + value + '"]' ).index;
-            }
-
-            var el = refs.options[ value ];
-
-            if ( el )
-            {
-                let isOpen = this.hasClass( refs.wrapper, 'open' );
-                this.toggleList( isOpen ? 'close' : 'open' );
-                el.click();
-            }
-        }
     }
 
 

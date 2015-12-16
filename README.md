@@ -47,13 +47,14 @@ $( '.example--class' ).flounder( configOptions );
 
 ```
 {
-    defaultValue        : defaultValue,
     classes             : {
         flounder        : 'class--to--give--the--main--flounder--element',
         hidden          : 'class--to--denote--hidden',
         selected        : 'class--to--denote--selected--option',
         wrapper         : 'additional--class--to--give--the--wrapper'
     },
+    defaultValue        : defaultValue,
+    defaultIndex        : defaultIndex,
     multiple            : false,
     multipleTags        : true,
     multipleMessage     : '(Multiple Items Selected)',
@@ -63,9 +64,37 @@ $( '.example--class' ).flounder( configOptions );
     onOpen              : function( e, valueArray ){},
     onSelect            : function( e, valueArray ){}
     options             : dataObject,
+    placeholder         : 'Please choose an option',
     search              : true
 }
 ```
+
+`classes`- (object) Contains configurable classes for various elements.  The are additional classes, not replacement classes
+
+`defaultValue` - (string) Sets the default value to the passed value but only if it matches one of the select box options
+
+`defaultIndex` - (number) Sets the default option to the passed index but only if it exists
+
+`multiple` - (boolean) Determines whether it is a multi-select box or single
+
+`multipleTags` - (boolean) Determines how a multi-select box is displayed
+
+`multipleMessage` - (string) If there are no tags, this is the message that will be displayed in the selected area when there are multiple options selected
+
+`onClose` - (function) Triggered when the selectbox is closed
+
+`onComponentDidMount` - (function) Triggered when the selectbox is finished building
+
+`onInit` - (function) Triggered when the selectbox is initiated, but before it's built
+
+`onOpen` - (function) Triggered when the selectbox is opened
+
+`onSelect` - (function) Triggered when an option selectbox is closed
+
+`options` - (array) Options to build in the select box.  Can be organized various ways
+
+`search` - (boolean) Determines whether the select box is searchable
+
 
 
 Building the select box
@@ -85,6 +114,7 @@ select options must be passed as an array of objects
 ```
  
 or an array.
+
 ```
 [
     'option 1',
@@ -105,16 +135,37 @@ API
 These functions are intended for use in the user provided event callbacks
 
 ```
-this.destroy()                  // removes event listeners, then flounder
-this.disable( bool )            // true or not true
+this.deselectAll()
+this.destroy()
+this.disable( bool )
 this.getOption( num )
 this.getSelectedOptions()
 this.getSelectedValues()
 this.rebuildOptions( options )
-this.refs                       // contains references to all flounder elements
-this.setValue()                 // sets item with an index (number) or 
-                                // value (string)
+this.refs
+this.setIndex( index, multiple )
+this.setValue( value, multiple )
 ```
+
+`deselectAll()` deselects all options
+
+`destroy()` removes event listeners, then flounder
+
+`disable( bool )` disables or reenables flounder
+
+`getOption( num )` returns the option element and the div element at a specified index as an object `{ option : option element, div : div element }`
+
+`getSelectedOptions()` returns the currently selected option tags in an array
+
+`getSelectedValues()` returns the currently selected values in an array
+ 
+ `rebuildOptions( options )` completely rebuilds the select boxes with new or altered options
+ 
+`refs` contains references to all flounder elements
+
+`setIndex( index, multiple )` sets the item with the passed index as selected.  If multiple is true and it is a multi-select box, it is selected additionally.  Otherwise it's selected instead.  This accepts arrays as well.  Without multiple equaling true it will only select the last option.
+ 
+`setValue( value, multiple )` sets the item with the passed value as selected.  If multiple is true and it is a multi-select box, it is selected additionally.  Otherwise it's selected instead. This accepts arrays as well.  Without multiple equaling true it will only select the last option.
 
 
 Contributing
@@ -177,7 +228,7 @@ flounder can be attached to basically anything
                     text        : option.text,
                     value       : option.id
                 } );
-            } );
+            } ); 
 
             this.options = res;
         },

@@ -266,8 +266,10 @@ var Flounder = (function () {
             this.displayMultipleTags = this.displayMultipleTags.bind(this);
             this.fuzzySearch = this.fuzzySearch.bind(this);
             this.removeMultiTag = this.removeMultiTag.bind(this);
+            this.setIndex = this.setIndex.bind(this);
             this.setKeypress = this.setKeypress.bind(this);
             this.setSelectValue = this.setSelectValue.bind(this);
+            this.setValue = this.setValue.bind(this);
             this.toggleClass = this.toggleClass.bind(this);
             this.toggleList = this.toggleList.bind(this);
         }
@@ -586,6 +588,20 @@ var Flounder = (function () {
         }
 
         /**
+         * ## deselectAll
+         *
+         * deslects all options
+         *
+         * @return _Void_
+         */
+    }, {
+        key: 'deselectAll',
+        value: function deselectAll() {
+            this.removeSelectedClass();
+            this.removeSelectedValue();
+        }
+
+        /**
          * ## destroy
          *
          * removes flounder and all it's events from the dom
@@ -695,6 +711,7 @@ var Flounder = (function () {
     }, {
         key: 'displaySelected',
         value: function displaySelected(selected, refs) {
+            console.log(this);
             var value = [];
             var index = -1;
 
@@ -1230,19 +1247,37 @@ var Flounder = (function () {
         }
 
         /**
-         * ## setPlatform
+         * ## setIndex
          *
-         * sets the platform to osx or not osx for the sake of the multi select key
+         * programatically sets the value by index.  If there are not enough elements
+         * to match the index, then nothing is selected.
          *
-         * @return _Void_
+         * @param {Mixed} index index to set flounder to.  _Number, or Array of numbers_
+         *
+         * return _Void_
          */
     }, {
-        key: 'setPlatform',
-        value: function setPlatform() {
-            var _osx = this.isOsx = window.navigator.platform.indexOf('Mac') === -1 ? false : true;
+        key: 'setIndex',
+        value: function setIndex(index, multiple) {
+            var refs = this.refs;
 
-            this.isIos = this.iosVersion();
-            this.multiSelect = _osx ? 'metaKey' : 'ctrlKey';
+            if (typeof index !== 'string' && index.length) {
+                var _setIndex = this.setIndex;
+                return index.map(_setIndex);
+            } else {
+                var el = refs.options[index];
+
+                if (el) {
+                    var isOpen = this.hasClass(refs.wrapper, 'open');
+                    this.toggleList(isOpen ? 'close' : 'open');
+                    this.___forceMultiple = multiple;
+                    el.click();
+
+                    return el;
+                }
+
+                return null;
+            }
         }
 
         /**
@@ -1299,6 +1334,22 @@ var Flounder = (function () {
             if (hasClass(options[index], _classes3['default'].HIDDEN) && hasClass(options[index], _classes3['default'].SELECTED_HIDDEN)) {
                 this.setKeypress(e);
             }
+        }
+
+        /**
+         * ## setPlatform
+         *
+         * sets the platform to osx or not osx for the sake of the multi select key
+         *
+         * @return _Void_
+         */
+    }, {
+        key: 'setPlatform',
+        value: function setPlatform() {
+            var _osx = this.isOsx = window.navigator.platform.indexOf('Mac') === -1 ? false : true;
+
+            this.isIos = this.iosVersion();
+            this.multiSelect = _osx ? 'metaKey' : 'ctrlKey';
         }
 
         /**
@@ -1397,11 +1448,11 @@ var Flounder = (function () {
             var index = undefined,
                 selectedOption = undefined;
 
-            if (!_multiple || _multiple && !this.multipleTags && !e[this.multiSelect]) {
-                this.removeSelectedClass();
-                this.removeSelectedValue();
+            if ((!_multiple || _multiple && !this.multipleTags && !e[this.multiSelect]) && !this.___forceMultiple) {
+                this.deselectAll();
             }
 
+            this.___forceMultiple = false;
             var target = e.target;
 
             this.toggleClass(target, selectedClass);
@@ -1438,6 +1489,28 @@ var Flounder = (function () {
         }
 
         /**
+         * ## setValue
+         *
+         * programatically sets the value by string.  If the value string
+         * is not matched to an element, nothing will be selected
+         *
+         * @param {Mixed} value value to set flounder to.  _Number, or Array of numbers_
+         *
+         * return _Void_
+         */
+    }, {
+        key: 'setValue',
+        value: function setValue(value, multiple) {
+            if (typeof value !== 'string' && value.length) {
+                var _setValue = this.setValue;
+                return value.map(_setValue);
+            } else {
+                value = this.refs.select.querySelector('[value="' + value + '"]');
+                return value ? this.setIndex(value.index, multiple) : null;
+            }
+        }
+
+        /**
          * ## showElement
          *
          * remove classes.HIDDEN from a given element
@@ -1450,39 +1523,6 @@ var Flounder = (function () {
         key: 'showElement',
         value: function showElement(_el) {
             this.removeClass(_el, _classes3['default'].HIDDEN);
-        }
-
-        /**
-         * ## setValue
-         *
-         * programatically sets the value by string or index.  If the value string
-         * is not matched to an element, nothing will be selected
-         *
-         * @param {Mixed} value value to set flounder to.  _String, Number, or Array with either/both_
-         *
-         * return _Void_
-         */
-    }, {
-        key: 'setValue',
-        value: function setValue(value) {
-            var refs = this.refs;
-
-            if (typeof value !== 'string' && value.length) {
-                var _setValue = this.setValue;
-                value.forEach(_setValue);
-            } else {
-                if (typeof value === 'string') {
-                    value = refs.select.querySelector('[value="' + value + '"]').index;
-                }
-
-                var el = refs.options[value];
-
-                if (el) {
-                    var isOpen = this.hasClass(refs.wrapper, 'open');
-                    this.toggleList(isOpen ? 'close' : 'open');
-                    el.click();
-                }
-            }
         }
 
         /**
