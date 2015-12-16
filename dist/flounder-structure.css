@@ -38,7 +38,7 @@
 }
 
 
-.flounder__list-wrapper
+.flounder__list--wrapper
 {
     display:                        block;
     z-index:                        800;
@@ -102,7 +102,7 @@
 /* -------------------------------------------------------------------------- */
 /* FLOUNDER - hover                                                           */
 /* -------------------------------------------------------------------------- */
-.flounder:hover, .flounder:hover .flounder__list-wrapper
+.flounder:hover, .flounder:hover .flounder__list--wrapper
 {
     z-index:                        800;
 }
@@ -208,7 +208,7 @@
 }
 
 
-.multi--tag--list
+.flounder__multi--tag--list
 {
     position:                       absolute;
     top:                            0;

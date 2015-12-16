@@ -37,7 +37,7 @@ class Flounder
 
             if ( target.tagName === 'INPUT' )
             {
-                this.addClass( target, 'flounder--hidden' );
+                this.addClass( target, classes.HIDDEN );
                 target.tabIndex = -1;
                 target          = target.parentNode;
             }
@@ -84,8 +84,7 @@ class Flounder
         let _elClass        = _el.className;
         let _elClassLength  = _elClass.length;
 
-        if ( _elClass.indexOf( ' ' + _class + ' ' ) === -1 &&
-            _elClass.slice( 0, _class.length + 1 ) !== _class + ' ' &&
+        if ( !this.hasClass( _el, _class ) && _elClass.slice( 0, _class.length + 1 ) !== _class + ' ' &&
             _elClass.slice( _elClassLength - _class.length - 1, _elClassLength ) !== ' ' + _class )
         {
             _el.className += '  ' + _class;
@@ -107,7 +106,7 @@ class Flounder
     {
         let _e = document.createElement( 'div' );
         _e.innerHTML = text;
-        _e.className = 'flounder__option--description';
+        _e.className = classes.DESCRIPTION;
         _el.appendChild( _e );
     }
 
@@ -147,7 +146,7 @@ class Flounder
             let search = this.constructElement( {
                                     tagname     : 'input',
                                     type        : 'text',
-                                    className   : 'flounder__input--search'
+                                    className   : classes.SEARCH
                                 } );
             flounder.appendChild( search );
 
@@ -211,19 +210,20 @@ class Flounder
      */
     bindThis()
     {
-        this.attachAttributes      = this.attachAttributes.bind( this );
-        this.catchBodyClick        = this.catchBodyClick.bind( this );
-        this.checkClickTarget      = this.checkClickTarget.bind( this );
-        this.checkFlounderKeypress = this.checkFlounderKeypress.bind( this );
-        this.checkPlaceholder      = this.checkPlaceholder.bind( this );
-        this.clickSet              = this.clickSet.bind( this );
-        this.displayMultipleTags   = this.displayMultipleTags.bind( this );
-        this.fuzzySearch           = this.fuzzySearch.bind( this );
-        this.removeMultiTag        = this.removeMultiTag.bind( this );
-        this.setKeypress           = this.setKeypress.bind( this );
-        this.setSelectValue        = this.setSelectValue.bind( this );
-        this.toggleClass           = this.toggleClass.bind( this );
-        this.toggleList            = this.toggleList.bind( this );
+        this.addClass               = this.addClass.bind( this );
+        this.attachAttributes       = this.attachAttributes.bind( this );
+        this.catchBodyClick         = this.catchBodyClick.bind( this );
+        this.checkClickTarget       = this.checkClickTarget.bind( this );
+        this.checkFlounderKeypress  = this.checkFlounderKeypress.bind( this );
+        this.checkPlaceholder       = this.checkPlaceholder.bind( this );
+        this.clickSet               = this.clickSet.bind( this );
+        this.displayMultipleTags    = this.displayMultipleTags.bind( this );
+        this.fuzzySearch            = this.fuzzySearch.bind( this );
+        this.removeMultiTag         = this.removeMultiTag.bind( this );
+        this.setKeypress            = this.setKeypress.bind( this );
+        this.setSelectValue         = this.setSelectValue.bind( this );
+        this.toggleClass            = this.toggleClass.bind( this );
+        this.toggleList             = this.toggleList.bind( this );
     }
 
 
@@ -240,10 +240,10 @@ class Flounder
 
         let constructElement    = this.constructElement;
 
-        let wrapperClass        = 'flounder-wrapper  flounder__input--select';
+        let wrapperClass        = classes.MAIN_WRAPPER;
         let wrapper             = constructElement( { className : this.wrapperClass ?
                                     wrapperClass + ' ' + this.wrapperClass : wrapperClass } );
-        let flounderClass       = 'flounder';
+        let flounderClass       = classes.MAIN;
         let flounder            = constructElement( { className : this.flounderClass ?
                                     flounderClass + '  ' + this.flounderClass : flounderClass } );
 
@@ -262,20 +262,20 @@ class Flounder
 
         let defaultValue        = this.defaultValue = this.setDefaultOption( this.defaultValue, _options );
 
-        let selected            = constructElement( { className : 'flounder__option--selected--displayed',
+        let selected            = constructElement( { className : classes.SELECTED_DISPLAYED,
                                         'data-value' : defaultValue.value, 'data-index' : defaultValue.index || -1  } );
             selected.innerHTML  = defaultValue.text;
 
-        let multiTagWrapper     = this.props.multiple ? constructElement( { className : 'multi--tag--list' } ) : null;
+        let multiTagWrapper     = this.props.multiple ? constructElement( { className : classes.MULTI_TAG_LIST } ) : null;
 
         if ( multiTagWrapper !== null )
         {
             multiTagWrapper.style.textIndent = this.defaultTextIndent + 'px';
         }
 
-        let arrow               = constructElement( { className : 'flounder__arrow' } );
-        let optionsListWrapper  = constructElement( { className : 'flounder__list-wrapper  flounder--hidden' } );
-        let optionsList         = constructElement( { className : 'flounder__list' } );
+        let arrow               = constructElement( { className : classes.ARROW } );
+        let optionsListWrapper  = constructElement( { className : classes.OPTIONS_WRAPPER + '  ' + classes.HIDDEN } );
+        let optionsList         = constructElement( { className : classes.LIST } );
         optionsListWrapper.appendChild( optionsList );
 
         [ selected, multiTagWrapper, arrow, optionsListWrapper ].forEach( _el =>
@@ -332,7 +332,7 @@ class Flounder
             let extraClass  = i === defaultValue.index ? '  ' + this.selectedClass : '';
 
             let res = {
-                className       : 'flounder__option' + extraClass,
+                className       : classes.OPTION + extraClass,
                 'data-index'    : i
             };
 
@@ -366,7 +366,7 @@ class Flounder
             if ( ! this.refs.select )
             {
                 selectOptions[ i ] = constructElement( { tagname : 'option',
-                                            className   : 'flounder--option--tag',
+                                            className   : classes.OPTION_TAG,
                                             value       :  _option.value } );
                 selectOptions[ i ].innerHTML = escapedText;
                 select.appendChild( selectOptions[ i ] );
@@ -386,7 +386,7 @@ class Flounder
 
             if ( selectOptions[ i ].getAttribute( 'disabled' ) )
             {
-                this.addClass( options[ i ], 'flounder--disabled' );
+                this.addClass( options[ i ], classes.DISABLED );
             }
         } );
 
@@ -601,7 +601,7 @@ class Flounder
             let target = originalTarget.nextElementSibling;
             target.parentNode.removeChild( target );
             originalTarget.tabIndex = 0;
-            this.removeClass( originalTarget, 'flounder--hidden' );
+            this.removeClass( originalTarget, classes.HIDDEN );
         }
         else
         {
@@ -637,10 +637,10 @@ class Flounder
         selectedOptions.forEach( function( option )
         {
             _span           = document.createElement( 'span' )
-            _span.className = 'flounder__multiple--select--tag';
+            _span.className = classes.MULTIPLE_SELECT_TAG;
 
             _a              = document.createElement( 'a' )
-            _a.className    = 'flounder__multiple__tag__close';
+            _a.className    = classes.MULTIPLE_TAG_CLOSE;
             _a.setAttribute( 'data-index', option.index );
 
             _span.appendChild( _a );
@@ -762,11 +762,11 @@ class Flounder
 
                 if ( term !== '' && text.indexOf( term ) === -1 )
                 {
-                    this.addClass( _option, 'flounder--search--hidden' );
+                    this.addClass( _option, classes.SEARCH_HIDDEN );
                 }
                 else
                 {
-                    this.removeClass( _option, 'flounder--search--hidden' );
+                    this.removeClass( _option, classes.SEARCH_HIDDEN );
                 }
             } );
         }
@@ -789,7 +789,7 @@ class Flounder
     {
         this.refs.options.forEach( _option =>
         {
-            this.removeClass( _option, 'flounder--search--hidden' );
+            this.removeClass( _option, classes.SEARCH_HIDDEN );
         } );
 
         this.refs.search.value = '';
@@ -913,7 +913,7 @@ class Flounder
      */
     hideElement( _el )
     {
-        this.addClass( _el, 'flounder--hidden' );
+        this.addClass( _el, classes.HIDDEN );
     }
 
 
@@ -954,7 +954,7 @@ class Flounder
 
         if ( this.multipleTags )
         {
-            this.selectedClass += '  flounder__option--selected--hidden';
+            this.selectedClass += '  ' + classes.SELECTED_HIDDEN;
         }
     }
 
@@ -976,8 +976,8 @@ class Flounder
 
         if ( target.tagName === 'SELECT' )
         {
-            this.addClass( target, 'flounder--select--tag' );
-            this.addClass( target, 'flounder--hidden' );
+            this.addClass( target, classes.SELECT_TAG );
+            this.addClass( target, classes.HIDDEN );
             this.refs.select    = target;
 
             let options = [], selectOptions = [];
@@ -995,11 +995,11 @@ class Flounder
             this.refs.selectOptions = selectOptions;
 
             select = this.refs.select;
-            this.addClass( select, 'flounder--hidden' );
+            this.addClass( select, classes.HIDDEN );
         }
         else
         {
-            select = this.constructElement( { tagname : 'select', className : 'flounder--select--tag  flounder--hidden' } );
+            select = this.constructElement( { tagname : 'select', className : classes.SELECT_TAG + '  ' + classes.HIDDEN } );
             wrapper.appendChild( select );
         }
 
@@ -1045,8 +1045,8 @@ class Flounder
         if ( !!this.isIos && ( !this.multipleTags || !this.multiple )  )
         {
             let sel     = refs.select;
-            this.removeClass( sel, 'flounder--hidden' );
-            this.addClass( sel, 'flounder--hidden--ios' );
+            this.removeClass( sel, classes.HIDDEN );
+            this.addClass( sel, classes.HIDDEN_IOS );
         }
 
 
@@ -1203,8 +1203,8 @@ class Flounder
 
         let selectedOptions = this.getSelectedOptions();
 
-        this.removeClass( refs.options[ targetIndex ], 'flounder__option--selected--hidden' );
-        this.removeClass( refs.options[ targetIndex ], 'flounder__option--selected' );
+        this.removeClass( refs.options[ targetIndex ], classes.SELECTED_HIDDEN );
+        this.removeClass( refs.options[ targetIndex ], classes.SELECTED );
 
         let span = target.parentNode;
         span.parentNode.removeChild( span );
@@ -1420,11 +1420,10 @@ class Flounder
         }
 
         selectTag.selectedIndex = index;
+        let hasClass            = this.hasClass;
 
-        let optionClassName = options[ index ].className;
-
-        if ( optionClassName.indexOf( 'flounder--hidden' ) !== -1 &&
-             optionClassName.indexOf( 'flounder__option--selected--hidden' ) !== -1 )
+        if ( hasClass( options[ index ], classes.HIDDEN ) &&
+             hasClass( options[ index ], classes.SELECTED_HIDDEN ) )
         {
             this.setKeypress( e );
         }
@@ -1561,7 +1560,7 @@ class Flounder
 
         if ( search )
         {
-            let _els = document.getElementsByClassName( 'flounder__multiple--select--tag' );
+            let _els = document.getElementsByClassName( classes.MULTIPLE_SELECT_TAG );
             _els.each( ( i, e ) =>
             {
                 offset += this.getActualWidth( e );
@@ -1575,7 +1574,7 @@ class Flounder
     /**
      * ## showElement
      *
-     * remove 'flounder--hidden' from a given element
+     * remove classes.HIDDEN from a given element
      *
      * @param {Object} _el element to show
      *
@@ -1583,7 +1582,7 @@ class Flounder
      */
     showElement( _el )
     {
-        this.removeClass( _el, 'flounder--hidden' );
+        this.removeClass( _el, classes.HIDDEN );
     }
 
 
@@ -1640,7 +1639,7 @@ class Flounder
         let _addClass       = this.addClass;
         let _removeClass    = this.removeClass;
 
-        if ( _el.className.indexOf( _class ) !== -1 )
+        if ( this.hasClass( _el, _class ) )
         {
             _removeClass( _el, _class );
         }
@@ -1665,13 +1664,14 @@ class Flounder
         let refs        = this.refs;
         let optionsList = refs.optionsListWrapper;
         let wrapper     = refs.wrapper;
+        let hasClass    = this.hasClass;
 
-        if ( force === 'open' || force !== 'close' && optionsList.className.indexOf( 'flounder--hidden' ) !== -1 )
+        if ( force === 'open' || force !== 'close' && hasClass( optionsList, classes.HIDDEN ) )
         {
             this.toggleList.justOpened = true;
             this.toggleOpen( e, optionsList, refs, wrapper );
         }
-        else if ( force === 'close' || optionsList.className.indexOf( 'flounder--hidden' ) === -1 )
+        else if ( force === 'close' || !hasClass( optionsList, classes.HIDDEN ) )
         {
             this.toggleList.justOpened = false;
             this.toggleClosed( e, optionsList, refs, wrapper );

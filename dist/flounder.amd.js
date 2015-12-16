@@ -1,12 +1,12 @@
 /*!
- * Flounder JavaScript Styleable Selectbox v0.2.0
+ * Flounder JavaScript Styleable Selectbox v0.2.1
  * https://github.com/sociomantic/flounder
  *
  * Copyright 2015-2015 Sociomantic Labs and other contributors
  * Released under the MIT license
  * https://github.com/sociomantic/flounder/license
  *
- * Date: Tue Dec 15 2015
+ * Date: Wed Dec 16 2015
  */
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 'use strict';
@@ -15,23 +15,25 @@ Object.defineProperty(exports, '__esModule', {
     value: true
 });
 var classes = {
-    MAIN: 'flounder',
-    DESCRIPTION: 'flounder__option--description',
-    SELECTED: 'flounder__option--selected',
-    SELECTED_HIDDEN: 'flounder__option--selected--hidden',
-    SEARCH: 'flounder__input--search',
-    SEARCH_HIDDEN: 'flounder--search--hidden',
-    MAIN_WRAPPER: 'flounder-wrapper  flounder__input--select',
-    MULTI_TAG_LIST: 'multi--tag--list',
     ARROW: 'flounder__arrow',
-    OPTIONS_WRAPPER: 'flounder__list-wrapper  flounder--hidden',
-    LIST: 'flounder__list',
-    OPTION_TAG: 'flounder--option--tag',
+    DESCRIPTION: 'flounder__option--description',
     DISABLED: 'flounder--disabled',
     HIDDEN: 'flounder--hidden',
     HIDDEN_IOS: 'flounder--hidden--ios',
+    LIST: 'flounder__list',
+    MAIN: 'flounder',
     MULTIPLE_SELECT_TAG: 'flounder__multiple--select--tag',
     MULTIPLE_TAG_CLOSE: 'flounder__multiple__tag__close',
+    SELECTED: 'flounder__option--selected',
+    SELECTED_HIDDEN: 'flounder__option--selected--hidden',
+    SELECTED_DISPLAYED: 'flounder__option--selected--displayed',
+    SEARCH: 'flounder__input--search',
+    SEARCH_HIDDEN: 'flounder--search--hidden',
+    MAIN_WRAPPER: 'flounder-wrapper  flounder__input--select',
+    MULTI_TAG_LIST: 'flounder__multi--tag--list',
+    OPTION: 'flounder__option',
+    OPTION_TAG: 'flounder--option--tag',
+    OPTIONS_WRAPPER: 'flounder__list--wrapper',
     SELECT_TAG: 'flounder--select--tag'
 };
 
@@ -135,7 +137,7 @@ var Flounder = (function () {
             this.originalTarget = target;
 
             if (target.tagName === 'INPUT') {
-                this.addClass(target, 'flounder--hidden');
+                this.addClass(target, _classes3['default'].HIDDEN);
                 target.tabIndex = -1;
                 target = target.parentNode;
             }
@@ -181,7 +183,7 @@ var Flounder = (function () {
             var _elClass = _el.className;
             var _elClassLength = _elClass.length;
 
-            if (_elClass.indexOf(' ' + _class + ' ') === -1 && _elClass.slice(0, _class.length + 1) !== _class + ' ' && _elClass.slice(_elClassLength - _class.length - 1, _elClassLength) !== ' ' + _class) {
+            if (!this.hasClass(_el, _class) && _elClass.slice(0, _class.length + 1) !== _class + ' ' && _elClass.slice(_elClassLength - _class.length - 1, _elClassLength) !== ' ' + _class) {
                 _el.className += '  ' + _class;
             }
         }
@@ -201,7 +203,7 @@ var Flounder = (function () {
         value: function addOptionDescription(_el, text) {
             var _e = document.createElement('div');
             _e.innerHTML = text;
-            _e.className = 'flounder__option--description';
+            _e.className = _classes3['default'].DESCRIPTION;
             _el.appendChild(_e);
         }
 
@@ -240,7 +242,7 @@ var Flounder = (function () {
                 var search = this.constructElement({
                     tagname: 'input',
                     type: 'text',
-                    className: 'flounder__input--search'
+                    className: _classes3['default'].SEARCH
                 });
                 flounder.appendChild(search);
 
@@ -300,6 +302,7 @@ var Flounder = (function () {
     }, {
         key: 'bindThis',
         value: function bindThis() {
+            this.addClass = this.addClass.bind(this);
             this.attachAttributes = this.attachAttributes.bind(this);
             this.catchBodyClick = this.catchBodyClick.bind(this);
             this.checkClickTarget = this.checkClickTarget.bind(this);
@@ -329,9 +332,9 @@ var Flounder = (function () {
 
             var constructElement = this.constructElement;
 
-            var wrapperClass = 'flounder-wrapper  flounder__input--select';
+            var wrapperClass = _classes3['default'].MAIN_WRAPPER;
             var wrapper = constructElement({ className: this.wrapperClass ? wrapperClass + ' ' + this.wrapperClass : wrapperClass });
-            var flounderClass = 'flounder';
+            var flounderClass = _classes3['default'].MAIN;
             var flounder = constructElement({ className: this.flounderClass ? flounderClass + '  ' + this.flounderClass : flounderClass });
 
             flounder.tabIndex = 0;
@@ -348,19 +351,19 @@ var Flounder = (function () {
 
             var defaultValue = this.defaultValue = this.setDefaultOption(this.defaultValue, _options);
 
-            var selected = constructElement({ className: 'flounder__option--selected--displayed',
+            var selected = constructElement({ className: _classes3['default'].SELECTED_DISPLAYED,
                 'data-value': defaultValue.value, 'data-index': defaultValue.index || -1 });
             selected.innerHTML = defaultValue.text;
 
-            var multiTagWrapper = this.props.multiple ? constructElement({ className: 'multi--tag--list' }) : null;
+            var multiTagWrapper = this.props.multiple ? constructElement({ className: _classes3['default'].MULTI_TAG_LIST }) : null;
 
             if (multiTagWrapper !== null) {
                 multiTagWrapper.style.textIndent = this.defaultTextIndent + 'px';
             }
 
-            var arrow = constructElement({ className: 'flounder__arrow' });
-            var optionsListWrapper = constructElement({ className: 'flounder__list-wrapper  flounder--hidden' });
-            var optionsList = constructElement({ className: 'flounder__list' });
+            var arrow = constructElement({ className: _classes3['default'].ARROW });
+            var optionsListWrapper = constructElement({ className: _classes3['default'].OPTIONS_WRAPPER + '  ' + _classes3['default'].HIDDEN });
+            var optionsList = constructElement({ className: _classes3['default'].LIST });
             optionsListWrapper.appendChild(optionsList);
 
             [selected, multiTagWrapper, arrow, optionsListWrapper].forEach(function (_el) {
@@ -421,7 +424,7 @@ var Flounder = (function () {
                 var extraClass = i === defaultValue.index ? '  ' + _this3.selectedClass : '';
 
                 var res = {
-                    className: 'flounder__option' + extraClass,
+                    className: _classes3['default'].OPTION + extraClass,
                     'data-index': i
                 };
 
@@ -450,7 +453,7 @@ var Flounder = (function () {
 
                 if (!_this3.refs.select) {
                     selectOptions[i] = constructElement({ tagname: 'option',
-                        className: 'flounder--option--tag',
+                        className: _classes3['default'].OPTION_TAG,
                         value: _option.value });
                     selectOptions[i].innerHTML = escapedText;
                     select.appendChild(selectOptions[i]);
@@ -466,7 +469,7 @@ var Flounder = (function () {
                 }
 
                 if (selectOptions[i].getAttribute('disabled')) {
-                    _this3.addClass(options[i], 'flounder--disabled');
+                    _this3.addClass(options[i], _classes3['default'].DISABLED);
                 }
             });
 
@@ -653,7 +656,7 @@ var Flounder = (function () {
                 var target = originalTarget.nextElementSibling;
                 target.parentNode.removeChild(target);
                 originalTarget.tabIndex = 0;
-                this.removeClass(originalTarget, 'flounder--hidden');
+                this.removeClass(originalTarget, _classes3['default'].HIDDEN);
             } else {
                 var target = this.target;
                 target.innerHTML = '';
@@ -686,10 +689,10 @@ var Flounder = (function () {
 
             selectedOptions.forEach(function (option) {
                 _span = document.createElement('span');
-                _span.className = 'flounder__multiple--select--tag';
+                _span.className = _classes3['default'].MULTIPLE_SELECT_TAG;
 
                 _a = document.createElement('a');
-                _a.className = 'flounder__multiple__tag__close';
+                _a.className = _classes3['default'].MULTIPLE_TAG_CLOSE;
                 _a.setAttribute('data-index', option.index);
 
                 _span.appendChild(_a);
@@ -796,9 +799,9 @@ var Flounder = (function () {
                         var text = _option.innerHTML.toLowerCase();
 
                         if (term !== '' && text.indexOf(term) === -1) {
-                            _this4.addClass(_option, 'flounder--search--hidden');
+                            _this4.addClass(_option, _classes3['default'].SEARCH_HIDDEN);
                         } else {
-                            _this4.removeClass(_option, 'flounder--search--hidden');
+                            _this4.removeClass(_option, _classes3['default'].SEARCH_HIDDEN);
                         }
                     });
                 })();
@@ -821,7 +824,7 @@ var Flounder = (function () {
             var _this5 = this;
 
             this.refs.options.forEach(function (_option) {
-                _this5.removeClass(_option, 'flounder--search--hidden');
+                _this5.removeClass(_option, _classes3['default'].SEARCH_HIDDEN);
             });
 
             this.refs.search.value = '';
@@ -941,7 +944,7 @@ var Flounder = (function () {
     }, {
         key: 'hideElement',
         value: function hideElement(_el) {
-            this.addClass(_el, 'flounder--hidden');
+            this.addClass(_el, _classes3['default'].HIDDEN);
         }
 
         /**
@@ -975,7 +978,7 @@ var Flounder = (function () {
             }
 
             if (this.multipleTags) {
-                this.selectedClass += '  flounder__option--selected--hidden';
+                this.selectedClass += '  ' + _classes3['default'].SELECTED_HIDDEN;
             }
         }
 
@@ -999,8 +1002,8 @@ var Flounder = (function () {
 
             if (target.tagName === 'SELECT') {
                 (function () {
-                    _this6.addClass(target, 'flounder--select--tag');
-                    _this6.addClass(target, 'flounder--hidden');
+                    _this6.addClass(target, _classes3['default'].SELECT_TAG);
+                    _this6.addClass(target, _classes3['default'].HIDDEN);
                     _this6.refs.select = target;
 
                     var options = [],
@@ -1018,10 +1021,10 @@ var Flounder = (function () {
                     _this6.refs.selectOptions = selectOptions;
 
                     select = _this6.refs.select;
-                    _this6.addClass(select, 'flounder--hidden');
+                    _this6.addClass(select, _classes3['default'].HIDDEN);
                 })();
             } else {
-                select = this.constructElement({ tagname: 'select', className: 'flounder--select--tag  flounder--hidden' });
+                select = this.constructElement({ tagname: 'select', className: _classes3['default'].SELECT_TAG + '  ' + _classes3['default'].HIDDEN });
                 wrapper.appendChild(select);
             }
 
@@ -1071,8 +1074,8 @@ var Flounder = (function () {
 
             if (!!this.isIos && (!this.multipleTags || !this.multiple)) {
                 var sel = refs.select;
-                this.removeClass(sel, 'flounder--hidden');
-                this.addClass(sel, 'flounder--hidden--ios');
+                this.removeClass(sel, _classes3['default'].HIDDEN);
+                this.addClass(sel, _classes3['default'].HIDDEN_IOS);
             }
 
             var self = this;
@@ -1231,8 +1234,8 @@ var Flounder = (function () {
 
             var selectedOptions = this.getSelectedOptions();
 
-            this.removeClass(refs.options[targetIndex], 'flounder__option--selected--hidden');
-            this.removeClass(refs.options[targetIndex], 'flounder__option--selected');
+            this.removeClass(refs.options[targetIndex], _classes3['default'].SELECTED_HIDDEN);
+            this.removeClass(refs.options[targetIndex], _classes3['default'].SELECTED);
 
             var span = target.parentNode;
             span.parentNode.removeChild(span);
@@ -1429,10 +1432,9 @@ var Flounder = (function () {
             }
 
             selectTag.selectedIndex = index;
+            var hasClass = this.hasClass;
 
-            var optionClassName = options[index].className;
-
-            if (optionClassName.indexOf('flounder--hidden') !== -1 && optionClassName.indexOf('flounder__option--selected--hidden') !== -1) {
+            if (hasClass(options[index], _classes3['default'].HIDDEN) && hasClass(options[index], _classes3['default'].SELECTED_HIDDEN)) {
                 this.setKeypress(e);
             }
         }
@@ -1564,7 +1566,7 @@ var Flounder = (function () {
             var offset = this.defaultTextIndent;
 
             if (search) {
-                var _els = document.getElementsByClassName('flounder__multiple--select--tag');
+                var _els = document.getElementsByClassName(_classes3['default'].MULTIPLE_SELECT_TAG);
                 _els.each(function (i, e) {
                     offset += _this11.getActualWidth(e);
                 });
@@ -1576,7 +1578,7 @@ var Flounder = (function () {
         /**
          * ## showElement
          *
-         * remove 'flounder--hidden' from a given element
+         * remove classes.HIDDEN from a given element
          *
          * @param {Object} _el element to show
          *
@@ -1585,7 +1587,7 @@ var Flounder = (function () {
     }, {
         key: 'showElement',
         value: function showElement(_el) {
-            this.removeClass(_el, 'flounder--hidden');
+            this.removeClass(_el, _classes3['default'].HIDDEN);
         }
 
         /**
@@ -1637,7 +1639,7 @@ var Flounder = (function () {
             var _addClass = this.addClass;
             var _removeClass = this.removeClass;
 
-            if (_el.className.indexOf(_class) !== -1) {
+            if (this.hasClass(_el, _class)) {
                 _removeClass(_el, _class);
             } else {
                 _addClass(_el, _class);
@@ -1659,11 +1661,12 @@ var Flounder = (function () {
             var refs = this.refs;
             var optionsList = refs.optionsListWrapper;
             var wrapper = refs.wrapper;
+            var hasClass = this.hasClass;
 
-            if (force === 'open' || force !== 'close' && optionsList.className.indexOf('flounder--hidden') !== -1) {
+            if (force === 'open' || force !== 'close' && hasClass(optionsList, _classes3['default'].HIDDEN)) {
                 this.toggleList.justOpened = true;
                 this.toggleOpen(e, optionsList, refs, wrapper);
-            } else if (force === 'close' || optionsList.className.indexOf('flounder--hidden') === -1) {
+            } else if (force === 'close' || !hasClass(optionsList, _classes3['default'].HIDDEN)) {
                 this.toggleList.justOpened = false;
                 this.toggleClosed(e, optionsList, refs, wrapper);
             }
