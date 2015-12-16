@@ -1,3 +1,13 @@
+/*!
+ * Flounder JavaScript Styleable Selectbox v0.2.1
+ * https://github.com/sociomantic/flounder
+ *
+ * Copyright 2015 Sociomantic Labs and other contributors
+ * Released under the MIT license
+ * https://github.com/sociomantic/flounder/license
+ *
+ * Date: Wed Dec 16 2015
+ */
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 // shim for using process in browser
 
@@ -19027,18 +19037,18 @@ var classes = {
     HIDDEN_IOS: 'flounder--hidden--ios',
     LIST: 'flounder__list',
     MAIN: 'flounder',
+    MAIN_WRAPPER: 'flounder--wrapper  flounder__input--select',
+    MULTI_TAG_LIST: 'flounder__multi--tag--list',
     MULTIPLE_SELECT_TAG: 'flounder__multiple--select--tag',
     MULTIPLE_TAG_CLOSE: 'flounder__multiple__tag__close',
+    OPTION: 'flounder__option',
+    OPTION_TAG: 'flounder--option--tag',
+    OPTIONS_WRAPPER: 'flounder__list--wrapper',
     SELECTED: 'flounder__option--selected',
     SELECTED_HIDDEN: 'flounder__option--selected--hidden',
     SELECTED_DISPLAYED: 'flounder__option--selected--displayed',
     SEARCH: 'flounder__input--search',
     SEARCH_HIDDEN: 'flounder--search--hidden',
-    MAIN_WRAPPER: 'flounder--wrapper  flounder__input--select',
-    MULTI_TAG_LIST: 'flounder__multi--tag--list',
-    OPTION: 'flounder__option',
-    OPTION_TAG: 'flounder--option--tag',
-    OPTIONS_WRAPPER: 'flounder__list--wrapper',
     SELECT_TAG: 'flounder--select--tag'
 };
 

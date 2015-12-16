@@ -1,24 +1,66 @@
-var gulp            = require('gulp');
-var fs              = require('fs');
-var browserify      = require('browserify');
-var babelify        = require('babelify');
+var gulp            = require( 'gulp' );
+var fs              = require( 'fs' );
+var browserify      = require( 'browserify' );
+var babelify        = require( 'babelify' );
+var uglify          = require( 'gulp-uglify' );
 var header          = require( 'gulp-header' );
 
 var _package        = require( './package.json' );
 
 var now             = new Date();
+var year            = now.getUTCFullYear();
+
 var liscenceLong    = '/*!\n' +
                       ' * Flounder JavaScript Styleable Selectbox v' + _package.version + '\n' +
                       ' * ' + _package.homepage + '\n' +
                       ' *\n' +
-                      ' * Copyright 2015-' + now.getUTCFullYear() + ' Sociomantic Labs and other contributors\n' +
+                      ' * Copyright ' + ( 2015 === year ? year : '2015-' + year ) + ' Sociomantic Labs and other contributors\n' +
                       ' * Released under the MIT license\n' +
                       ' * https://github.com/sociomantic/flounder/license\n' +
                       ' *\n' +
                       ' * Date: ' + now.toDateString() + '\n' +
                       ' */\n';
 
-var liscenceShort   = '/*! Flounder v' + _package.version + ' | (c) 2015-' + now.getUTCFullYear() + ' Sociomantic Labs | https://github.com/sociomantic/flounder/license */\n';
+var liscenceShort   = '/*! Flounder v' + _package.version + ' | (c) ' + ( 2015 === year ? year : '2015-' + year ) + ' Sociomantic Labs | https://github.com/sociomantic/flounder/license */\n';
+
+
+function build( folder, filename )
+{
+    browserifyFiles( folder, filename );
+    min( folder, filename );
+}
+
+
+function browserifyFiles( folder, filename )
+{
+    browserify( './src/' + folder + '/' + filename + '.jsx' )
+        .transform( babelify, { stage : 0 } )
+        .bundle()
+        .pipe( fs.createWriteStream( __dirname + '/dist/' + filename + '.js' ) )
+        .on( 'finish', function()
+        {
+            gulp.src( './dist/' + filename + '.js' )
+                .pipe( header( liscenceLong ) )
+                .pipe( gulp.dest( './dist/' ) )
+        } );
+};
+
+
+function min( folder, filename )
+{
+    browserify( './src/' + folder + '/' + filename + '.jsx' )
+        .transform( babelify, { stage : 0 } )
+        .bundle()
+        .pipe( fs.createWriteStream( __dirname + '/dist/' + filename + '.min.js' ) )
+        .on( 'finish', function()
+        {
+            gulp.src( './dist/' + filename + '.min.js' )
+                .pipe( uglify() )
+                .pipe( header( liscenceShort ) )
+                .pipe( gulp.dest( './dist/' ) )
+        } );
+}
+
 
 gulp.task( 'demo', function()
 {
@@ -31,80 +73,45 @@ gulp.task( 'demo', function()
 
 gulp.task( 'vanilla', function()
 {
-    browserify( './src/core/flounder.jsx' )
-        .transform( babelify, { stage : 0 } )
-        .bundle()
-        .pipe( fs.createWriteStream( __dirname + '/dist/flounder.js' ) )
-        .on( 'finish', function()
-        {
-            gulp.src( './dist/flounder.js' )
-                .pipe( header( liscenceLong ) )
-                .pipe( gulp.dest( './dist/' ) )
-        } );
+    build( 'core', 'flounder' );
 } );
 
 
 gulp.task( 'react', function()
 {
-    browserify( './src/wrappers/flounder.react.jsx' )
-        .transform( babelify, { stage : 0 } )
-        .bundle()
-        .pipe( fs.createWriteStream( __dirname + '/dist/flounder.react.jsx' ) )
-        .on( 'finish', function()
-        {
-            gulp.src( './dist/flounder.react.js' )
-                .pipe( header( liscenceLong ) )
-                .pipe( gulp.dest( './dist/' ) )
-        } );
+    build( 'wrappers', 'flounder.react' );
 } );
 
 
 gulp.task( 'amd', function()
 {
-    browserify( './src/wrappers/flounder.amd.jsx' )
-        .transform( babelify, { stage : 0 } )
-        .bundle()
-        .pipe( fs.createWriteStream( __dirname + '/dist/flounder.amd.js' ) )
-        .on( 'finish', function()
-        {
-            gulp.src( './dist/flounder.amd.js' )
-                .pipe( header( liscenceLong ) )
-                .pipe( gulp.dest( './dist/' ) )
-        } );
+    build( 'wrappers', 'flounder.amd' );
 } );
 
 
 gulp.task( 'jquery', function()
 {
-    browserify( './src/wrappers/flounder.jquery.jsx' )
-        .transform( babelify, { stage : 0 } )
-        .bundle()
-        .pipe( fs.createWriteStream( __dirname + '/dist/flounder.jquery.js' ) )
-        .on( 'finish', function()
-        {
-            gulp.src( './dist/flounder.jquery.js' )
-                .pipe( header( liscenceLong ) )
-                .pipe( gulp.dest( './dist/' ) )
-        } );
+    build( 'wrappers', 'flounder.jquery' );
 } );
 
 
 gulp.task( 'microbe', function()
 {
-    browserify( './src/wrappers/flounder.microbe.jsx' )
-        .transform( babelify, { stage : 0 } )
-        .bundle()
-        .pipe( fs.createWriteStream( __dirname + '/dist/flounder.microbe.js' ) )
-        .on( 'finish', function()
-        {
-            gulp.src( './dist/flounder.microbe.js' )
-                .pipe( header( liscenceLong ) )
-                .pipe( gulp.dest( './dist/' ) )
-        } );
+    build( 'wrappers', 'flounder.microbe' );
 } );
 
 
 gulp.task( 'default', [], function()
 {
     gulp.start( [ 'vanilla', 'react', 'amd', 'jquery', 'microbe', 'demo' ] );
+} );
+
+
+gulp.task( 'compile', [], function()
+{
+        browserifyFiles( 'core', 'flounder' );
+        browserifyFiles( 'wrappers', 'flounder.react' );
+        browserifyFiles( 'wrappers', 'flounder.amd' );
+        browserifyFiles( 'wrappers', 'flounder.jquery' );
+        browserifyFiles( 'wrappers', 'flounder.microbe' );
 } );
