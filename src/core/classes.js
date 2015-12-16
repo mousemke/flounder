@@ -14,7 +14,7 @@ const classes =
     SELECTED_DISPLAYED  : 'flounder__option--selected--displayed',
     SEARCH              : 'flounder__input--search',
     SEARCH_HIDDEN       : 'flounder--search--hidden',
-    MAIN_WRAPPER        : 'flounder-wrapper  flounder__input--select',
+    MAIN_WRAPPER        : 'flounder--wrapper  flounder__input--select',
     MULTI_TAG_LIST      : 'flounder__multi--tag--list',
     OPTION              : 'flounder__option',
     OPTION_TAG          : 'flounder--option--tag',

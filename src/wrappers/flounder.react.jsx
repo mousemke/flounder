@@ -5,6 +5,7 @@
 import React, { Component } from 'react';
 import ReactDOM             from 'react-dom';
 import Flounder             from '../core/flounder.jsx';
+import classes              from '../core/classes';
 
 const slice = Array.prototype.slice;
 
@@ -157,30 +158,30 @@ class FlounderReact extends Component
         _stateModifier = _stateModifier.length > 0 ? '--' + _stateModifier : '';
 
         return (
-            <div ref="wrapper" className={'flounder-wrapper  flounder__input--select' + wrapperClass}>
-                <div ref="flounder" tabIndex="0" className={'flounder' + flounderClass}>
-                    <div ref="selected" className="flounder__option--selected--displayed" data-value={defaultValue.value}>
+            <div ref="wrapper" className={classes.MAIN_WRAPPER + wrapperClass}>
+                <div ref="flounder" tabIndex="0" className={classes.MAIN + flounderClass}>
+                    <div ref="selected" className={classes.SELECTED_DISPLAYED} data-value={defaultValue.value}>
                         {defaultValue.text}
                     </div>
-                    { props.multiple ? <div ref="multiTagWrapper" className="multi--tag--list"  multiple></div> : null }
-                    <div ref="arrow" className="flounder__arrow"></div>
-                    <div ref="optionsListWrapper" className="flounder__list-wrapper  flounder--hidden">
-                        <div ref="optionsList" className="flounder__list">
+                    { props.multiple ? <div ref="multiTagWrapper" className={classes.MULTI_TAG_LIST}  multiple></div> : null }
+                    <div ref="arrow" className={classes.ARROW}></div>
+                    <div ref="optionsListWrapper" className={classes.OPTIONS_WRAPPER + '  ' + classes.HIDDEN}>
+                        <div ref="optionsList" className={classes.LIST}>
                         {
                             options.map( ( _option, i ) =>
                             {
-                                let extraClass = i === props.defaultValue ? '  flounder__option--selected' : '';
-                                extraClass += _option.disabled ? '  flounder--disabled' : '';
+                                let extraClass = i === props.defaultValue ? '  ' + classes.SELECTED : '';
+                                extraClass += _option.disabled ? '  ' + classes.DISABLED : '';
 
                                 if ( typeof _option === 'string' )
                                 {
                                     _option = [ _option, _option ];
                                 }
 
-                                return ( <div className={'flounder__option' + extraClass} data-index={i} key={i} ref={'option' + i}>
+                                return ( <div className={classes.OPTION + extraClass} data-index={i} key={i} ref={'option' + i}>
                                             {_option.text}
                                             {_option.description ?
-                                                <div className="flounder__option--description">
+                                                <div className={classes.DESCRIPTION}>
                                                     {_option.description}
                                                 </div> :
                                                 null
@@ -190,20 +191,20 @@ class FlounderReact extends Component
                         }
                         </div>
                     </div>
-                    { props.search ? <input ref="search" type="text" className="flounder__input--search" /> : null }
+                    { props.search ? <input ref="search" type="text" className={classes.SEARCH} /> : null }
                 </div>
-                <select ref="select" className="flounder--select--tag  flounder--hidden" tabIndex="-1" multiple={props.multiple}>
+                <select ref="select" className={classes.SELECT_TAG + '  ' + classes.HIDDEN} tabIndex="-1" multiple={props.multiple}>
                 {
                     options.map( ( _option, i ) =>
                     {
                         let extraClass  = i === defaultValue ? '  ' + this.selectedClass : '';
 
                         let res = {
-                            className       : 'flounder__option' + extraClass,
+                            className       : classes.OPTION + extraClass,
                             'data-index'    : i
                         };
 
-                        return ( <option key={i} value ={_option.value} className="flounder--option--tag" ref={'option' + i}>
+                        return ( <option key={i} value ={_option.value} className={classes.OPTION_TAG} ref={'option' + i}>
                                     {_option.text}
                                 </option> );
                     } )

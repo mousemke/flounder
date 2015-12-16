@@ -19034,7 +19034,7 @@ var classes = {
     SELECTED_DISPLAYED: 'flounder__option--selected--displayed',
     SEARCH: 'flounder__input--search',
     SEARCH_HIDDEN: 'flounder--search--hidden',
-    MAIN_WRAPPER: 'flounder-wrapper  flounder__input--select',
+    MAIN_WRAPPER: 'flounder--wrapper  flounder__input--select',
     MULTI_TAG_LIST: 'flounder__multi--tag--list',
     OPTION: 'flounder__option',
     OPTION_TAG: 'flounder--option--tag',
@@ -20788,6 +20788,10 @@ var _coreFlounderJsx = require('../core/flounder.jsx');
 
 var _coreFlounderJsx2 = _interopRequireDefault(_coreFlounderJsx);
 
+var _coreClasses = require('../core/classes');
+
+var _coreClasses2 = _interopRequireDefault(_coreClasses);
+
 var slice = Array.prototype.slice;
 
 var FlounderReact = (function (_Component) {
@@ -20941,26 +20945,26 @@ var FlounderReact = (function (_Component) {
 
             return _react2['default'].createElement(
                 'div',
-                { ref: 'wrapper', className: 'flounder-wrapper  flounder__input--select' + wrapperClass },
+                { ref: 'wrapper', className: _coreClasses2['default'].MAIN_WRAPPER + wrapperClass },
                 _react2['default'].createElement(
                     'div',
-                    { ref: 'flounder', tabIndex: '0', className: 'flounder' + flounderClass },
+                    { ref: 'flounder', tabIndex: '0', className: _coreClasses2['default'].MAIN + flounderClass },
                     _react2['default'].createElement(
                         'div',
-                        { ref: 'selected', className: 'flounder__option--selected--displayed', 'data-value': defaultValue.value },
+                        { ref: 'selected', className: _coreClasses2['default'].SELECTED_DISPLAYED, 'data-value': defaultValue.value },
                         defaultValue.text
                     ),
-                    props.multiple ? _react2['default'].createElement('div', { ref: 'multiTagWrapper', className: 'multi--tag--list', multiple: true }) : null,
-                    _react2['default'].createElement('div', { ref: 'arrow', className: 'flounder__arrow' }),
+                    props.multiple ? _react2['default'].createElement('div', { ref: 'multiTagWrapper', className: _coreClasses2['default'].MULTI_TAG_LIST, multiple: true }) : null,
+                    _react2['default'].createElement('div', { ref: 'arrow', className: _coreClasses2['default'].ARROW }),
                     _react2['default'].createElement(
                         'div',
-                        { ref: 'optionsListWrapper', className: 'flounder__list-wrapper  flounder--hidden' },
+                        { ref: 'optionsListWrapper', className: _coreClasses2['default'].OPTIONS_WRAPPER + '  ' + _coreClasses2['default'].HIDDEN },
                         _react2['default'].createElement(
                             'div',
-                            { ref: 'optionsList', className: 'flounder__list' },
+                            { ref: 'optionsList', className: _coreClasses2['default'].LIST },
                             options.map(function (_option, i) {
-                                var extraClass = i === props.defaultValue ? '  flounder__option--selected' : '';
-                                extraClass += _option.disabled ? '  flounder--disabled' : '';
+                                var extraClass = i === props.defaultValue ? '  ' + _coreClasses2['default'].SELECTED : '';
+                                extraClass += _option.disabled ? '  ' + _coreClasses2['default'].DISABLED : '';
 
                                 if (typeof _option === 'string') {
                                     _option = [_option, _option];
@@ -20968,33 +20972,33 @@ var FlounderReact = (function (_Component) {
 
                                 return _react2['default'].createElement(
                                     'div',
-                                    { className: 'flounder__option' + extraClass, 'data-index': i, key: i, ref: 'option' + i },
+                                    { className: _coreClasses2['default'].OPTION + extraClass, 'data-index': i, key: i, ref: 'option' + i },
                                     _option.text,
                                     _option.description ? _react2['default'].createElement(
                                         'div',
-                                        { className: 'flounder__option--description' },
+                                        { className: _coreClasses2['default'].DESCRIPTION },
                                         _option.description
                                     ) : null
                                 );
                             })
                         )
                     ),
-                    props.search ? _react2['default'].createElement('input', { ref: 'search', type: 'text', className: 'flounder__input--search' }) : null
+                    props.search ? _react2['default'].createElement('input', { ref: 'search', type: 'text', className: _coreClasses2['default'].SEARCH }) : null
                 ),
                 _react2['default'].createElement(
                     'select',
-                    { ref: 'select', className: 'flounder--select--tag  flounder--hidden', tabIndex: '-1', multiple: props.multiple },
+                    { ref: 'select', className: _coreClasses2['default'].SELECT_TAG + '  ' + _coreClasses2['default'].HIDDEN, tabIndex: '-1', multiple: props.multiple },
                     options.map(function (_option, i) {
                         var extraClass = i === defaultValue ? '  ' + _this2.selectedClass : '';
 
                         var res = {
-                            className: 'flounder__option' + extraClass,
+                            className: _coreClasses2['default'].OPTION + extraClass,
                             'data-index': i
                         };
 
                         return _react2['default'].createElement(
                             'option',
-                            { key: i, value: _option.value, className: 'flounder--option--tag', ref: 'option' + i },
+                            { key: i, value: _option.value, className: _coreClasses2['default'].OPTION_TAG, ref: 'option' + i },
                             _option.text
                         );
                     })
@@ -21019,4 +21023,4 @@ methods.forEach(function (method) {
 exports['default'] = { React: _react2['default'], Component: _react.Component, ReactDOM: _reactDom2['default'], FlounderReact: FlounderReact, Flounder: _coreFlounderJsx2['default'] };
 module.exports = exports['default'];
 
-},{"../core/flounder.jsx":161,"react":158,"react-dom":2}]},{},[162]);
+},{"../core/classes":159,"../core/flounder.jsx":161,"react":158,"react-dom":2}]},{},[162]);
