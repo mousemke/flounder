@@ -151,7 +151,9 @@ class FlounderReact extends Component
 
         let handleChange    = this.handleChange.bind( this );
         let multiple        = props.multiple;
-        let defaultValue    = this.defaultValue = this.setDefaultOption( props.defaultValue || this.defaultValue, options );
+
+        let defaultValue    = this._default = this.setDefaultOption( props, options );
+
         let wrapperClass    = this.wrapperClass ? '  ' + this.wrapperClass : '';
         let flounderClass   = this.flounderClass ? '  ' + this.flounderClass : '';
 
@@ -171,8 +173,9 @@ class FlounderReact extends Component
                         {
                             options.map( ( _option, i ) =>
                             {
-                                let extraClass = i === props.defaultValue ? '  ' + classes.SELECTED : '';
+                                let extraClass = i === defaultValue.index ? '  ' + classes.SELECTED : '';
                                 extraClass += _option.disabled ? '  ' + classes.DISABLED : '';
+                                extraClass += _option.extraClass ? '  ' + _option.extraClass : '';
 
                                 if ( typeof _option === 'string' )
                                 {

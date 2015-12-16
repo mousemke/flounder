@@ -69,11 +69,11 @@ $( '.example--class' ).flounder( configOptions );
 }
 ```
 
-`classes`- (object) Contains configurable classes for various elements.  The are additional classes, not replacement classes
+`classes`- (object) Contains configurable classes for various elements.  The are additional classes, not replacement classes.
 
-`defaultValue` - (string) Sets the default value to the passed value but only if it matches one of the select box options
+`defaultValue` - (string) Sets the default value to the passed value but only if it matches one of the select box options. Multi-tag select boxes only support placeholders
 
-`defaultIndex` - (number) Sets the default option to the passed index but only if it exists
+`defaultIndex` - (number) Sets the default option to the passed index but only if it exists.  This overrides defaultValue. Multi-tag select boxes only support placeholders.
 
 `multiple` - (boolean) Determines whether it is a multi-select box or single
 
@@ -92,6 +92,8 @@ $( '.example--class' ).flounder( configOptions );
 `onSelect` - (function) Triggered when an option selectbox is closed
 
 `options` - (array) Options to build in the select box.  Can be organized various ways
+
+`placeholder` - (string) Builds a blank option with the placeholder text that is selected by default.  This overrides defaultIndex
 
 `search` - (boolean) Determines whether the select box is searchable
 

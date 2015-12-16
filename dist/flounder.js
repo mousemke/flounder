@@ -55,7 +55,6 @@ var defaults = {
         wrapper: ''
     },
     defaultTextIndent: 0,
-    defaultValue: '',
     multiple: false,
     multipleTags: true,
     multipleMessage: '(Multiple Items Selected)',
@@ -65,6 +64,7 @@ var defaults = {
     onOpen: function onOpen() {},
     onSelect: function onSelect() {},
     options: [],
+    placeholder: 'Please choose an option',
     search: false
 };
 
@@ -305,7 +305,7 @@ var Flounder = (function () {
 
             var _options = this.options;
 
-            var defaultValue = this.defaultValue = this.setDefaultOption(this.defaultValue, _options);
+            var defaultValue = this._default = this.setDefaultOption(this.props, _options);
 
             var selected = constructElement({ className: _classes3['default'].SELECTED_DISPLAYED,
                 'data-value': defaultValue.value, 'data-index': defaultValue.index || -1 });
@@ -419,7 +419,7 @@ var Flounder = (function () {
                     }
                 } else {
                     var selectChild = select.children[i];
-
+                    console.log(select);
                     selectOptions[i] = selectChild;
                     selectChild.setAttribute('value', selectChild.value);
                 }
@@ -532,7 +532,7 @@ var Flounder = (function () {
                 refs.selected.innerHTML = '';
             } else {
                 if (refs.multiTagWrapper && refs.multiTagWrapper.children.length === 0) {
-                    this.refs.selected.innerHTML = this.defaultValue.text;
+                    this.refs.selected.innerHTML = this._default.text;
                 }
             }
         }
@@ -679,18 +679,22 @@ var Flounder = (function () {
             multiTagWrapper.innerHTML = '';
 
             selectedOptions.forEach(function (option) {
-                _span = document.createElement('span');
-                _span.className = _classes3['default'].MULTIPLE_SELECT_TAG;
+                if (option.value !== '') {
+                    _span = document.createElement('span');
+                    _span.className = _classes3['default'].MULTIPLE_SELECT_TAG;
 
-                _a = document.createElement('a');
-                _a.className = _classes3['default'].MULTIPLE_TAG_CLOSE;
-                _a.setAttribute('data-index', option.index);
+                    _a = document.createElement('a');
+                    _a.className = _classes3['default'].MULTIPLE_TAG_CLOSE;
+                    _a.setAttribute('data-index', option.index);
 
-                _span.appendChild(_a);
+                    _span.appendChild(_a);
 
-                _span.innerHTML += option.innerHTML;
+                    _span.innerHTML += option.innerHTML;
 
-                multiTagWrapper.appendChild(_span);
+                    multiTagWrapper.appendChild(_span);
+                } else {
+                    option.selected = false;
+                }
             });
 
             this.setTextMultiTagIndent();
@@ -724,7 +728,7 @@ var Flounder = (function () {
                 selected.innerHTML = selectedOption[0].innerHTML;
                 value = selectedOption[0].value;
             } else if (selectedLength === 0) {
-                var defaultValue = this.defaultValue;
+                var defaultValue = this._default;
 
                 index = defaultValue.index || -1;
                 selected.innerHTML = defaultValue.text;
@@ -1067,7 +1071,7 @@ var Flounder = (function () {
             var _select = refs.select;
             refs.select = false;
 
-            var _buildOptions3 = this.buildOptions(this.defaultValue, _options, refs.optionsList, _select);
+            var _buildOptions3 = this.buildOptions(this._default, _options, refs.optionsList, _select);
 
             var _buildOptions32 = _slicedToArray(_buildOptions3, 2);
 
@@ -1132,7 +1136,7 @@ var Flounder = (function () {
             var select = refs.select;
             var selected = refs.selected;
             var target = e.target;
-            var defaultValue = this.defaultValue;
+            var defaultValue = this._default;
             var targetIndex = target.getAttribute('data-index');
             select[targetIndex].selected = false;
 
@@ -1230,20 +1234,69 @@ var Flounder = (function () {
          */
     }, {
         key: 'setDefaultOption',
-        value: function setDefaultOption(defaultProp, options) {
-            var defaultValue = '';
+        value: function setDefaultOption(configObj, options) {
+            if (configObj.placeholder) {
+                var refs = this.refs;
+                var select = refs.select;
 
-            if (typeof defaultProp === 'number') {
-                defaultValue = options[defaultProp];
-                defaultValue.index = defaultProp;
-            } else if (typeof defaultProp === 'string') {
-                defaultValue = {
-                    text: defaultProp,
-                    value: defaultProp
+                var _default = {
+                    text: configObj.placeholder,
+                    value: '',
+                    index: 0,
+                    extraClass: _classes3['default'].HIDDEN
                 };
-            }
 
-            return defaultValue;
+                if (select) {
+                    var escapedText = this.escapeHTML(_default.text);
+                    var defaultOption = this.constructElement({ tagname: 'option',
+                        className: _classes3['default'].OPTION_TAG,
+                        value: _default.value });
+                    defaultOption.innerHTML = escapedText;
+
+                    select.insertBefore(defaultOption, select[0]);
+                    this.refs.selectOptions.unshift(defaultOption);
+                }
+
+                options.unshift(_default);
+
+                return _default;
+            } else if (configObj.defaultIndex) {
+                var defaultIndex = configObj.defaultIndex;
+                var defaultOption = options[defaultIndex];
+
+                if (defaultOption) {
+                    defaultOption.index = defaultIndex;
+                    return defaultOption;
+                }
+
+                return null;
+            } else if (configObj.defaultValue) {
+                var _ret3 = (function () {
+                    var defaultProp = configObj.defaultValue;
+                    var index = undefined;
+
+                    options.forEach(function (opt, i) {
+                        if (opt.value === defaultProp) {
+                            index = i;
+                        }
+                    });
+
+                    var _default = index ? options[index] : null;
+
+                    if (_default) {
+                        _default.index = index;
+                        return {
+                            v: _default
+                        };
+                    }
+
+                    return {
+                        v: null
+                    };
+                })();
+
+                if (typeof _ret3 === 'object') return _ret3.v;
+            }
         }
 
         /**

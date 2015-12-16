@@ -214,7 +214,7 @@ class Flounder
 
         let _options            = this.options;
 
-        let defaultValue        = this.defaultValue = this.setDefaultOption( this.defaultValue, _options );
+        let defaultValue        = this._default = this.setDefaultOption( this.props, _options );
 
         let selected            = constructElement( { className : classes.SELECTED_DISPLAYED,
                                         'data-value' : defaultValue.value, 'data-index' : defaultValue.index || -1  } );
@@ -317,7 +317,7 @@ class Flounder
                 options[ i ].className += '  ' + uniqueExtraClass;
             }
 
-            if ( ! this.refs.select )
+            if ( !this.refs.select )
             {
                 selectOptions[ i ] = constructElement( { tagname : 'option',
                                             className   : classes.OPTION_TAG,
@@ -333,7 +333,7 @@ class Flounder
             else
             {
                 let selectChild = select.children[ i ];
-
+                console.log( select );
                 selectOptions[ i ] = selectChild;
                 selectChild.setAttribute( 'value', selectChild.value );
             }
@@ -462,7 +462,7 @@ class Flounder
             if ( refs.multiTagWrapper &&
                     refs.multiTagWrapper.children.length === 0 )
             {
-                this.refs.selected.innerHTML = this.defaultValue.text;
+                this.refs.selected.innerHTML = this._default.text;
             }
         }
     }
@@ -619,18 +619,25 @@ class Flounder
 
         selectedOptions.forEach( function( option )
         {
-            _span           = document.createElement( 'span' )
-            _span.className = classes.MULTIPLE_SELECT_TAG;
+            if ( option.value !== '' )
+            {
+                _span           = document.createElement( 'span' )
+                _span.className = classes.MULTIPLE_SELECT_TAG;
 
-            _a              = document.createElement( 'a' )
-            _a.className    = classes.MULTIPLE_TAG_CLOSE;
-            _a.setAttribute( 'data-index', option.index );
+                _a              = document.createElement( 'a' )
+                _a.className    = classes.MULTIPLE_TAG_CLOSE;
+                _a.setAttribute( 'data-index', option.index );
 
-            _span.appendChild( _a );
+                _span.appendChild( _a );
 
-            _span.innerHTML += option.innerHTML;
+                _span.innerHTML += option.innerHTML;
 
-            multiTagWrapper.appendChild( _span );
+                multiTagWrapper.appendChild( _span );
+            }
+            else
+            {
+                option.selected = false;
+            }
         } );
 
         this.setTextMultiTagIndent();
@@ -669,7 +676,7 @@ class Flounder
         }
         else if ( selectedLength === 0 )
         {
-            let defaultValue = this.defaultValue;
+            let defaultValue = this._default;
 
             index               = defaultValue.index || -1;
             selected.innerHTML  = defaultValue.text;
@@ -1032,7 +1039,7 @@ class Flounder
 
         let _select                 = refs.select;
         refs.select                 = false;
-        [ refs.options, refs.selectOptions ] = this.buildOptions( this.defaultValue, _options, refs.optionsList, _select );
+        [ refs.options, refs.selectOptions ] = this.buildOptions( this._default, _options, refs.optionsList, _select );
         refs.select                 = _select;
 
         this.removeSelectedValue();
@@ -1093,7 +1100,7 @@ class Flounder
         let select          = refs.select;
         let selected        = refs.selected;
         let target          = e.target;
-        let defaultValue    = this.defaultValue;
+        let defaultValue    = this._default;
         let targetIndex     = target.getAttribute( 'data-index' );
         select[ targetIndex ].selected = false;
 
@@ -1193,24 +1200,72 @@ class Flounder
      *
      * @return _Void_
      */
-    setDefaultOption( defaultProp, options )
+    setDefaultOption( configObj, options )
     {
-        let defaultValue = '';
+        if ( configObj.placeholder )
+        {
+            let refs        = this.refs;
+            let select      = refs.select;
 
-        if ( typeof defaultProp === 'number' )
-        {
-            defaultValue        = options[ defaultProp ];
-            defaultValue.index  = defaultProp;
-        }
-        else if ( typeof defaultProp === 'string' )
-        {
-            defaultValue = {
-                text    : defaultProp,
-                value   : defaultProp
+            let _default    = {
+                text        : configObj.placeholder,
+                value       : '',
+                index       : 0,
+                extraClass  : classes.HIDDEN
             };
-        }
 
-        return defaultValue;
+            if ( select )
+            {
+                let escapedText     = this.escapeHTML( _default.text );
+                let defaultOption   = this.constructElement( { tagname : 'option',
+                                            className   : classes.OPTION_TAG,
+                                            value       :  _default.value } );
+                defaultOption.innerHTML = escapedText;
+
+                select.insertBefore( defaultOption, select[0] );
+                this.refs.selectOptions.unshift( defaultOption );
+            }
+
+            options.unshift( _default );
+
+            return _default;
+        }
+        else if ( configObj.defaultIndex )
+        {
+            let defaultIndex        = configObj.defaultIndex;
+            let defaultOption       = options[ defaultIndex ]
+
+            if ( defaultOption )
+            {
+                defaultOption.index   = defaultIndex;
+                return defaultOption;
+            }
+
+            return null;
+        }
+        else if ( configObj.defaultValue )
+        {
+            let defaultProp = configObj.defaultValue;
+            let index;
+
+            options.forEach( function( opt, i )
+            {
+                if ( opt.value === defaultProp )
+                {
+                    index = i;
+                }
+            } );
+
+            let _default = index ? options[ index ] : null;
+
+            if ( _default )
+            {
+                _default.index = index;
+                return _default;
+            }
+
+            return null;
+        }
     }
 
 

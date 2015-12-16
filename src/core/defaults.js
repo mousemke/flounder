@@ -6,7 +6,6 @@ const defaults = {
         wrapper     : ''
     },
     defaultTextIndent   : 0,
-    defaultValue        : '',
     multiple            : false,
     multipleTags        : true,
     multipleMessage     : '(Multiple Items Selected)',
@@ -16,6 +15,7 @@ const defaults = {
     onOpen              : function(){ },
     onSelect            : function(){ },
     options             : [],
+    placeholder         : 'Please choose an option',
     search              : false
 };
 
