@@ -106,7 +106,7 @@ These functions are intended for use in the user provided event callbacks
 
 ```
 this.destroy()                  // removes event listeners, then flounder
-this.disable( bool )            // NOT AVAILABLE YET
+this.disable( bool )            // true or not true
 this.getOption( num )
 this.getSelectedOptions()
 this.getSelectedValues()
@@ -231,10 +231,13 @@ Change Log
 0.2.1
 -----
 
-+ added setValue
++ added setValue to API
++ added disable classes to the css
 + internal fixes
 + added hasClass
 + changed setValueClick
++ added disable to API
++ added classes config object
 
 
 0.2.0

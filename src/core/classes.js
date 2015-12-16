@@ -2,7 +2,8 @@ const classes =
 {
     ARROW               : 'flounder__arrow',
     DESCRIPTION         : 'flounder__option--description',
-    DISABLED            : 'flounder--disabled',
+    DISABLED            : 'flounder__disabled',
+    DISABLED_OPTION     : 'flounder__disabled--option',
     HIDDEN              : 'flounder--hidden',
     HIDDEN_IOS          : 'flounder--hidden--ios',
     LIST                : 'flounder__list',

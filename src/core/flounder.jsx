@@ -386,7 +386,7 @@ class Flounder
 
             if ( selectOptions[ i ].getAttribute( 'disabled' ) )
             {
-                this.addClass( options[ i ], classes.DISABLED );
+                this.addClass( options[ i ], classes.DISABLED_OPTION );
             }
         } );
 
@@ -611,6 +611,29 @@ class Flounder
     }
 
 
+    disable( bool )
+    {
+        let refs        = this.refs;
+        let flounder    = refs.flounder;
+        let selected    = refs.selected;
+
+        if ( bool )
+        {
+            refs.flounder.removeEventListener( 'keydown', this.checkFlounderKeypress );
+            refs.selected.removeEventListener( 'click', this.toggleList );
+            this.addClass( selected, classes.DISABLED );
+            this.addClass( flounder, classes.DISABLED );
+        }
+        else
+        {
+            refs.flounder.addEventListener( 'keydown', this.checkFlounderKeypress );
+            refs.selected.addEventListener( 'click', this.toggleList );
+            this.removeClass( selected, classes.DISABLED );
+            this.removeClass( flounder, classes.DISABLED );
+        }
+    }
+
+
     /**
      * ## displayMultipleTags
      *
@@ -670,6 +693,7 @@ class Flounder
      */
     displaySelected( selected, refs )
     {
+        console.log( this );
         let value = [];
         let index = -1;
 

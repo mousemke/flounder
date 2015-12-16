@@ -19032,7 +19032,8 @@ Object.defineProperty(exports, '__esModule', {
 var classes = {
     ARROW: 'flounder__arrow',
     DESCRIPTION: 'flounder__option--description',
-    DISABLED: 'flounder--disabled',
+    DISABLED: 'flounder__disabled',
+    DISABLED_OPTION: 'flounder__disabled--option',
     HIDDEN: 'flounder--hidden',
     HIDDEN_IOS: 'flounder--hidden--ios',
     LIST: 'flounder__list',
@@ -19484,7 +19485,7 @@ var Flounder = (function () {
                 }
 
                 if (selectOptions[i].getAttribute('disabled')) {
-                    _this3.addClass(options[i], _classes3['default'].DISABLED);
+                    _this3.addClass(options[i], _classes3['default'].DISABLED_OPTION);
                 }
             });
 
@@ -19677,6 +19678,25 @@ var Flounder = (function () {
                 target.innerHTML = '';
             }
         }
+    }, {
+        key: 'disable',
+        value: function disable(bool) {
+            var refs = this.refs;
+            var flounder = refs.flounder;
+            var selected = refs.selected;
+
+            if (bool) {
+                refs.flounder.removeEventListener('keydown', this.checkFlounderKeypress);
+                refs.selected.removeEventListener('click', this.toggleList);
+                this.addClass(selected, _classes3['default'].DISABLED);
+                this.addClass(flounder, _classes3['default'].DISABLED);
+            } else {
+                refs.flounder.addEventListener('keydown', this.checkFlounderKeypress);
+                refs.selected.addEventListener('click', this.toggleList);
+                this.removeClass(selected, _classes3['default'].DISABLED);
+                this.removeClass(flounder, _classes3['default'].DISABLED);
+            }
+        }
 
         /**
          * ## displayMultipleTags
@@ -19735,6 +19755,7 @@ var Flounder = (function () {
     }, {
         key: 'displaySelected',
         value: function displaySelected(selected, refs) {
+            console.log(this);
             var value = [];
             var index = -1;
 

@@ -178,9 +178,18 @@
     left:                           -999999px;
 }
 
-.flounder--disabled
+
+.flounder__disabled, .flounder__disabled--option
 {
     pointer-events:                 none;
+    cursor:                         auto;
+}
+
+
+.flounder__disabled
+{
+    border-color:                   #ccc;
+    color:                          #ccc;
 }
 
 

@@ -115,3 +115,14 @@ gulp.task( 'compile', [], function()
         browserifyFiles( 'wrappers', 'flounder.jquery' );
         browserifyFiles( 'wrappers', 'flounder.microbe' );
 } );
+
+
+gulp.task( 'min', [], function()
+{
+        min( 'core', 'flounder' );
+        min( 'wrappers', 'flounder.react' );
+        min( 'wrappers', 'flounder.amd' );
+        min( 'wrappers', 'flounder.jquery' );
+        min( 'wrappers', 'flounder.microbe' );
+} );
+
