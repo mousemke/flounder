@@ -8,6 +8,7 @@ import Flounder from '../core/flounder.jsx';
 
     µ.core.flounder = function( options )
     {
+        console.log( Flounder );
         return new Flounder( this, options );
     };
 

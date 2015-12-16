@@ -6,6 +6,7 @@ import React, { Component } from 'react';
 import ReactDOM             from 'react-dom';
 import Flounder             from '../core/flounder.jsx';
 import classes              from '../core/classes';
+import utils                from '../core/utils';
 
 const slice = Array.prototype.slice;
 
@@ -117,7 +118,7 @@ class FlounderReact extends Component
                 };
             }
 
-            _option.text = this.escapeHTML( _option.text );
+            _option.text = utils.escapeHTML( _option.text );
         } );
 
         return _options;
@@ -144,7 +145,7 @@ class FlounderReact extends Component
         let optionsCollection       = [];
         let selectOptionsCollection = [];
 
-        let escapeHTML      = this.escapeHTML;
+        let escapeHTML      = utils.escapeHTML;
         let props           = this.props;
         let options         = this.options = this.prepOptions( props.options || this.options );
 

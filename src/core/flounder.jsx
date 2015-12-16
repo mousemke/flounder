@@ -4,6 +4,7 @@
 
 import defaultOptions   from './defaults';
 import classes          from './classes';
+import utils            from './utils';
 
 class Flounder
 {
@@ -25,7 +26,7 @@ class Flounder
             {
                 return target.map( ( i, _el ) => new this.constructor( _el, props ) );
             }
-            else if ( target.isMicrobe )
+            else if ( target.isMicrobe  )
             {
                 return target.map( ( _el ) => new this.constructor( _el, props ) );
             }
@@ -65,29 +66,6 @@ class Flounder
         else if ( !target && !props )
         {
             return this.constructor;
-        }
-    }
-
-
-    /**
-     * ## addClass
-     *
-     * on the quest to nuke jquery, a wild helper function appears
-     *
-     * @param {DOMElement} _el target element
-     * @param {String} _class class to add
-     *
-     * @return _Void_
-     */
-    addClass( _el, _class )
-    {
-        let _elClass        = _el.className;
-        let _elClassLength  = _elClass.length;
-
-        if ( !this.hasClass( _el, _class ) && _elClass.slice( 0, _class.length + 1 ) !== _class + ' ' &&
-            _elClass.slice( _elClassLength - _class.length - 1, _elClassLength ) !== ' ' + _class )
-        {
-            _el.className += '  ' + _class;
         }
     }
 
@@ -175,32 +153,6 @@ class Flounder
 
 
     /**
-     * ## attachAttribute
-     *
-     * attached data attributes and others (seperately)
-     *
-     * @param {DOMElement} _el element to assign attributes
-     * @param {Object} _elObj contains the attributes to attach
-     *
-     * @return _Void_
-     */
-    attachAttributes( _el, _elObj )
-    {
-        for ( let att in _elObj )
-        {
-            if ( att.indexOf( 'data-' ) !== -1 )
-            {
-                _el.setAttribute( att, _elObj[ att ] );
-            }
-            else
-            {
-                _el[ att ] = _elObj[ att ];
-            }
-        }
-    }
-
-
-    /**
      * ## bindThis
      *
      * binds this to whatever functions need it.  Arrow functions cannot be used
@@ -210,6 +162,7 @@ class Flounder
      */
     bindThis()
     {
+        console.log( this );
         this.addClass               = this.addClass.bind( this );
         this.attachAttributes       = this.attachAttributes.bind( this );
         this.catchBodyClick         = this.catchBodyClick.bind( this );
@@ -241,7 +194,7 @@ class Flounder
         let constructElement    = this.constructElement;
 
         let wrapperClass        = classes.MAIN_WRAPPER;
-        let wrapper             = constructElement( { className : this.wrapperClass ?
+        let wrapper             = this.constructElement( { className : this.wrapperClass ?
                                     wrapperClass + ' ' + this.wrapperClass : wrapperClass } );
         let flounderClass       = classes.MAIN;
         let flounder            = constructElement( { className : this.flounderClass ?
@@ -447,6 +400,8 @@ class Flounder
      */
     checkSelect( e )
     {
+        console.log( e );
+        console.trace();
         if ( !this.toggleList.justOpened )
         {
             switch ( e.keyCode )
@@ -568,23 +523,6 @@ class Flounder
 
 
     /**
-     * ## constructElement
-     *
-     * @param {Object} _elObj object carrying properties to transfer
-     *
-     * @return _Element_
-     */
-    constructElement = _elObj =>
-    {
-        let _el         = document.createElement( _elObj.tagname || 'div' );
-
-        this.attachAttributes( _el, _elObj );
-
-        return _el;
-    }
-
-
-    /**
      * ## destroy
      *
      * removes flounder and all it's events from the dom
@@ -611,6 +549,15 @@ class Flounder
     }
 
 
+    /**
+     * ## disable
+     *
+     * disables flounder by adjusting listeners and classes
+     *
+     * @param {Boolean} bool dsable or enable
+     *
+     * @return _Void_
+     */
     disable( bool )
     {
         let refs        = this.refs;
@@ -693,7 +640,6 @@ class Flounder
      */
     displaySelected( selected, refs )
     {
-        console.log( this );
         let value = [];
         let index = -1;
 
@@ -740,24 +686,6 @@ class Flounder
 
         selected.setAttribute( 'data-value', value );
         selected.setAttribute( 'data-index', index );
-    }
-
-
-    /**
-     * ## escapeHTML
-     *
-     * Escapes HTML in order to put correct elements in the DOM
-     *
-     * @param {String} string unescaped string
-     *
-     * @return _Void_
-     */
-    escapeHTML( string )
-    {
-        return String( string ).replace( /&/g, '&amp;' )
-                                .replace( /</g, '&lt;' )
-                                .replace( />/g, '&gt;' )
-                                .replace( /"/g, '&quot;' );
     }
 
 
@@ -909,24 +837,6 @@ class Flounder
 
 
     /**
-     * ## hasClass
-     *
-     * on the quest to nuke jquery, a wild helper function appears
-     *
-     * @param {DOMElement} _el target element
-     * @param {String} _class class to check
-     *
-     * @return _Void_
-     */
-    hasClass( _el, _class )
-    {
-        let _elClass    = _el.className;
-        let regex       = new RegExp( '(^' + _class + ' )|( ' + _class + '$)|( ' + _class + ' )|(^' + _class + '$)' );
-        return !!_elClass.match( regex );
-    }
-
-
-    /**
      * hideElement
      *
      * hides an element offscreen
@@ -1032,28 +942,6 @@ class Flounder
 
 
     /**
-     * ## iosVersion
-     *
-     * checks and returns the ios version
-     *
-     * @return _Void_:
-     */
-    iosVersion()
-    {
-
-      if ( /iPad|iPhone|iPod/.test( navigator.platform ) )
-      {
-        if ( !!window.indexedDB ) { return '8+'; }
-        if ( !!window.SpeechSynthesisUtterance ) { return '7'; }
-        if ( !!window.webkitAudioContext ) { return '6'; }
-        return '5-';
-      }
-
-      return false;
-    }
-
-
-    /**
      * ## onRender
      *
      * attaches necessary events to the built DOM
@@ -1149,36 +1037,6 @@ class Flounder
         } );
 
         this.addOptionsListeners();
-    }
-
-
-    /**
-     * ## removeClass
-     *
-     * on the quest to nuke jquery, a wild helper function appears
-     *
-     * @param {DOMElement} _el target element
-     * @param {String} _class class to remove
-     *
-     * @return _Void_
-     */
-    removeClass( _el, _class )
-    {
-        let _elClass        = _el.className;
-        let _elClassLength  = _elClass.length;
-        let _classLength    = _class.length;
-
-        if ( _elClass.slice( 0, _classLength + 1 ) === _class + ' ' )
-        {
-            _el.className = _elClass.slice( _classLength + 1, _elClassLength );
-        }
-
-        if ( _elClass.slice( _elClassLength - _classLength - 1, _elClassLength ) === ' ' + _class )
-        {
-            _el.className = _elClass.slice( 0, _elClassLength - _classLength - 1 );
-        }
-
-        _el.className =  _el.className.trim();
     }
 
 
@@ -1308,34 +1166,6 @@ class Flounder
         {
             this.refs.select[ i ].selected = false;
         } );
-    }
-
-
-    /**
-     * ## scrollTo
-     *
-     * checks if an option is visible and, if it is not, scrolls it into view
-     *
-     * @param {DOMElement} element element to check
-     *
-     *@return _Void_
-     */
-    scrollTo( element )
-    {
-        let parent      = element.parentNode.parentNode;
-        let elHeight    = element.offsetHeight;
-        let min         = parent.scrollTop;
-        let max         = parent.scrollTop + parent.offsetHeight - element.offsetHeight;
-        let pos         = element.offsetTop;
-
-        if ( pos < min )
-        {
-            parent.scrollTop = pos  - ( elHeight * 0.5 );
-        }
-        else if ( pos > max )
-        {
-            parent.scrollTop = pos - parent.offsetHeight + ( elHeight * 1.5 );
-        }
     }
 
 
@@ -1649,32 +1479,6 @@ class Flounder
 
 
     /**
-     * ## toggleClass
-     *
-     * in a world moving away from jquery, a wild helper function appears
-     *
-     * @param  {DOMElement} _el target to toggle class on
-     * @param  {String} _class class to toggle on/off
-     *
-     * @return _Void_
-     */
-    toggleClass( _el, _class )
-    {
-        let _addClass       = this.addClass;
-        let _removeClass    = this.removeClass;
-
-        if ( this.hasClass( _el, _class ) )
-        {
-            _removeClass( _el, _class );
-        }
-        else
-        {
-            _addClass( _el, _class );
-        }
-    }
-
-
-    /**
      * ## toggleList
      *
      * on click of flounder--selected, this shows or hides the options list
@@ -1782,6 +1586,8 @@ class Flounder
         this.onClose( e, this.getSelectedValues() );
     }
 }
+
+utils.extendClass( Flounder, utils );
 
 export default Flounder;
 

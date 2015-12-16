@@ -96,6 +96,10 @@ var _classes2 = require('./classes');
 
 var _classes3 = _interopRequireDefault(_classes2);
 
+var _utils = require('./utils');
+
+var _utils2 = _interopRequireDefault(_utils);
+
 var Flounder = (function () {
     /**
      * ## constructor
@@ -112,14 +116,6 @@ var Flounder = (function () {
         var _this = this;
 
         _classCallCheck(this, Flounder);
-
-        this.constructElement = function (_elObj) {
-            var _el = document.createElement(_elObj.tagname || 'div');
-
-            _this.attachAttributes(_el, _elObj);
-
-            return _el;
-        };
 
         if (target && target.length !== 0) {
             if (target.jquery) {
@@ -168,38 +164,17 @@ var Flounder = (function () {
     }
 
     /**
-     * ## addClass
+     * ## addOptionDescription
      *
-     * on the quest to nuke jquery, a wild helper function appears
+     * adds a description to the option
      *
-     * @param {DOMElement} _el target element
-     * @param {String} _class class to add
+     * @param {DOMElement} _el option leement to add description to
+     * @param {String} text description
      *
      * @return _Void_
      */
 
     _createClass(Flounder, [{
-        key: 'addClass',
-        value: function addClass(_el, _class) {
-            var _elClass = _el.className;
-            var _elClassLength = _elClass.length;
-
-            if (!this.hasClass(_el, _class) && _elClass.slice(0, _class.length + 1) !== _class + ' ' && _elClass.slice(_elClassLength - _class.length - 1, _elClassLength) !== ' ' + _class) {
-                _el.className += '  ' + _class;
-            }
-        }
-
-        /**
-         * ## addOptionDescription
-         *
-         * adds a description to the option
-         *
-         * @param {DOMElement} _el option leement to add description to
-         * @param {String} text description
-         *
-         * @return _Void_
-         */
-    }, {
         key: 'addOptionDescription',
         value: function addOptionDescription(_el, text) {
             var _e = document.createElement('div');
@@ -271,28 +246,6 @@ var Flounder = (function () {
         }
 
         /**
-         * ## attachAttribute
-         *
-         * attached data attributes and others (seperately)
-         *
-         * @param {DOMElement} _el element to assign attributes
-         * @param {Object} _elObj contains the attributes to attach
-         *
-         * @return _Void_
-         */
-    }, {
-        key: 'attachAttributes',
-        value: function attachAttributes(_el, _elObj) {
-            for (var att in _elObj) {
-                if (att.indexOf('data-') !== -1) {
-                    _el.setAttribute(att, _elObj[att]);
-                } else {
-                    _el[att] = _elObj[att];
-                }
-            }
-        }
-
-        /**
          * ## bindThis
          *
          * binds this to whatever functions need it.  Arrow functions cannot be used
@@ -303,6 +256,7 @@ var Flounder = (function () {
     }, {
         key: 'bindThis',
         value: function bindThis() {
+            console.log(this);
             this.addClass = this.addClass.bind(this);
             this.attachAttributes = this.attachAttributes.bind(this);
             this.catchBodyClick = this.catchBodyClick.bind(this);
@@ -334,7 +288,7 @@ var Flounder = (function () {
             var constructElement = this.constructElement;
 
             var wrapperClass = _classes3['default'].MAIN_WRAPPER;
-            var wrapper = constructElement({ className: this.wrapperClass ? wrapperClass + ' ' + this.wrapperClass : wrapperClass });
+            var wrapper = this.constructElement({ className: this.wrapperClass ? wrapperClass + ' ' + this.wrapperClass : wrapperClass });
             var flounderClass = _classes3['default'].MAIN;
             var flounder = constructElement({ className: this.flounderClass ? flounderClass + '  ' + this.flounderClass : flounderClass });
 
@@ -526,6 +480,8 @@ var Flounder = (function () {
     }, {
         key: 'checkSelect',
         value: function checkSelect(e) {
+            console.log(e);
+            console.trace();
             if (!this.toggleList.justOpened) {
                 switch (e.keyCode) {
                     case 13:
@@ -633,22 +589,14 @@ var Flounder = (function () {
         }
 
         /**
-         * ## constructElement
-         *
-         * @param {Object} _elObj object carrying properties to transfer
-         *
-         * @return _Element_
-         */
-    }, {
-        key: 'destroy',
-
-        /**
          * ## destroy
          *
          * removes flounder and all it's events from the dom
          *
          * @return _Void_
          */
+    }, {
+        key: 'destroy',
         value: function destroy() {
             this.componentWillUnmount();
             var originalTarget = this.originalTarget;
@@ -663,6 +611,16 @@ var Flounder = (function () {
                 target.innerHTML = '';
             }
         }
+
+        /**
+         * ## disable
+         *
+         * disables flounder by adjusting listeners and classes
+         *
+         * @param {Boolean} bool dsable or enable
+         *
+         * @return _Void_
+         */
     }, {
         key: 'disable',
         value: function disable(bool) {
@@ -740,7 +698,6 @@ var Flounder = (function () {
     }, {
         key: 'displaySelected',
         value: function displaySelected(selected, refs) {
-            console.log(this);
             var value = [];
             var index = -1;
 
@@ -777,21 +734,6 @@ var Flounder = (function () {
 
             selected.setAttribute('data-value', value);
             selected.setAttribute('data-index', index);
-        }
-
-        /**
-         * ## escapeHTML
-         *
-         * Escapes HTML in order to put correct elements in the DOM
-         *
-         * @param {String} string unescaped string
-         *
-         * @return _Void_
-         */
-    }, {
-        key: 'escapeHTML',
-        value: function escapeHTML(string) {
-            return String(string).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
         }
 
         /**
@@ -936,24 +878,6 @@ var Flounder = (function () {
         }
 
         /**
-         * ## hasClass
-         *
-         * on the quest to nuke jquery, a wild helper function appears
-         *
-         * @param {DOMElement} _el target element
-         * @param {String} _class class to check
-         *
-         * @return _Void_
-         */
-    }, {
-        key: 'hasClass',
-        value: function hasClass(_el, _class) {
-            var _elClass = _el.className;
-            var regex = new RegExp('(^' + _class + ' )|( ' + _class + '$)|( ' + _class + ' )|(^' + _class + '$)');
-            return !!_elClass.match(regex);
-        }
-
-        /**
          * hideElement
          *
          * hides an element offscreen
@@ -1050,33 +974,6 @@ var Flounder = (function () {
             }
 
             return select;
-        }
-
-        /**
-         * ## iosVersion
-         *
-         * checks and returns the ios version
-         *
-         * @return _Void_:
-         */
-    }, {
-        key: 'iosVersion',
-        value: function iosVersion() {
-
-            if (/iPad|iPhone|iPod/.test(navigator.platform)) {
-                if (!!window.indexedDB) {
-                    return '8+';
-                }
-                if (!!window.SpeechSynthesisUtterance) {
-                    return '7';
-                }
-                if (!!window.webkitAudioContext) {
-                    return '6';
-                }
-                return '5-';
-            }
-
-            return false;
         }
 
         /**
@@ -1179,34 +1076,6 @@ var Flounder = (function () {
             });
 
             this.addOptionsListeners();
-        }
-
-        /**
-         * ## removeClass
-         *
-         * on the quest to nuke jquery, a wild helper function appears
-         *
-         * @param {DOMElement} _el target element
-         * @param {String} _class class to remove
-         *
-         * @return _Void_
-         */
-    }, {
-        key: 'removeClass',
-        value: function removeClass(_el, _class) {
-            var _elClass = _el.className;
-            var _elClassLength = _elClass.length;
-            var _classLength = _class.length;
-
-            if (_elClass.slice(0, _classLength + 1) === _class + ' ') {
-                _el.className = _elClass.slice(_classLength + 1, _elClassLength);
-            }
-
-            if (_elClass.slice(_elClassLength - _classLength - 1, _elClassLength) === ' ' + _class) {
-                _el.className = _elClass.slice(0, _elClassLength - _classLength - 1);
-            }
-
-            _el.className = _el.className.trim();
         }
 
         /**
@@ -1333,31 +1202,6 @@ var Flounder = (function () {
             options.forEach(function (_option, i) {
                 _this10.refs.select[i].selected = false;
             });
-        }
-
-        /**
-         * ## scrollTo
-         *
-         * checks if an option is visible and, if it is not, scrolls it into view
-         *
-         * @param {DOMElement} element element to check
-         *
-         *@return _Void_
-         */
-    }, {
-        key: 'scrollTo',
-        value: function scrollTo(element) {
-            var parent = element.parentNode.parentNode;
-            var elHeight = element.offsetHeight;
-            var min = parent.scrollTop;
-            var max = parent.scrollTop + parent.offsetHeight - element.offsetHeight;
-            var pos = element.offsetTop;
-
-            if (pos < min) {
-                parent.scrollTop = pos - elHeight * 0.5;
-            } else if (pos > max) {
-                parent.scrollTop = pos - parent.offsetHeight + elHeight * 1.5;
-            }
         }
 
         /**
@@ -1645,29 +1489,6 @@ var Flounder = (function () {
         }
 
         /**
-         * ## toggleClass
-         *
-         * in a world moving away from jquery, a wild helper function appears
-         *
-         * @param  {DOMElement} _el target to toggle class on
-         * @param  {String} _class class to toggle on/off
-         *
-         * @return _Void_
-         */
-    }, {
-        key: 'toggleClass',
-        value: function toggleClass(_el, _class) {
-            var _addClass = this.addClass;
-            var _removeClass = this.removeClass;
-
-            if (this.hasClass(_el, _class)) {
-                _removeClass(_el, _class);
-            } else {
-                _addClass(_el, _class);
-            }
-        }
-
-        /**
          * ## toggleList
          *
          * on click of flounder--selected, this shows or hides the options list
@@ -1770,7 +1591,226 @@ var Flounder = (function () {
     return Flounder;
 })();
 
+_utils2['default'].extendClass(Flounder, _utils2['default']);
+
 exports['default'] = Flounder;
 module.exports = exports['default'];
 
-},{"./classes":1,"./defaults":2}]},{},[3]);
+},{"./classes":1,"./defaults":2,"./utils":4}],4:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+    value: true
+});
+var utils = {
+    /**
+     * ## addClass
+     *
+     * on the quest to nuke jquery, a wild helper function appears
+     *
+     * @param {DOMElement} _el target element
+     * @param {String} _class class to add
+     *
+     * @return _Void_
+     */
+    addClass: function addClass(_el, _class) {
+        var _elClass = _el.className;
+        var _elClassLength = _elClass.length;
+
+        if (!utils.hasClass(_el, _class) && _elClass.slice(0, _class.length + 1) !== _class + ' ' && _elClass.slice(_elClassLength - _class.length - 1, _elClassLength) !== ' ' + _class) {
+            _el.className += '  ' + _class;
+        }
+    },
+
+    /**
+     * ## attachAttribute
+     *
+     * attached data attributes and others (seperately)
+     *
+     * @param {DOMElement} _el element to assign attributes
+     * @param {Object} _elObj contains the attributes to attach
+     *
+     * @return _Void_
+     */
+    attachAttributes: function attachAttributes(_el, _elObj) {
+        for (var att in _elObj) {
+            if (att.indexOf('data-') !== -1) {
+                _el.setAttribute(att, _elObj[att]);
+            } else {
+                _el[att] = _elObj[att];
+            }
+        }
+    },
+
+    /**
+     * ## constructElement
+     *
+     * @param {Object} _elObj object carrying properties to transfer
+     *
+     * @return _Element_
+     */
+    constructElement: function constructElement(_elObj) {
+        var _el = document.createElement(_elObj.tagname || 'div');
+
+        utils.attachAttributes(_el, _elObj);
+
+        return _el;
+    },
+
+    /**
+     * ## extendClass
+     *
+     * extends a class from an object.  returns the original reference
+     *
+     * @param {Class} arguments[0]
+     *
+     * @return {Class} modified class object
+     */
+    extendClass: function extendClass() {
+        var extended = arguments[0].prototype;
+
+        var merge = function merge(obj) {
+            for (var prop in obj) {
+                if (Object.prototype.hasOwnProperty.call(obj, prop)) {
+                    extended[prop] = obj[prop];
+                }
+            }
+        };
+
+        for (var i = 1, lenI = arguments.length; i < lenI; i++) {
+            var obj = arguments[i];
+            merge(obj);
+        }
+
+        return extended;
+    },
+
+    /**
+     * ## escapeHTML
+     *
+     * Escapes HTML in order to put correct elements in the DOM
+     *
+     * @param {String} string unescaped string
+     *
+     * @return _Void_
+     */
+    escapeHTML: function escapeHTML(string) {
+        return String(string).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    },
+
+    /**
+     * ## hasClass
+     *
+     * on the quest to nuke jquery, a wild helper function appears
+     *
+     * @param {DOMElement} _el target element
+     * @param {String} _class class to check
+     *
+     * @return _Void_
+     */
+    hasClass: function hasClass(_el, _class) {
+        var _elClass = _el.className;
+        var regex = new RegExp('(^' + _class + ' )|( ' + _class + '$)|( ' + _class + ' )|(^' + _class + '$)');
+        return !!_elClass.match(regex);
+    },
+
+    /**
+     * ## iosVersion
+     *
+     * checks and returns the ios version
+     *
+     * @return _Void_:
+     */
+    iosVersion: function iosVersion() {
+
+        if (/iPad|iPhone|iPod/.test(navigator.platform)) {
+            if (!!window.indexedDB) {
+                return '8+';
+            }
+            if (!!window.SpeechSynthesisUtterance) {
+                return '7';
+            }
+            if (!!window.webkitAudioContext) {
+                return '6';
+            }
+            return '5-';
+        }
+
+        return false;
+    },
+
+    /**
+     * ## removeClass
+     *
+     * on the quest to nuke jquery, a wild helper function appears
+     *
+     * @param {DOMElement} _el target element
+     * @param {String} _class class to remove
+     *
+     * @return _Void_
+     */
+    removeClass: function removeClass(_el, _class) {
+        var _elClass = _el.className;
+        var _elClassLength = _elClass.length;
+        var _classLength = _class.length;
+
+        if (_elClass.slice(0, _classLength + 1) === _class + ' ') {
+            _el.className = _elClass.slice(_classLength + 1, _elClassLength);
+        }
+
+        if (_elClass.slice(_elClassLength - _classLength - 1, _elClassLength) === ' ' + _class) {
+            _el.className = _elClass.slice(0, _elClassLength - _classLength - 1);
+        }
+
+        _el.className = _el.className.trim();
+    },
+
+    /**
+     * ## scrollTo
+     *
+     * checks if an option is visible and, if it is not, scrolls it into view
+     *
+     * @param {DOMElement} element element to check
+     *
+     *@return _Void_
+     */
+    scrollTo: function scrollTo(element) {
+        var parent = element.parentNode.parentNode;
+        var elHeight = element.offsetHeight;
+        var min = parent.scrollTop;
+        var max = parent.scrollTop + parent.offsetHeight - element.offsetHeight;
+        var pos = element.offsetTop;
+
+        if (pos < min) {
+            parent.scrollTop = pos - elHeight * 0.5;
+        } else if (pos > max) {
+            parent.scrollTop = pos - parent.offsetHeight + elHeight * 1.5;
+        }
+    },
+
+    /**
+     * ## toggleClass
+     *
+     * in a world moving away from jquery, a wild helper function appears
+     *
+     * @param  {DOMElement} _el target to toggle class on
+     * @param  {String} _class class to toggle on/off
+     *
+     * @return _Void_
+     */
+    toggleClass: function toggleClass(_el, _class) {
+        var _addClass = utils.addClass;
+        var _removeClass = utils.removeClass;
+
+        if (utils.hasClass(_el, _class)) {
+            _removeClass(_el, _class);
+        } else {
+            _addClass(_el, _class);
+        }
+    }
+};
+
+exports['default'] = utils;
+module.exports = exports['default'];
+
+},{}]},{},[3]);
