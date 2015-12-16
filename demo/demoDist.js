@@ -19487,7 +19487,6 @@ var Flounder = (function () {
     }, {
         key: 'bindThis',
         value: function bindThis() {
-            console.log(this);
             this.addClass = this.addClass.bind(this);
             this.attachAttributes = this.attachAttributes.bind(this);
             this.catchBodyClick = this.catchBodyClick.bind(this);
@@ -19711,8 +19710,6 @@ var Flounder = (function () {
     }, {
         key: 'checkSelect',
         value: function checkSelect(e) {
-            console.log(e);
-            console.trace();
             if (!this.toggleList.justOpened) {
                 switch (e.keyCode) {
                     case 13:
@@ -20567,7 +20564,7 @@ var Flounder = (function () {
                         return false;
                     }
 
-                    selection = this.checkSelect(e);
+                    selection = this.checkSelect(obj);
 
                     if (selection) {
                         this.setSelectValueButton(obj);

@@ -162,7 +162,6 @@ class Flounder
      */
     bindThis()
     {
-        console.log( this );
         this.addClass               = this.addClass.bind( this );
         this.attachAttributes       = this.attachAttributes.bind( this );
         this.catchBodyClick         = this.catchBodyClick.bind( this );
@@ -400,8 +399,6 @@ class Flounder
      */
     checkSelect( e )
     {
-        console.log( e );
-        console.trace();
         if ( !this.toggleList.justOpened )
         {
             switch ( e.keyCode )
@@ -1317,7 +1314,7 @@ class Flounder
                 return false;
             }
 
-            selection = this.checkSelect( e );
+            selection = this.checkSelect( obj );
 
             if ( selection )
             {

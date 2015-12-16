@@ -238,6 +238,7 @@ Change Log
 + changed setValueClick
 + added disable to API
 + added classes config object
++ broke up the main flounder file
 
 
 0.2.0

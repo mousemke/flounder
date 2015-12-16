@@ -256,7 +256,6 @@ var Flounder = (function () {
     }, {
         key: 'bindThis',
         value: function bindThis() {
-            console.log(this);
             this.addClass = this.addClass.bind(this);
             this.attachAttributes = this.attachAttributes.bind(this);
             this.catchBodyClick = this.catchBodyClick.bind(this);
@@ -480,8 +479,6 @@ var Flounder = (function () {
     }, {
         key: 'checkSelect',
         value: function checkSelect(e) {
-            console.log(e);
-            console.trace();
             if (!this.toggleList.justOpened) {
                 switch (e.keyCode) {
                     case 13:
@@ -1336,7 +1333,7 @@ var Flounder = (function () {
                         return false;
                     }
 
-                    selection = this.checkSelect(e);
+                    selection = this.checkSelect(obj);
 
                     if (selection) {
                         this.setSelectValueButton(obj);
@@ -1827,7 +1824,6 @@ var _coreFlounderJsx2 = _interopRequireDefault(_coreFlounderJsx);
 (function (µ) {
 
     µ.core.flounder = function (options) {
-        console.log(_coreFlounderJsx2['default']);
         return new _coreFlounderJsx2['default'](this, options);
     };
 })(µ);
