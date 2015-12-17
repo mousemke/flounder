@@ -40,6 +40,7 @@ class Flounder
             if ( target.tagName === 'INPUT' )
             {
                 this.addClass( target, classes.HIDDEN );
+                target.setAttribute( 'aria-hidden', true );
                 target.tabIndex = -1;
                 target          = target.parentNode;
             }
@@ -199,6 +200,7 @@ class Flounder
         let flounder            = constructElement( { className : this.flounderClass ?
                                     flounderClass + '  ' + this.flounderClass : flounderClass } );
 
+        flounder.setAttribute( 'aria-hidden', true );
         flounder.tabIndex       = 0;
         wrapper.appendChild( flounder );
 
@@ -846,12 +848,19 @@ class Flounder
 
 
         let self    = this;
-        var _divertTarget = function( e )
+        let _divertTarget = function( e )
         {
-            var index   = this.selectedIndex;
-            var _e      = {
+            let index   = this.selectedIndex;
+
+            let _e      = {
                 target          : refs.options[ index ]
             };
+
+            if ( self.multipleTags )
+            {
+                e.preventDefault();
+                e.stopPropagation();
+            }
 
             self.setSelectValue( _e );
 
@@ -1077,7 +1086,6 @@ class Flounder
             if ( defaultOption )
             {
                 defaultOption.index   = defaultIndex;
-                console.log( defaultOption );
                 return defaultOption;
             }
 
@@ -1095,7 +1103,6 @@ class Flounder
          */
         let setValueDefault = function()
         {
-            console.log( configObj );
             let defaultProp = configObj.defaultValue + '';
             let index;
 
@@ -1112,7 +1119,6 @@ class Flounder
             if ( _default )
             {
                 _default.index = index;
-                console.log( _default );
                 return _default;
             }
 
@@ -1234,10 +1240,7 @@ class Flounder
         {
             if ( this.multipleTags )
             {
-                obj.preventDefault();
-                obj.stopPropagation();
-
-                return false;
+                // return false;
             }
 
             selection = this.checkSelect( obj );

@@ -128,7 +128,7 @@ new Flounder( document.getElementById( 'vanilla--select' ), {
 
 
 /**
- * react amulti-Flounder with tags attached to an div
+ * react multi-Flounder with tags attached to an div
  */
 ReactDOM.render( React.createElement( FlounderReact, {
     placeholder         : 'placeholders!',
@@ -152,7 +152,7 @@ ReactDOM.render( React.createElement( FlounderReact, {
 
 
 /**
- * react amulti-Flounder without tags attached to an div
+ * react multi-Flounder without tags attached to an div
  */
 ReactDOM.render( React.createElement( FlounderReact, {
     defaultValue        : 'tag',
@@ -174,7 +174,7 @@ ReactDOM.render( React.createElement( FlounderReact, {
 
 
 /**
- * react amulti-Flounder with description attached to div
+ * react multi-Flounder with description attached to div
  */
 ReactDOM.render( React.createElement( FlounderReact, {
     defaultIndex        : 3,

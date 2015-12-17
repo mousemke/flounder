@@ -290,7 +290,11 @@ Change Log
 0.2.2
 -----
 
-+ improvments in defaults
++ improvements in defaults
++ react improvements
++ debug mode added to demo page
++ added better aria support
+
 
 
 0.2.1

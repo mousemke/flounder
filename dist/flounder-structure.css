@@ -18,12 +18,6 @@
 }
 
 
-.flounder:focus
-{
-    outline:                        none;
-}
-
-
 .flounder__arrow
 {
     position:                       absolute;
