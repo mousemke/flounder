@@ -215,7 +215,7 @@ class Flounder
         let _options            = this.options;
 
         let defaultValue        = this._default = this.setDefaultOption( this.props, _options );
-
+console.log( defaultValue );
         let selected            = constructElement( { className : classes.SELECTED_DISPLAYED,
                                         'data-value' : defaultValue.value, 'data-index' : defaultValue.index || -1  } );
             selected.innerHTML  = defaultValue.text;
@@ -1245,7 +1245,7 @@ class Flounder
         }
         else if ( configObj.defaultValue )
         {
-            let defaultProp = configObj.defaultValue;
+            let defaultProp = configObj.defaultValue + '';
             let index;
 
             options.forEach( function( opt, i )

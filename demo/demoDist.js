@@ -120,7 +120,7 @@ new _srcCoreFlounderJsx2['default'](document.getElementById('vanilla--input'), {
  * vanilla Flounder attached pre built select box
  */
 new _srcCoreFlounderJsx2['default'](document.getElementById('vanilla--select'), {
-    placeholder: 'placeholders!',
+    defaultValue: 2,
 
     classes: {
         container: 'moon',
@@ -19537,7 +19537,7 @@ var Flounder = (function () {
             var _options = this.options;
 
             var defaultValue = this._default = this.setDefaultOption(this.props, _options);
-
+            console.log(defaultValue);
             var selected = constructElement({ className: _classes3['default'].SELECTED_DISPLAYED,
                 'data-value': defaultValue.value, 'data-index': defaultValue.index || -1 });
             selected.innerHTML = defaultValue.text;
@@ -20503,7 +20503,7 @@ var Flounder = (function () {
                 return null;
             } else if (configObj.defaultValue) {
                 var _ret3 = (function () {
-                    var defaultProp = configObj.defaultValue;
+                    var defaultProp = configObj.defaultValue + '';
                     var index = undefined;
 
                     options.forEach(function (opt, i) {

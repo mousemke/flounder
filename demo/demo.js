@@ -117,7 +117,7 @@ new Flounder( document.getElementById( 'vanilla--input' ), {
  * vanilla Flounder attached pre built select box
  */
 new Flounder( document.getElementById( 'vanilla--select' ), {
-    placeholder     : 'placeholders!',
+    defaultValue : 2,
 
     classes : {
         container   : 'moon',

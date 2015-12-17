@@ -292,6 +292,7 @@ Change Log
 + added disable to API
 + added classes config object
 + broke up the main flounder file
++ readme updates
 
 
 0.2.0

@@ -6,7 +6,7 @@
  * Released under the MIT license
  * https://github.com/sociomantic/flounder/license
  *
- * Date: Wed Dec 16 2015
+ * Date: Thu Dec 17 2015
  */
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 // shim for using process in browser
@@ -19321,7 +19321,7 @@ var Flounder = (function () {
             var _options = this.options;
 
             var defaultValue = this._default = this.setDefaultOption(this.props, _options);
-
+            console.log(defaultValue);
             var selected = constructElement({ className: _classes3['default'].SELECTED_DISPLAYED,
                 'data-value': defaultValue.value, 'data-index': defaultValue.index || -1 });
             selected.innerHTML = defaultValue.text;
@@ -20287,7 +20287,7 @@ var Flounder = (function () {
                 return null;
             } else if (configObj.defaultValue) {
                 var _ret3 = (function () {
-                    var defaultProp = configObj.defaultValue;
+                    var defaultProp = configObj.defaultValue + '';
                     var index = undefined;
 
                     options.forEach(function (opt, i) {
