@@ -19032,6 +19032,12 @@ Object.defineProperty(exports, '__esModule', {
 
 var _slicedToArray = (function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i['return']) _i['return'](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError('Invalid attempt to destructure non-iterable instance'); } }; })();
 
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _classes = require('./classes');
+
+var _classes2 = _interopRequireDefault(_classes);
+
 var api = {
 
     /**
@@ -19049,7 +19055,7 @@ var api = {
             var target = originalTarget.nextElementSibling;
             target.parentNode.removeChild(target);
             originalTarget.tabIndex = 0;
-            this.removeClass(originalTarget, classes.HIDDEN);
+            this.removeClass(originalTarget, _classes2['default'].HIDDEN);
         } else {
             var target = this.target;
             target.innerHTML = '';
@@ -19085,13 +19091,13 @@ var api = {
         if (bool) {
             refs.flounder.removeEventListener('keydown', this.checkFlounderKeypress);
             refs.selected.removeEventListener('click', this.toggleList);
-            this.addClass(selected, classes.DISABLED);
-            this.addClass(flounder, classes.DISABLED);
+            this.addClass(selected, _classes2['default'].DISABLED);
+            this.addClass(flounder, _classes2['default'].DISABLED);
         } else {
             refs.flounder.addEventListener('keydown', this.checkFlounderKeypress);
             refs.selected.addEventListener('click', this.toggleList);
-            this.removeClass(selected, classes.DISABLED);
-            this.removeClass(flounder, classes.DISABLED);
+            this.removeClass(selected, _classes2['default'].DISABLED);
+            this.removeClass(flounder, _classes2['default'].DISABLED);
         }
     },
 
@@ -19253,7 +19259,7 @@ var api = {
 exports['default'] = api;
 module.exports = exports['default'];
 
-},{}],160:[function(require,module,exports){
+},{"./classes":160}],160:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -19377,10 +19383,10 @@ var Flounder = (function () {
                 });
             }
 
-            this.props = props;
             target = target.nodeType === 1 ? target : document.querySelector(target);
 
             this.originalTarget = target;
+            target.flounder = this;
 
             if (target.tagName === 'INPUT') {
                 this.addClass(target, _classes3['default'].HIDDEN);
@@ -19390,6 +19396,7 @@ var Flounder = (function () {
 
             this.target = target;
 
+            this.props = props;
             this.bindThis();
             this.initialzeOptions();
             this.onInit();

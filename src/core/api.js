@@ -1,4 +1,6 @@
 
+import classes          from './classes';
+
 const api = {
 
     /**

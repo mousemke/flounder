@@ -32,10 +32,10 @@ class Flounder
                 return target.map( ( _el ) => new this.constructor( _el, props ) );
             }
 
-            this.props  = props;
             target      = target.nodeType === 1 ? target : document.querySelector( target );
 
             this.originalTarget = target;
+            target.flounder     = this;
 
             if ( target.tagName === 'INPUT' )
             {
@@ -46,6 +46,7 @@ class Flounder
 
             this.target     = target;
 
+            this.props = props;
             this.bindThis();
             this.initialzeOptions();
             this.onInit();

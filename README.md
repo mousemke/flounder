@@ -17,7 +17,7 @@ import Flounder from 'flounder';
 Usage
 =====
 
-Flounder can be used in vanilla js or with react.
+Flounder can be used in vanilla js or with react, requirejs, jquery, and microbe
 
 ```
 // vanilla
