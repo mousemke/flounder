@@ -38,7 +38,7 @@ class FlounderReact extends Component
 
         this.target         = refs.wrapper.parentNode;
 
-        refs.options        = slice.call( refs.optionsList.children, 0 );
+        refs.data           = slice.call( refs.optionsList.children, 0 );
         refs.selectOptions  = slice.call( refs.select.children, 0 );
 
         this.refs.select.flounder = this.refs.selected.flounder = this.target.flounder = this;
@@ -106,22 +106,22 @@ class FlounderReact extends Component
      *
      * @return _Array_ correctly formatted options
      */
-    prepOptions( _options )
+    prepOptions( data )
     {
-        _options.forEach( ( _option, i ) =>
+        data.forEach( ( dataObj, i ) =>
         {
-            if ( typeof _option === 'string' )
+            if ( typeof dataObj === 'string' )
             {
-                _option = {
-                    text    : _option,
-                    value   : _option
+                dataObj = {
+                    text    : dataObj,
+                    value   : dataObj
                 };
             }
 
-            _option.text = utils.escapeHTML( _option.text );
+            dataObj.text = utils.escapeHTML( dataObj.text );
         } );
 
-        return _options;
+        return data;
     }
 
 
@@ -147,12 +147,12 @@ class FlounderReact extends Component
 
         let escapeHTML      = utils.escapeHTML;
         let props           = this.props;
-        let options         = this.options = this.prepOptions( props.options || this.options );
+        let data            = this.data = this.prepOptions( props.data || this.data );
 
         let handleChange    = this.handleChange.bind( this );
         let multiple        = props.multiple;
 
-        let defaultValue    = this._default = this.setDefaultOption( props, options );
+        let defaultValue    = this._default = this.setDefaultOption( props, data );
         let defaultReact    = multiple ? [ defaultValue.value ] : defaultValue.value;
 
         let wrapperClass    = this.wrapperClass ? '  ' + this.wrapperClass : '';
@@ -172,22 +172,22 @@ class FlounderReact extends Component
                     <div ref="optionsListWrapper" className={classes.OPTIONS_WRAPPER + '  ' + classes.HIDDEN}>
                         <div ref="optionsList" className={classes.LIST}>
                         {
-                            options.map( ( _option, i ) =>
+                            data.map( ( dataObj, i ) =>
                             {
                                 let extraClass = i === defaultValue.index ? '  ' + classes.SELECTED : '';
-                                extraClass += _option.disabled ? '  ' + classes.DISABLED : '';
-                                extraClass += _option.extraClass ? '  ' + _option.extraClass : '';
+                                extraClass += dataObj.disabled ? '  ' + classes.DISABLED : '';
+                                extraClass += dataObj.extraClass ? '  ' + dataObj.extraClass : '';
 
-                                if ( typeof _option === 'string' )
+                                if ( typeof dataObj === 'string' )
                                 {
-                                    _option = [ _option, _option ];
+                                    dataObj = [ dataObj, dataObj ];
                                 }
 
                                 return ( <div className={classes.OPTION + extraClass} data-index={i} key={i} ref={'option' + i}>
-                                            {_option.text}
-                                            {_option.description ?
+                                            {dataObj.text}
+                                            {dataObj.description ?
                                                 <div className={classes.DESCRIPTION}>
-                                                    {_option.description}
+                                                    {dataObj.description}
                                                 </div> :
                                                 null
                                             }
@@ -200,7 +200,7 @@ class FlounderReact extends Component
                 </div>
                 <select ref="select" className={classes.SELECT_TAG + '  ' + classes.HIDDEN} defaultValue={defaultReact} tabIndex="-1" multiple={multiple}>
                 {
-                    options.map( ( _option, i ) =>
+                    data.map( ( dataObj, i ) =>
                     {
                         let extraClass  = i === defaultValue ? '  ' + this.selectedClass : '';
 
@@ -209,8 +209,8 @@ class FlounderReact extends Component
                             'data-index'    : i
                         };
 
-                        return ( <option key={i} value ={_option.value} className={classes.OPTION_TAG} ref={'option' + i} disabled={_option.disabled}>
-                                    {_option.text}
+                        return ( <option key={i} value ={dataObj.value} className={classes.OPTION_TAG} ref={'option' + i} disabled={dataObj.disabled}>
+                                    {dataObj.text}
                                 </option> );
                     } )
                 }

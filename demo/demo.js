@@ -7,11 +7,11 @@ window.Flounder = Flounder;
 
 var _slice = Array.prototype.slice;
 /**
- * example options object
+ * example data object
  *
  * @type {Array}
  */
-var options = [
+var data = [
     {
         cssClass    : 'select-filters',
         id          : 'All',
@@ -48,16 +48,16 @@ new Flounder( '.vanilla--input--tags', {
     onInit               : function()
     {
         var res = [];
-        options.forEach( function( option )
+        data.forEach( function( dataObj )
         {
             res.push( {
-                text        : option.text,
-                value       : option.id,
+                text        : dataObj.text,
+                value       : dataObj.id,
                 extraClass  : 'vantar' + Math.ceil( Math.random() * 10 )
             } );
         } );
 
-        this.options = res;
+        this.data = res;
     },
 
     multiple            : true
@@ -73,16 +73,16 @@ new Flounder( document.getElementById( 'vanilla--input' ), {
     onInit               : function()
     {
         var res     = [];
-        options.forEach( function( option, i )
+        data.forEach( function( dataObj, i )
         {
             res.push( {
-                text        : option.text,
-                value       : option.id,
+                text        : dataObj.text,
+                value       : dataObj.id,
                 disabled    : i === 1 ? true : false
             } );
         } );
 
-        this.options = res;
+        this.data = res;
     },
 
     multiple            : true,
@@ -94,11 +94,11 @@ new Flounder( document.getElementById( 'vanilla--input' ), {
         var selected    = _slice.call( this.refs.select.selectedOptions );
         selected        = selected.map( el => el.index );
 
-        var rand = function( option, i )
+        var rand = function( dataObj, i )
         {
             if ( selected.indexOf( i ) !== -1 )
             {
-                return option;
+                return dataObj;
             }
             else
             {
@@ -107,9 +107,10 @@ new Flounder( document.getElementById( 'vanilla--input' ), {
             }
         };
 
-        let _o          = this.options.map( rand );
-        this.options    = _o;
-        this.rebuildOptions( _o );
+        let _o       = this.data.map( rand );
+        console.log( _o );
+        this.data    = _o;
+        this.rebuildSelect( _o );
     }
 } );
 
@@ -121,8 +122,10 @@ new Flounder( document.getElementById( 'vanilla--select' ), {
     defaultValue : 2,
 
     classes : {
-        container   : 'moon',
-        wrapper     : 'doge'
+        flounder        : 'class--to--give--the--main--flounder--element',
+        hidden          : 'class--to--denote--hidden',
+        selected        : 'class--to--denote--selected--option',
+        wrapper         : 'additional--class--to--give--the--wrapper'
     }
 } );
 
@@ -138,15 +141,15 @@ ReactDOM.render( React.createElement( FlounderReact, {
     onInit              : function()
     {
         var res = [];
-        options.forEach( function( option )
+        data.forEach( function( dataObj )
         {
             res.push( {
-                text        : option.text,
-                value       : option.id
+                text        : dataObj.text,
+                value       : dataObj.id
             } );
         } );
 
-        this.options = res;
+        this.data = res;
     } } ), document.getElementById( 'react--multiple--tags' )
 );
 
@@ -160,15 +163,15 @@ ReactDOM.render( React.createElement( FlounderReact, {
     onInit              : function()
     {
         var res = [];
-        options.forEach( function( option )
+        data.forEach( function( dataObj )
         {
             res.push( {
-                text        : option.text,
-                value       : option.id
+                text        : dataObj.text,
+                value       : dataObj.id
             } );
         } );
 
-        this.options = res;
+        this.data = res;
     } } ), document.getElementById( 'react--multiple' )
 );
 
@@ -186,17 +189,17 @@ ReactDOM.render( React.createElement( FlounderReact, {
     onInit              : function()
     {
         var res = [];
-        options.forEach( function( option, i )
+        data.forEach( function( dataObj, i )
         {
             res.push( {
-                text        : option.text,
-                value       : option.id,
-                description : option.id + ' - ' + option.text,
+                text        : dataObj.text,
+                value       : dataObj.id,
+                description : dataObj.id + ' - ' + dataObj.text,
                 disabled    : i === 1 ? true : false
             } );
         } );
 
-        this.options = res;
+        this.data = res;
     } } ), document.getElementById( 'react--multiple--desc' )
 );
 
@@ -218,16 +221,16 @@ requirejs( [ 'flounder' ], function( Flounder )
         onInit               : function()
         {
             var res = [];
-            options.forEach( function( option )
+            data.forEach( function( dataObj )
             {
                 res.push( {
-                    text        : option.text,
-                    value       : option.id,
-                    description : option.text + ' - ' + option.text
+                    text        : dataObj.text,
+                    value       : dataObj.id,
+                    description : dataObj.text + ' - ' + dataObj.text
                 } );
             } );
 
-            this.options = res;
+            this.data = res;
         }
      } );
 } );

@@ -50,7 +50,7 @@ var api = {
     /**
      * ## deselectAll
      *
-     * deslects all options
+     * deslects all data
      *
      * @return _Void_
      */
@@ -98,13 +98,13 @@ var api = {
     getOption: function getOption(_i) {
         var refs = this.refs;
 
-        return { option: refs.selectOptions[_i], div: refs.options[_i] };
+        return { option: refs.selectOptions[_i], div: refs.data[_i] };
     },
 
     /**
      * ## getSelectedOptions
      *
-     * returns the currently selected options of a SELECT box
+     * returns the currently selected data of a SELECT box
      *
      * @return _Void_
      */
@@ -112,10 +112,10 @@ var api = {
         var _el = this.refs.select;
         var opts = [],
             opt = undefined;
-        var _options = _el.options;
+        var _data = _el.options;
 
-        for (var i = 0, len = _options.length; i < len; i++) {
-            opt = _options[i];
+        for (var i = 0, len = _data.length; i < len; i++) {
+            opt = _data[i];
 
             if (opt.selected) {
                 opts.push(opt);
@@ -128,7 +128,7 @@ var api = {
     /**
      * ## getSelectedValues
      *
-     * returns the values of the currently selected options
+     * returns the values of the currently selected data
      *
      * @return _Void_
      */
@@ -139,15 +139,15 @@ var api = {
     },
 
     /**
-     * ## rebuildOptions
+     * ## rebuildSelect
      *
-     * after editing the options, this can be used to rebuild them
+     * after editing the data, this can be used to rebuild them
      *
-     * @param {Array} _options array with optino information
+     * @param {Array} _data array with optino information
      *
      * @return _Void_
      */
-    rebuildOptions: function rebuildOptions(_options) {
+    rebuildSelect: function rebuildSelect(_data) {
         var _this = this;
 
         var refs = this.refs;
@@ -155,6 +155,7 @@ var api = {
         selected = Array.prototype.slice.call(selected).map(function (e) {
             return e.value;
         });
+
         this.removeOptionsListeners();
 
         refs.select.innerHTML = '';
@@ -163,12 +164,12 @@ var api = {
         var _select = refs.select;
         refs.select = false;
 
-        var _buildOptions = this.buildOptions(this._default, _options, refs.optionsList, _select);
+        var _buildData = this.buildData(this._default, _data, refs.optionsList, _select);
 
-        var _buildOptions2 = _slicedToArray(_buildOptions, 2);
+        var _buildData2 = _slicedToArray(_buildData, 2);
 
-        refs.options = _buildOptions2[0];
-        refs.selectOptions = _buildOptions2[1];
+        refs.data = _buildData2[0];
+        refs.selectOptions = _buildData2[1];
 
         refs.select = _select;
 
@@ -181,7 +182,7 @@ var api = {
             if (valuePosition !== -1) {
                 selected.splice(valuePosition, 1);
                 el.selected = true;
-                _this.addClass(refs.options[i], _this.selectedClass);
+                _this.addClass(refs.data[i], _this.selectedClass);
             }
         });
 
@@ -205,12 +206,13 @@ var api = {
             var _setIndex = this.setIndex;
             return index.map(_setIndex);
         } else {
-            var el = refs.options[index];
+            var el = refs.data[index];
 
             if (el) {
                 var isOpen = this.hasClass(refs.wrapper, 'open');
                 this.toggleList(isOpen ? 'close' : 'open');
                 this.___forceMultiple = multiple;
+                this.___programmaticClick = true;
                 el.click();
 
                 return el;
@@ -375,6 +377,7 @@ var Flounder = (function () {
 
             if (target.tagName === 'INPUT') {
                 this.addClass(target, _classes3['default'].HIDDEN);
+                target.setAttribute('aria-hidden', true);
                 target.tabIndex = -1;
                 target = target.parentNode;
             }
@@ -432,9 +435,9 @@ var Flounder = (function () {
         value: function addOptionsListeners() {
             var _this2 = this;
 
-            this.refs.options.forEach(function (_option, i) {
-                if (_option.tagName === 'DIV') {
-                    _option.addEventListener('click', _this2.clickSet);
+            this.refs.data.forEach(function (dataObj, i) {
+                if (dataObj.tagName === 'DIV') {
+                    dataObj.addEventListener('click', _this2.clickSet);
                 }
             });
         }
@@ -530,6 +533,7 @@ var Flounder = (function () {
             var flounderClass = _classes3['default'].MAIN;
             var flounder = constructElement({ className: this.flounderClass ? flounderClass + '  ' + this.flounderClass : flounderClass });
 
+            flounder.setAttribute('aria-hidden', true);
             flounder.tabIndex = 0;
             wrapper.appendChild(flounder);
 
@@ -540,9 +544,9 @@ var Flounder = (function () {
                 select.setAttribute('multiple', '');
             }
 
-            var _options = this.options;
+            var data = this.data;
 
-            var defaultValue = this._default = this.setDefaultOption(this.props, _options);
+            var defaultValue = this._default = this.setDefaultOption(this.props, data);
 
             var selected = constructElement({ className: _classes3['default'].SELECTED_DISPLAYED,
                 'data-value': defaultValue.value, 'data-index': defaultValue.index || -1 });
@@ -566,52 +570,53 @@ var Flounder = (function () {
             });
 
             var search = this.addSearch(flounder);
+            var selectOptions = undefined;
 
-            var _buildOptions = this.buildOptions(defaultValue, _options, optionsList, select);
+            var _buildData = this.buildData(defaultValue, data, optionsList, select);
 
-            var _buildOptions2 = _slicedToArray(_buildOptions, 2);
+            var _buildData2 = _slicedToArray(_buildData, 2);
 
-            var options = _buildOptions2[0];
-            var selectOptions = _buildOptions2[1];
+            data = _buildData2[0];
+            selectOptions = _buildData2[1];
 
             this.target.appendChild(wrapper);
 
             this.refs = { wrapper: wrapper, flounder: flounder, selected: selected, arrow: arrow, optionsListWrapper: optionsListWrapper,
-                search: search, multiTagWrapper: multiTagWrapper, optionsList: optionsList, select: select, options: options, selectOptions: selectOptions };
+                search: search, multiTagWrapper: multiTagWrapper, optionsList: optionsList, select: select, data: data, selectOptions: selectOptions };
         }
 
         /**
-         * ## buildOptions
+         * ## buildData
          *
          * builds both the div and select based options. will skip the select box
          * if it already exists
          *
          * @param {Mixed} defaultValue default entry (string or number)
-         * @param {Array} _options array with optino information
+         * @param {Array} data array with optino information
          * @param {Object} optionsList reference to the div option wrapper
          * @param {Object} select reference to the select box
          *
          * @return _Array_ refs to both container elements
          */
     }, {
-        key: 'buildOptions',
-        value: function buildOptions(defaultValue, _options, optionsList, select) {
+        key: 'buildData',
+        value: function buildData(defaultValue, _data, optionsList, select) {
             var _this3 = this;
 
-            _options = _options || [];
-            var options = [];
+            _data = _data || [];
+            var data = [];
             var selectOptions = [];
             var constructElement = this.constructElement;
             var addOptionDescription = this.addOptionDescription;
 
-            _options.forEach(function (_option, i) {
-                if (typeof _option !== 'object') {
-                    _option = {
-                        text: _option,
-                        value: _option
+            _data.forEach(function (dataObj, i) {
+                if (typeof dataObj !== 'object') {
+                    dataObj = {
+                        text: dataObj,
+                        value: dataObj
                     };
                 }
-                _option.index = i;
+                dataObj.index = i;
 
                 var extraClass = i === defaultValue.index ? '  ' + _this3.selectedClass : '';
 
@@ -620,27 +625,27 @@ var Flounder = (function () {
                     'data-index': i
                 };
 
-                for (var _o in _option) {
+                for (var _o in dataObj) {
                     if (_o !== 'text' && _o !== 'description') {
-                        res[_o] = _option[_o];
+                        res[_o] = dataObj[_o];
                     }
                 }
 
-                options[i] = constructElement(res);
-                var escapedText = _this3.escapeHTML(_option.text);
-                options[i].innerHTML = escapedText;
-                optionsList.appendChild(options[i]);
+                data[i] = constructElement(res);
+                var escapedText = _this3.escapeHTML(dataObj.text);
+                data[i].innerHTML = escapedText;
+                optionsList.appendChild(data[i]);
 
-                if (_option.description) {
-                    addOptionDescription(options[i], _option.description);
+                if (dataObj.description) {
+                    addOptionDescription(data[i], dataObj.description);
                 }
 
-                options[i].className += _option.extraClass ? '  ' + _option.extraClass : '';
+                data[i].className += dataObj.extraClass ? '  ' + dataObj.extraClass : '';
 
                 if (!_this3.refs.select) {
                     selectOptions[i] = constructElement({ tagname: 'option',
                         className: _classes3['default'].OPTION_TAG,
-                        value: _option.value });
+                        value: dataObj.value });
                     selectOptions[i].innerHTML = escapedText;
                     select.appendChild(selectOptions[i]);
                 } else {
@@ -655,11 +660,11 @@ var Flounder = (function () {
                 }
 
                 if (selectOptions[i].getAttribute('disabled')) {
-                    _this3.addClass(options[i], _classes3['default'].DISABLED_OPTION);
+                    _this3.addClass(data[i], _classes3['default'].DISABLED_OPTION);
                 }
             });
 
-            return [options, selectOptions];
+            return [data, selectOptions];
         }
 
         /**
@@ -692,7 +697,7 @@ var Flounder = (function () {
     }, {
         key: 'checkClickTarget',
         value: function checkClickTarget(e, target) {
-            target = target || this.refs.options[e.target.getAttribute('data-index')] || e.target;
+            target = target || this.refs.data[e.target.getAttribute('data-index')] || e.target;
 
             if (target === document) {
                 return false;
@@ -938,13 +943,13 @@ var Flounder = (function () {
                 (function () {
                     var term = e.target.value.toLowerCase();
 
-                    _this4.refs.options.forEach(function (_option) {
-                        var text = _option.innerHTML.toLowerCase();
+                    _this4.refs.data.forEach(function (dataObj) {
+                        var text = dataObj.innerHTML.toLowerCase();
 
                         if (term !== '' && text.indexOf(term) === -1) {
-                            _this4.addClass(_option, _classes3['default'].SEARCH_HIDDEN);
+                            _this4.addClass(dataObj, _classes3['default'].SEARCH_HIDDEN);
                         } else {
-                            _this4.removeClass(_option, _classes3['default'].SEARCH_HIDDEN);
+                            _this4.removeClass(dataObj, _classes3['default'].SEARCH_HIDDEN);
                         }
                     });
                 })();
@@ -966,8 +971,8 @@ var Flounder = (function () {
         value: function fuzzySearchReset() {
             var _this5 = this;
 
-            this.refs.options.forEach(function (_option) {
-                _this5.removeClass(_option, _classes3['default'].SEARCH_HIDDEN);
+            this.refs.data.forEach(function (dataObj) {
+                _this5.removeClass(dataObj, _classes3['default'].SEARCH_HIDDEN);
             });
 
             this.refs.search.value = '';
@@ -1073,17 +1078,18 @@ var Flounder = (function () {
                     _this6.addClass(target, _classes3['default'].HIDDEN);
                     _this6.refs.select = target;
 
-                    var options = [],
+                    var data = [],
                         selectOptions = [];
+
                     Array.prototype.slice.apply(target.children).forEach(function (optionEl) {
                         selectOptions.push(optionEl);
-                        options.push({
+                        data.push({
                             text: optionEl.innerHTML,
                             value: optionEl.value
                         });
                     });
 
-                    _this6.options = options;
+                    _this6.data = data;
                     _this6.target = target.parentNode;
                     _this6.refs.selectOptions = selectOptions;
 
@@ -1110,7 +1116,7 @@ var Flounder = (function () {
         value: function onRender() {
             var props = this.props;
             var refs = this.refs;
-            var options = refs.options;
+            var data = refs.data;
 
             if (!!this.isIos && (!this.multipleTags || !this.multiple)) {
                 var sel = refs.select;
@@ -1121,9 +1127,15 @@ var Flounder = (function () {
             var self = this;
             var _divertTarget = function _divertTarget(e) {
                 var index = this.selectedIndex;
+
                 var _e = {
-                    target: refs.options[index]
+                    target: data[index]
                 };
+
+                if (self.multipleTags) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
 
                 self.setSelectValue(_e);
 
@@ -1151,7 +1163,7 @@ var Flounder = (function () {
         /**
          * ## removeOptionsListeners
          *
-         * removes event listeners on the options divs
+         * removes event listeners on the data divs
          *
          * @return _Void_
          */
@@ -1160,9 +1172,9 @@ var Flounder = (function () {
         value: function removeOptionsListeners() {
             var _this7 = this;
 
-            this.refs.options.forEach(function (_option) {
-                if (_option.tagName === 'DIV') {
-                    _option.removeEventListener('click', _this7.clickSet);
+            this.refs.data.forEach(function (dataObj) {
+                if (dataObj.tagName === 'DIV') {
+                    dataObj.removeEventListener('click', _this7.clickSet);
                 }
             });
         }
@@ -1189,13 +1201,14 @@ var Flounder = (function () {
             var selected = refs.selected;
             var target = e.target;
             var defaultValue = this._default;
+            var data = this.refs.data;
             var targetIndex = target.getAttribute('data-index');
             select[targetIndex].selected = false;
 
             var selectedOptions = this.getSelectedOptions();
 
-            this.removeClass(refs.options[targetIndex], _classes3['default'].SELECTED_HIDDEN);
-            this.removeClass(refs.options[targetIndex], _classes3['default'].SELECTED);
+            this.removeClass(data[targetIndex], _classes3['default'].SELECTED_HIDDEN);
+            this.removeClass(data[targetIndex], _classes3['default'].SELECTED);
 
             var span = target.parentNode;
             span.parentNode.removeChild(span);
@@ -1239,37 +1252,37 @@ var Flounder = (function () {
         /**
          * ## removeSelectedClass
          *
-         * removes the [[this.selectedClass]] from all options
+         * removes the [[this.selectedClass]] from all data
          *
          * @return _Void_
          */
     }, {
         key: 'removeSelectedClass',
-        value: function removeSelectedClass(options) {
+        value: function removeSelectedClass(data) {
             var _this8 = this;
 
-            options = options || this.refs.options;
+            data = data || this.refs.data;
 
-            options.forEach(function (_option, i) {
-                _this8.removeClass(_option, _this8.selectedClass);
+            data.forEach(function (dataObj, i) {
+                _this8.removeClass(dataObj, _this8.selectedClass);
             });
         }
 
         /**
          * ## removeSelectedValue
          *
-         * sets the selected property to false for all options
+         * sets the selected property to false for all data
          *
          * @return _Void_
          */
     }, {
         key: 'removeSelectedValue',
-        value: function removeSelectedValue(options) {
+        value: function removeSelectedValue(data) {
             var _this9 = this;
 
-            options = options || this.refs.options;
+            data = data || this.refs.data;
 
-            options.forEach(function (_option, i) {
+            data.forEach(function (_d, i) {
                 _this9.refs.select[i].selected = false;
             });
         }
@@ -1280,13 +1293,13 @@ var Flounder = (function () {
          * sets the initial default value
          *
          * @param {String or Number}    defaultProp         default passed from this.props
-         * @param {Object}              options             this.props.options
+         * @param {Object}              data                this.props.data
          *
          * @return _Void_
          */
     }, {
         key: 'setDefaultOption',
-        value: function setDefaultOption(configObj, options) {
+        value: function setDefaultOption(configObj, data) {
             var self = this;
 
             /**
@@ -1319,7 +1332,7 @@ var Flounder = (function () {
                     self.refs.selectOptions.unshift(defaultOption);
                 }
 
-                options.unshift(_default);
+                data.unshift(_default);
 
                 return _default;
             };
@@ -1334,11 +1347,10 @@ var Flounder = (function () {
              */
             var setIndexDefault = function setIndexDefault(index) {
                 var defaultIndex = index || index === 0 ? index : configObj.defaultIndex;
-                var defaultOption = options[defaultIndex];
+                var defaultOption = data[defaultIndex];
 
                 if (defaultOption) {
                     defaultOption.index = defaultIndex;
-                    console.log(defaultOption);
                     return defaultOption;
                 }
 
@@ -1348,27 +1360,25 @@ var Flounder = (function () {
             /**
              * ## setValueDefault
              *
-             * sets a specified indexas the default option. This only works correctly
-             * if it is a valid value, otherwise it returns null
+             * sets a specified index as the default. This only works correctly if
+             * it is a valid value, otherwise it returns null
              *
              * @return {Object} default settings
              */
             var setValueDefault = function setValueDefault() {
-                console.log(configObj);
                 var defaultProp = configObj.defaultValue + '';
                 var index = undefined;
 
-                options.forEach(function (opt, i) {
-                    if (opt.value === defaultProp) {
+                data.forEach(function (dataObj, i) {
+                    if (dataObj.value === defaultProp) {
                         index = i;
                     }
                 });
 
-                var _default = index ? options[index] : null;
+                var _default = index ? data[index] : null;
 
                 if (_default) {
                     _default.index = index;
-                    console.log(_default);
                     return _default;
                 }
 
@@ -1426,20 +1436,20 @@ var Flounder = (function () {
 
             var refs = this.refs;
             var selectTag = refs.select;
-            var options = refs.options;
-            var optionsMaxIndex = options.length - 1;
+            var data = refs.data;
+            var dataMaxIndex = data.length - 1;
             var index = selectTag.selectedIndex + increment;
 
-            if (index > optionsMaxIndex) {
+            if (index > dataMaxIndex) {
                 index = 0;
             } else if (index < 0) {
-                index = optionsMaxIndex;
+                index = dataMaxIndex;
             }
 
             selectTag.selectedIndex = index;
             var hasClass = this.hasClass;
 
-            if (hasClass(options[index], _classes3['default'].HIDDEN) && hasClass(options[index], _classes3['default'].SELECTED_HIDDEN)) {
+            if (hasClass(data[index], _classes3['default'].HIDDEN) && hasClass(data[index], _classes3['default'].SELECTED_HIDDEN)) {
                 this.setKeypress(e);
             }
         }
@@ -1469,13 +1479,6 @@ var Flounder = (function () {
                     selection = true;
                 } else // keypress
                 {
-                    if (this.multipleTags) {
-                        obj.preventDefault();
-                        obj.stopPropagation();
-
-                        return false;
-                    }
-
                     selection = this.checkSelect(obj);
 
                     if (selection) {
@@ -1486,7 +1489,11 @@ var Flounder = (function () {
             if (selection) {
                 this.displaySelected(refs.selected, refs);
 
-                this.onSelect(e, this.getSelectedValues());
+                if (!this.___programmaticClick) {
+                    this.onSelect(e, this.getSelectedValues());
+                } else {
+                    this.___programmaticClick = false;
+                }
             }
         }
 
@@ -1501,19 +1508,19 @@ var Flounder = (function () {
         key: 'setSelectValueButton',
         value: function setSelectValueButton() {
             var refs = this.refs;
-            var options = refs.options;
+            var data = refs.data;
             var select = refs.select;
             var selectedClass = this.selectedClass;
 
             var selectedOption = undefined;
 
-            this.removeSelectedClass(options);
+            this.removeSelectedClass(data);
 
-            var optionsArray = this.getSelectedOptions();
-            var baseOption = optionsArray[0];
+            var dataArray = this.getSelectedOptions();
+            var baseOption = dataArray[0];
 
             if (baseOption) {
-                selectedOption = options[baseOption.index];
+                selectedOption = data[baseOption.index];
 
                 this.addClass(selectedOption, selectedClass);
 
@@ -1535,7 +1542,6 @@ var Flounder = (function () {
         value: function setSelectValueClick(e) {
             var _multiple = this.multiple;
             var refs = this.refs;
-            var options = refs.options;
             var selectedClass = this.selectedClass;
             var index = undefined,
                 selectedOption = undefined;
@@ -1648,7 +1654,7 @@ var Flounder = (function () {
 
             if (!this.multiple) {
                 var index = refs.select.selectedIndex;
-                var selectedDiv = refs.options[index];
+                var selectedDiv = refs.data[index];
 
                 if (selectedDiv) {
                     this.scrollTo(selectedDiv);

@@ -97,11 +97,11 @@ class Flounder
      */
     addOptionsListeners()
     {
-        this.refs.options.forEach( ( _option, i ) =>
+        this.refs.data.forEach( ( dataObj, i ) =>
         {
-            if ( _option.tagName === 'DIV' )
+            if ( dataObj.tagName === 'DIV' )
             {
-                _option.addEventListener( 'click', this.clickSet );
+                dataObj.addEventListener( 'click', this.clickSet );
             }
         } );
     }
@@ -212,9 +212,9 @@ class Flounder
             select.setAttribute( 'multiple', '' );
         }
 
-        let _options            = this.options;
+        let data                = this.data;
 
-        let defaultValue        = this._default = this.setDefaultOption( this.props, _options );
+        let defaultValue        = this._default = this.setDefaultOption( this.props, data );
 
         let selected            = constructElement( { className : classes.SELECTED_DISPLAYED,
                                         'data-value' : defaultValue.value, 'data-index' : defaultValue.index || -1  } );
@@ -241,46 +241,47 @@ class Flounder
         } );
 
         let search = this.addSearch( flounder );
-        let [ options, selectOptions ] = this.buildOptions( defaultValue, _options, optionsList, select );
+        let selectOptions;
+        [ data, selectOptions ] = this.buildData( defaultValue, data, optionsList, select );
 
         this.target.appendChild( wrapper );
 
         this.refs = { wrapper, flounder, selected, arrow, optionsListWrapper,
-                    search, multiTagWrapper, optionsList, select, options, selectOptions };
+                    search, multiTagWrapper, optionsList, select, data, selectOptions };
     }
 
 
     /**
-     * ## buildOptions
+     * ## buildData
      *
      * builds both the div and select based options. will skip the select box
      * if it already exists
      *
      * @param {Mixed} defaultValue default entry (string or number)
-     * @param {Array} _options array with optino information
+     * @param {Array} data array with optino information
      * @param {Object} optionsList reference to the div option wrapper
      * @param {Object} select reference to the select box
      *
      * @return _Array_ refs to both container elements
      */
-    buildOptions( defaultValue, _options, optionsList, select )
+    buildData( defaultValue, _data, optionsList, select )
     {
-        _options                    = _options || [];
-        let options                 = [];
+        _data                       = _data || [];
+        let data                    = [];
         let selectOptions           = [];
         let constructElement        = this.constructElement;
         let addOptionDescription    = this.addOptionDescription;
 
-        _options.forEach( ( _option, i ) =>
+        _data.forEach( ( dataObj, i ) =>
         {
-            if ( typeof _option !== 'object' )
+            if ( typeof dataObj !== 'object' )
             {
-                _option = {
-                    text    : _option,
-                    value   : _option
+                dataObj = {
+                    text    : dataObj,
+                    value   : dataObj
                 };
             }
-            _option.index   = i;
+            dataObj.index   = i;
 
             let extraClass  = i === defaultValue.index ? '  ' + this.selectedClass : '';
 
@@ -289,31 +290,31 @@ class Flounder
                 'data-index'    : i
             };
 
-            for ( let _o in _option )
+            for ( let _o in dataObj )
             {
                 if ( _o !== 'text' && _o !== 'description' )
                 {
-                    res[ _o ] = _option[ _o ];
+                    res[ _o ] = dataObj[ _o ];
                 }
             }
 
-            options[ i ]            = constructElement( res );
-            let escapedText         = this.escapeHTML( _option.text );
-            options[ i ].innerHTML  = escapedText;
-            optionsList.appendChild( options[ i ] );
+            data[ i ]            = constructElement( res );
+            let escapedText      = this.escapeHTML( dataObj.text );
+            data[ i ].innerHTML  = escapedText;
+            optionsList.appendChild( data[ i ] );
 
-            if ( _option.description )
+            if ( dataObj.description )
             {
-                addOptionDescription( options[ i ], _option.description );
+                addOptionDescription( data[ i ], dataObj.description );
             }
 
-            options[ i ].className += _option.extraClass ? '  ' + _option.extraClass : '';
+            data[ i ].className += dataObj.extraClass ? '  ' + dataObj.extraClass : '';
 
             if ( !this.refs.select )
             {
                 selectOptions[ i ] = constructElement( { tagname : 'option',
                                             className   : classes.OPTION_TAG,
-                                            value       :  _option.value } );
+                                            value       :  dataObj.value } );
                 selectOptions[ i ].innerHTML = escapedText;
                 select.appendChild( selectOptions[ i ] );
             }
@@ -332,11 +333,11 @@ class Flounder
 
             if ( selectOptions[ i ].getAttribute( 'disabled' ) )
             {
-                this.addClass( options[ i ], classes.DISABLED_OPTION );
+                this.addClass( data[ i ], classes.DISABLED_OPTION );
             }
         } );
 
-        return  [ options, selectOptions ];
+        return  [ data, selectOptions ];
     }
 
 
@@ -370,7 +371,7 @@ class Flounder
      */
     checkClickTarget( e, target )
     {
-        target = target || this.refs.options[ e.target.getAttribute( 'data-index' ) ] || e.target;
+        target = target || this.refs.data[ e.target.getAttribute( 'data-index' ) ] || e.target;
 
         if ( target === document )
         {
@@ -650,17 +651,17 @@ class Flounder
         {
             let term        = e.target.value.toLowerCase();
 
-            this.refs.options.forEach( _option =>
+            this.refs.data.forEach( dataObj =>
             {
-                let text    = _option.innerHTML.toLowerCase();
+                let text    = dataObj.innerHTML.toLowerCase();
 
                 if ( term !== '' && text.indexOf( term ) === -1 )
                 {
-                    this.addClass( _option, classes.SEARCH_HIDDEN );
+                    this.addClass( dataObj, classes.SEARCH_HIDDEN );
                 }
                 else
                 {
-                    this.removeClass( _option, classes.SEARCH_HIDDEN );
+                    this.removeClass( dataObj, classes.SEARCH_HIDDEN );
                 }
             } );
         }
@@ -681,9 +682,9 @@ class Flounder
      */
     fuzzySearchReset()
     {
-        this.refs.options.forEach( _option =>
+        this.refs.data.forEach( dataObj =>
         {
-            this.removeClass( _option, classes.SEARCH_HIDDEN );
+            this.removeClass( dataObj, classes.SEARCH_HIDDEN );
         } );
 
         this.refs.search.value = '';
@@ -799,17 +800,18 @@ class Flounder
             this.addClass( target, classes.HIDDEN );
             this.refs.select    = target;
 
-            let options = [], selectOptions = [];
+            let data = [], selectOptions = [];
+
             Array.prototype.slice.apply( target.children ).forEach( function( optionEl )
             {
                 selectOptions.push( optionEl );
-                options.push( {
+                data.push( {
                     text    : optionEl.innerHTML,
                     value   : optionEl.value
                 } );
             } );
 
-            this.options            = options;
+            this.data            = data;
             this.target             = target.parentNode;
             this.refs.selectOptions = selectOptions;
 
@@ -837,7 +839,7 @@ class Flounder
     {
         let props   = this.props;
         let refs    = this.refs;
-        let options = refs.options;
+        let data    = refs.data;
 
         if ( !!this.isIos && ( !this.multipleTags || !this.multiple )  )
         {
@@ -853,7 +855,7 @@ class Flounder
             let index   = this.selectedIndex;
 
             let _e      = {
-                target          : refs.options[ index ]
+                target          : data[ index ]
             };
 
             if ( self.multipleTags )
@@ -892,17 +894,17 @@ class Flounder
     /**
      * ## removeOptionsListeners
      *
-     * removes event listeners on the options divs
+     * removes event listeners on the data divs
      *
      * @return _Void_
      */
     removeOptionsListeners()
     {
-        this.refs.options.forEach( _option =>
+        this.refs.data.forEach( dataObj =>
         {
-            if ( _option.tagName === 'DIV' )
+            if ( dataObj.tagName === 'DIV' )
             {
-                _option.removeEventListener( 'click', this.clickSet );
+                dataObj.removeEventListener( 'click', this.clickSet );
             }
         } );
     }
@@ -929,13 +931,14 @@ class Flounder
         let selected        = refs.selected;
         let target          = e.target;
         let defaultValue    = this._default;
+        let data            = this.refs.data;
         let targetIndex     = target.getAttribute( 'data-index' );
         select[ targetIndex ].selected = false;
 
         let selectedOptions = this.getSelectedOptions();
 
-        this.removeClass( refs.options[ targetIndex ], classes.SELECTED_HIDDEN );
-        this.removeClass( refs.options[ targetIndex ], classes.SELECTED );
+        this.removeClass( data[ targetIndex ], classes.SELECTED_HIDDEN );
+        this.removeClass( data[ targetIndex ], classes.SELECTED );
 
         let span = target.parentNode;
         span.parentNode.removeChild( span );
@@ -985,17 +988,17 @@ class Flounder
     /**
      * ## removeSelectedClass
      *
-     * removes the [[this.selectedClass]] from all options
+     * removes the [[this.selectedClass]] from all data
      *
      * @return _Void_
      */
-    removeSelectedClass( options )
+    removeSelectedClass( data )
     {
-        options = options || this.refs.options;
+        data = data || this.refs.data;
 
-        options.forEach( ( _option, i ) =>
+        data.forEach( ( dataObj, i ) =>
         {
-            this.removeClass( _option, this.selectedClass );
+            this.removeClass( dataObj, this.selectedClass );
         } );
     }
 
@@ -1003,15 +1006,15 @@ class Flounder
     /**
      * ## removeSelectedValue
      *
-     * sets the selected property to false for all options
+     * sets the selected property to false for all data
      *
      * @return _Void_
      */
-    removeSelectedValue( options )
+    removeSelectedValue( data )
     {
-        options = options || this.refs.options;
+        data = data || this.refs.data;
 
-        options.forEach( ( _option, i ) =>
+        data.forEach( ( _d, i ) =>
         {
             this.refs.select[ i ].selected = false;
         } );
@@ -1024,11 +1027,11 @@ class Flounder
      * sets the initial default value
      *
      * @param {String or Number}    defaultProp         default passed from this.props
-     * @param {Object}              options             this.props.options
+     * @param {Object}              data                this.props.data
      *
      * @return _Void_
      */
-    setDefaultOption( configObj, options )
+    setDefaultOption( configObj, data )
     {
         let self = this;
 
@@ -1064,7 +1067,7 @@ class Flounder
                 self.refs.selectOptions.unshift( defaultOption );
             }
 
-            options.unshift( _default );
+            data.unshift( _default );
 
             return _default;
         };
@@ -1081,7 +1084,7 @@ class Flounder
         let setIndexDefault = function( index )
         {
             let defaultIndex        = index || index === 0 ? index : configObj.defaultIndex;
-            let defaultOption       = options[ defaultIndex ];
+            let defaultOption       = data[ defaultIndex ];
 
             if ( defaultOption )
             {
@@ -1096,8 +1099,8 @@ class Flounder
         /**
          * ## setValueDefault
          *
-         * sets a specified indexas the default option. This only works correctly
-         * if it is a valid value, otherwise it returns null
+         * sets a specified index as the default. This only works correctly if
+         * it is a valid value, otherwise it returns null
          *
          * @return {Object} default settings
          */
@@ -1106,15 +1109,15 @@ class Flounder
             let defaultProp = configObj.defaultValue + '';
             let index;
 
-            options.forEach( function( opt, i )
+            data.forEach( function( dataObj, i )
             {
-                if ( opt.value === defaultProp )
+                if ( dataObj.value === defaultProp )
                 {
                     index = i;
                 }
             } );
 
-            let _default = index ? options[ index ] : null;
+            let _default = index ? data[ index ] : null;
 
             if ( _default )
             {
@@ -1189,24 +1192,24 @@ class Flounder
 
         let refs                = this.refs;
         let selectTag           = refs.select;
-        let options             = refs.options;
-        let optionsMaxIndex     = options.length - 1;
+        let data                = refs.data;
+        let dataMaxIndex        = data.length - 1;
         let index               = selectTag.selectedIndex + increment;
 
-        if ( index > optionsMaxIndex )
+        if ( index > dataMaxIndex )
         {
             index = 0;
         }
         else if ( index < 0 )
         {
-            index = optionsMaxIndex;
+            index = dataMaxIndex;
         }
 
         selectTag.selectedIndex = index;
         let hasClass            = this.hasClass;
 
-        if ( hasClass( options[ index ], classes.HIDDEN ) &&
-             hasClass( options[ index ], classes.SELECTED_HIDDEN ) )
+        if ( hasClass( data[ index ], classes.HIDDEN ) &&
+             hasClass( data[ index ], classes.SELECTED_HIDDEN ) )
         {
             this.setKeypress( e );
         }
@@ -1238,11 +1241,6 @@ class Flounder
         }
         else // keypress
         {
-            if ( this.multipleTags )
-            {
-                // return false;
-            }
-
             selection = this.checkSelect( obj );
 
             if ( selection )
@@ -1255,7 +1253,14 @@ class Flounder
         {
             this.displaySelected( refs.selected, refs );
 
-            this.onSelect( e, this.getSelectedValues() );
+            if ( !this.___programmaticClick )
+            {
+                this.onSelect( e, this.getSelectedValues() );
+            }
+            else
+            {
+                this.___programmaticClick = false;
+            }
         }
     }
 
@@ -1270,20 +1275,20 @@ class Flounder
     setSelectValueButton()
     {
         let refs            = this.refs;
-        let options         = refs.options;
+        let data            = refs.data;
         let select          = refs.select;
         let selectedClass   = this.selectedClass;
 
         let selectedOption;
 
-        this.removeSelectedClass( options );
+        this.removeSelectedClass( data );
 
-        let optionsArray    = this.getSelectedOptions();
-        let baseOption      = optionsArray[ 0 ];
+        let dataArray    = this.getSelectedOptions();
+        let baseOption      = dataArray[ 0 ];
 
         if ( baseOption )
         {
-            selectedOption  = options[ baseOption.index ];
+            selectedOption  = data[ baseOption.index ];
 
             this.addClass( selectedOption, selectedClass );
 
@@ -1305,7 +1310,6 @@ class Flounder
     {
         let _multiple       = this.multiple;
         let refs            = this.refs;
-        let options         = refs.options;
         let selectedClass   = this.selectedClass;
         let index, selectedOption;
 
@@ -1424,7 +1428,7 @@ class Flounder
         if ( !this.multiple )
         {
             let index       = refs.select.selectedIndex;
-            let selectedDiv = refs.options[ index ];
+            let selectedDiv = refs.data[ index ];
 
             if ( selectedDiv )
             {

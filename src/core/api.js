@@ -33,7 +33,7 @@ const api = {
     /**
      * ## deselectAll
      *
-     * deslects all options
+     * deslects all data
      *
      * @return _Void_
      */
@@ -89,14 +89,14 @@ const api = {
     {
         let refs = this.refs;
 
-        return { option : refs.selectOptions[ _i ], div : refs.options[ _i ] };
+        return { option : refs.selectOptions[ _i ], div : refs.data[ _i ] };
     },
 
 
     /**
      * ## getSelectedOptions
      *
-     * returns the currently selected options of a SELECT box
+     * returns the currently selected data of a SELECT box
      *
      * @return _Void_
      */
@@ -104,11 +104,11 @@ const api = {
     {
         let _el         = this.refs.select;
         let opts        = [], opt;
-        let _options    = _el.options;
+        let _data       = _el.options;
 
-        for ( let i = 0, len = _options.length; i < len; i++ )
+        for ( let i = 0, len = _data.length; i < len; i++ )
         {
-            opt = _options[ i ];
+            opt = _data[ i ];
 
             if ( opt.selected )
             {
@@ -123,7 +123,7 @@ const api = {
     /**
      * ## getSelectedValues
      *
-     * returns the values of the currently selected options
+     * returns the values of the currently selected data
      *
      * @return _Void_
      */
@@ -134,19 +134,20 @@ const api = {
 
 
     /**
-     * ## rebuildOptions
+     * ## rebuildSelect
      *
-     * after editing the options, this can be used to rebuild them
+     * after editing the data, this can be used to rebuild them
      *
-     * @param {Array} _options array with optino information
+     * @param {Array} _data array with optino information
      *
      * @return _Void_
      */
-    rebuildOptions : function( _options )
+    rebuildSelect : function( _data )
     {
         let refs        = this.refs;
         let selected    = refs.select.selectedOptions;
         selected        = Array.prototype.slice.call( selected ).map( function( e ){ return e.value; } );
+
         this.removeOptionsListeners();
 
         refs.select.innerHTML       = '';
@@ -154,7 +155,7 @@ const api = {
 
         let _select                 = refs.select;
         refs.select                 = false;
-        [ refs.options, refs.selectOptions ] = this.buildOptions( this._default, _options, refs.optionsList, _select );
+        [ refs.data, refs.selectOptions ] = this.buildData( this._default, _data, refs.optionsList, _select );
         refs.select                 = _select;
 
         this.removeSelectedValue();
@@ -168,7 +169,7 @@ const api = {
             {
                 selected.splice( valuePosition, 1 );
                 el.selected = true;
-                this.addClass( refs.options[ i ], this.selectedClass );
+                this.addClass( refs.data[ i ], this.selectedClass );
             }
         } );
 
@@ -197,13 +198,14 @@ const api = {
         }
         else
         {
-            var el = refs.options[ index ];
+            var el = refs.data[ index ];
 
             if ( el )
             {
                 let isOpen = this.hasClass( refs.wrapper, 'open' );
                 this.toggleList( isOpen ? 'close' : 'open' );
-                this.___forceMultiple = multiple;
+                this.___forceMultiple       = multiple;
+                this.___programmaticClick   = true;
                 el.click();
 
                 return el;

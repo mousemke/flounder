@@ -58,6 +58,7 @@ document.querySelector( '#vanilla--select' ).flounder.destroy()
         selected        : 'class--to--denote--selected--option',
         wrapper         : 'additional--class--to--give--the--wrapper'
     },
+    data                : dataObject,
     defaultValue        : defaultValue,
     defaultIndex        : defaultIndex,
     multiple            : false,
@@ -68,13 +69,14 @@ document.querySelector( '#vanilla--select' ).flounder.destroy()
     onInit              : function(){},
     onOpen              : function( e, valueArray ){},
     onSelect            : function( e, valueArray ){}
-    options             : dataObject,
     placeholder         : 'Please choose an option',
     search              : true
 }
 ```
 
 `classes`- (object) Contains configurable classes for various elements.  The are additional classes, not replacement classes.
+
+`data` - (array) select box options to build in the select box.  Can be organized various ways
 
 `defaultValue` - (string) Sets the default value to the passed value but only if it matches one of the select box options. Multi-tag select boxes only support placeholders
 
@@ -96,8 +98,6 @@ document.querySelector( '#vanilla--select' ).flounder.destroy()
 
 `onSelect` - (function) Triggered when an option selectbox is closed
 
-`options` - (array) Options to build in the select box.  Can be organized various ways
-
 `placeholder` - (string) Builds a blank option with the placeholder text that is selected by default.  This overrides defaultIndex
 
 `search` - (boolean) Determines whether the select box is searchable
@@ -107,14 +107,14 @@ document.querySelector( '#vanilla--select' ).flounder.destroy()
 Building the select box
 =======================
 
-select options must be passed as an array of objects
+selectbox data must be passed as an array of objects
 
 ```
 [
     {
         text        : 'probably the string you want to see',
         value       : 'return value',
-        description : 'a longer description of this option', // optional, string
+        description : 'a longer description of this element', // optional, string
         extraClass  : 'extra--classname',                   // optional, string
         disabled    : false                                 // optional, boolean
     }
@@ -125,16 +125,16 @@ or an array.
 
 ```
 [
-    'option 1',
-    'option 2',
-    'option 3'
+    'value 1',
+    'value 2',
+    'value 3'
 ]
 ```
 
 in the case of an array, the passed text will be both the text and the value.  There would be no description in this case
 
 
-all extra properties passed that are not shown here will be added as data attributes for the sake of reference later.  The options can be accessed in the init (before building) as this.options if they need reformatting or filtering.
+all extra properties passed that are not shown here will be added as data attributes for the sake of reference later.  The data can be accessed in the init (before building) as this.data if they need reformatting or filtering.
 
 
 API
@@ -149,7 +149,7 @@ this.disable( bool )
 this.getOption( num )
 this.getSelectedOptions()
 this.getSelectedValues()
-this.rebuildOptions( options )
+this.rebuildSelect( data )
 this.refs
 this.setIndex( index, multiple )
 this.setValue( value, multiple )
@@ -294,7 +294,9 @@ Change Log
 + react improvements
 + debug mode added to demo page
 + added better aria support
-
++ programmatically setting value or index no longer triggers onSelect
++ changed rebuildOptions to rebuildSelect for clarity
++ changed this.options to this.data for clarity
 
 
 0.2.1

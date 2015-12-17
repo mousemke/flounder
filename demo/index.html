@@ -69,7 +69,7 @@
         <script type="text/javascript" data-main="../demo/demoDist.js" src="../node_modules/requirejs/require.js"></script>
 
         <script type="text/javascript">
-            var options = [
+            var data = [
                 {
                     cssClass    : 'select-filters',
                     id          : 'All',
@@ -104,7 +104,7 @@
                 onInit               : function()
                 {
                     var res = [];
-                    options.forEach( function( option )
+                    data.forEach( function( option )
                     {
                         res.push( {
                             text        : option.text,
@@ -113,7 +113,7 @@
                         } );
                     } );
 
-                    this.options = res;
+                    this.data = res;
                 },
 
                 multiple            : true,
@@ -130,7 +130,7 @@
                 onInit               : function()
                 {
                     var res = [];
-                    options.forEach( function( option )
+                    data.forEach( function( option )
                     {
                         res.push( {
                             text        : option.text,
@@ -138,7 +138,7 @@
                         } );
                     } );
 
-                    this.options = res;
+                    this.data = res;
                 } } );</script>
     </body>
 </html>
