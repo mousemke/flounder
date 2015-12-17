@@ -5,13 +5,13 @@ import Flounder                 from '../src/core/flounder.jsx';
 
 window.Flounder = Flounder;
 
-var _slice = Array.prototype.slice;
+let _slice = Array.prototype.slice;
 /**
  * example data object
  *
  * @type {Array}
  */
-var data = [
+let data = [
     {
         cssClass    : 'select-filters',
         id          : 'All',
@@ -45,22 +45,40 @@ var data = [
 new Flounder( '.vanilla--input--tags', {
     placeholder          : 'placeholders!',
 
-    onInit               : function()
+    onInit : function()
     {
-        var res = [];
-        data.forEach( function( dataObj )
+        let res = [];
+
+        let top = {
+            header : 'top',
+            data    : []
+        };
+
+        let bottom = {
+            header : 'bottom',
+            data    : []
+        };
+
+        data.forEach( function( dataObj, i )
         {
-            res.push( {
+            res = {
                 text        : dataObj.text,
                 value       : dataObj.id,
                 extraClass  : 'vantar' + Math.ceil( Math.random() * 10 )
-            } );
+            };
+
+            if ( i % 2 === 0 )
+            {
+                top.data.push( res );
+            }
+            else
+            {
+                bottom.data.push( res );
+            }
         } );
 
-        this.data = res;
-    },
-
-    multiple            : true
+        this.data = [ top, bottom ];
+    }
 } );
 
 
@@ -72,7 +90,7 @@ new Flounder( document.getElementById( 'vanilla--input' ), {
 
     onInit               : function()
     {
-        var res     = [];
+        let res     = [];
         data.forEach( function( dataObj, i )
         {
             res.push( {
@@ -91,10 +109,10 @@ new Flounder( document.getElementById( 'vanilla--input' ), {
 
     onSelect            : function( e )
     {
-        var selected    = _slice.call( this.refs.select.selectedOptions );
+        let selected    = _slice.call( this.refs.select.selectedOptions );
         selected        = selected.map( el => el.index );
 
-        var rand = function( dataObj, i )
+        let rand = function( dataObj, i )
         {
             if ( selected.indexOf( i ) !== -1 )
             {
@@ -102,13 +120,13 @@ new Flounder( document.getElementById( 'vanilla--input' ), {
             }
             else
             {
-                var value = Math.ceil( Math.random() * 10 );
+                let value = Math.ceil( Math.random() * 10 );
                 return { text : value, value : value, index : i };
             }
         };
 
         let _o       = this.data.map( rand );
-        console.log( _o );
+
         this.data    = _o;
         this.rebuildSelect( _o );
     }
@@ -140,7 +158,7 @@ ReactDOM.render( React.createElement( FlounderReact, {
 
     onInit              : function()
     {
-        var res = [];
+        let res = [];
         data.forEach( function( dataObj )
         {
             res.push( {
@@ -155,24 +173,25 @@ ReactDOM.render( React.createElement( FlounderReact, {
 
 
 /**
- * react multi-Flounder without tags attached to an div
+ * react Flounder attached to an div
  */
 ReactDOM.render( React.createElement( FlounderReact, {
     defaultValue        : 'tag',
 
     onInit              : function()
     {
-        var res = [];
+        let res = [];
         data.forEach( function( dataObj )
         {
             res.push( {
                 text        : dataObj.text,
-                value       : dataObj.id
+                value       : dataObj.id,
+                description : dataObj.text + ' - ' + dataObj.text
             } );
         } );
 
         this.data = res;
-    } } ), document.getElementById( 'react--multiple' )
+    } } ), document.getElementById( 'react--span' )
 );
 
 
@@ -188,7 +207,7 @@ ReactDOM.render( React.createElement( FlounderReact, {
 
     onInit              : function()
     {
-        var res = [];
+        let res = [];
         data.forEach( function( dataObj, i )
         {
             res.push( {
@@ -220,7 +239,7 @@ requirejs( [ 'flounder' ], function( Flounder )
 
         onInit               : function()
         {
-            var res = [];
+            let res = [];
             data.forEach( function( dataObj )
             {
                 res.push( {

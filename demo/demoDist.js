@@ -59,18 +59,33 @@ new _srcCoreFlounderJsx2['default']('.vanilla--input--tags', {
 
     onInit: function onInit() {
         var res = [];
-        data.forEach(function (dataObj) {
-            res.push({
+
+        var top = {
+            header: 'top',
+            data: []
+        };
+
+        var bottom = {
+            header: 'bottom',
+            data: []
+        };
+
+        data.forEach(function (dataObj, i) {
+            res = {
                 text: dataObj.text,
                 value: dataObj.id,
                 extraClass: 'vantar' + Math.ceil(Math.random() * 10)
-            });
+            };
+
+            if (i % 2 === 0) {
+                top.data.push(res);
+            } else {
+                bottom.data.push(res);
+            }
         });
 
-        this.data = res;
-    },
-
-    multiple: true
+        this.data = [top, bottom];
+    }
 });
 
 /**
@@ -112,7 +127,7 @@ new _srcCoreFlounderJsx2['default'](document.getElementById('vanilla--input'), {
         };
 
         var _o = this.data.map(rand);
-        console.log(_o);
+
         this.data = _o;
         this.rebuildSelect(_o);
     }
@@ -153,7 +168,7 @@ _reactDom2['default'].render(_react2['default'].createElement(_srcWrappersFlound
     } }), document.getElementById('react--multiple--tags'));
 
 /**
- * react multi-Flounder without tags attached to an div
+ * react Flounder attached to an div
  */
 _reactDom2['default'].render(_react2['default'].createElement(_srcWrappersFlounderReactJsx.FlounderReact, {
     defaultValue: 'tag',
@@ -163,12 +178,13 @@ _reactDom2['default'].render(_react2['default'].createElement(_srcWrappersFlound
         data.forEach(function (dataObj) {
             res.push({
                 text: dataObj.text,
-                value: dataObj.id
+                value: dataObj.id,
+                description: dataObj.text + ' - ' + dataObj.text
             });
         });
 
         this.data = res;
-    } }), document.getElementById('react--multiple'));
+    } }), document.getElementById('react--span'));
 
 /**
  * react multi-Flounder with description attached to div
@@ -19494,6 +19510,7 @@ var classes = {
     DESCRIPTION: 'flounder__option--description',
     DISABLED: 'flounder__disabled',
     DISABLED_OPTION: 'flounder__disabled--option',
+    HEADER: 'flounder__header',
     HIDDEN: 'flounder--hidden',
     HIDDEN_IOS: 'flounder--hidden--ios',
     LIST: 'flounder__list',
@@ -19505,6 +19522,7 @@ var classes = {
     OPTION: 'flounder__option',
     OPTION_TAG: 'flounder--option--tag',
     OPTIONS_WRAPPER: 'flounder__list--wrapper',
+    SECTION: 'flounder__section',
     SELECTED: 'flounder__option--selected',
     SELECTED_HIDDEN: 'flounder__option--selected--hidden',
     SELECTED_DISPLAYED: 'flounder__option--selected--displayed',
@@ -19838,15 +19856,28 @@ var Flounder = (function () {
     }, {
         key: 'buildData',
         value: function buildData(defaultValue, _data, optionsList, select) {
-            var _this3 = this;
-
             _data = _data || [];
+            var index = 0;
             var data = [];
             var selectOptions = [];
             var constructElement = this.constructElement;
             var addOptionDescription = this.addOptionDescription;
+            var selectedClass = this.selectedClass;
+            var escapeHTML = this.escapeHTML;
+            var addClass = this.addClass;
+            var selectRef = this.refs.select;
 
-            _data.forEach(function (dataObj, i) {
+            /**
+             * ## buildDiv
+             *
+             * builds an individual div tag for a flounder dropdown
+             *
+             * @param {Object} dataObj [description]
+             * @param {Number} i index
+             *
+             * @return {DOMElement}
+             */
+            var buildDiv = function buildDiv(dataObj, i) {
                 if (typeof dataObj !== 'object') {
                     dataObj = {
                         text: dataObj,
@@ -19855,7 +19886,7 @@ var Flounder = (function () {
                 }
                 dataObj.index = i;
 
-                var extraClass = i === defaultValue.index ? '  ' + _this3.selectedClass : '';
+                var extraClass = i === defaultValue.index ? '  ' + selectedClass : '';
 
                 var res = {
                     className: _classes3['default'].OPTION + extraClass,
@@ -19868,36 +19899,79 @@ var Flounder = (function () {
                     }
                 }
 
-                data[i] = constructElement(res);
-                var escapedText = _this3.escapeHTML(dataObj.text);
-                data[i].innerHTML = escapedText;
-                optionsList.appendChild(data[i]);
+                var data = constructElement(res);
+                var escapedText = escapeHTML(dataObj.text);
+                data.innerHTML = escapedText;
 
                 if (dataObj.description) {
-                    addOptionDescription(data[i], dataObj.description);
+                    addOptionDescription(data, dataObj.description);
                 }
 
-                data[i].className += dataObj.extraClass ? '  ' + dataObj.extraClass : '';
+                data.className += dataObj.extraClass ? '  ' + dataObj.extraClass : '';
 
-                if (!_this3.refs.select) {
-                    selectOptions[i] = constructElement({ tagname: 'option',
+                return data;
+            };
+
+            /**
+             * ## buildOption
+             *
+             * builds an individual option tag for a flounder dropdown
+             *
+             * @param {Object} dataObj [description]
+             * @param {Number} i index
+             *
+             * @return {DOMElement}
+             */
+            var buildOption = function buildOption(dataObj, i) {
+                var selectOption = undefined;
+
+                if (!selectRef) {
+                    selectOption = constructElement({ tagname: 'option',
                         className: _classes3['default'].OPTION_TAG,
                         value: dataObj.value });
-                    selectOptions[i].innerHTML = escapedText;
-                    select.appendChild(selectOptions[i]);
+                    var escapedText = escapeHTML(dataObj.text);
+                    selectOption.innerHTML = escapedText;
+                    select.appendChild(selectOption);
                 } else {
                     var selectChild = select.children[i];
-
-                    selectOptions[i] = selectChild;
+                    selectOption = selectChild;
                     selectChild.setAttribute('value', selectChild.value);
                 }
 
                 if (i === defaultValue.index) {
-                    selectOptions[i].selected = true;
+                    selectOption.selected = true;
                 }
 
-                if (selectOptions[i].getAttribute('disabled')) {
-                    _this3.addClass(data[i], _classes3['default'].DISABLED_OPTION);
+                if (selectOption.getAttribute('disabled')) {
+                    addClass(data[i], _classes3['default'].DISABLED_OPTION);
+                }
+
+                return selectOption;
+            };
+
+            _data.forEach(function (dataObj) {
+                if (dataObj.header) {
+                    (function () {
+                        var section = constructElement({ tagname: 'div',
+                            className: _classes3['default'].SECTION });
+                        var header = constructElement({ tagname: 'div',
+                            className: _classes3['default'].HEADER });
+                        header.textContent = dataObj.header;
+                        section.appendChild(header);
+                        optionsList.appendChild(section);
+
+                        dataObj.data.forEach(function (_dataObj) {
+                            data[index] = buildDiv(_dataObj, index);
+                            section.appendChild(data[index]);
+                            selectOptions[index] = buildOption(_dataObj, index);
+                            index++;
+                        });
+                    })();
+                } else {
+                    data[index] = buildDiv(dataObj, index);
+                    optionsList.appendChild(data[index]);
+                    selectOptions[index] = buildOption(dataObj, index);
+                    index++;
                 }
             });
 
@@ -20171,7 +20245,7 @@ var Flounder = (function () {
         key: 'fuzzySearch',
         value: function fuzzySearch(e) // disclaimer: not actually fuzzy
         {
-            var _this4 = this;
+            var _this3 = this;
 
             e.preventDefault();
             var keyCode = e.keyCode;
@@ -20180,13 +20254,13 @@ var Flounder = (function () {
                 (function () {
                     var term = e.target.value.toLowerCase();
 
-                    _this4.refs.data.forEach(function (dataObj) {
+                    _this3.refs.data.forEach(function (dataObj) {
                         var text = dataObj.innerHTML.toLowerCase();
 
                         if (term !== '' && text.indexOf(term) === -1) {
-                            _this4.addClass(dataObj, _classes3['default'].SEARCH_HIDDEN);
+                            _this3.addClass(dataObj, _classes3['default'].SEARCH_HIDDEN);
                         } else {
-                            _this4.removeClass(dataObj, _classes3['default'].SEARCH_HIDDEN);
+                            _this3.removeClass(dataObj, _classes3['default'].SEARCH_HIDDEN);
                         }
                     });
                 })();
@@ -20206,10 +20280,10 @@ var Flounder = (function () {
     }, {
         key: 'fuzzySearchReset',
         value: function fuzzySearchReset() {
-            var _this5 = this;
+            var _this4 = this;
 
             this.refs.data.forEach(function (dataObj) {
-                _this5.removeClass(dataObj, _classes3['default'].SEARCH_HIDDEN);
+                _this4.removeClass(dataObj, _classes3['default'].SEARCH_HIDDEN);
             });
 
             this.refs.search.value = '';
@@ -20304,16 +20378,16 @@ var Flounder = (function () {
     }, {
         key: 'initSelectBox',
         value: function initSelectBox(wrapper) {
-            var _this6 = this;
+            var _this5 = this;
 
             var target = this.target;
             var select = undefined;
 
             if (target.tagName === 'SELECT') {
                 (function () {
-                    _this6.addClass(target, _classes3['default'].SELECT_TAG);
-                    _this6.addClass(target, _classes3['default'].HIDDEN);
-                    _this6.refs.select = target;
+                    _this5.addClass(target, _classes3['default'].SELECT_TAG);
+                    _this5.addClass(target, _classes3['default'].HIDDEN);
+                    _this5.refs.select = target;
 
                     var data = [],
                         selectOptions = [];
@@ -20326,12 +20400,12 @@ var Flounder = (function () {
                         });
                     });
 
-                    _this6.data = data;
-                    _this6.target = target.parentNode;
-                    _this6.refs.selectOptions = selectOptions;
+                    _this5.data = data;
+                    _this5.target = target.parentNode;
+                    _this5.refs.selectOptions = selectOptions;
 
-                    select = _this6.refs.select;
-                    _this6.addClass(select, _classes3['default'].HIDDEN);
+                    select = _this5.refs.select;
+                    _this5.addClass(select, _classes3['default'].HIDDEN);
                 })();
             } else {
                 select = this.constructElement({ tagname: 'select', className: _classes3['default'].SELECT_TAG + '  ' + _classes3['default'].HIDDEN });
@@ -20407,11 +20481,11 @@ var Flounder = (function () {
     }, {
         key: 'removeOptionsListeners',
         value: function removeOptionsListeners() {
-            var _this7 = this;
+            var _this6 = this;
 
             this.refs.data.forEach(function (dataObj) {
                 if (dataObj.tagName === 'DIV') {
-                    dataObj.removeEventListener('click', _this7.clickSet);
+                    dataObj.removeEventListener('click', _this6.clickSet);
                 }
             });
         }
@@ -20496,12 +20570,12 @@ var Flounder = (function () {
     }, {
         key: 'removeSelectedClass',
         value: function removeSelectedClass(data) {
-            var _this8 = this;
+            var _this7 = this;
 
             data = data || this.refs.data;
 
             data.forEach(function (dataObj, i) {
-                _this8.removeClass(dataObj, _this8.selectedClass);
+                _this7.removeClass(dataObj, _this7.selectedClass);
             });
         }
 
@@ -20515,12 +20589,12 @@ var Flounder = (function () {
     }, {
         key: 'removeSelectedValue',
         value: function removeSelectedValue(data) {
-            var _this9 = this;
+            var _this8 = this;
 
             data = data || this.refs.data;
 
             data.forEach(function (_d, i) {
-                _this9.refs.select[i].selected = false;
+                _this8.refs.select[i].selected = false;
             });
         }
 
@@ -20686,7 +20760,7 @@ var Flounder = (function () {
             selectTag.selectedIndex = index;
             var hasClass = this.hasClass;
 
-            if (hasClass(data[index], _classes3['default'].HIDDEN) && hasClass(data[index], _classes3['default'].SELECTED_HIDDEN)) {
+            if (hasClass(data[index], _classes3['default'].HIDDEN) || hasClass(data[index], _classes3['default'].SELECTED_HIDDEN) || hasClass(data[index], _classes3['default'].DISABLED)) {
                 this.setKeypress(e);
             }
         }
@@ -20808,7 +20882,7 @@ var Flounder = (function () {
     }, {
         key: 'setTextMultiTagIndent',
         value: function setTextMultiTagIndent() {
-            var _this10 = this;
+            var _this9 = this;
 
             var search = this.refs.search;
             var offset = this.defaultTextIndent;
@@ -20816,7 +20890,7 @@ var Flounder = (function () {
             if (search) {
                 var _els = document.getElementsByClassName(_classes3['default'].MULTIPLE_SELECT_TAG);
                 _els.each(function (i, e) {
-                    offset += _this10.getActualWidth(e);
+                    offset += _this9.getActualWidth(e);
                 });
 
                 search.style.textIndent = offset + 'px';

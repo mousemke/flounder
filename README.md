@@ -117,24 +117,45 @@ selectbox data must be passed as an array of objects
         description : 'a longer description of this element', // optional, string
         extraClass  : 'extra--classname',                   // optional, string
         disabled    : false                                 // optional, boolean
-    }
+    },
+    ...
 ]
 ```
  
-or an array.
+or a simple array of strings. The passed text will be both the text and the value.  There would be no description in this case
 
 ```
 [
     'value 1',
     'value 2',
-    'value 3'
+    'value 3',
+    ...
 ]
 ```
 
-in the case of an array, the passed text will be both the text and the value.  There would be no description in this case
+or, if you want section headers.  You can even add uncatagorized things intermingled
 
+```
+[
+    {
+        header : header1,
+        data : [ option1, option2, ... ]
+    },
+    {
+        text        : 'probably the string you want to see',
+        value       : 'return value',
+        description : 'a longer description of this element'
+    },
+    {
+        header : header2,
+        data : [ option1, option2, ... ]
+    },
+    ...
+]
 
-all extra properties passed that are not shown here will be added as data attributes for the sake of reference later.  The data can be accessed in the init (before building) as this.data if they need reformatting or filtering.
+```
+
+all extra properties passed in an option that are not shown here will be added as data attributes for the sake of reference later.  The data can be accessed in the init (before building) as this.data if they need reformatting or filtering.
 
 
 API
@@ -297,6 +318,8 @@ Change Log
 + programmatically setting value or index no longer triggers onSelect
 + changed rebuildOptions to rebuildSelect for clarity
 + changed this.options to this.data for clarity
++ added the ability to build sections with headers
++ refactored some build functions
 
 
 0.2.1

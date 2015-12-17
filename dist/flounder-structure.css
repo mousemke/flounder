@@ -94,6 +94,37 @@
 
 
 /* -------------------------------------------------------------------------- */
+/* FLOUNDER - sections                                                         */
+/* -------------------------------------------------------------------------- */
+.flounder__section, .flounder__header
+{
+    cursor:                         auto;
+    pointer-events:                 none;
+}
+
+.flounder__section
+{
+    text-indent:                    5px;
+    margin:                         5px 0 3px 2px;
+    border:                         1px solid #ddd;
+    padding-top:                    2px;
+}
+
+
+.flounder__header
+{
+    color:                          #777;
+}
+
+.flounder__section .flounder__option
+{
+    cursor:                         pointer;
+    pointer-events:                 auto;
+}
+
+
+
+/* -------------------------------------------------------------------------- */
 /* FLOUNDER - hover                                                           */
 /* -------------------------------------------------------------------------- */
 .flounder:hover, .flounder:hover .flounder__list--wrapper

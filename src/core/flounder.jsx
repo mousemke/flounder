@@ -267,12 +267,27 @@ class Flounder
     buildData( defaultValue, _data, optionsList, select )
     {
         _data                       = _data || [];
+        let index                   = 0;
         let data                    = [];
         let selectOptions           = [];
         let constructElement        = this.constructElement;
         let addOptionDescription    = this.addOptionDescription;
+        let selectedClass           = this.selectedClass;
+        let escapeHTML              = this.escapeHTML;
+        let addClass                = this.addClass;
+        let selectRef               = this.refs.select;
 
-        _data.forEach( ( dataObj, i ) =>
+        /**
+         * ## buildDiv
+         *
+         * builds an individual div tag for a flounder dropdown
+         *
+         * @param {Object} dataObj [description]
+         * @param {Number} i index
+         *
+         * @return {DOMElement}
+         */
+        let buildDiv = function( dataObj, i )
         {
             if ( typeof dataObj !== 'object' )
             {
@@ -283,7 +298,7 @@ class Flounder
             }
             dataObj.index   = i;
 
-            let extraClass  = i === defaultValue.index ? '  ' + this.selectedClass : '';
+            let extraClass  = i === defaultValue.index ? '  ' + selectedClass : '';
 
             let res = {
                 className       : classes.OPTION + extraClass,
@@ -298,42 +313,92 @@ class Flounder
                 }
             }
 
-            data[ i ]            = constructElement( res );
-            let escapedText      = this.escapeHTML( dataObj.text );
-            data[ i ].innerHTML  = escapedText;
-            optionsList.appendChild( data[ i ] );
+            let data        = constructElement( res );
+            let escapedText = escapeHTML( dataObj.text );
+            data.innerHTML  = escapedText;
 
             if ( dataObj.description )
             {
-                addOptionDescription( data[ i ], dataObj.description );
+                addOptionDescription( data, dataObj.description );
             }
 
-            data[ i ].className += dataObj.extraClass ? '  ' + dataObj.extraClass : '';
+            data.className += dataObj.extraClass ? '  ' + dataObj.extraClass : '';
 
-            if ( !this.refs.select )
+            return data;
+        };
+
+
+        /**
+         * ## buildOption
+         *
+         * builds an individual option tag for a flounder dropdown
+         *
+         * @param {Object} dataObj [description]
+         * @param {Number} i index
+         *
+         * @return {DOMElement}
+         */
+        let buildOption = function( dataObj, i )
+        {
+            let selectOption;
+
+            if ( !selectRef )
             {
-                selectOptions[ i ] = constructElement( { tagname : 'option',
+                selectOption            = constructElement( { tagname : 'option',
                                             className   : classes.OPTION_TAG,
-                                            value       :  dataObj.value } );
-                selectOptions[ i ].innerHTML = escapedText;
-                select.appendChild( selectOptions[ i ] );
+                                            value       : dataObj.value } );
+                let escapedText         = escapeHTML( dataObj.text );
+                selectOption.innerHTML  = escapedText;
+                select.appendChild( selectOption );
             }
             else
             {
-                let selectChild = select.children[ i ];
-
-                selectOptions[ i ] = selectChild;
+                let selectChild     = select.children[ i ];
+                selectOption        = selectChild;
                 selectChild.setAttribute( 'value', selectChild.value );
             }
 
             if ( i === defaultValue.index )
             {
-                selectOptions[ i ].selected = true;
+                selectOption.selected = true;
             }
 
-            if ( selectOptions[ i ].getAttribute( 'disabled' ) )
+            if ( selectOption.getAttribute( 'disabled' ) )
             {
-                this.addClass( data[ i ], classes.DISABLED_OPTION );
+                addClass( data[ i ], classes.DISABLED_OPTION );
+            }
+
+            return selectOption;
+        };
+
+
+
+        _data.forEach( ( dataObj ) =>
+        {
+            if ( dataObj.header )
+            {
+                let section = constructElement( { tagname   : 'div',
+                                                className   : classes.SECTION } );
+                let header = constructElement( { tagname    : 'div',
+                                                className   : classes.HEADER } );
+                header.textContent = dataObj.header;
+                section.appendChild( header );
+                optionsList.appendChild( section );
+
+                dataObj.data.forEach( ( _dataObj ) =>
+                {
+                    data[ index ]           = buildDiv( _dataObj, index );
+                    section.appendChild( data[ index ] );
+                    selectOptions[ index ]  = buildOption( _dataObj, index );
+                    index++;
+                } );
+            }
+            else
+            {
+                data[ index ]           = buildDiv( dataObj, index );
+                optionsList.appendChild( data[ index ] );
+                selectOptions[ index ]  = buildOption( dataObj, index );
+                index++;
             }
         } );
 
@@ -1208,8 +1273,9 @@ class Flounder
         selectTag.selectedIndex = index;
         let hasClass            = this.hasClass;
 
-        if ( hasClass( data[ index ], classes.HIDDEN ) &&
-             hasClass( data[ index ], classes.SELECTED_HIDDEN ) )
+        if ( hasClass( data[ index ], classes.HIDDEN ) ||
+             hasClass( data[ index ], classes.SELECTED_HIDDEN ) ||
+             hasClass( data[ index ], classes.DISABLED ) )
         {
             this.setKeypress( e );
         }
