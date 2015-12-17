@@ -14,6 +14,236 @@
 Object.defineProperty(exports, '__esModule', {
     value: true
 });
+
+var _slicedToArray = (function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i['return']) _i['return'](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError('Invalid attempt to destructure non-iterable instance'); } }; })();
+
+var api = {
+
+    /**
+     * ## destroy
+     *
+     * removes flounder and all it's events from the dom
+     *
+     * @return _Void_
+     */
+    destroy: function destroy() {
+        this.componentWillUnmount();
+        var originalTarget = this.originalTarget;
+
+        if (originalTarget.tagName === 'INPUT' || originalTarget.tagName === 'SELECT') {
+            var target = originalTarget.nextElementSibling;
+            target.parentNode.removeChild(target);
+            originalTarget.tabIndex = 0;
+            this.removeClass(originalTarget, classes.HIDDEN);
+        } else {
+            var target = this.target;
+            target.innerHTML = '';
+        }
+    },
+
+    /**
+     * ## deselectAll
+     *
+     * deslects all options
+     *
+     * @return _Void_
+     */
+    deselectAll: function deselectAll() {
+        this.removeSelectedClass();
+        this.removeSelectedValue();
+    },
+
+    /**
+     * ## disable
+     *
+     * disables flounder by adjusting listeners and classes
+     *
+     * @param {Boolean} bool dsable or enable
+     *
+     * @return _Void_
+     */
+    disable: function disable(bool) {
+        var refs = this.refs;
+        var flounder = refs.flounder;
+        var selected = refs.selected;
+
+        if (bool) {
+            refs.flounder.removeEventListener('keydown', this.checkFlounderKeypress);
+            refs.selected.removeEventListener('click', this.toggleList);
+            this.addClass(selected, classes.DISABLED);
+            this.addClass(flounder, classes.DISABLED);
+        } else {
+            refs.flounder.addEventListener('keydown', this.checkFlounderKeypress);
+            refs.selected.addEventListener('click', this.toggleList);
+            this.removeClass(selected, classes.DISABLED);
+            this.removeClass(flounder, classes.DISABLED);
+        }
+    },
+
+    /**
+     * ## getOption
+     *
+     * returns the option and div tags related to an option
+     *
+     * @param {Number} _i index to return
+     *
+     * @return _Object_ option and div tage
+     */
+    getOption: function getOption(_i) {
+        var refs = this.refs;
+
+        return { option: refs.selectOptions[_i], div: refs.options[_i] };
+    },
+
+    /**
+     * ## getSelectedOptions
+     *
+     * returns the currently selected options of a SELECT box
+     *
+     * @return _Void_
+     */
+    getSelectedOptions: function getSelectedOptions() {
+        var _el = this.refs.select;
+        var opts = [],
+            opt = undefined;
+        var _options = _el.options;
+
+        for (var i = 0, len = _options.length; i < len; i++) {
+            opt = _options[i];
+
+            if (opt.selected) {
+                opts.push(opt);
+            }
+        }
+
+        return opts;
+    },
+
+    /**
+     * ## getSelectedValues
+     *
+     * returns the values of the currently selected options
+     *
+     * @return _Void_
+     */
+    getSelectedValues: function getSelectedValues() {
+        return this.getSelectedOptions().map(function (_v) {
+            return _v.value;
+        });
+    },
+
+    /**
+     * ## rebuildOptions
+     *
+     * after editing the options, this can be used to rebuild them
+     *
+     * @param {Array} _options array with optino information
+     *
+     * @return _Void_
+     */
+    rebuildOptions: function rebuildOptions(_options) {
+        var _this = this;
+
+        var refs = this.refs;
+        var selected = refs.select.selectedOptions;
+        selected = Array.prototype.slice.call(selected).map(function (e) {
+            return e.value;
+        });
+        this.removeOptionsListeners();
+
+        refs.select.innerHTML = '';
+        refs.optionsList.innerHTML = '';
+
+        var _select = refs.select;
+        refs.select = false;
+
+        var _buildOptions = this.buildOptions(this._default, _options, refs.optionsList, _select);
+
+        var _buildOptions2 = _slicedToArray(_buildOptions, 2);
+
+        refs.options = _buildOptions2[0];
+        refs.selectOptions = _buildOptions2[1];
+
+        refs.select = _select;
+
+        this.removeSelectedValue();
+        this.removeSelectedClass();
+
+        refs.selectOptions.forEach(function (el, i) {
+            var valuePosition = selected.indexOf(el.value);
+
+            if (valuePosition !== -1) {
+                selected.splice(valuePosition, 1);
+                el.selected = true;
+                _this.addClass(refs.options[i], _this.selectedClass);
+            }
+        });
+
+        this.addOptionsListeners();
+    },
+
+    /**
+     * ## setIndex
+     *
+     * programatically sets the value by index.  If there are not enough elements
+     * to match the index, then nothing is selected.
+     *
+     * @param {Mixed} index index to set flounder to.  _Number, or Array of numbers_
+     *
+     * return _Void_
+     */
+    setIndex: function setIndex(index, multiple) {
+        var refs = this.refs;
+
+        if (typeof index !== 'string' && index.length) {
+            var _setIndex = this.setIndex;
+            return index.map(_setIndex);
+        } else {
+            var el = refs.options[index];
+
+            if (el) {
+                var isOpen = this.hasClass(refs.wrapper, 'open');
+                this.toggleList(isOpen ? 'close' : 'open');
+                this.___forceMultiple = multiple;
+                el.click();
+
+                return el;
+            }
+
+            return null;
+        }
+    },
+
+    /**
+     * ## setValue
+     *
+     * programatically sets the value by string.  If the value string
+     * is not matched to an element, nothing will be selected
+     *
+     * @param {Mixed} value value to set flounder to.  _Number, or Array of numbers_
+     *
+     * return _Void_
+     */
+    setValue: function setValue(value, multiple) {
+        if (typeof value !== 'string' && value.length) {
+            var _setValue = this.setValue;
+            return value.map(_setValue);
+        } else {
+            value = this.refs.select.querySelector('[value="' + value + '"]');
+            return value ? this.setIndex(value.index, multiple) : null;
+        }
+    }
+};
+
+exports['default'] = api;
+module.exports = exports['default'];
+
+},{}],2:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+    value: true
+});
 var classes = {
     ARROW: 'flounder__arrow',
     DESCRIPTION: 'flounder__option--description',
@@ -41,7 +271,7 @@ var classes = {
 exports['default'] = classes;
 module.exports = exports['default'];
 
-},{}],2:[function(require,module,exports){
+},{}],3:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -71,7 +301,7 @@ var defaults = {
 exports['default'] = defaults;
 module.exports = exports['default'];
 
-},{}],3:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 
 /* jshint globalstrict: true */
 'use strict';
@@ -99,6 +329,10 @@ var _classes3 = _interopRequireDefault(_classes2);
 var _utils = require('./utils');
 
 var _utils2 = _interopRequireDefault(_utils);
+
+var _api = require('./api');
+
+var _api2 = _interopRequireDefault(_api);
 
 var Flounder = (function () {
     /**
@@ -142,15 +376,11 @@ var Flounder = (function () {
             this.target = target;
 
             this.bindThis();
-
             this.initialzeOptions();
-
             this.onInit();
 
             this.buildDom();
-
             this.setPlatform();
-
             this.onRender();
 
             this.onComponentDidMount();
@@ -306,7 +536,7 @@ var Flounder = (function () {
             var _options = this.options;
 
             var defaultValue = this._default = this.setDefaultOption(this.props, _options);
-            console.log(defaultValue);
+
             var selected = constructElement({ className: _classes3['default'].SELECTED_DISPLAYED,
                 'data-value': defaultValue.value, 'data-index': defaultValue.index || -1 });
             selected.innerHTML = defaultValue.text;
@@ -376,7 +606,6 @@ var Flounder = (function () {
                 }
                 _option.index = i;
 
-                var escapedText = _this3.escapeHTML(_option.text);
                 var extraClass = i === defaultValue.index ? '  ' + _this3.selectedClass : '';
 
                 var res = {
@@ -391,21 +620,15 @@ var Flounder = (function () {
                 }
 
                 options[i] = constructElement(res);
-
+                var escapedText = _this3.escapeHTML(_option.text);
                 options[i].innerHTML = escapedText;
                 optionsList.appendChild(options[i]);
 
-                var description = _option.description;
-
-                if (description) {
-                    addOptionDescription(options[i], description);
+                if (_option.description) {
+                    addOptionDescription(options[i], _option.description);
                 }
 
-                var uniqueExtraClass = _option.extraClass;
-
-                if (uniqueExtraClass) {
-                    options[i].className += '  ' + uniqueExtraClass;
-                }
+                options[i].className += _option.extraClass ? '  ' + _option.extraClass : '';
 
                 if (!_this3.refs.select) {
                     selectOptions[i] = constructElement({ tagname: 'option',
@@ -419,7 +642,7 @@ var Flounder = (function () {
                     }
                 } else {
                     var selectChild = select.children[i];
-                    console.log(select);
+
                     selectOptions[i] = selectChild;
                     selectChild.setAttribute('value', selectChild.value);
                 }
@@ -588,73 +811,6 @@ var Flounder = (function () {
         }
 
         /**
-         * ## deselectAll
-         *
-         * deslects all options
-         *
-         * @return _Void_
-         */
-    }, {
-        key: 'deselectAll',
-        value: function deselectAll() {
-            this.removeSelectedClass();
-            this.removeSelectedValue();
-        }
-
-        /**
-         * ## destroy
-         *
-         * removes flounder and all it's events from the dom
-         *
-         * @return _Void_
-         */
-    }, {
-        key: 'destroy',
-        value: function destroy() {
-            this.componentWillUnmount();
-            var originalTarget = this.originalTarget;
-
-            if (originalTarget.tagName === 'INPUT' || originalTarget.tagName === 'SELECT') {
-                var target = originalTarget.nextElementSibling;
-                target.parentNode.removeChild(target);
-                originalTarget.tabIndex = 0;
-                this.removeClass(originalTarget, _classes3['default'].HIDDEN);
-            } else {
-                var target = this.target;
-                target.innerHTML = '';
-            }
-        }
-
-        /**
-         * ## disable
-         *
-         * disables flounder by adjusting listeners and classes
-         *
-         * @param {Boolean} bool dsable or enable
-         *
-         * @return _Void_
-         */
-    }, {
-        key: 'disable',
-        value: function disable(bool) {
-            var refs = this.refs;
-            var flounder = refs.flounder;
-            var selected = refs.selected;
-
-            if (bool) {
-                refs.flounder.removeEventListener('keydown', this.checkFlounderKeypress);
-                refs.selected.removeEventListener('click', this.toggleList);
-                this.addClass(selected, _classes3['default'].DISABLED);
-                this.addClass(flounder, _classes3['default'].DISABLED);
-            } else {
-                refs.flounder.addEventListener('keydown', this.checkFlounderKeypress);
-                refs.selected.addEventListener('click', this.toggleList);
-                this.removeClass(selected, _classes3['default'].DISABLED);
-                this.removeClass(flounder, _classes3['default'].DISABLED);
-            }
-        }
-
-        /**
          * ## displayMultipleTags
          *
          * handles the display and management of multiple choice tage
@@ -715,7 +871,6 @@ var Flounder = (function () {
     }, {
         key: 'displaySelected',
         value: function displaySelected(selected, refs) {
-            console.log(this);
             var value = [];
             var index = -1;
 
@@ -835,64 +990,6 @@ var Flounder = (function () {
             }
 
             return _el.offsetWidth + parseInt(style['margin-left']) + parseInt(style['margin-right']);
-        }
-
-        /**
-         * ## getOption
-         *
-         * returns the option and div tags related to an option
-         *
-         * @param {Number} _i index to return
-         *
-         * @return _Object_ option and div tage
-         */
-    }, {
-        key: 'getOption',
-        value: function getOption(_i) {
-            var refs = this.refs;
-
-            return { option: refs.selectOptions[_i], div: refs.options[_i] };
-        }
-
-        /**
-         * ## getSelectedOptions
-         *
-         * returns the currently selected options of a SELECT box
-         *
-         * @return _Void_
-         */
-    }, {
-        key: 'getSelectedOptions',
-        value: function getSelectedOptions() {
-            var _el = this.refs.select;
-            var opts = [],
-                opt = undefined;
-            var _options = _el.options;
-
-            for (var i = 0, len = _options.length; i < len; i++) {
-                opt = _options[i];
-
-                if (opt.selected) {
-                    opts.push(opt);
-                }
-            }
-
-            return opts;
-        }
-
-        /**
-         * ## getSelectedValues
-         *
-         * returns the values of the currently selected options
-         *
-         * @return _Void_
-         */
-    }, {
-        key: 'getSelectedValues',
-        value: function getSelectedValues() {
-            return this.getSelectedOptions().map(function (_v) {
-                return _v.value;
-            });
         }
 
         /**
@@ -1045,58 +1142,6 @@ var Flounder = (function () {
         }
 
         /**
-         * ## rebuildOptions
-         *
-         * after editing the options, this can be used to rebuild them
-         *
-         * @param {Array} _options array with optino information
-         *
-         * @return _Void_
-         */
-    }, {
-        key: 'rebuildOptions',
-        value: function rebuildOptions(_options) {
-            var _this7 = this;
-
-            var refs = this.refs;
-            var selected = refs.select.selectedOptions;
-            selected = Array.prototype.slice.call(selected).map(function (e) {
-                return e.value;
-            });
-            this.removeOptionsListeners();
-
-            refs.select.innerHTML = '';
-            refs.optionsList.innerHTML = '';
-
-            var _select = refs.select;
-            refs.select = false;
-
-            var _buildOptions3 = this.buildOptions(this._default, _options, refs.optionsList, _select);
-
-            var _buildOptions32 = _slicedToArray(_buildOptions3, 2);
-
-            refs.options = _buildOptions32[0];
-            refs.selectOptions = _buildOptions32[1];
-
-            refs.select = _select;
-
-            this.removeSelectedValue();
-            this.removeSelectedClass();
-
-            refs.selectOptions.forEach(function (el, i) {
-                var valuePosition = selected.indexOf(el.value);
-
-                if (valuePosition !== -1) {
-                    selected.splice(valuePosition, 1);
-                    el.selected = true;
-                    _this7.addClass(refs.options[i], _this7.selectedClass);
-                }
-            });
-
-            this.addOptionsListeners();
-        }
-
-        /**
          * ## removeOptionsListeners
          *
          * removes event listeners on the options divs
@@ -1106,11 +1151,11 @@ var Flounder = (function () {
     }, {
         key: 'removeOptionsListeners',
         value: function removeOptionsListeners() {
-            var _this8 = this;
+            var _this7 = this;
 
             this.refs.options.forEach(function (_option) {
                 if (_option.tagName === 'DIV') {
-                    _option.removeEventListener('click', _this8.clickSet);
+                    _option.removeEventListener('click', _this7.clickSet);
                 }
             });
         }
@@ -1194,12 +1239,12 @@ var Flounder = (function () {
     }, {
         key: 'removeSelectedClass',
         value: function removeSelectedClass(options) {
-            var _this9 = this;
+            var _this8 = this;
 
             options = options || this.refs.options;
 
             options.forEach(function (_option, i) {
-                _this9.removeClass(_option, _this9.selectedClass);
+                _this8.removeClass(_option, _this8.selectedClass);
             });
         }
 
@@ -1213,12 +1258,12 @@ var Flounder = (function () {
     }, {
         key: 'removeSelectedValue',
         value: function removeSelectedValue(options) {
-            var _this10 = this;
+            var _this9 = this;
 
             options = options || this.refs.options;
 
             options.forEach(function (_option, i) {
-                _this10.refs.select[i].selected = false;
+                _this9.refs.select[i].selected = false;
             });
         }
 
@@ -1235,8 +1280,18 @@ var Flounder = (function () {
     }, {
         key: 'setDefaultOption',
         value: function setDefaultOption(configObj, options) {
-            if (configObj.placeholder) {
-                var refs = this.refs;
+            var self = this;
+
+            /**
+             * ## setPlaceholderDefault
+             *
+             * sets a placeholder as the default option.  This inserts an empty
+             * option first and sets that as default
+             *
+             * @return {Object} default settings
+             */
+            var setPlaceholderDefault = function setPlaceholderDefault() {
+                var refs = self.refs;
                 var select = refs.select;
 
                 var _default = {
@@ -1247,21 +1302,31 @@ var Flounder = (function () {
                 };
 
                 if (select) {
-                    var escapedText = this.escapeHTML(_default.text);
-                    var defaultOption = this.constructElement({ tagname: 'option',
+                    var escapedText = self.escapeHTML(_default.text);
+                    var defaultOption = self.constructElement({ tagname: 'option',
                         className: _classes3['default'].OPTION_TAG,
                         value: _default.value });
                     defaultOption.innerHTML = escapedText;
 
                     select.insertBefore(defaultOption, select[0]);
-                    this.refs.selectOptions.unshift(defaultOption);
+                    self.refs.selectOptions.unshift(defaultOption);
                 }
 
                 options.unshift(_default);
 
                 return _default;
-            } else if (configObj.defaultIndex) {
-                var defaultIndex = configObj.defaultIndex;
+            };
+
+            /**
+             * ## setIndexDefault
+             *
+             * sets a specified indexas the default option. This only works correctly
+             * if it is a valid index, otherwise it returns null
+             *
+             * @return {Object} default settings
+             */
+            var setIndexDefault = function setIndexDefault(index) {
+                var defaultIndex = index || index === 0 ? index : configObj.defaultIndex;
                 var defaultOption = options[defaultIndex];
 
                 if (defaultOption) {
@@ -1270,67 +1335,47 @@ var Flounder = (function () {
                 }
 
                 return null;
-            } else if (configObj.defaultValue) {
-                var _ret3 = (function () {
-                    var defaultProp = configObj.defaultValue + '';
-                    var index = undefined;
+            };
 
-                    options.forEach(function (opt, i) {
-                        if (opt.value === defaultProp) {
-                            index = i;
-                        }
-                    });
+            /**
+             * ## setValueDefault
+             *
+             * sets a specified indexas the default option. This only works correctly
+             * if it is a valid value, otherwise it returns null
+             *
+             * @return {Object} default settings
+             */
+            var setValueDefault = function setValueDefault() {
+                var defaultProp = configObj.defaultValue + '';
+                var index = undefined;
 
-                    var _default = index ? options[index] : null;
-
-                    if (_default) {
-                        _default.index = index;
-                        return {
-                            v: _default
-                        };
+                options.forEach(function (opt, i) {
+                    if (opt.value === defaultProp) {
+                        index = i;
                     }
+                });
 
-                    return {
-                        v: null
-                    };
-                })();
+                var _default = index ? options[index] : null;
 
-                if (typeof _ret3 === 'object') return _ret3.v;
-            }
-        }
-
-        /**
-         * ## setIndex
-         *
-         * programatically sets the value by index.  If there are not enough elements
-         * to match the index, then nothing is selected.
-         *
-         * @param {Mixed} index index to set flounder to.  _Number, or Array of numbers_
-         *
-         * return _Void_
-         */
-    }, {
-        key: 'setIndex',
-        value: function setIndex(index, multiple) {
-            var refs = this.refs;
-
-            if (typeof index !== 'string' && index.length) {
-                var _setIndex = this.setIndex;
-                return index.map(_setIndex);
-            } else {
-                var el = refs.options[index];
-
-                if (el) {
-                    var isOpen = this.hasClass(refs.wrapper, 'open');
-                    this.toggleList(isOpen ? 'close' : 'open');
-                    this.___forceMultiple = multiple;
-                    el.click();
-
-                    return el;
+                if (_default) {
+                    _default.index = index;
+                    return _default;
                 }
 
                 return null;
+            };
+
+            var defaultObj = undefined;
+
+            if (configObj.placeholder) {
+                defaultObj = setPlaceholderDefault();
+            } else if (configObj.defaultIndex) {
+                defaultObj = setIndexDefault();
+            } else if (configObj.defaultValue) {
+                defaultObj = setValueDefault();
             }
+
+            return defaultObj || setIndexDefault(0);
         }
 
         /**
@@ -1387,22 +1432,6 @@ var Flounder = (function () {
             if (hasClass(options[index], _classes3['default'].HIDDEN) && hasClass(options[index], _classes3['default'].SELECTED_HIDDEN)) {
                 this.setKeypress(e);
             }
-        }
-
-        /**
-         * ## setPlatform
-         *
-         * sets the platform to osx or not osx for the sake of the multi select key
-         *
-         * @return _Void_
-         */
-    }, {
-        key: 'setPlatform',
-        value: function setPlatform() {
-            var _osx = this.isOsx = window.navigator.platform.indexOf('Mac') === -1 ? false : true;
-
-            this.isIos = this.iosVersion();
-            this.multiSelect = _osx ? 'metaKey' : 'ctrlKey';
         }
 
         /**
@@ -1526,7 +1555,7 @@ var Flounder = (function () {
     }, {
         key: 'setTextMultiTagIndent',
         value: function setTextMultiTagIndent() {
-            var _this11 = this;
+            var _this10 = this;
 
             var search = this.refs.search;
             var offset = this.defaultTextIndent;
@@ -1534,32 +1563,10 @@ var Flounder = (function () {
             if (search) {
                 var _els = document.getElementsByClassName(_classes3['default'].MULTIPLE_SELECT_TAG);
                 _els.each(function (i, e) {
-                    offset += _this11.getActualWidth(e);
+                    offset += _this10.getActualWidth(e);
                 });
 
                 search.style.textIndent = offset + 'px';
-            }
-        }
-
-        /**
-         * ## setValue
-         *
-         * programatically sets the value by string.  If the value string
-         * is not matched to an element, nothing will be selected
-         *
-         * @param {Mixed} value value to set flounder to.  _Number, or Array of numbers_
-         *
-         * return _Void_
-         */
-    }, {
-        key: 'setValue',
-        value: function setValue(value, multiple) {
-            if (typeof value !== 'string' && value.length) {
-                var _setValue = this.setValue;
-                return value.map(_setValue);
-            } else {
-                value = this.refs.select.querySelector('[value="' + value + '"]');
-                return value ? this.setIndex(value.index, multiple) : null;
             }
         }
 
@@ -1681,12 +1688,12 @@ var Flounder = (function () {
     return Flounder;
 })();
 
-_utils2['default'].extendClass(Flounder, _utils2['default']);
+_utils2['default'].extendClass(Flounder, _utils2['default'], _api2['default']);
 
 exports['default'] = Flounder;
 module.exports = exports['default'];
 
-},{"./classes":1,"./defaults":2,"./utils":4}],4:[function(require,module,exports){
+},{"./api":1,"./classes":2,"./defaults":3,"./utils":5}],5:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -1752,27 +1759,31 @@ var utils = {
      *
      * extends a class from an object.  returns the original reference
      *
-     * @param {Class} arguments[0]
+     * @param {Class} _extend class to be extended
      *
      * @return {Class} modified class object
      */
-    extendClass: function extendClass() {
-        var extended = arguments[0].prototype;
+    extendClass: function extendClass(_extend) {
+        _extend = _extend.prototype;
 
         var merge = function merge(obj) {
             for (var prop in obj) {
                 if (Object.prototype.hasOwnProperty.call(obj, prop)) {
-                    extended[prop] = obj[prop];
+                    _extend[prop] = obj[prop];
                 }
             }
         };
 
-        for (var i = 1, lenI = arguments.length; i < lenI; i++) {
-            var obj = arguments[i];
+        for (var _len = arguments.length, objects = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+            objects[_key - 1] = arguments[_key];
+        }
+
+        for (var i = 0, lenI = objects.length; i < lenI; i++) {
+            var obj = objects[i];
             merge(obj);
         }
 
-        return extended;
+        return _extend;
     },
 
     /**
@@ -1879,6 +1890,20 @@ var utils = {
     },
 
     /**
+     * ## setPlatform
+     *
+     * sets the platform to osx or not osx for the sake of the multi select key
+     *
+     * @return _Void_
+     */
+    setPlatform: function setPlatform() {
+        var _osx = this.isOsx = window.navigator.platform.indexOf('Mac') === -1 ? false : true;
+
+        this.isIos = this.iosVersion();
+        this.multiSelect = _osx ? 'metaKey' : 'ctrlKey';
+    },
+
+    /**
      * ## toggleClass
      *
      * in a world moving away from jquery, a wild helper function appears
@@ -1903,7 +1928,7 @@ var utils = {
 exports['default'] = utils;
 module.exports = exports['default'];
 
-},{}],5:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 
 /* jshint globalstrict: true */
 'use strict';
@@ -1918,4 +1943,4 @@ define('flounder', [], function () {
   return _coreFlounderJsx2['default'];
 });
 
-},{"../core/flounder.jsx":3}]},{},[5]);
+},{"../core/flounder.jsx":4}]},{},[6]);

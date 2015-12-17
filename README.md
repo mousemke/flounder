@@ -281,6 +281,12 @@ See more examples on the [demo page](./demo/index.html)
 Change Log
 ==========
 
+0.2.2
+-----
+
++ improvments in defaults
+
+
 0.2.1
 -----
 
@@ -339,4 +345,4 @@ Change Log
 0.1.0
 -----
 
-+ all callback functions all start with `on` for clarity (`init becomes `onInit`)
++ all callback functions all start with `on` for clarity (`init` becomes `onInit`)

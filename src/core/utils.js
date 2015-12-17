@@ -71,13 +71,13 @@ const utils =
      *
      * extends a class from an object.  returns the original reference
      *
-     * @param {Class} arguments[0]
+     * @param {Class} _extend class to be extended
      *
      * @return {Class} modified class object
      */
-    extendClass : function()
+    extendClass : function( _extend, ...objects )
     {
-        let extended = arguments[ 0 ].prototype;
+        _extend = _extend.prototype;
 
         let merge = function ( obj )
         {
@@ -85,18 +85,18 @@ const utils =
             {
                 if ( Object.prototype.hasOwnProperty.call( obj, prop ) )
                 {
-                    extended[ prop ] = obj[ prop ];
+                    _extend[ prop ] = obj[ prop ];
                 }
             }
         };
 
-        for ( let i = 1, lenI = arguments.length; i < lenI; i++ )
+        for ( let i = 0, lenI = objects.length; i < lenI; i++ )
         {
-            let obj = arguments[ i ];
+            let obj = objects[ i ];
             merge( obj );
         }
 
-        return extended;
+        return _extend;
     },
 
 
@@ -213,6 +213,22 @@ const utils =
         {
             parent.scrollTop = pos - parent.offsetHeight + ( elHeight * 1.5 );
         }
+    },
+
+
+    /**
+     * ## setPlatform
+     *
+     * sets the platform to osx or not osx for the sake of the multi select key
+     *
+     * @return _Void_
+     */
+    setPlatform : function()
+    {
+        let _osx = this.isOsx = window.navigator.platform.indexOf( 'Mac' ) === -1 ? false : true;
+
+        this.isIos          = this.iosVersion();
+        this.multiSelect    = _osx ? 'metaKey' : 'ctrlKey';
     },
 
 

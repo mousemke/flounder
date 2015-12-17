@@ -5,6 +5,7 @@
 import defaultOptions   from './defaults';
 import classes          from './classes';
 import utils            from './utils';
+import api              from './api';
 
 class Flounder
 {
@@ -46,15 +47,11 @@ class Flounder
             this.target     = target;
 
             this.bindThis();
-
             this.initialzeOptions();
-
             this.onInit();
 
             this.buildDom();
-
             this.setPlatform();
-
             this.onRender();
 
             this.onComponentDidMount();
@@ -215,7 +212,7 @@ class Flounder
         let _options            = this.options;
 
         let defaultValue        = this._default = this.setDefaultOption( this.props, _options );
-console.log( defaultValue );
+
         let selected            = constructElement( { className : classes.SELECTED_DISPLAYED,
                                         'data-value' : defaultValue.value, 'data-index' : defaultValue.index || -1  } );
             selected.innerHTML  = defaultValue.text;
@@ -282,7 +279,6 @@ console.log( defaultValue );
             }
             _option.index   = i;
 
-            let escapedText = this.escapeHTML( _option.text );
             let extraClass  = i === defaultValue.index ? '  ' + this.selectedClass : '';
 
             let res = {
@@ -298,24 +294,17 @@ console.log( defaultValue );
                 }
             }
 
-            options[ i ] = constructElement( res );
-
+            options[ i ]            = constructElement( res );
+            let escapedText         = this.escapeHTML( _option.text );
             options[ i ].innerHTML  = escapedText;
             optionsList.appendChild( options[ i ] );
 
-            let description = _option.description;
-
-            if ( description )
+            if ( _option.description )
             {
-                addOptionDescription( options[ i ], description );
+                addOptionDescription( options[ i ], _option.description );
             }
 
-            let uniqueExtraClass    = _option.extraClass;
-
-            if ( uniqueExtraClass )
-            {
-                options[ i ].className += '  ' + uniqueExtraClass;
-            }
+            options[ i ].className += _option.extraClass ? '  ' + _option.extraClass : '';
 
             if ( !this.refs.select )
             {
@@ -333,7 +322,7 @@ console.log( defaultValue );
             else
             {
                 let selectChild = select.children[ i ];
-                console.log( select );
+
                 selectOptions[ i ] = selectChild;
                 selectChild.setAttribute( 'value', selectChild.value );
             }
@@ -521,77 +510,7 @@ console.log( defaultValue );
     }
 
 
-    /**
-     * ## deselectAll
-     *
-     * deslects all options
-     *
-     * @return _Void_
-     */
-    deselectAll()
-    {
-        this.removeSelectedClass();
-        this.removeSelectedValue();
-    }
 
-
-    /**
-     * ## destroy
-     *
-     * removes flounder and all it's events from the dom
-     *
-     * @return _Void_
-     */
-    destroy()
-    {
-        this.componentWillUnmount();
-        let originalTarget  = this.originalTarget;
-
-        if ( originalTarget.tagName === 'INPUT' || originalTarget.tagName === 'SELECT' )
-        {
-            let target = originalTarget.nextElementSibling;
-            target.parentNode.removeChild( target );
-            originalTarget.tabIndex = 0;
-            this.removeClass( originalTarget, classes.HIDDEN );
-        }
-        else
-        {
-            let target          = this.target;
-            target.innerHTML    = '';
-        }
-    }
-
-
-    /**
-     * ## disable
-     *
-     * disables flounder by adjusting listeners and classes
-     *
-     * @param {Boolean} bool dsable or enable
-     *
-     * @return _Void_
-     */
-    disable( bool )
-    {
-        let refs        = this.refs;
-        let flounder    = refs.flounder;
-        let selected    = refs.selected;
-
-        if ( bool )
-        {
-            refs.flounder.removeEventListener( 'keydown', this.checkFlounderKeypress );
-            refs.selected.removeEventListener( 'click', this.toggleList );
-            this.addClass( selected, classes.DISABLED );
-            this.addClass( flounder, classes.DISABLED );
-        }
-        else
-        {
-            refs.flounder.addEventListener( 'keydown', this.checkFlounderKeypress );
-            refs.selected.addEventListener( 'click', this.toggleList );
-            this.removeClass( selected, classes.DISABLED );
-            this.removeClass( flounder, classes.DISABLED );
-        }
-    }
 
 
     /**
@@ -660,7 +579,6 @@ console.log( defaultValue );
      */
     displaySelected( selected, refs )
     {
-        console.log( this );
         let value = [];
         let index = -1;
 
@@ -797,63 +715,6 @@ console.log( defaultValue );
 
         return _el.offsetWidth + parseInt( style[ 'margin-left' ] ) +
                                 parseInt( style[ 'margin-right' ] );
-    }
-
-
-    /**
-     * ## getOption
-     *
-     * returns the option and div tags related to an option
-     *
-     * @param {Number} _i index to return
-     *
-     * @return _Object_ option and div tage
-     */
-    getOption( _i )
-    {
-        let refs = this.refs;
-
-        return { option : refs.selectOptions[ _i ], div : refs.options[ _i ] };
-    }
-
-
-    /**
-     * ## getSelectedOptions
-     *
-     * returns the currently selected options of a SELECT box
-     *
-     * @return _Void_
-     */
-    getSelectedOptions()
-    {
-        let _el         = this.refs.select;
-        let opts        = [], opt;
-        let _options    = _el.options;
-
-        for ( let i = 0, len = _options.length; i < len; i++ )
-        {
-            opt = _options[ i ];
-
-            if ( opt.selected )
-            {
-                opts.push( opt );
-            }
-        }
-
-        return opts;
-    }
-
-
-    /**
-     * ## getSelectedValues
-     *
-     * returns the values of the currently selected options
-     *
-     * @return _Void_
-     */
-    getSelectedValues()
-    {
-        return this.getSelectedOptions().map( ( _v ) => _v.value )
     }
 
 
@@ -1019,49 +880,6 @@ console.log( defaultValue );
 
 
     /**
-     * ## rebuildOptions
-     *
-     * after editing the options, this can be used to rebuild them
-     *
-     * @param {Array} _options array with optino information
-     *
-     * @return _Void_
-     */
-    rebuildOptions( _options )
-    {
-        let refs        = this.refs;
-        let selected    = refs.select.selectedOptions;
-        selected        = Array.prototype.slice.call( selected ).map( function( e ){ return e.value; } );
-        this.removeOptionsListeners();
-
-        refs.select.innerHTML       = '';
-        refs.optionsList.innerHTML  = '';
-
-        let _select                 = refs.select;
-        refs.select                 = false;
-        [ refs.options, refs.selectOptions ] = this.buildOptions( this._default, _options, refs.optionsList, _select );
-        refs.select                 = _select;
-
-        this.removeSelectedValue();
-        this.removeSelectedClass();
-
-        refs.selectOptions.forEach( ( el, i ) =>
-        {
-            let valuePosition = selected.indexOf( el.value );
-
-            if ( valuePosition !== -1 )
-            {
-                selected.splice( valuePosition, 1 );
-                el.selected = true;
-                this.addClass( refs.options[ i ], this.selectedClass );
-            }
-        } );
-
-        this.addOptionsListeners();
-    }
-
-
-    /**
      * ## removeOptionsListeners
      *
      * removes event listeners on the options divs
@@ -1202,9 +1020,19 @@ console.log( defaultValue );
      */
     setDefaultOption( configObj, options )
     {
-        if ( configObj.placeholder )
+        let self = this;
+
+        /**
+         * ## setPlaceholderDefault
+         *
+         * sets a placeholder as the default option.  This inserts an empty
+         * option first and sets that as default
+         *
+         * @return {Object} default settings
+         */
+        let setPlaceholderDefault = function()
         {
-            let refs        = this.refs;
+            let refs        = self.refs;
             let select      = refs.select;
 
             let _default    = {
@@ -1216,24 +1044,34 @@ console.log( defaultValue );
 
             if ( select )
             {
-                let escapedText     = this.escapeHTML( _default.text );
-                let defaultOption   = this.constructElement( { tagname : 'option',
+                let escapedText     = self.escapeHTML( _default.text );
+                let defaultOption   = self.constructElement( { tagname : 'option',
                                             className   : classes.OPTION_TAG,
                                             value       :  _default.value } );
                 defaultOption.innerHTML = escapedText;
 
                 select.insertBefore( defaultOption, select[0] );
-                this.refs.selectOptions.unshift( defaultOption );
+                self.refs.selectOptions.unshift( defaultOption );
             }
 
             options.unshift( _default );
 
             return _default;
-        }
-        else if ( configObj.defaultIndex )
+        };
+
+
+        /**
+         * ## setIndexDefault
+         *
+         * sets a specified indexas the default option. This only works correctly
+         * if it is a valid index, otherwise it returns null
+         *
+         * @return {Object} default settings
+         */
+        let setIndexDefault = function( index )
         {
-            let defaultIndex        = configObj.defaultIndex;
-            let defaultOption       = options[ defaultIndex ]
+            let defaultIndex        = index || index === 0 ? index : configObj.defaultIndex;
+            let defaultOption       = options[ defaultIndex ];
 
             if ( defaultOption )
             {
@@ -1242,8 +1080,18 @@ console.log( defaultValue );
             }
 
             return null;
-        }
-        else if ( configObj.defaultValue )
+        };
+
+
+        /**
+         * ## setValueDefault
+         *
+         * sets a specified indexas the default option. This only works correctly
+         * if it is a valid value, otherwise it returns null
+         *
+         * @return {Object} default settings
+         */
+        let setValueDefault = function()
         {
             let defaultProp = configObj.defaultValue + '';
             let index;
@@ -1265,45 +1113,25 @@ console.log( defaultValue );
             }
 
             return null;
-        }
-    }
+        };
 
 
-    /**
-     * ## setIndex
-     *
-     * programatically sets the value by index.  If there are not enough elements
-     * to match the index, then nothing is selected.
-     *
-     * @param {Mixed} index index to set flounder to.  _Number, or Array of numbers_
-     *
-     * return _Void_
-     */
-    setIndex( index, multiple )
-    {
-        let refs = this.refs;
+        let defaultObj;
 
-        if ( typeof index !== 'string' && index.length )
+        if ( configObj.placeholder )
         {
-            let _setIndex = this.setIndex;
-            return index.map( _setIndex );
+            defaultObj =  setPlaceholderDefault();
         }
-        else
+        else if ( configObj.defaultIndex )
         {
-            var el = refs.options[ index ];
-
-            if ( el )
-            {
-                let isOpen = this.hasClass( refs.wrapper, 'open' );
-                this.toggleList( isOpen ? 'close' : 'open' );
-                this.___forceMultiple = multiple;
-                el.click();
-
-                return el;
-            }
-
-            return null;
+            defaultObj =  setIndexDefault();
         }
+        else if ( configObj.defaultValue )
+        {
+            defaultObj =  setValueDefault();
+        }
+
+        return defaultObj || setIndexDefault( 0 );
     }
 
 
@@ -1372,22 +1200,6 @@ console.log( defaultValue );
         {
             this.setKeypress( e );
         }
-    }
-
-
-    /**
-     * ## setPlatform
-     *
-     * sets the platform to osx or not osx for the sake of the multi select key
-     *
-     * @return _Void_
-     */
-    setPlatform()
-    {
-        let _osx = this.isOsx = window.navigator.platform.indexOf( 'Mac' ) === -1 ? false : true;
-
-        this.isIos          = this.iosVersion();
-        this.multiSelect    = _osx ? 'metaKey' : 'ctrlKey';
     }
 
 
@@ -1533,31 +1345,6 @@ console.log( defaultValue );
 
 
     /**
-     * ## setValue
-     *
-     * programatically sets the value by string.  If the value string
-     * is not matched to an element, nothing will be selected
-     *
-     * @param {Mixed} value value to set flounder to.  _Number, or Array of numbers_
-     *
-     * return _Void_
-     */
-    setValue( value, multiple )
-    {
-        if ( typeof value !== 'string' && value.length )
-        {
-            let _setValue = this.setValue;
-            return value.map( _setValue );
-        }
-        else
-        {
-            value = this.refs.select.querySelector( '[value="' + value + '"]' );
-            return value ? this.setIndex( value.index, multiple ) : null;
-        }
-    }
-
-
-    /**
      * ## showElement
      *
      * remove classes.HIDDEN from a given element
@@ -1647,7 +1434,6 @@ console.log( defaultValue );
     }
 
 
-
     /**
      * ## toggleClosed
      *
@@ -1681,7 +1467,7 @@ console.log( defaultValue );
     }
 }
 
-utils.extendClass( Flounder, utils );
+utils.extendClass( Flounder, utils, api );
 
 export default Flounder;
 
