@@ -73,11 +73,12 @@ new Flounder( document.getElementById( 'vanilla--input' ), {
     onInit               : function()
     {
         var res     = [];
-        options.forEach( function( option )
+        options.forEach( function( option, i )
         {
             res.push( {
                 text        : option.text,
-                value       : option.id
+                value       : option.id,
+                disabled    : i === 1 ? true : false
             } );
         } );
 
@@ -154,11 +155,7 @@ ReactDOM.render( React.createElement( FlounderReact, {
  * react amulti-Flounder without tags attached to an div
  */
 ReactDOM.render( React.createElement( FlounderReact, {
-    placeholder         : 'placeholders!',
-
-    multiple            : true,
-
-    multipleTags        : false,
+    defaultValue        : 'tag',
 
     onInit              : function()
     {
@@ -180,7 +177,7 @@ ReactDOM.render( React.createElement( FlounderReact, {
  * react amulti-Flounder with description attached to div
  */
 ReactDOM.render( React.createElement( FlounderReact, {
-    placeholder         : 'placeholders!',
+    defaultIndex        : 3,
 
     multiple            : true,
 
@@ -189,12 +186,13 @@ ReactDOM.render( React.createElement( FlounderReact, {
     onInit              : function()
     {
         var res = [];
-        options.forEach( function( option )
+        options.forEach( function( option, i )
         {
             res.push( {
                 text        : option.text,
                 value       : option.id,
-                description : option.id + ' - ' + option.text
+                description : option.id + ' - ' + option.text,
+                disabled    : i === 1 ? true : false
             } );
         } );
 
@@ -234,5 +232,11 @@ requirejs( [ 'flounder' ], function( Flounder )
      } );
 } );
 
+
+µ( '.debug--mode' ).on( 'click', function()
+{
+    µ( '.flounder--select--tag' ).removeClass( 'flounder--hidden' );
+    µ( '.flounder' ).css( 'display', 'inline-block' )
+} );
 
 export default { React, Component, ReactDOM, FlounderReact, Flounder };

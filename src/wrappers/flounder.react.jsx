@@ -153,6 +153,7 @@ class FlounderReact extends Component
         let multiple        = props.multiple;
 
         let defaultValue    = this._default = this.setDefaultOption( props, options );
+        let defaultReact    = multiple ? [ defaultValue.value ] : defaultValue.value;
 
         let wrapperClass    = this.wrapperClass ? '  ' + this.wrapperClass : '';
         let flounderClass   = this.flounderClass ? '  ' + this.flounderClass : '';
@@ -166,7 +167,7 @@ class FlounderReact extends Component
                     <div ref="selected" className={classes.SELECTED_DISPLAYED} data-value={defaultValue.value}>
                         {defaultValue.text}
                     </div>
-                    { props.multiple ? <div ref="multiTagWrapper" className={classes.MULTI_TAG_LIST}  multiple></div> : null }
+                    { multiple ? <div ref="multiTagWrapper" className={classes.MULTI_TAG_LIST}  multiple></div> : null }
                     <div ref="arrow" className={classes.ARROW}></div>
                     <div ref="optionsListWrapper" className={classes.OPTIONS_WRAPPER + '  ' + classes.HIDDEN}>
                         <div ref="optionsList" className={classes.LIST}>
@@ -197,7 +198,7 @@ class FlounderReact extends Component
                     </div>
                     { props.search ? <input ref="search" type="text" className={classes.SEARCH} /> : null }
                 </div>
-                <select ref="select" className={classes.SELECT_TAG + '  ' + classes.HIDDEN} tabIndex="-1" multiple={props.multiple}>
+                <select ref="select" className={classes.SELECT_TAG + '  ' + classes.HIDDEN} defaultValue={defaultReact} tabIndex="-1" multiple={multiple}>
                 {
                     options.map( ( _option, i ) =>
                     {
@@ -208,7 +209,7 @@ class FlounderReact extends Component
                             'data-index'    : i
                         };
 
-                        return ( <option key={i} value ={_option.value} className={classes.OPTION_TAG} ref={'option' + i}>
+                        return ( <option key={i} value ={_option.value} className={classes.OPTION_TAG} ref={'option' + i} disabled={_option.disabled}>
                                     {_option.text}
                                 </option> );
                     } )

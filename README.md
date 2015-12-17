@@ -42,6 +42,11 @@ $( '.example--class' ).flounder( configOptions );
 µ( '.example--class' ).flounder( configOptions )
 ```
 
+Flounder also saves a copy of itself to its target element.  So if you lose the reference, you can just grab it from the element again
+```
+document.querySelector( '#vanilla--select' ).flounder.destroy()
+```
+
 
 ###Available config options
 
@@ -109,8 +114,9 @@ select options must be passed as an array of objects
     {
         text        : 'probably the string you want to see',
         value       : 'return value',
-        description : 'a longer description of this option', // optional
-        extraClass  : 'extra--classname' // optional
+        description : 'a longer description of this option', // optional, string
+        extraClass  : 'extra--classname',                   // optional, string
+        disabled    : false                                 // optional, boolean
     }
 ]
 ```

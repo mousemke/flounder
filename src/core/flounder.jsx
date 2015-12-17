@@ -314,11 +314,6 @@ class Flounder
                                             value       :  _option.value } );
                 selectOptions[ i ].innerHTML = escapedText;
                 select.appendChild( selectOptions[ i ] );
-
-                if ( i === defaultValue.index )
-                {
-                    selectOptions[ i ].selected = true;
-                }
             }
             else
             {
@@ -326,6 +321,11 @@ class Flounder
 
                 selectOptions[ i ] = selectChild;
                 selectChild.setAttribute( 'value', selectChild.value );
+            }
+
+            if ( i === defaultValue.index )
+            {
+                selectOptions[ i ].selected = true;
             }
 
             if ( selectOptions[ i ].getAttribute( 'disabled' ) )
@@ -1077,6 +1077,7 @@ class Flounder
             if ( defaultOption )
             {
                 defaultOption.index   = defaultIndex;
+                console.log( defaultOption );
                 return defaultOption;
             }
 
@@ -1094,6 +1095,7 @@ class Flounder
          */
         let setValueDefault = function()
         {
+            console.log( configObj );
             let defaultProp = configObj.defaultValue + '';
             let index;
 
@@ -1110,6 +1112,7 @@ class Flounder
             if ( _default )
             {
                 _default.index = index;
+                console.log( _default );
                 return _default;
             }
 

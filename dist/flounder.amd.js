@@ -643,15 +643,15 @@ var Flounder = (function () {
                         value: _option.value });
                     selectOptions[i].innerHTML = escapedText;
                     select.appendChild(selectOptions[i]);
-
-                    if (i === defaultValue.index) {
-                        selectOptions[i].selected = true;
-                    }
                 } else {
                     var selectChild = select.children[i];
 
                     selectOptions[i] = selectChild;
                     selectChild.setAttribute('value', selectChild.value);
+                }
+
+                if (i === defaultValue.index) {
+                    selectOptions[i].selected = true;
                 }
 
                 if (selectOptions[i].getAttribute('disabled')) {
@@ -1338,6 +1338,7 @@ var Flounder = (function () {
 
                 if (defaultOption) {
                     defaultOption.index = defaultIndex;
+                    console.log(defaultOption);
                     return defaultOption;
                 }
 
@@ -1353,6 +1354,7 @@ var Flounder = (function () {
              * @return {Object} default settings
              */
             var setValueDefault = function setValueDefault() {
+                console.log(configObj);
                 var defaultProp = configObj.defaultValue + '';
                 var index = undefined;
 
@@ -1366,6 +1368,7 @@ var Flounder = (function () {
 
                 if (_default) {
                     _default.index = index;
+                    console.log(_default);
                     return _default;
                 }
 

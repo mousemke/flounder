@@ -19658,15 +19658,15 @@ var Flounder = (function () {
                         value: _option.value });
                     selectOptions[i].innerHTML = escapedText;
                     select.appendChild(selectOptions[i]);
-
-                    if (i === defaultValue.index) {
-                        selectOptions[i].selected = true;
-                    }
                 } else {
                     var selectChild = select.children[i];
 
                     selectOptions[i] = selectChild;
                     selectChild.setAttribute('value', selectChild.value);
+                }
+
+                if (i === defaultValue.index) {
+                    selectOptions[i].selected = true;
                 }
 
                 if (selectOptions[i].getAttribute('disabled')) {
@@ -20353,6 +20353,7 @@ var Flounder = (function () {
 
                 if (defaultOption) {
                     defaultOption.index = defaultIndex;
+                    console.log(defaultOption);
                     return defaultOption;
                 }
 
@@ -20368,6 +20369,7 @@ var Flounder = (function () {
              * @return {Object} default settings
              */
             var setValueDefault = function setValueDefault() {
+                console.log(configObj);
                 var defaultProp = configObj.defaultValue + '';
                 var index = undefined;
 
@@ -20381,6 +20383,7 @@ var Flounder = (function () {
 
                 if (_default) {
                     _default.index = index;
+                    console.log(_default);
                     return _default;
                 }
 
@@ -21133,6 +21136,7 @@ var FlounderReact = (function (_Component) {
             var multiple = props.multiple;
 
             var defaultValue = this._default = this.setDefaultOption(props, options);
+            var defaultReact = multiple ? [defaultValue.value] : defaultValue.value;
 
             var wrapperClass = this.wrapperClass ? '  ' + this.wrapperClass : '';
             var flounderClass = this.flounderClass ? '  ' + this.flounderClass : '';
@@ -21151,7 +21155,7 @@ var FlounderReact = (function (_Component) {
                         { ref: 'selected', className: _coreClasses2['default'].SELECTED_DISPLAYED, 'data-value': defaultValue.value },
                         defaultValue.text
                     ),
-                    props.multiple ? _react2['default'].createElement('div', { ref: 'multiTagWrapper', className: _coreClasses2['default'].MULTI_TAG_LIST, multiple: true }) : null,
+                    multiple ? _react2['default'].createElement('div', { ref: 'multiTagWrapper', className: _coreClasses2['default'].MULTI_TAG_LIST, multiple: true }) : null,
                     _react2['default'].createElement('div', { ref: 'arrow', className: _coreClasses2['default'].ARROW }),
                     _react2['default'].createElement(
                         'div',
@@ -21185,7 +21189,7 @@ var FlounderReact = (function (_Component) {
                 ),
                 _react2['default'].createElement(
                     'select',
-                    { ref: 'select', className: _coreClasses2['default'].SELECT_TAG + '  ' + _coreClasses2['default'].HIDDEN, tabIndex: '-1', multiple: props.multiple },
+                    { ref: 'select', className: _coreClasses2['default'].SELECT_TAG + '  ' + _coreClasses2['default'].HIDDEN, defaultValue: defaultReact, tabIndex: '-1', multiple: multiple },
                     options.map(function (_option, i) {
                         var extraClass = i === defaultValue ? '  ' + _this.selectedClass : '';
 
@@ -21196,7 +21200,7 @@ var FlounderReact = (function (_Component) {
 
                         return _react2['default'].createElement(
                             'option',
-                            { key: i, value: _option.value, className: _coreClasses2['default'].OPTION_TAG, ref: 'option' + i },
+                            { key: i, value: _option.value, className: _coreClasses2['default'].OPTION_TAG, ref: 'option' + i, disabled: _option.disabled },
                             _option.text
                         );
                     })
