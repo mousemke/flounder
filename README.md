@@ -293,9 +293,15 @@ react flounder can only be attached to container elements (div, span, etc)
 
 The result of either of these is shown here (only styled with the structural css)
 
+closed
+
 ![closed](https://cloud.githubusercontent.com/assets/4903570/11898709/4ee0059a-a59a-11e5-83e9-d1d2e0dbe46e.png)
 
+open menu
+
 ![open menu](https://cloud.githubusercontent.com/assets/4903570/11898721/629c0cbe-a59a-11e5-95ed-82f0ff557bde.png)
+
+1 selected
 
 ![1 selected](https://cloud.githubusercontent.com/assets/4903570/11898730/708eaa02-a59a-11e5-930a-cccbc22f0401.png)
 

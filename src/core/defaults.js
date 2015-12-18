@@ -5,6 +5,7 @@ const defaults = {
         selected    : 'flounder__option--selected',
         wrapper     : ''
     },
+    data                : [],
     defaultTextIndent   : 0,
     multiple            : false,
     multipleTags        : true,
@@ -14,7 +15,6 @@ const defaults = {
     onInit              : function(){ },
     onOpen              : function(){ },
     onSelect            : function(){ },
-    options             : [],
     placeholder         : 'Please choose an option',
     search              : false
 };

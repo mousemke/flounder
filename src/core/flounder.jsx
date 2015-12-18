@@ -21,20 +21,17 @@ class Flounder
      */
     constructor( target, props )
     {
-        if ( target && target.length !== 0 )
+        if ( target )
         {
-            if ( target.jquery )
+            if ( target.length && typeof target !== 'string' )
             {
-                return target.map( ( i, _el ) => new this.constructor( _el, props ) );
-            }
-            else if ( target.isMicrobe  )
-            {
-                return target.map( ( _el ) => new this.constructor( _el, props ) );
+                return this.arrayOfFlounders( target, props );
             }
 
             target      = target.nodeType === 1 ? target : document.querySelector( target );
 
             this.originalTarget = target;
+
             target.flounder     = this;
 
             if ( target.tagName === 'INPUT' )
@@ -148,6 +145,25 @@ class Flounder
         select.addEventListener( 'keyup', this.setSelectValue );
         select.addEventListener( 'keydown', this.setKeypress );
         select.focus();
+    }
+
+
+    /**
+     * ## arrayOfFlounders
+     *
+     * called when a jquery object, microbe, or array is fed into flounder
+     * as a target
+     *
+     * @param {DOMElement} target flounder mount point
+     * @param {Object} props passed options
+     *
+     * @return {Array} array of flounders
+     */
+    arrayOfFlounders( targets, props )
+    {
+        targets = Array.prototype.slice.call( targets );
+
+        return targets.map( ( _el, i ) => new this.constructor( _el, props ) );
     }
 
 
@@ -813,6 +829,7 @@ class Flounder
         {
             this.selectedClass += '  ' + classes.SELECTED_HIDDEN;
         }
+        console.log( this.data );
     }
 
 
