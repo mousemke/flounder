@@ -213,11 +213,11 @@ Need to report something? [hr@sociomantic.com](hr@sociomantic.com)
 Example
 ========
 
-Given the example options:
+Given the example data:
 
 ```
 
-    var options = [
+    var data = [
         {
             cssClass    : 'select-filters',
             id          : 'All',
@@ -246,23 +246,22 @@ flounder can be attached to basically anything
 ```
 
     new flounder( document.getElementById( 'example' ), {
-        defaultValue        : 'placeholders!',
+        placeholder         : 'placeholders!',
 
         onInit              : function()
         {
             var res = [];
-            options.forEach( function( option )
+            data.forEach( function( dataObj )
             {
                 res.push( {
-                    text        : option.text,
-                    value       : option.id
+                    text        : dataObj.text,
+                    value       : dataObj.id
                 } );
             } ); 
 
-            this.options = res;
-        },
-
-        multiple            : true } );
+            this.data = res;
+        } 
+    } );
 ```
 
 a react multi-flounder with tags
@@ -275,20 +274,18 @@ react flounder can only be attached to container elements (div, span, etc)
     ReactDOM.render( React.createElement( FlounderReact, {
         defaultValue        : 'placeholders!',
 
-        multiple            : true,
-
         onInit              : function()
         {
             var res = [];
-            options.forEach( function( option )
+            data.forEach( function( dataObj )
             {
                 res.push( {
-                    text        : option.text,
-                    value       : option.id
+                    text        : dataObj.text,
+                    value       : dataObj.id
                 } );
             } );
 
-            this.options = res;
+            this.data = res;
         } } ), document.getElementById( 'example' )
     );
 ```
@@ -296,11 +293,11 @@ react flounder can only be attached to container elements (div, span, etc)
 
 The result of either of these is shown here (only styled with the structural css)
 
-![closed](https://d1ro8r1rbfn3jf.cloudfront.net/ms_16133/Vu591qbeROU9QezI1cXQ1XkYoQEkhP/Flounder%2Bdemo%2B2015-11-23%2B23-26-41.jpg?Expires=1448404005&Signature=Rj~Hm6GmMgBCFkwr4~BnhmYyrcHDzMYGS9GGIg4kPHgCc7GhMmIStXlFJouWAEny4BeMXKHMZu-ruXTQwRCeVeZf2oL098kTyScHEVLsyZr-JZ6z6mnPP-ikgMlvc78xZJcZsdIjDEihaVm3NmJWRmfq~kKH3BvVQaLgUt7NyZV6IxuRhYfxUFkBlHOg6moHTibrehy-Yvni8fllz8BekBX-oVibZ6ezgmBQvOrOOCGRjp39mn4-QJU8jpNO41RW3iG2osAXJMxlmJhG8cL6X7trpM1VWQP7M462PrtnGt6~j4BjammY8hldEaDp8LpjsCI-2AGOm48FqGH5VAVLPw__&Key-Pair-Id=APKAJHEJJBIZWFB73RSA)
+![closed](https://cloud.githubusercontent.com/assets/4903570/11898709/4ee0059a-a59a-11e5-83e9-d1d2e0dbe46e.png)
 
-![open menu](https://d1ro8r1rbfn3jf.cloudfront.net/ms_16133/MfbfkOAmsRGZHKfONjpntVYHRLzaUF/Flounder%2Bdemo%2B2015-11-23%2B23-26-20.jpg?Expires=1448403987&Signature=bxaazMlR6YnSqY4-mm8wZ5ZaeiiyHSIcYoptQLlk96DZB3cWM9JRUH6cuvVdbgEpuAwViJgBQPeeDyRBEfql5IS3WJXWPTlFCv-dOwvKT-7VboFDbjPv5-JD1TmBNr4ElcdWGTK8TsISv~8Bo0p35vnXnwUx7LBUTj86z3Z4hEP8-YMkU8vLVaYoqEDy6jSYDtptfTZvMxH3x4Nv2gNOeRLt-RYH9vhQtt1Vqv4YsOF29lNe2EmrvV5VDahdOviuPMwJ4K5HyggGZ4qsO84DM~~KhAS4ff50SCk069cfWRVARYwW1JGm71D-ccmPYQzM70pT1pAMIaqWkFjpFAy8CA__&Key-Pair-Id=APKAJHEJJBIZWFB73RSA)
+![open menu](https://cloud.githubusercontent.com/assets/4903570/11898721/629c0cbe-a59a-11e5-95ed-82f0ff557bde.png)
 
-![1 selected](https://d1ro8r1rbfn3jf.cloudfront.net/ms_16133/mL3upXVlwnB4pkC4jN5QCE4ZIdiQ8F/Flounder%2Bdemo%2B2015-11-23%2B23-26-57.jpg?Expires=1448404020&Signature=bWFxIgxc-0DQWqSAWXCNzGI5R9LiCho7EfuHgUp0wheeDl85cui3OcnOcw~HSYR6sSJ6XcQPHeVE5FAet1suEFR2q0fe9p--tuq8G9T0wK0Mp6fLYi49OGs6mTftFzQy3zgUVlPKY58nIejzAl6N-fT67NjUqKBhfUltjssc-OZvD3TZf7nAS0erQwuiM5QH6y9sFscavZWHDrsV1ReXkYqMbRXtbykM~JNPP-2Pr9ZvRwpcA7wdFpTpIF4OH0SsR-hem-xnnZ1ZHvJELARqzp2Q6OLWapRdaHHg~9OTnIDY7~lbz-2XcmrP6wMLJqZ6bqVuoWfCdtLk8VK6xQdIEg__&Key-Pair-Id=APKAJHEJJBIZWFB73RSA)
+![1 selected](https://cloud.githubusercontent.com/assets/4903570/11898730/708eaa02-a59a-11e5-930a-cccbc22f0401.png)
 
 See more examples on the [demo page](./demo/index.html)
 
@@ -313,6 +310,8 @@ Change Log
 
 + simplified how keypresses are handled
 + fixed first keypress bug (#23)
++ updated example pics
+
 
 0.2.2
 -----
