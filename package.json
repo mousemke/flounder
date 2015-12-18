@@ -23,7 +23,9 @@
     "end",
     "frontend",
     "select",
-    "box"
+    "box",
+    "flounder",
+    "sociomantic"
   ],
   "author": "Mouse Braun <mouse@sociomantic.com> (http://sociomantic.com)",
   "license": "MIT",

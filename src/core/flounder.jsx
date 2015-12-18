@@ -45,9 +45,9 @@ class Flounder
                 target          = target.parentNode;
             }
 
-            this.target     = target;
+            this.target = target;
+            this.props  = props;
 
-            this.props = props;
             this.bindThis();
             this.initialzeOptions();
             this.onInit();

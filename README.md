@@ -1,4 +1,4 @@
-Flounder.js 0.2.1
+Flounder.js 0.2.3
 =================
 
 (for modern browsers and ie9+)
@@ -310,7 +310,7 @@ Change Log
 
 + simplified how keypresses are handled
 + fixed first keypress bug (#23)
-+ updated example pics
++ updated examples and example pics
 
 
 0.2.2

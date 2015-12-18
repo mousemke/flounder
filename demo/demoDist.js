@@ -19638,8 +19638,8 @@ var Flounder = (function () {
             }
 
             this.target = target;
-
             this.props = props;
+
             this.bindThis();
             this.initialzeOptions();
             this.onInit();

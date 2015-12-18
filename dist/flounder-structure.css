@@ -92,6 +92,24 @@
 }
 
 
+.flounder__option:hover
+{
+    background-color:               #eee;
+}
+
+
+.flounder__option--selected
+{
+    background-color:               #ccc;
+}
+
+
+.flounder__option--selected:hover
+{
+    background-color:               #aaa;
+}
+
+
 
 /* -------------------------------------------------------------------------- */
 /* FLOUNDER - sections                                                         */
@@ -115,6 +133,7 @@
 {
     color:                          #777;
 }
+
 
 .flounder__section .flounder__option
 {
