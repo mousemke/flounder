@@ -312,7 +312,7 @@ Change Log
 -----
 
 + simplified how keypresses are handled
-
++ fixed first keypress bug (#23)
 
 0.2.2
 -----

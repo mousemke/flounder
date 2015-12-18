@@ -1429,7 +1429,11 @@ class Flounder
 
         if ( force === 'open' || force !== 'close' && hasClass( optionsList, classes.HIDDEN ) )
         {
-            this.toggleList.justOpened = true;
+            if ( e.type === 'keydown' )
+            {
+                this.toggleList.justOpened = true;
+            }
+
             this.toggleOpen( e, optionsList, refs, wrapper );
         }
         else if ( force === 'close' || !hasClass( optionsList, classes.HIDDEN ) )

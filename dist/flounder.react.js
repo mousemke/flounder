@@ -20671,7 +20671,10 @@ var Flounder = (function () {
             var hasClass = this.hasClass;
 
             if (force === 'open' || force !== 'close' && hasClass(optionsList, _classes3['default'].HIDDEN)) {
-                this.toggleList.justOpened = true;
+                if (e.type === 'keydown') {
+                    this.toggleList.justOpened = true;
+                }
+
                 this.toggleOpen(e, optionsList, refs, wrapper);
             } else if (force === 'close' || !hasClass(optionsList, _classes3['default'].HIDDEN)) {
                 this.toggleList.justOpened = false;
