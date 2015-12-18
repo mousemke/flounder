@@ -239,7 +239,7 @@ Given the example data:
     ];
 ```
 
-a vanilla multi-flounder with tags
+a vanilla flounder
 
 flounder can be attached to basically anything
 
@@ -264,7 +264,7 @@ flounder can be attached to basically anything
     } );
 ```
 
-a react multi-flounder with tags
+a react flounder
 
 react flounder can only be attached to container elements (div, span, etc)
 
@@ -311,6 +311,8 @@ Change Log
 + simplified how keypresses are handled
 + fixed first keypress bug (#23)
 + updated examples and example pics
++ updated default css
++ added additional package descriptions
 
 
 0.2.2
