@@ -319,6 +319,8 @@ Change Log
 + updated examples and example pics
 + updated default css
 + added additional package descriptions
++ updates to readme
++ fixed a bug based on select tags NOT being arrays
 
 
 0.2.2

@@ -94,18 +94,7 @@ new _srcCoreFlounderJsx2['default']('.vanilla--input--tags', {
 new _srcCoreFlounderJsx2['default'](document.getElementById('vanilla--input'), {
     defaultIndex: 2,
 
-    onInit: function onInit() {
-        var res = [];
-        data.forEach(function (dataObj, i) {
-            res.push({
-                text: dataObj.text,
-                value: dataObj.id,
-                disabled: i === 1 ? true : false
-            });
-        });
-
-        this.data = res;
-    },
+    data: data,
 
     multiple: true,
 
@@ -19547,6 +19536,7 @@ var defaults = {
         selected: 'flounder__option--selected',
         wrapper: ''
     },
+    data: [],
     defaultTextIndent: 0,
     multiple: false,
     multipleTags: true,
@@ -19556,7 +19546,6 @@ var defaults = {
     onInit: function onInit() {},
     onOpen: function onOpen() {},
     onSelect: function onSelect() {},
-    options: [],
     placeholder: 'Please choose an option',
     search: false
 };
@@ -19610,24 +19599,17 @@ var Flounder = (function () {
      */
 
     function Flounder(target, props) {
-        var _this = this;
-
         _classCallCheck(this, Flounder);
 
-        if (target && target.length !== 0) {
-            if (target.jquery) {
-                return target.map(function (i, _el) {
-                    return new _this.constructor(_el, props);
-                });
-            } else if (target.isMicrobe) {
-                return target.map(function (_el) {
-                    return new _this.constructor(_el, props);
-                });
+        if (target) {
+            if (target.length && typeof target !== 'string' && target.tagName !== 'SELECT') {
+                return this.arrayOfFlounders(target, props);
             }
 
             target = target.nodeType === 1 ? target : document.querySelector(target);
 
             this.originalTarget = target;
+
             target.flounder = this;
 
             if (target.tagName === 'INPUT') {
@@ -19688,11 +19670,11 @@ var Flounder = (function () {
     }, {
         key: 'addOptionsListeners',
         value: function addOptionsListeners() {
-            var _this2 = this;
+            var _this = this;
 
             this.refs.data.forEach(function (dataObj, i) {
                 if (dataObj.tagName === 'DIV') {
-                    dataObj.addEventListener('click', _this2.clickSet);
+                    dataObj.addEventListener('click', _this.clickSet);
                 }
             });
         }
@@ -19738,6 +19720,29 @@ var Flounder = (function () {
             select.addEventListener('keyup', this.setSelectValue);
             select.addEventListener('keydown', this.setKeypress);
             select.focus();
+        }
+
+        /**
+         * ## arrayOfFlounders
+         *
+         * called when a jquery object, microbe, or array is fed into flounder
+         * as a target
+         *
+         * @param {DOMElement} target flounder mount point
+         * @param {Object} props passed options
+         *
+         * @return {Array} array of flounders
+         */
+    }, {
+        key: 'arrayOfFlounders',
+        value: function arrayOfFlounders(targets, props) {
+            var _this2 = this;
+
+            targets = Array.prototype.slice.call(targets);
+
+            return targets.map(function (_el, i) {
+                return new _this2.constructor(_el, props);
+            });
         }
 
         /**

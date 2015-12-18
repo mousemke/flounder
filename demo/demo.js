@@ -88,20 +88,7 @@ new Flounder( '.vanilla--input--tags', {
 new Flounder( document.getElementById( 'vanilla--input' ), {
     defaultIndex         : 2,
 
-    onInit               : function()
-    {
-        let res     = [];
-        data.forEach( function( dataObj, i )
-        {
-            res.push( {
-                text        : dataObj.text,
-                value       : dataObj.id,
-                disabled    : i === 1 ? true : false
-            } );
-        } );
-
-        this.data = res;
-    },
+    data                : data,
 
     multiple            : true,
 
@@ -137,9 +124,9 @@ new Flounder( document.getElementById( 'vanilla--input' ), {
  * vanilla Flounder attached pre built select box
  */
 new Flounder( document.getElementById( 'vanilla--select' ), {
-    defaultValue : 2,
+    defaultValue    : 2,
 
-    classes : {
+    classes         : {
         flounder        : 'class--to--give--the--main--flounder--element',
         hidden          : 'class--to--denote--hidden',
         selected        : 'class--to--denote--selected--option',

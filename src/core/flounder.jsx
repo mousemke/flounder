@@ -23,7 +23,7 @@ class Flounder
     {
         if ( target )
         {
-            if ( target.length && typeof target !== 'string' )
+            if ( target.length && typeof target !== 'string' && target.tagName !== 'SELECT' )
             {
                 return this.arrayOfFlounders( target, props );
             }
@@ -829,7 +829,6 @@ class Flounder
         {
             this.selectedClass += '  ' + classes.SELECTED_HIDDEN;
         }
-        console.log( this.data );
     }
 
 
@@ -865,7 +864,7 @@ class Flounder
                 } );
             } );
 
-            this.data            = data;
+            this.data               = data;
             this.target             = target.parentNode;
             this.refs.selectOptions = selectOptions;
 
