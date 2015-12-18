@@ -9,6 +9,7 @@ import api              from './api';
 
 class Flounder
 {
+
     /**
      * ## constructor
      *
@@ -21,48 +22,29 @@ class Flounder
      */
     constructor( target, props )
     {
-        if ( target )
-        {
-            if ( target.length && typeof target !== 'string' && target.tagName !== 'SELECT' )
-            {
-                return this.arrayOfFlounders( target, props );
-            }
-
-            target      = target.nodeType === 1 ? target : document.querySelector( target );
-
-            this.originalTarget = target;
-
-            target.flounder     = this;
-
-            if ( target.tagName === 'INPUT' )
-            {
-                this.addClass( target, classes.HIDDEN );
-                target.setAttribute( 'aria-hidden', true );
-                target.tabIndex = -1;
-                target          = target.parentNode;
-            }
-
-            this.target = target;
-            this.props  = props;
-
-            this.bindThis();
-            this.initialzeOptions();
-            this.onInit();
-
-            this.buildDom();
-            this.setPlatform();
-            this.onRender();
-
-            this.onComponentDidMount();
-
-            this.refs.select.flounder = this.refs.selected.flounder = this.target.flounder = this;
-
-            return this;
-        }
-        else if ( !target && !props )
+        if ( !target && !props )
         {
             return this.constructor;
         }
+
+        if ( target.length && typeof target !== 'string' && target.tagName !== 'SELECT' )
+        {
+            return this.arrayOfFlounders( target, props );
+        }
+
+        this.props = props;
+        this.setTarget();
+        this.bindThis();
+        this.initialzeOptions();
+        this.onInit();
+        this.buildDom();
+        this.setPlatform();
+        this.onRender();
+        this.onComponentDidMount();
+
+        this.refs.select.flounder = this.refs.selected.flounder = this.target.flounder = this;
+
+        return this;
     }
 
 
@@ -1536,6 +1518,34 @@ class Flounder
         refs.flounder.focus();
 
         this.onClose( e, this.getSelectedValues() );
+    }
+
+
+    /**
+     * ## Set Target
+     *
+     * sets the target related
+     *
+     * @param {DOMElement} target  the actual to-be-flounderized element
+     *
+     * @return _Void_
+     */
+    setTarget( target )
+    {
+        target      = target.nodeType === 1 ? target : document.querySelector( target );
+
+        this.originalTarget = target;
+        target.flounder     = this;
+
+        if ( target.tagName === 'INPUT' )
+        {
+            this.addClass( target, classes.HIDDEN );
+            target.setAttribute( 'aria-hidden', true );
+            target.tabIndex = -1;
+            target          = target.parentNode;
+        }
+
+        this.target = target;
     }
 }
 
