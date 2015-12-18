@@ -453,34 +453,6 @@ class Flounder
 
 
     /**
-     * ## checkSelect
-     *
-     * checks if a keypress is a selection
-     */
-    checkSelect( e )
-    {
-        if ( !this.toggleList.justOpened )
-        {
-            switch ( e.keyCode )
-            {
-                case 13:
-                case 27:
-                case 32:
-                case 38:
-                case 40:
-                    return true;
-            }
-        }
-        else
-        {
-            this.toggleList.justOpened = false;
-        }
-
-        return false;
-    }
-
-
-    /**
      * ## checkFlounderKeypress
      *
      * checks flounder focused keypresses and filters all but space and enter
@@ -1298,36 +1270,39 @@ class Flounder
     setSelectValue( obj, e )
     {
         let refs        = this.refs;
-        let selection;
+        let keyCode;
 
         if ( e ) // click
         {
             this.setSelectValueClick( e );
-            selection = true;
         }
         else // keypress
         {
-            selection = this.checkSelect( obj );
-
-            if ( selection )
-            {
-                this.setSelectValueButton( obj );
-            }
+            keyCode = obj.keyCode;
+            this.setSelectValueButton( obj );
         }
 
-        if ( selection )
+        this.displaySelected( refs.selected, refs );
+
+        if ( !this.___programmaticClick )
         {
-            this.displaySelected( refs.selected, refs );
+            // tab, shift, ctrl, alt, caps, cmd
+            let nonKeys = [ 9, 16, 17, 18, 20, 91 ];
 
-            if ( !this.___programmaticClick )
+            if ( e || ( keyCode && nonKeys.indexOf( keyCode ) === -1 ) )
             {
-                this.onSelect( e, this.getSelectedValues() );
-            }
-            else
-            {
-                this.___programmaticClick = false;
+                if ( this.toggleList.justOpened && !e )
+                {
+                    this.toggleList.justOpened = false;
+                }
+                else
+                {
+                    this.onSelect( e, this.getSelectedValues() );
+                }
             }
         }
+
+        this.___programmaticClick = false;
     }
 
 
@@ -1349,7 +1324,7 @@ class Flounder
 
         this.removeSelectedClass( data );
 
-        let dataArray    = this.getSelectedOptions();
+        let dataArray       = this.getSelectedOptions();
         let baseOption      = dataArray[ 0 ];
 
         if ( baseOption )

@@ -308,6 +308,12 @@ See more examples on the [demo page](./demo/index.html)
 Change Log
 ==========
 
+0.2.3
+-----
+
++ simplified how keypresses are handled
+
+
 0.2.2
 -----
 

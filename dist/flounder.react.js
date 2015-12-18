@@ -1,12 +1,12 @@
 /*!
- * Flounder JavaScript Styleable Selectbox v0.2.2
+ * Flounder JavaScript Styleable Selectbox v0.2.3
  * https://github.com/sociomantic/flounder
  *
  * Copyright 2015 Sociomantic Labs and other contributors
  * Released under the MIT license
  * https://github.com/sociomantic/flounder/license
  *
- * Date: Thu Dec 17 2015
+ * Date: Fri Dec 18 2015
  */
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 // shim for using process in browser
@@ -19782,30 +19782,6 @@ var Flounder = (function () {
         }
 
         /**
-         * ## checkSelect
-         *
-         * checks if a keypress is a selection
-         */
-    }, {
-        key: 'checkSelect',
-        value: function checkSelect(e) {
-            if (!this.toggleList.justOpened) {
-                switch (e.keyCode) {
-                    case 13:
-                    case 27:
-                    case 32:
-                    case 38:
-                    case 40:
-                        return true;
-                }
-            } else {
-                this.toggleList.justOpened = false;
-            }
-
-            return false;
-        }
-
-        /**
          * ## checkFlounderKeypress
          *
          * checks flounder focused keypresses and filters all but space and enter
@@ -20544,30 +20520,33 @@ var Flounder = (function () {
         key: 'setSelectValue',
         value: function setSelectValue(obj, e) {
             var refs = this.refs;
-            var selection = undefined;
+            var keyCode = undefined;
 
             if (e) // click
                 {
                     this.setSelectValueClick(e);
-                    selection = true;
                 } else // keypress
                 {
-                    selection = this.checkSelect(obj);
+                    keyCode = obj.keyCode;
+                    this.setSelectValueButton(obj);
+                }
 
-                    if (selection) {
-                        this.setSelectValueButton(obj);
+            this.displaySelected(refs.selected, refs);
+
+            if (!this.___programmaticClick) {
+                // tab, shift, ctrl, alt, caps, cmd
+                var nonKeys = [9, 16, 17, 18, 20, 91];
+
+                if (e || keyCode && nonKeys.indexOf(keyCode) === -1) {
+                    if (this.toggleList.justOpened && !e) {
+                        this.toggleList.justOpened = false;
+                    } else {
+                        this.onSelect(e, this.getSelectedValues());
                     }
                 }
-
-            if (selection) {
-                this.displaySelected(refs.selected, refs);
-
-                if (!this.___programmaticClick) {
-                    this.onSelect(e, this.getSelectedValues());
-                } else {
-                    this.___programmaticClick = false;
-                }
             }
+
+            this.___programmaticClick = false;
         }
 
         /**
