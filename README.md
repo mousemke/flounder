@@ -318,9 +318,11 @@ Change Log
 + fixed first keypress bug (#23)
 + updated examples and example pics
 + updated default css
-+ added additional package descriptions
++ added additional package keywords
 + updates to readme
 + fixed a bug based on select tags NOT being arrays
++ fixed a bug that stopped data from being passed from the config object
++ brought back _slice and the constructor position
 
 
 0.2.2
