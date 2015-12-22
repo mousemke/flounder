@@ -19,15 +19,17 @@
   "keywords": [
     "select2",
     "dropdown",
-    "front",
-    "end",
+    "plugin",
+    "react",
+    "component",
+    "ui",
     "frontend",
     "select",
     "box",
     "flounder",
     "sociomantic"
   ],
-  "author": "Mouse Braun <mouse@sociomantic.com> (http://sociomantic.com)",
+  "author": "Mouse Braun <mouse@knoblau.ch> (http://sociomantic.com)",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/sociomantic/flounder/issues"
