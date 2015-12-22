@@ -35,6 +35,7 @@ var api = {
     destroy: function destroy() {
         this.componentWillUnmount();
         var originalTarget = this.originalTarget;
+        originalTarget.flounder = this.refs.flounder = null;
 
         if (originalTarget.tagName === 'INPUT' || originalTarget.tagName === 'SELECT') {
             var target = originalTarget.nextElementSibling;
@@ -672,10 +673,10 @@ var Flounder = (function () {
                         section.appendChild(header);
                         optionsList.appendChild(section);
 
-                        dataObj.data.forEach(function (_dataObj) {
-                            data[index] = buildDiv(_dataObj, index);
+                        dataObj.data.forEach(function (d) {
+                            data[index] = buildDiv(d, index);
                             section.appendChild(data[index]);
-                            selectOptions[index] = buildOption(_dataObj, index);
+                            selectOptions[index] = buildOption(d, index);
                             index++;
                         });
                     })();
@@ -741,16 +742,25 @@ var Flounder = (function () {
     }, {
         key: 'checkFlounderKeypress',
         value: function checkFlounderKeypress(e) {
-            if (e.keyCode === 13 || e.keyCode === 32) {
+            var keyCode = e.keyCode;
+
+            if (keyCode === 13 || keyCode === 32 && e.target.tagName !== 'INPUT') {
                 e.preventDefault();
                 this.toggleList(e);
-            }
+            } else if (keyCode >= 48 && keyCode <= 57 || keyCode >= 65 && keyCode <= 90) // letters - allows native behavior
+                {
+                    var refs = this.refs;
+
+                    if (refs.search && e.target.tagName === 'INPUT') {
+                        refs.selected.innerHTML = '';
+                    }
+                }
         }
 
         /**
          * ## checkPlaceholder
          *
-         * clears or readds the placeholder
+         * clears or re-adds the placeholder
          *
          * @param {Object} e event object
          *
@@ -856,9 +866,7 @@ var Flounder = (function () {
         this.onRender();
         this.onComponentDidMount();
 
-        this.refs.select.flounder = this.refs.selected.flounder = this.target.flounder = this;
-
-        return this;
+        return this.refs.flounder.flounder = this.originalTarget.flounder = this;
     }
 
     /**
@@ -976,26 +984,32 @@ var Flounder = (function () {
         {
             var _this3 = this;
 
-            e.preventDefault();
-            var keyCode = e.keyCode;
+            var refs = this.refs;
 
-            if (keyCode !== 38 && keyCode !== 40 && keyCode !== 13 && keyCode !== 27) {
-                (function () {
-                    var term = e.target.value.toLowerCase();
+            if (!this.toggleList.justOpened) {
+                e.preventDefault();
+                var keyCode = e.keyCode;
 
-                    _this3.refs.data.forEach(function (dataObj) {
-                        var text = dataObj.innerHTML.toLowerCase();
+                if (keyCode !== 38 && keyCode !== 40 && keyCode !== 13 && keyCode !== 27) {
+                    (function () {
+                        var term = e.target.value.toLowerCase();
 
-                        if (term !== '' && text.indexOf(term) === -1) {
-                            _this3.addClass(dataObj, _classes3['default'].SEARCH_HIDDEN);
-                        } else {
-                            _this3.removeClass(dataObj, _classes3['default'].SEARCH_HIDDEN);
-                        }
-                    });
-                })();
+                        refs.data.forEach(function (dataObj) {
+                            var text = dataObj.innerHTML.toLowerCase();
+
+                            if (term !== '' && text.indexOf(term) === -1) {
+                                _this3.addClass(dataObj, _classes3['default'].SEARCH_HIDDEN);
+                            } else {
+                                _this3.removeClass(dataObj, _classes3['default'].SEARCH_HIDDEN);
+                            }
+                        });
+                    })();
+                } else {
+                    this.setKeypress(e);
+                    this.setSelectValue(e);
+                }
             } else {
-                this.setKeypress(e);
-                this.setSelectValue(e);
+                this.toggleList.justOpened = false;
             }
         }
 
@@ -1011,7 +1025,7 @@ var Flounder = (function () {
         value: function fuzzySearchReset() {
             var _this4 = this;
 
-            var refs = tihs.refs;
+            var refs = this.refs;
 
             refs.data.forEach(function (dataObj) {
                 _this4.removeClass(dataObj, _classes3['default'].SEARCH_HIDDEN);
@@ -1342,7 +1356,9 @@ var Flounder = (function () {
     }, {
         key: 'setDefaultOption',
         value: function setDefaultOption(configObj, data) {
+            var defaultObj = undefined;
             var self = this;
+            var _data = undefined; // internally reorganized data options
 
             /**
              * ## setIndexDefault
@@ -1352,9 +1368,9 @@ var Flounder = (function () {
              *
              * @return {Object} default settings
              */
-            var setIndexDefault = function setIndexDefault(index) {
+            var setIndexDefault = function setIndexDefault(_data, index) {
                 var defaultIndex = index || index === 0 ? index : configObj.defaultIndex;
-                var defaultOption = data[defaultIndex];
+                var defaultOption = _data[defaultIndex];
 
                 if (defaultOption) {
                     defaultOption.index = defaultIndex;
@@ -1372,11 +1388,11 @@ var Flounder = (function () {
              *
              * @return {Object} default settings
              */
-            var setPlaceholderDefault = function setPlaceholderDefault(d) {
+            var setPlaceholderDefault = function setPlaceholderDefault(_data) {
                 var refs = self.refs;
                 var select = refs.select;
 
-                var _default = d || {
+                var _default = {
                     text: configObj.placeholder,
                     value: '',
                     index: 0,
@@ -1407,11 +1423,11 @@ var Flounder = (function () {
              *
              * @return {Object} default settings
              */
-            var setValueDefault = function setValueDefault() {
+            var setValueDefault = function setValueDefault(_data) {
                 var defaultProp = configObj.defaultValue + '';
                 var index = undefined;
 
-                data.forEach(function (dataObj, i) {
+                _data.forEach(function (dataObj, i) {
                     if (dataObj.value === defaultProp) {
                         index = i;
                     }
@@ -1428,34 +1444,40 @@ var Flounder = (function () {
             };
 
             /**
-             * ## defaultDefault
+             * ## detectHeaders
              *
-             * given no other options, this spawns a default placeholder
+             * checks the data object for header options, and sorts it accordingly
              *
-             * @return {Object} default settings
+             * @return _Boolean_ hasHeaders
              */
-            var defaultDefault = function defaultDefault() {
-                var d = {
-                    text: _defaults2['default'].placeholder,
-                    value: '',
-                    index: 0,
-                    extraClass: _classes3['default'].HIDDEN
-                };
+            var sortData = function sortData(data) {
+                var res = arguments.length <= 1 || arguments[1] === undefined ? [] : arguments[1];
+                var i = arguments.length <= 2 || arguments[2] === undefined ? 0 : arguments[2];
 
-                return setPlaceholderDefault(d);
+                data.forEach(function (d) {
+                    if (d.header) {
+                        res = sortData(d.data, res, i);
+                    } else {
+                        d.index = i;
+                        res.push(d);
+                        i++;
+                    }
+                });
+
+                return res;
             };
 
-            var defaultObj = undefined;
+            _data = sortData(data);
 
             if (configObj.placeholder) {
-                defaultObj = setPlaceholderDefault();
+                defaultObj = setPlaceholderDefault(_data);
             } else if (configObj.defaultIndex) {
-                defaultObj = setIndexDefault();
+                defaultObj = setIndexDefault(_data);
             } else if (configObj.defaultValue) {
-                defaultObj = setValueDefault();
+                defaultObj = setValueDefault(_data);
             }
 
-            return defaultObj || setIndexDefault(0) || defaultDefault();
+            return defaultObj || setIndexDefault(_data, 0) || setPlaceholderDefault();
         }
 
         /**
@@ -1470,31 +1492,35 @@ var Flounder = (function () {
     }, {
         key: 'setKeypress',
         value: function setKeypress(e) {
-            e.preventDefault();
+            var refs = this.refs;
+
             var increment = 0;
             var keyCode = e.keyCode;
 
             if (this.multipleTags) {
+                e.preventDefault();
                 return false;
             }
 
-            if (keyCode === 13 || keyCode === 27 || keyCode === 32) {
-                this.toggleList(e);
-                return false;
-            } else if (keyCode === 38) {
-                e.preventDefault();
-                increment--;
-            } else if (keyCode === 40) {
-                e.preventDefault();
-                increment++;
-            }
-
-            if (!!window.sidebar) // ff
+            if (keyCode === 13 || keyCode === 27 || keyCode === 32) // space enter escape
                 {
-                    increment = 0;
+                    this.toggleList(e);
+                    return false;
+                } else if (!window.sidebar && keyCode === 38 || keyCode === 40) // up and down
+                {
+                    e.preventDefault();
+                    var search = refs.search;
+
+                    if (search) {
+                        search.value = '';
+                    }
+
+                    increment = keyCode - 39;
+                } else if (keyCode >= 48 && keyCode <= 57 || keyCode >= 65 && keyCode <= 90) // letters - allows native behavior
+                {
+                    return true;
                 }
 
-            var refs = this.refs;
             var selectTag = refs.select;
             var data = refs.data;
             var dataMaxIndex = data.length - 1;
@@ -1510,7 +1536,7 @@ var Flounder = (function () {
             var hasClass = this.hasClass;
             var dataAtIndex = data[index];
 
-            if (hasClass(dataAtIndex, _classes3['default'].HIDDEN) || hasClass(dataAtIndex, _classes3['default'].SELECTED_HIDDEN) || hasClass(dataAtIndex, _classes3['default'].DISABLED)) {
+            if (hasClass(dataAtIndex, _classes3['default'].HIDDEN) || hasClass(dataAtIndex, _classes3['default'].SELECTED_HIDDEN) || hasClass(dataAtIndex, _classes3['default'].SEARCH_HIDDEN) || hasClass(dataAtIndex, _classes3['default'].DISABLED)) {
                 this.setKeypress(e);
             }
         }
@@ -1962,20 +1988,20 @@ var utils = {
      *
      * @return _Void_
      */
-    removeClass: function removeClass(_el, _class) {
-        var _elClass = _el.className;
-        var _elClassLength = _elClass.length;
-        var _classLength = _class.length;
+    removeClass: function removeClass(el, _class) {
+        var baseClass = el.className;
+        var baseClassLength = baseClass.length;
+        var classLength = _class.length;
 
-        if (_elClass.slice(0, _classLength + 1) === _class + ' ') {
-            _el.className = _elClass.slice(_classLength + 1, _elClassLength);
+        if (baseClass.slice(0, classLength + 1) === _class + ' ') {
+            baseClass = baseClass.slice(classLength + 1, baseClassLength);
+        } else if (baseClass.slice(baseClassLength - classLength - 1, baseClassLength) === ' ' + _class) {
+            baseClass = baseClass.slice(0, classLength - classLength - 1);
+        } else if (baseClass.indexOf(' ' + _class + ' ') !== -1) {
+            baseClass = baseClass.replace(' ' + _class + ' ', ' ');
         }
 
-        if (_elClass.slice(_elClassLength - _classLength - 1, _elClassLength) === ' ' + _class) {
-            _el.className = _elClass.slice(0, _elClassLength - _classLength - 1);
-        }
-
-        _el.className = _el.className.trim();
+        el.className = baseClass.trim();
     },
 
     /**

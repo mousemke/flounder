@@ -15,15 +15,15 @@
     </head>
     <body>
         <div>
-            <span class="demo--label">Vanilla from Input (sections)</span>
+            <span class="demo--label">Vanilla from Input (sections, unique classes, default value)</span>
             <input class="vanilla--input--tags" id="vanilla--input--tags" type="text">
         </div>
         <div>
-            <span class="demo--label">Vanilla from Input (multiple, no tags, dynamic options)</span>
+            <span class="demo--label">Vanilla from Input (multiple, no tags, dynamic options, default index)</span>
             <input id="vanilla--input" type="text">
         </div>
         <div>
-            <span class="demo--label">Vanilla from Select</span>
+            <span class="demo--label">Vanilla from Select (default value, custom classes)</span>
             <select id="vanilla--select" class="test--class--one  test--class--two">
                 <option>1</option>
                 <option>2</option>
@@ -33,19 +33,19 @@
             </select>
         </div>
         <div>
-            <span class="demo--label">React from Div (multiple, tags)</span>
+            <span class="demo--label">React from Div (multiple, tags, placeholder)</span>
             <div style="display:inline-block;" id="react--multiple--tags"></div>
         </div>
         <div>
-            <span class="demo--label">React from Span ()</span>
+            <span class="demo--label">React from Span (default value)</span>
             <span style="display:inline-block;" id="react--span"></span>
         </div>
         <div>
-            <span class="demo--label">React from Div (multiple, no-tags, desciption)</span>
+            <span class="demo--label">React from Div (multiple, no-tags, desciption, default index)</span>
             <div style="display:inline-block;" id="react--multiple--desc"></div>
         </div>
         <div>
-            <span class="demo--label">AMD required vanilla from Div (desciption)</span>
+            <span class="demo--label">AMD required vanilla from Div (desciption, placeholder)</span>
             <div style="display:inline-block;" id="AMD--desc"></div>
         </div>
         <div>
@@ -53,7 +53,7 @@
             <div style="display:inline-block;" id="microbe--multiple--desc"></div>
         </div>
         <div>
-            <span class="demo--label">jQuery plugin from Div</span>
+            <span class="demo--label">jQuery plugin from Div (search, placeholder)</span>
             <div style="display:inline-block;" id="jquery--div"></div>
         </div>
 
@@ -79,10 +79,10 @@
                     text        : 'Categories'
                 },
                 {
-                    cssClass    : 'tag',
-                    id          : 'tag',
+                    cssClass    : 'cag',
+                    id          : 'cag',
                     isTaxonomy  : true,
-                    text        : 'Tags'
+                    text        : 'cags'
                 },
                 {
                     cssClass    : 'month',
@@ -113,6 +113,7 @@
                 },
 
                 multiple            : true,
+
                 multipleTags        : false
              } );
 
@@ -121,9 +122,8 @@
              * jquery Flounder attached to a div
              */
              $( '#jquery--div' ).flounder( {
-                placeholder          : 'placeholders!',
 
-                onInit               : function()
+                onInit              : function()
                 {
                     var res = [];
                     data.forEach( function( option )
@@ -135,6 +135,11 @@
                     } );
 
                     this.data = res;
-                } } );</script>
+                },
+
+                placeholder         : 'placeholders!',
+
+                search              : true
+            } );</script>
     </body>
 </html>
