@@ -422,10 +422,22 @@ class Flounder
      */
     checkFlounderKeypress( e )
     {
-        if ( e.keyCode === 13 || e.keyCode === 32 )
+        let keyCode = e.keyCode;
+
+        if ( keyCode === 13 || ( keyCode === 32 && e.target.tagName !== 'INPUT' ) )
         {
             e.preventDefault();
             this.toggleList( e );
+        }
+        else if ( ( keyCode >= 48 && keyCode <= 57 ) ||
+                    ( keyCode >= 65 && keyCode <= 90 ) ) // letters - allows native behavior
+        {
+            let refs = this.refs;
+
+            if ( refs.search && e.target.tagName === 'INPUT')
+            {
+                refs.selected.innerHTML = '';
+            }
         }
     }
 
@@ -433,7 +445,7 @@ class Flounder
     /**
      * ## checkPlaceholder
      *
-     * clears or readds the placeholder
+     * clears or re-adds the placeholder
      *
      * @param {Object} e event object
      *
@@ -678,32 +690,41 @@ class Flounder
      */
     fuzzySearch( e ) // disclaimer: not actually fuzzy
     {
-        e.preventDefault();
-        let keyCode = e.keyCode;
+        let refs = this.refs;
 
-        if ( keyCode !== 38 && keyCode !== 40 &&
-                keyCode !== 13 && keyCode !== 27 )
+        if ( !this.toggleList.justOpened )
         {
-            let term        = e.target.value.toLowerCase();
+            e.preventDefault();
+            let keyCode = e.keyCode;
 
-            this.refs.data.forEach( dataObj =>
+            if ( keyCode !== 38 && keyCode !== 40 &&
+                    keyCode !== 13 && keyCode !== 27 )
             {
-                let text    = dataObj.innerHTML.toLowerCase();
+                let term        = e.target.value.toLowerCase();
 
-                if ( term !== '' && text.indexOf( term ) === -1 )
+                refs.data.forEach( dataObj =>
                 {
-                    this.addClass( dataObj, classes.SEARCH_HIDDEN );
-                }
-                else
-                {
-                    this.removeClass( dataObj, classes.SEARCH_HIDDEN );
-                }
-            } );
+                    let text    = dataObj.innerHTML.toLowerCase();
+
+                    if ( term !== '' && text.indexOf( term ) === -1 )
+                    {
+                        this.addClass( dataObj, classes.SEARCH_HIDDEN );
+                    }
+                    else
+                    {
+                        this.removeClass( dataObj, classes.SEARCH_HIDDEN );
+                    }
+                } );
+            }
+            else
+            {
+                this.setKeypress( e );
+                this.setSelectValue( e );
+            }
         }
         else
         {
-            this.setKeypress( e );
-            this.setSelectValue( e );
+            this.toggleList.justOpened = false;
         }
     }
 
@@ -724,7 +745,7 @@ class Flounder
             this.removeClass( dataObj, classes.SEARCH_HIDDEN );
         } );
 
-        refs.search.value = '';
+        refs.search.value       = '';
     }
 
 
@@ -1194,6 +1215,7 @@ class Flounder
             return res;
         };
 
+
         _data = sortData( data );
 
         if ( configObj.placeholder )
@@ -1224,6 +1246,8 @@ class Flounder
      */
     setKeypress( e )
     {
+        let refs                = this.refs;
+
         let increment   = 0;
         let keyCode     = e.keyCode;
 
@@ -1241,6 +1265,13 @@ class Flounder
         else if ( !window.sidebar && keyCode === 38 || keyCode === 40 ) // up and down
         {
             e.preventDefault();
+            let search = refs.search;
+
+            if ( search )
+            {
+                search.value = '';
+            }
+
             increment = keyCode - 39;
         }
         else if ( ( keyCode >= 48 && keyCode <= 57 ) ||
@@ -1249,7 +1280,7 @@ class Flounder
             return true;
         }
 
-        let refs                = this.refs;
+
         let selectTag           = refs.select;
         let data                = refs.data;
         let dataMaxIndex        = data.length - 1;
@@ -1270,6 +1301,7 @@ class Flounder
 
         if ( hasClass( dataAtIndex, classes.HIDDEN ) ||
              hasClass( dataAtIndex, classes.SELECTED_HIDDEN ) ||
+             hasClass( dataAtIndex, classes.SEARCH_HIDDEN ) ||
              hasClass( dataAtIndex, classes.DISABLED ) )
         {
             this.setKeypress( e );

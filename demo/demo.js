@@ -43,9 +43,10 @@ let data = [
  * vanilla multi-Flounder with tags attached to an input
  */
 new Flounder( '.vanilla--input--tags', {
-    placeholder          : 'placeholders!',
 
-    onInit : function()
+    defaultValue    : 'All',
+
+    onInit          : function()
     {
         let res = [];
 

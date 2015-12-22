@@ -311,11 +311,23 @@ See more examples on the [demo page](./demo/index.html)
 Change Log
 ==========
 
+
 0.2.4
 -----
 
 + updated default defaults
 + added better error message for 0 length targets
++ now allows for native selection by letter
++ flounder leaves references to itself on .flounder and the original target
++ destroy cleans up references
++ selection after a search clears the search field
++ defaults are correctly determined inside header based flounders
++ removeClass fix
++ search opens properly with keypresses
++ hidden search options no longer appear on keypress
++ search input now clears on up/down navigation
++ space in a search field no longer closes the field
++ selected field gets out of the way on search
 
 
 0.2.3
@@ -375,33 +387,8 @@ Change Log
 + restructured folders and files
 
 
-0.1.5
------
 
-+ added rebuildOption and getOptions
-+ added dynamic options
-+ added getSelected
-+ fixes in keypress handlers
-+ added support for AMD loaders
-+ added a jquery plugin wrapper
-+ added a microbe plugin wrapper
-+ fixed multi-select with dynamic options
+Older Changes
+=============
 
-
-0.1.4
------
-
-+ flounder now detroys itself properly
-
-
-0.1.3
------
-
-+ fresh opening a menu now scrolls to selected (non-multiple)
-+ events in setValue are now normalized
-
-
-0.1.0
------
-
-+ all callback functions all start with `on` for clarity (`init` becomes `onInit`)
+To keep the length of this file down, [older changes are here](./older_changes.md)
