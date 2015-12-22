@@ -346,11 +346,11 @@ class Flounder
                 section.appendChild( header );
                 optionsList.appendChild( section );
 
-                dataObj.data.forEach( ( _dataObj ) =>
+                dataObj.data.forEach( ( d ) =>
                 {
-                    data[ index ]           = buildDiv( _dataObj, index );
+                    data[ index ]           = buildDiv( d, index );
                     section.appendChild( data[ index ] );
-                    selectOptions[ index ]  = buildOption( _dataObj, index );
+                    selectOptions[ index ]  = buildOption( d, index );
                     index++;
                 } );
             }
@@ -548,9 +548,7 @@ class Flounder
         this.onRender();
         this.onComponentDidMount();
 
-        this.refs.select.flounder = this.refs.selected.flounder = this.target.flounder = this;
-
-        return this;
+        return this.refs.flounder.flounder = this.originalTarget.flounder = this;
     }
 
 
@@ -719,7 +717,7 @@ class Flounder
      */
     fuzzySearchReset()
     {
-        let refs = tihs.refs;
+        let refs = this.refs;
 
         refs.data.forEach( dataObj =>
         {
@@ -1072,7 +1070,9 @@ class Flounder
      */
     setDefaultOption( configObj, data )
     {
-        let self = this;
+        let defaultObj;
+        let self        = this;
+        let _data;  // internally reorganized data options
 
         /**
          * ## setIndexDefault
@@ -1082,10 +1082,10 @@ class Flounder
          *
          * @return {Object} default settings
          */
-        let setIndexDefault = function( index )
+        let setIndexDefault = function( _data, index )
         {
             let defaultIndex        = index || index === 0 ? index : configObj.defaultIndex;
-            let defaultOption       = data[ defaultIndex ];
+            let defaultOption       = _data[ defaultIndex ];
 
             if ( defaultOption )
             {
@@ -1105,12 +1105,12 @@ class Flounder
          *
          * @return {Object} default settings
          */
-        let setPlaceholderDefault = function( d )
+        let setPlaceholderDefault = function( _data )
         {
             let refs        = self.refs;
             let select      = refs.select;
 
-            let _default    = d || {
+            let _default    = {
                 text        : configObj.placeholder,
                 value       : '',
                 index       : 0,
@@ -1143,12 +1143,12 @@ class Flounder
          *
          * @return {Object} default settings
          */
-        let setValueDefault = function()
+        let setValueDefault = function( _data )
         {
             let defaultProp = configObj.defaultValue + '';
             let index;
 
-            data.forEach( function( dataObj, i )
+            _data.forEach( function( dataObj, i )
             {
                 if ( dataObj.value === defaultProp )
                 {
@@ -1169,41 +1169,47 @@ class Flounder
 
 
         /**
-         * ## defaultDefault
+         * ## detectHeaders
          *
-         * given no other options, this spawns a default placeholder
+         * checks the data object for header options, and sorts it accordingly
          *
-         * @return {Object} default settings
+         * @return _Boolean_ hasHeaders
          */
-        let defaultDefault = function()
+        let sortData = function( data, res = [], i = 0 )
         {
-            let d = {
-                text        : defaultOptions.placeholder,
-                value       : '',
-                index       : 0,
-                extraClass  : classes.HIDDEN
-            };
+            data.forEach( function( d )
+            {
+                if ( d.header )
+                {
+                    res = sortData( d.data, res, i );
+                }
+                else
+                {
+                    d.index = i;
+                    res.push( d );
+                    i++;
+                }
+            } );
 
-            return setPlaceholderDefault( d );
+            return res;
         };
 
-
-        let defaultObj;
+        _data = sortData( data );
 
         if ( configObj.placeholder )
         {
-            defaultObj =  setPlaceholderDefault();
+            defaultObj =  setPlaceholderDefault( _data );
         }
         else if ( configObj.defaultIndex )
         {
-            defaultObj =  setIndexDefault();
+            defaultObj =  setIndexDefault( _data );
         }
         else if ( configObj.defaultValue )
         {
-            defaultObj =  setValueDefault();
+            defaultObj =  setValueDefault( _data );
         }
 
-        return defaultObj || setIndexDefault( 0 ) || defaultDefault();
+        return defaultObj || setIndexDefault( _data, 0 ) || setPlaceholderDefault();
     }
 
 
@@ -1218,34 +1224,29 @@ class Flounder
      */
     setKeypress( e )
     {
-        e.preventDefault();
         let increment   = 0;
         let keyCode     = e.keyCode;
 
         if ( this.multipleTags )
         {
+            e.preventDefault();
             return false;
         }
 
-        if ( keyCode === 13 || keyCode === 27 || keyCode === 32 )
+        if ( keyCode === 13 || keyCode === 27 || keyCode === 32 ) // space enter escape
         {
             this.toggleList( e );
             return false;
         }
-        else if ( keyCode === 38 )
+        else if ( !window.sidebar && keyCode === 38 || keyCode === 40 ) // up and down
         {
             e.preventDefault();
-            increment--;
+            increment = keyCode - 39;
         }
-        else if ( keyCode === 40 )
+        else if ( ( keyCode >= 48 && keyCode <= 57 ) ||
+                ( keyCode >= 65 && keyCode <= 90 ) ) // letters - allows native behavior
         {
-            e.preventDefault();
-            increment++;
-        }
-
-        if ( !!window.sidebar ) // ff
-        {
-            increment = 0;
+            return true;
         }
 
         let refs                = this.refs;

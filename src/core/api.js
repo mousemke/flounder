@@ -13,7 +13,8 @@ const api = {
     destroy : function()
     {
         this.componentWillUnmount();
-        let originalTarget  = this.originalTarget;
+        let originalTarget      = this.originalTarget;
+        originalTarget.flounder = this.refs.flounder = null;
 
         if ( originalTarget.tagName === 'INPUT' || originalTarget.tagName === 'SELECT' )
         {
