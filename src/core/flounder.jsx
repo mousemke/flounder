@@ -533,6 +533,10 @@ class Flounder
         {
             return this.arrayOfFlounders( target, props );
         }
+        else if ( target.length === 0 )
+        {
+            throw ': target length cannot equal 0. Flounder cannot continue';
+        }
 
         this.props = props;
         this.setTarget( target );
@@ -1071,6 +1075,29 @@ class Flounder
         let self = this;
 
         /**
+         * ## setIndexDefault
+         *
+         * sets a specified indexas the default option. This only works correctly
+         * if it is a valid index, otherwise it returns null
+         *
+         * @return {Object} default settings
+         */
+        let setIndexDefault = function( index )
+        {
+            let defaultIndex        = index || index === 0 ? index : configObj.defaultIndex;
+            let defaultOption       = data[ defaultIndex ];
+
+            if ( defaultOption )
+            {
+                defaultOption.index   = defaultIndex;
+                return defaultOption;
+            }
+
+            return null;
+        };
+
+
+        /**
          * ## setPlaceholderDefault
          *
          * sets a placeholder as the default option.  This inserts an empty
@@ -1078,12 +1105,12 @@ class Flounder
          *
          * @return {Object} default settings
          */
-        let setPlaceholderDefault = function()
+        let setPlaceholderDefault = function( d )
         {
             let refs        = self.refs;
             let select      = refs.select;
 
-            let _default    = {
+            let _default    = d || {
                 text        : configObj.placeholder,
                 value       : '',
                 index       : 0,
@@ -1105,29 +1132,6 @@ class Flounder
             data.unshift( _default );
 
             return _default;
-        };
-
-
-        /**
-         * ## setIndexDefault
-         *
-         * sets a specified indexas the default option. This only works correctly
-         * if it is a valid index, otherwise it returns null
-         *
-         * @return {Object} default settings
-         */
-        let setIndexDefault = function( index )
-        {
-            let defaultIndex        = index || index === 0 ? index : configObj.defaultIndex;
-            let defaultOption       = data[ defaultIndex ];
-
-            if ( defaultOption )
-            {
-                defaultOption.index   = defaultIndex;
-                return defaultOption;
-            }
-
-            return null;
         };
 
 
@@ -1164,6 +1168,26 @@ class Flounder
         };
 
 
+        /**
+         * ## defaultDefault
+         *
+         * given no other options, this spawns a default placeholder
+         *
+         * @return {Object} default settings
+         */
+        let defaultDefault = function()
+        {
+            let d = {
+                text        : defaultOptions.placeholder,
+                value       : '',
+                index       : 0,
+                extraClass  : classes.HIDDEN
+            };
+
+            return setPlaceholderDefault( d );
+        };
+
+
         let defaultObj;
 
         if ( configObj.placeholder )
@@ -1179,7 +1203,7 @@ class Flounder
             defaultObj =  setValueDefault();
         }
 
-        return defaultObj || setIndexDefault( 0 );
+        return defaultObj || setIndexDefault( 0 ) || defaultDefault();
     }
 
 

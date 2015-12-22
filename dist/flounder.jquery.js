@@ -1,12 +1,12 @@
 /*!
- * Flounder JavaScript Styleable Selectbox v0.2.3
+ * Flounder JavaScript Styleable Selectbox v0.2.4
  * https://github.com/sociomantic/flounder
  *
  * Copyright 2015 Sociomantic Labs and other contributors
  * Released under the MIT license
  * https://github.com/sociomantic/flounder/license
  *
- * Date: Fri Dec 18 2015
+ * Date: Tue Dec 22 2015
  */
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 'use strict';
@@ -842,6 +842,8 @@ var Flounder = (function () {
 
         if (target.length && typeof target !== 'string' && target.tagName !== 'SELECT') {
             return this.arrayOfFlounders(target, props);
+        } else if (target.length === 0) {
+            throw ': target length cannot equal 0. Flounder cannot continue';
         }
 
         this.props = props;
@@ -1343,6 +1345,26 @@ var Flounder = (function () {
             var self = this;
 
             /**
+             * ## setIndexDefault
+             *
+             * sets a specified indexas the default option. This only works correctly
+             * if it is a valid index, otherwise it returns null
+             *
+             * @return {Object} default settings
+             */
+            var setIndexDefault = function setIndexDefault(index) {
+                var defaultIndex = index || index === 0 ? index : configObj.defaultIndex;
+                var defaultOption = data[defaultIndex];
+
+                if (defaultOption) {
+                    defaultOption.index = defaultIndex;
+                    return defaultOption;
+                }
+
+                return null;
+            };
+
+            /**
              * ## setPlaceholderDefault
              *
              * sets a placeholder as the default option.  This inserts an empty
@@ -1350,11 +1372,11 @@ var Flounder = (function () {
              *
              * @return {Object} default settings
              */
-            var setPlaceholderDefault = function setPlaceholderDefault() {
+            var setPlaceholderDefault = function setPlaceholderDefault(d) {
                 var refs = self.refs;
                 var select = refs.select;
 
-                var _default = {
+                var _default = d || {
                     text: configObj.placeholder,
                     value: '',
                     index: 0,
@@ -1375,26 +1397,6 @@ var Flounder = (function () {
                 data.unshift(_default);
 
                 return _default;
-            };
-
-            /**
-             * ## setIndexDefault
-             *
-             * sets a specified indexas the default option. This only works correctly
-             * if it is a valid index, otherwise it returns null
-             *
-             * @return {Object} default settings
-             */
-            var setIndexDefault = function setIndexDefault(index) {
-                var defaultIndex = index || index === 0 ? index : configObj.defaultIndex;
-                var defaultOption = data[defaultIndex];
-
-                if (defaultOption) {
-                    defaultOption.index = defaultIndex;
-                    return defaultOption;
-                }
-
-                return null;
             };
 
             /**
@@ -1425,6 +1427,24 @@ var Flounder = (function () {
                 return null;
             };
 
+            /**
+             * ## defaultDefault
+             *
+             * given no other options, this spawns a default placeholder
+             *
+             * @return {Object} default settings
+             */
+            var defaultDefault = function defaultDefault() {
+                var d = {
+                    text: _defaults2['default'].placeholder,
+                    value: '',
+                    index: 0,
+                    extraClass: _classes3['default'].HIDDEN
+                };
+
+                return setPlaceholderDefault(d);
+            };
+
             var defaultObj = undefined;
 
             if (configObj.placeholder) {
@@ -1435,7 +1455,7 @@ var Flounder = (function () {
                 defaultObj = setValueDefault();
             }
 
-            return defaultObj || setIndexDefault(0);
+            return defaultObj || setIndexDefault(0) || defaultDefault();
         }
 
         /**

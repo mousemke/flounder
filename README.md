@@ -1,4 +1,4 @@
-Flounder.js 0.2.3
+Flounder.js 0.2.4
 =================
 
 (for modern browsers and ie9+)
@@ -310,6 +310,13 @@ See more examples on the [demo page](./demo/index.html)
 
 Change Log
 ==========
+
+0.2.4
+-----
+
++ updated default defaults
++ added better error message for 0 length targets
+
 
 0.2.3
 -----
