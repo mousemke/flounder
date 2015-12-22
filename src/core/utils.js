@@ -168,23 +168,26 @@ const utils =
      *
      * @return _Void_
      */
-    removeClass : function( _el, _class )
+    removeClass : function( el, _class )
     {
-        let _elClass        = _el.className;
-        let _elClassLength  = _elClass.length;
-        let _classLength    = _class.length;
+        var baseClass        = el.className;
+        var baseClassLength  = baseClass.length;
+        var classLength    = _class.length;
 
-        if ( _elClass.slice( 0, _classLength + 1 ) === _class + ' ' )
+        if ( baseClass.slice( 0, classLength + 1 ) === _class + ' ' )
         {
-            _el.className = _elClass.slice( _classLength + 1, _elClassLength );
+            baseClass = baseClass.slice( classLength + 1, baseClassLength );
+        }
+        else if ( baseClass.slice( baseClassLength - classLength - 1, baseClassLength ) === ' ' + _class )
+        {
+            baseClass = baseClass.slice( 0, classLength - classLength - 1 );
+        }
+        else if ( baseClass.indexOf( ' ' + _class + ' ' ) !== -1 )
+        {
+            baseClass = baseClass.replace( ' ' + _class + ' ', ' ' );
         }
 
-        if ( _elClass.slice( _elClassLength - _classLength - 1, _elClassLength ) === ' ' + _class )
-        {
-            _el.className = _elClass.slice( 0, _elClassLength - _classLength - 1 );
-        }
-
-        _el.className =  _el.className.trim();
+        el.className = baseClass.trim();
     },
 
 
