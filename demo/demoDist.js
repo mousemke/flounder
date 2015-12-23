@@ -134,7 +134,11 @@ new _srcCoreFlounderJsx2['default'](document.getElementById('vanilla--select'), 
         hidden: 'class--to--denote--hidden',
         selected: 'class--to--denote--selected--option',
         wrapper: 'additional--class--to--give--the--wrapper'
-    }
+    },
+
+    onSelect: (function (a, b) {
+        console.log(this, a, b);
+    }).bind(window)
 });
 
 /**
@@ -225,6 +229,32 @@ requirejs(['flounder'], function (Flounder) {
 
             this.data = res;
         }
+    });
+});
+
+/**
+ * vanilla Flounder with descriptions attached to a div
+ */
+requirejs(['flounder'], function (Flounder) {
+    new Flounder(document.getElementById('AMD--select'), {
+
+        placeholder: 'placeholders!',
+
+        onInit: function onInit() {
+            var res = [];
+            data.forEach(function (dataObj) {
+                res.push({
+                    text: dataObj.text,
+                    value: dataObj.id
+                });
+            });
+
+            this.data = res;
+        },
+
+        onSelect: (function (a, b) {
+            console.log(this, a, b);
+        }).bind(window)
     });
 });
 
