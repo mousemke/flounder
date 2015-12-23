@@ -6,7 +6,7 @@
  * Released under the MIT license
  * https://github.com/sociomantic/flounder/license
  *
- * Date: Tue Dec 22 2015
+ * Date: Wed Dec 23 2015
  */
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 // shim for using process in browser
@@ -21011,7 +21011,7 @@ var utils = {
         if (baseClass.slice(0, classLength + 1) === _class + ' ') {
             baseClass = baseClass.slice(classLength + 1, baseClassLength);
         } else if (baseClass.slice(baseClassLength - classLength - 1, baseClassLength) === ' ' + _class) {
-            baseClass = baseClass.slice(0, classLength - classLength - 1);
+            baseClass = baseClass.slice(0, baseClassLength - classLength - 1);
         } else if (baseClass.indexOf(' ' + _class + ' ') !== -1) {
             baseClass = baseClass.replace(' ' + _class + ' ', ' ');
         }

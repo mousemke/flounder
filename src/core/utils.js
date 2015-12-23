@@ -180,7 +180,7 @@ const utils =
         }
         else if ( baseClass.slice( baseClassLength - classLength - 1, baseClassLength ) === ' ' + _class )
         {
-            baseClass = baseClass.slice( 0, classLength - classLength - 1 );
+            baseClass = baseClass.slice( 0, baseClassLength - classLength - 1 );
         }
         else if ( baseClass.indexOf( ' ' + _class + ' ' ) !== -1 )
         {
