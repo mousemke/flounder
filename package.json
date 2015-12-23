@@ -1,6 +1,6 @@
 {
   "name": "flounder",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "description": "a native friendly dropdown menu",
   "main": "./dist/flounder.js",
   "scripts": {

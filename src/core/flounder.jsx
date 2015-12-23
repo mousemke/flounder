@@ -434,7 +434,7 @@ class Flounder
         {
             let refs = this.refs;
 
-            if ( refs.search && e.target.tagName === 'INPUT')
+            if ( refs.search && e.target.tagName === 'INPUT' )
             {
                 refs.selected.innerHTML = '';
             }

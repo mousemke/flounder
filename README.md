@@ -1,4 +1,4 @@
-Flounder.js 0.2.4
+Flounder.js 0.2.5
 =================
 
 (for modern browsers and ie9+)
@@ -312,6 +312,12 @@ Change Log
 ==========
 
 
+0.2.5
+-----
+
++ fixed removeClass
+
+
 0.2.4
 -----
 
@@ -356,35 +362,6 @@ Change Log
 + changed this.options to this.data for clarity
 + added the ability to build sections with headers
 + refactored some build functions
-
-
-0.2.1
------
-
-+ added setValue to API
-+ added disable classes to the css
-+ internal fixes
-+ added hasClass
-+ changed setValueClick
-+ added disable to API
-+ added classes config object
-+ broke up the main flounder file
-+ readme updates
-
-
-0.2.0
------
-
-+ user callbacks now keep their name internally for dynamic changes
-+ some users callback now give the array of selected values (see examples)
-+ _default is now defaultValue
-+ the constructor now accepts µ and $ objects and returns an array of flounders
-+ a call to the constructor without and arguments now returns the constructor
-+ added getSelectedValues() to API
-+ added the ability to give options unique classes
-+ added wrapper to the class options
-+ changed the flounder class optoin from container to flounder
-+ restructured folders and files
 
 
 
