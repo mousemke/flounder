@@ -1,9 +1,14 @@
 {
   "name": "flounder",
   "version": "0.2.5",
+  "author": "Mouse Braun <mouse@knoblau.ch>",
   "description": "a native friendly dropdown menu",
-  "main": "./dist/flounder.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sociomantic/flounder.git"
+  },
   "scripts": {
+    "build": "./node_modules/.bin/gulp && ./node_modules/.bin/gulp buildTests && npm test && echo \"All builds complete and tests passed.\"",
     "amd": "./node_modules/.bin/gulp amd",
     "buildTests": "./node_modules/.bin/gulp buildTests",
     "demo": "./node_modules/.bin/gulp demo",
@@ -14,29 +19,6 @@
     "test": "node --harmony ./scripts/nightmare.js",
     "vanilla": "./node_modules/.bin/gulp vanilla"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/sociomantic/flounder.git"
-  },
-  "keywords": [
-    "select2",
-    "dropdown",
-    "plugin",
-    "react",
-    "component",
-    "ui",
-    "frontend",
-    "select",
-    "box",
-    "flounder",
-    "sociomantic"
-  ],
-  "author": "Mouse Braun <mouse@knoblau.ch> (http://sociomantic.com)",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/sociomantic/flounder/issues"
-  },
-  "homepage": "https://github.com/sociomantic/flounder",
   "devDependencies": {
     "babelify": "^6.3.0",
     "browserify": "^11.2.0",
@@ -52,7 +34,30 @@
     "serve-static": "^1.10.0",
     "vo": "^1.0.3"
   },
-  "dependencies": {
-    "qunit": "^0.7.7"
-  }
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sociomantic/flounder/issues"
+  },
+  "files": [
+    "CODE_OF_CONDUCT.md",
+    "older_changes.md",
+    "README.md",
+    "src/",
+    "dist/"
+  ],
+  "homepage": "https://github.com/sociomantic/flounder",
+  "main": "./dist/flounder.js",
+  "keywords": [
+    "select2",
+    "dropdown",
+    "plugin",
+    "react",
+    "component",
+    "ui",
+    "frontend",
+    "select",
+    "box",
+    "flounder",
+    "sociomantic"
+  ]
 }

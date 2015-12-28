@@ -2094,8 +2094,8 @@ var Tests = function Tests() {
 ;
 
 _srcCoreUtils2['default'].extendClass(Tests, _srcCoreUtils2['default']);
-
 var tests = new Tests();
+
 (0, _unitConstructorTest2['default'])(_srcCoreFlounderJsx2['default']);
 
 exports['default'] = tests;
