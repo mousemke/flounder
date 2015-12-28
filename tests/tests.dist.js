@@ -2077,6 +2077,10 @@ var _srcCoreUtils = require('../src/core/utils');
 
 var _srcCoreUtils2 = _interopRequireDefault(_srcCoreUtils);
 
+var _unitConstructorTest = require('./unit/constructorTest');
+
+var _unitConstructorTest2 = _interopRequireDefault(_unitConstructorTest);
+
 var nativeSlice = Array.prototype.slice;
 
 var Tests = function Tests() {
@@ -2091,7 +2095,37 @@ var Tests = function Tests() {
 
 _srcCoreUtils2['default'].extendClass(Tests, _srcCoreUtils2['default']);
 
-exports['default'] = new Tests();
+var tests = new Tests();
+(0, _unitConstructorTest2['default'])(_srcCoreFlounderJsx2['default']);
+
+exports['default'] = tests;
 module.exports = exports['default'];
 
-},{"../src/core/flounder.jsx":4,"../src/core/utils":5}]},{},[6]);
+},{"../src/core/flounder.jsx":4,"../src/core/utils":5,"./unit/constructorTest":7}],7:[function(require,module,exports){
+/* global document, window, µ, $, QUnit, Benchmark, buildTest  */
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+    value: true
+});
+var tests = function tests(Flounder) {
+    QUnit.module('Flounder constructor');
+
+    /*
+     * constructor tests
+     *
+     * @test    constructor exists
+     * @test    constructor returns constructor with no args
+     */
+    QUnit.test('Flounder', function (assert) {
+        assert.ok(Flounder, 'Flounder Exists');
+        var flounder = new Flounder();
+
+        assert.deepEqual(Flounder, flounder, 'empty returns a new constructor');
+    });
+};
+
+exports['default'] = tests;
+module.exports = exports['default'];
+
+},{}]},{},[6]);
