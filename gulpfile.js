@@ -62,6 +62,15 @@ function min( folder, filename )
 }
 
 
+gulp.task( 'buildTests', function()
+{
+    browserify( './tests/tests.js' )
+        .transform( babelify, { stage : 0 } )
+        .bundle()
+        .pipe( fs.createWriteStream( __dirname + '/tests/tests.dist.js' ) )
+} );
+
+
 gulp.task( 'demo', function()
 {
     browserify( './demo/demo.js' )

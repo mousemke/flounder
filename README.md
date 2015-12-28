@@ -316,6 +316,8 @@ Change Log
 -----
 
 + fixed removeClass
++ added a qunit
++ added nightmare testing
 
 
 0.2.4

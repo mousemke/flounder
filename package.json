@@ -4,13 +4,15 @@
   "description": "a native friendly dropdown menu",
   "main": "./dist/flounder.js",
   "scripts": {
-    "gulp": "./node_modules/.bin/gulp",
-    "vanilla": "./node_modules/.bin/gulp vanilla",
-    "react": "./node_modules/.bin/gulp react",
-    "microbe": "./node_modules/.bin/gulp microbe",
-    "jquery": "./node_modules/.bin/gulp jquery",
     "amd": "./node_modules/.bin/gulp amd",
-    "demo": "./node_modules/.bin/gulp demo"
+    "buildTests": "./node_modules/.bin/gulp buildTests",
+    "demo": "./node_modules/.bin/gulp demo",
+    "gulp": "./node_modules/.bin/gulp",
+    "jquery": "./node_modules/.bin/gulp jquery",
+    "microbe": "./node_modules/.bin/gulp microbe",
+    "react": "./node_modules/.bin/gulp react",
+    "test": "node --harmony ./scripts/nightmare.js",
+    "vanilla": "./node_modules/.bin/gulp vanilla"
   },
   "repository": {
     "type": "git",
@@ -38,11 +40,19 @@
   "devDependencies": {
     "babelify": "^6.3.0",
     "browserify": "^11.2.0",
+    "connect": "^3.4.0",
     "gulp": "^3.9.0",
     "gulp-header": "^1.7.1",
     "gulp-uglify": "^1.5.1",
+    "nightmare": "^2.1.1",
+    "qunitjs": "^1.20.0",
     "react": "^0.14.2",
     "react-dom": "^0.14.2",
-    "requirejs": "^2.1.22"
+    "requirejs": "^2.1.22",
+    "serve-static": "^1.10.0",
+    "vo": "^1.0.3"
+  },
+  "dependencies": {
+    "qunit": "^0.7.7"
   }
 }
