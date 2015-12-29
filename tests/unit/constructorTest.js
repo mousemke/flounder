@@ -16,6 +16,15 @@ let tests = function( Flounder )
         let flounder = new Flounder;
 
         assert.deepEqual( Flounder, flounder, 'empty returns a new constructor' );
+
+        let flounders = new Flounder( [ document.body ] );
+        assert.ok( Array.isArray( flounders ), 'multiple targets returns an array' );
+        assert.ok( flounders[0] instanceof Flounder, 'of flounders' );
+        flounders[0].destroy();
+
+        flounder = new Flounder( document.body );
+        assert.ok( flounder instanceof Flounder, 'a single target makes a flounder' );
+        flounder.destroy();
     });
 };
 

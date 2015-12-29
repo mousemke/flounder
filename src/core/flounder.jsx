@@ -42,22 +42,13 @@ class Flounder
      */
     componentWillUnmount()
     {
-        let props       = this.props;
         let refs        = this.refs;
-
-        let events      = props.events;
-        let div         = refs.flounder;
-
-        for ( let event in events )
-        {
-            div.removeEventListener( event, events[ event ] );
-        }
 
         this.removeOptionsListeners();
 
         refs.selected.removeEventListener( 'click', this.toggleList );
 
-        if ( props.search )
+        if ( this.props.search )
         {
             let search = refs.search;
             search.removeEventListener( 'click', this.toggleList );

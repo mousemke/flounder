@@ -19,14 +19,29 @@ const api = {
         if ( originalTarget.tagName === 'INPUT' || originalTarget.tagName === 'SELECT' )
         {
             let target = originalTarget.nextElementSibling;
-            target.parentNode.removeChild( target );
-            originalTarget.tabIndex = 0;
-            this.removeClass( originalTarget, classes.HIDDEN );
+            try
+            {
+                target.parentNode.removeChild( target );
+                originalTarget.tabIndex = 0;
+                this.removeClass( originalTarget, classes.HIDDEN );
+            }
+            catch( e )
+            {
+                throw ' : this flounder may have already been removed';
+            }
         }
         else
         {
-            let target          = this.target;
-            target.innerHTML    = '';
+            try
+            {
+                let wrapper = this.refs.wrapper;
+                let parent  = wrapper.parentNode;
+                parent.removeChild( wrapper );
+            }
+            catch( e )
+            {
+                throw ' : this flounder may have already been removed';
+            }
         }
     },
 
