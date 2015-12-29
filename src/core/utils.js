@@ -1,5 +1,7 @@
-const utils =
-{
+
+import classes          from './classes';
+
+const utils = {
     /**
      * ## addClass
      *
@@ -119,6 +121,37 @@ const utils =
 
 
     /**
+     * ## getElWidth
+     *
+     * gets the width adjusted for margins
+     *
+     * @param {DOMElement} el target element
+     *
+     * @return _Integer_ adjusted width
+     */
+    getElWidth : function( el )
+    {
+        let style = getComputedStyle( el );
+
+        if ( el.offsetWidth === 0 )
+        {
+            if ( this.__checkWidthAgain !== true )
+            {
+                setTimeout( this.setTextMultiTagIndent.bind( this ), 1500 );
+                this.__checkWidthAgain === true;
+            }
+        }
+        else
+        {
+            this.__checkWidthAgain !== false
+        }
+
+        return el.offsetWidth + parseInt( style[ 'margin-left' ] ) +
+                                parseInt( style[ 'margin-right' ] );
+    },
+
+
+    /**
      * ## hasClass
      *
      * on the quest to nuke jquery, a wild helper function appears
@@ -133,6 +166,21 @@ const utils =
         let _elClass    = _el.className;
         let regex       = new RegExp( '(^' + _class + ' )|( ' + _class + '$)|( ' + _class + ' )|(^' + _class + '$)' );
         return !!_elClass.match( regex );
+    },
+
+
+    /**
+     * hideElement
+     *
+     * hides an element offscreen
+     *
+     * @param {Object} el element to hide
+     *
+     * @return _Void_
+     */
+    hideElement : function( el )
+    {
+        this.addClass( el, classes.HIDDEN );
     },
 
 
@@ -232,6 +280,21 @@ const utils =
 
         this.isIos          = this.iosVersion();
         this.multiSelect    = _osx ? 'metaKey' : 'ctrlKey';
+    },
+
+
+    /**
+     * ## showElement
+     *
+     * remove classes.HIDDEN from a given element
+     *
+     * @param {Object} _el element to show
+     *
+     * @return _Void_
+     */
+    showElement : function( _el )
+    {
+        this.removeClass( _el, classes.HIDDEN );
     },
 
 

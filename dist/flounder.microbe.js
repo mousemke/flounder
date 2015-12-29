@@ -6,7 +6,7 @@
  * Released under the MIT license
  * https://github.com/sociomantic/flounder/license
  *
- * Date: Mon Dec 28 2015
+ * Date: Tue Dec 29 2015
  */
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 'use strict';
@@ -247,7 +247,326 @@ var api = {
 exports['default'] = api;
 module.exports = exports['default'];
 
-},{"./classes":2}],2:[function(require,module,exports){
+},{"./classes":3}],2:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+    value: true
+});
+
+var _slicedToArray = (function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i['return']) _i['return'](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError('Invalid attempt to destructure non-iterable instance'); } }; })();
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _classes = require('./classes');
+
+var _classes2 = _interopRequireDefault(_classes);
+
+var build = {
+
+    /**
+     * ## addOptionDescription
+     *
+     * adds a description to the option
+     *
+     * @param {DOMElement} el option leement to add description to
+     * @param {String} text description
+     *
+     * @return _Void_
+     */
+    addOptionDescription: function addOptionDescription(el, text) {
+        var div = document.createElement('div');
+        div.innerHTML = text;
+        div.className = _classes2['default'].DESCRIPTION;
+        el.appendChild(div);
+    },
+
+    /**
+     * ## addSearch
+     *
+     * checks if a search box is required and attaches it or not
+     *
+     * @param {Object} flounder main element reference
+     *
+     * @return _Mixed_ search node or false
+     */
+    addSearch: function addSearch(flounder) {
+        if (this.props.search) {
+            var search = this.constructElement({
+                tagname: 'input',
+                type: 'text',
+                className: _classes2['default'].SEARCH
+            });
+            flounder.appendChild(search);
+
+            return search;
+        }
+
+        return false;
+    },
+
+    /**
+     * ## bindThis
+     *
+     * binds this to whatever functions need it.  Arrow functions cannot be used
+     * here due to the react extension needing them as well;
+     *
+     * @return _Void_
+     */
+    bindThis: function bindThis() {
+        this.addClass = this.addClass.bind(this);
+        this.attachAttributes = this.attachAttributes.bind(this);
+        this.catchBodyClick = this.catchBodyClick.bind(this);
+        this.checkClickTarget = this.checkClickTarget.bind(this);
+        this.checkFlounderKeypress = this.checkFlounderKeypress.bind(this);
+        this.checkPlaceholder = this.checkPlaceholder.bind(this);
+        this.clickSet = this.clickSet.bind(this);
+        this.displayMultipleTags = this.displayMultipleTags.bind(this);
+        this.fuzzySearch = this.fuzzySearch.bind(this);
+        this.removeMultiTag = this.removeMultiTag.bind(this);
+        this.setIndex = this.setIndex.bind(this);
+        this.setKeypress = this.setKeypress.bind(this);
+        this.setSelectValue = this.setSelectValue.bind(this);
+        this.setValue = this.setValue.bind(this);
+        this.toggleClass = this.toggleClass.bind(this);
+        this.toggleList = this.toggleList.bind(this);
+    },
+
+    /**
+     * ## buildDom
+     *
+     * builds flounder
+     *
+     * @return _Void_
+     */
+    buildDom: function buildDom() {
+        this.refs = {};
+
+        var constructElement = this.constructElement;
+
+        var wrapperClass = _classes2['default'].MAIN_WRAPPER;
+        var wrapper = this.constructElement({ className: this.wrapperClass ? wrapperClass + ' ' + this.wrapperClass : wrapperClass });
+        var flounderClass = _classes2['default'].MAIN;
+        var flounder = constructElement({ className: this.flounderClass ? flounderClass + '  ' + this.flounderClass : flounderClass });
+
+        flounder.setAttribute('aria-hidden', true);
+        flounder.tabIndex = 0;
+        wrapper.appendChild(flounder);
+
+        var select = this.initSelectBox(wrapper);
+        select.tabIndex = -1;
+
+        if (this.multiple === true) {
+            select.setAttribute('multiple', '');
+        }
+
+        var data = this.data;
+
+        var defaultValue = this._default = this.setDefaultOption(this.props, data);
+
+        var selected = constructElement({ className: _classes2['default'].SELECTED_DISPLAYED,
+            'data-value': defaultValue.value, 'data-index': defaultValue.index || -1 });
+        selected.innerHTML = defaultValue.text;
+
+        var multiTagWrapper = this.props.multiple ? constructElement({ className: _classes2['default'].MULTI_TAG_LIST }) : null;
+
+        if (multiTagWrapper) {
+            multiTagWrapper.style.textIndent = this.defaultTextIndent + 'px';
+        }
+
+        var arrow = constructElement({ className: _classes2['default'].ARROW });
+        var optionsListWrapper = constructElement({ className: _classes2['default'].OPTIONS_WRAPPER + '  ' + _classes2['default'].HIDDEN });
+        var optionsList = constructElement({ className: _classes2['default'].LIST });
+        optionsListWrapper.appendChild(optionsList);
+
+        [selected, multiTagWrapper, arrow, optionsListWrapper].forEach(function (el) {
+            if (el) {
+                flounder.appendChild(el);
+            }
+        });
+
+        var search = this.addSearch(flounder);
+        var selectOptions = undefined;
+
+        var _buildData = this.buildData(defaultValue, data, optionsList, select);
+
+        var _buildData2 = _slicedToArray(_buildData, 2);
+
+        data = _buildData2[0];
+        selectOptions = _buildData2[1];
+
+        this.target.appendChild(wrapper);
+
+        this.refs = { wrapper: wrapper, flounder: flounder, selected: selected, arrow: arrow, optionsListWrapper: optionsListWrapper,
+            search: search, multiTagWrapper: multiTagWrapper, optionsList: optionsList, select: select, data: data, selectOptions: selectOptions };
+    },
+
+    /**
+     * ## buildData
+     *
+     * builds both the div and select based options. will skip the select box
+     * if it already exists
+     *
+     * @param {Mixed} defaultValue default entry (string or number)
+     * @param {Array} data array with optino information
+     * @param {Object} optionsList reference to the div option wrapper
+     * @param {Object} select reference to the select box
+     *
+     * @return _Array_ refs to both container elements
+     */
+    buildData: function buildData(defaultValue, originalData, optionsList, select) {
+        originalData = originalData || [];
+        var index = 0;
+        var data = [];
+        var selectOptions = [];
+        var constructElement = this.constructElement;
+        var addOptionDescription = this.addOptionDescription;
+        var selectedClass = this.selectedClass;
+        var escapeHTML = this.escapeHTML;
+        var addClass = this.addClass;
+        var selectRef = this.refs.select;
+
+        /**
+         * ## buildDiv
+         *
+         * builds an individual div tag for a flounder dropdown
+         *
+         * @param {Object} dataObj [description]
+         * @param {Number} i index
+         *
+         * @return {DOMElement}
+         */
+        var buildDiv = function buildDiv(dataObj, i) {
+            if (typeof dataObj !== 'object') {
+                dataObj = {
+                    text: dataObj,
+                    value: dataObj
+                };
+            }
+            dataObj.index = i;
+
+            var extraClass = i === defaultValue.index ? '  ' + selectedClass : '';
+
+            var res = {
+                className: _classes2['default'].OPTION + extraClass,
+                'data-index': i
+            };
+
+            for (var o in dataObj) {
+                if (o !== 'text' && o !== 'description') {
+                    res[o] = dataObj[o];
+                }
+            }
+
+            var data = constructElement(res);
+            var escapedText = escapeHTML(dataObj.text);
+            data.innerHTML = escapedText;
+
+            if (dataObj.description) {
+                addOptionDescription(data, dataObj.description);
+            }
+
+            data.className += dataObj.extraClass ? '  ' + dataObj.extraClass : '';
+
+            return data;
+        };
+
+        /**
+         * ## buildOption
+         *
+         * builds an individual option tag for a flounder dropdown
+         *
+         * @param {Object} dataObj [description]
+         * @param {Number} i index
+         *
+         * @return {DOMElement}
+         */
+        var buildOption = function buildOption(dataObj, i) {
+            var selectOption = undefined;
+
+            if (!selectRef) {
+                selectOption = constructElement({ tagname: 'option',
+                    className: _classes2['default'].OPTION_TAG,
+                    value: dataObj.value });
+                var escapedText = escapeHTML(dataObj.text);
+                selectOption.innerHTML = escapedText;
+                select.appendChild(selectOption);
+            } else {
+                var selectChild = select.children[i];
+                selectOption = selectChild;
+                selectChild.setAttribute('value', selectChild.value);
+            }
+
+            if (i === defaultValue.index) {
+                selectOption.selected = true;
+            }
+
+            if (selectOption.getAttribute('disabled')) {
+                addClass(data[i], _classes2['default'].DISABLED_OPTION);
+            }
+
+            return selectOption;
+        };
+
+        originalData.forEach(function (dataObj) {
+            if (dataObj.header) {
+                (function () {
+                    var section = constructElement({ tagname: 'div',
+                        className: _classes2['default'].SECTION });
+                    var header = constructElement({ tagname: 'div',
+                        className: _classes2['default'].HEADER });
+                    header.textContent = dataObj.header;
+                    section.appendChild(header);
+                    optionsList.appendChild(section);
+
+                    dataObj.data.forEach(function (d) {
+                        data[index] = buildDiv(d, index);
+                        section.appendChild(data[index]);
+                        selectOptions[index] = buildOption(d, index);
+                        index++;
+                    });
+                })();
+            } else {
+                data[index] = buildDiv(dataObj, index);
+                optionsList.appendChild(data[index]);
+                selectOptions[index] = buildOption(dataObj, index);
+                index++;
+            }
+        });
+
+        return [data, selectOptions];
+    },
+
+    /**
+     * ## Set Target
+     *
+     * sets the target related
+     *
+     * @param {DOMElement} target  the actual to-be-flounderized element
+     *
+     * @return _Void_
+     */
+    setTarget: function setTarget(target) {
+        target = target.nodeType === 1 ? target : document.querySelector(target);
+
+        this.originalTarget = target;
+        target.flounder = this;
+
+        if (target.tagName === 'INPUT') {
+            this.addClass(target, _classes2['default'].HIDDEN);
+            target.setAttribute('aria-hidden', true);
+            target.tabIndex = -1;
+            target = target.parentNode;
+        }
+
+        this.target = target;
+    }
+};
+
+exports['default'] = build;
+module.exports = exports['default'];
+
+},{"./classes":3}],3:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -282,7 +601,7 @@ var classes = {
 exports['default'] = classes;
 module.exports = exports['default'];
 
-},{}],3:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -312,7 +631,491 @@ var defaults = {
 exports['default'] = defaults;
 module.exports = exports['default'];
 
-},{}],4:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+    value: true
+});
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _classes = require('./classes');
+
+var _classes2 = _interopRequireDefault(_classes);
+
+var events = {
+
+    /**
+     * ## addListeners
+     *
+     * adds listeners on render
+     *
+     * @return _Void_
+     */
+    addListeners: function addListeners(refs, props) {
+        var self = this;
+        var divertTarget = function divertTarget(e) {
+            var index = this.selectedIndex;
+
+            var _e = {
+                target: data[index]
+            };
+
+            if (self.multipleTags) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+
+            self.setSelectValue(_e);
+
+            if (!self.multiple) {
+                self.toggleList(e, 'close');
+            }
+        };
+
+        refs.select.addEventListener('change', divertTarget);
+
+        this.addOptionsListeners();
+
+        refs.flounder.addEventListener('keydown', this.checkFlounderKeypress);
+        refs.selected.addEventListener('click', this.toggleList);
+
+        if (props.search) {
+            var search = refs.search;
+            search.addEventListener('click', this.toggleList);
+            search.addEventListener('keyup', this.fuzzySearch);
+            search.addEventListener('focus', this.checkPlaceholder);
+            search.addEventListener('blur', this.checkPlaceholder);
+        }
+    },
+
+    /**
+     * ## addOptionsListeners
+     *
+     * adds listeners to the options
+     *
+     * @return _Void_
+     */
+    addOptionsListeners: function addOptionsListeners() {
+        var _this = this;
+
+        this.refs.data.forEach(function (dataObj, i) {
+            if (dataObj.tagName === 'DIV') {
+                dataObj.addEventListener('click', _this.clickSet);
+            }
+        });
+    },
+
+    /**
+     * ## addSelectKeyListener
+     *
+     * adds a listener to the selectbox to allow for seeking through the native
+     * selectbox on keypress
+     *
+     * @return _Void_
+     */
+    addSelectKeyListener: function addSelectKeyListener() {
+        var select = this.refs.select;
+        select.addEventListener('keyup', this.setSelectValue);
+        select.addEventListener('keydown', this.setKeypress);
+        select.focus();
+    },
+
+    /**
+     * ## catchBodyClick
+     *
+     * checks if a click is on the menu and, if it isnt, closes the menu
+     *
+     * @param  {Object} e event object
+     *
+     * @return _Void_
+     */
+    catchBodyClick: function catchBodyClick(e) {
+        if (!this.checkClickTarget(e)) {
+            this.toggleList(e);
+        }
+    },
+
+    /**
+     * ## checkClickTarget
+     *
+     * checks whether the target of a click is the menu or not
+     *
+     * @param  {Object} e event object
+     * @param  {DOMElement} target click target
+     *
+     * @return _Boolean_
+     */
+    checkClickTarget: function checkClickTarget(e, target) {
+        target = target || this.refs.data[e.target.getAttribute('data-index')] || e.target;
+
+        if (target === document) {
+            return false;
+        } else if (target === this.refs.flounder) {
+            return true;
+        }
+
+        return this.checkClickTarget(e, target.parentNode);
+    },
+
+    /**
+     * ## checkFlounderKeypress
+     *
+     * checks flounder focused keypresses and filters all but space and enter
+     *
+     * @return _Void_
+     */
+    checkFlounderKeypress: function checkFlounderKeypress(e) {
+        var keyCode = e.keyCode;
+
+        if (keyCode === 13 || keyCode === 32 && e.target.tagName !== 'INPUT') {
+            e.preventDefault();
+            this.toggleList(e);
+        } else if (keyCode >= 48 && keyCode <= 57 || keyCode >= 65 && keyCode <= 90) // letters - allows native behavior
+            {
+                var refs = this.refs;
+
+                if (refs.search && e.target.tagName === 'INPUT') {
+                    refs.selected.innerHTML = '';
+                }
+            }
+    },
+
+    /**
+     * ## checkPlaceholder
+     *
+     * clears or re-adds the placeholder
+     *
+     * @param {Object} e event object
+     *
+     * @return _Void_
+     */
+    checkPlaceholder: function checkPlaceholder(e) {
+        var type = e.type;
+        var refs = this.refs;
+
+        if (type === 'focus') {
+            refs.selected.innerHTML = '';
+        } else {
+            if (refs.multiTagWrapper && refs.multiTagWrapper.children.length === 0) {
+                this.refs.selected.innerHTML = this._default.text;
+            }
+        }
+    },
+
+    /**
+     * ## clickSet
+     *
+     * when a flounder option is clicked on it needs to set the option as selected
+     *
+     * @param {Object} e event object
+     *
+     * @return _Void_
+     */
+    clickSet: function clickSet(e) {
+        this.setSelectValue({}, e);
+
+        if (!this.multiple || !e[this.multiSelect]) {
+            this.toggleList(e);
+        }
+    },
+
+    /**
+     * ## removeOptionsListeners
+     *
+     * removes event listeners on the data divs
+     *
+     * @return _Void_
+     */
+    removeOptionsListeners: function removeOptionsListeners() {
+        var _this2 = this;
+
+        this.refs.data.forEach(function (dataObj) {
+            if (dataObj.tagName === 'DIV') {
+                dataObj.removeEventListener('click', _this2.clickSet);
+            }
+        });
+    },
+
+    /**
+     * ## removeSelectKeyListener
+     *
+     * disables the event listener on the native select box
+     *
+     * @return _Void_
+     */
+    removeSelectKeyListener: function removeSelectKeyListener() {
+        var select = this.refs.select;
+        select.removeEventListener('keyup', this.setSelectValue);
+    },
+
+    /**
+     * ## setKeypress
+     *
+     * handles arrow key selection
+     *
+     * @param {Object} e event object
+     *
+     * @return _Void_
+     */
+    setKeypress: function setKeypress(e) {
+        var refs = this.refs;
+
+        var increment = 0;
+        var keyCode = e.keyCode;
+
+        if (this.multipleTags) {
+            e.preventDefault();
+            return false;
+        }
+
+        if (keyCode === 13 || keyCode === 27 || keyCode === 32) // space enter escape
+            {
+                this.toggleList(e);
+                return false;
+            } else if (!window.sidebar && keyCode === 38 || keyCode === 40) // up and down
+            {
+                e.preventDefault();
+                var search = refs.search;
+
+                if (search) {
+                    search.value = '';
+                }
+
+                increment = keyCode - 39;
+            } else if (keyCode >= 48 && keyCode <= 57 || keyCode >= 65 && keyCode <= 90) // letters - allows native behavior
+            {
+                return true;
+            }
+
+        var selectTag = refs.select;
+        var data = refs.data;
+        var dataMaxIndex = data.length - 1;
+        var index = selectTag.selectedIndex + increment;
+
+        if (index > dataMaxIndex) {
+            index = 0;
+        } else if (index < 0) {
+            index = dataMaxIndex;
+        }
+
+        selectTag.selectedIndex = index;
+        var hasClass = this.hasClass;
+        var dataAtIndex = data[index];
+
+        if (hasClass(dataAtIndex, _classes2['default'].HIDDEN) || hasClass(dataAtIndex, _classes2['default'].SELECTED_HIDDEN) || hasClass(dataAtIndex, _classes2['default'].SEARCH_HIDDEN) || hasClass(dataAtIndex, _classes2['default'].DISABLED)) {
+            this.setKeypress(e);
+        }
+    },
+
+    /**
+     * ## setSelectValue
+     *
+     * sets the selected value in flounder.  when activated by a click, the event
+     * object is moved to the second variable.  this gives us the ability to
+     * discern between triggered events (keyup) and processed events (click)
+     * for the sake of choosing our targets
+     *
+     * @param {Object} obj possible event object
+     * @param {Object} e event object
+     *
+     * @return _Void_
+     */
+    setSelectValue: function setSelectValue(obj, e) {
+        var refs = this.refs;
+        var keyCode = undefined;
+
+        if (e) // click
+            {
+                this.setSelectValueClick(e);
+            } else // keypress
+            {
+                keyCode = obj.keyCode;
+                this.setSelectValueButton(obj);
+            }
+
+        this.displaySelected(refs.selected, refs);
+
+        if (!this.___programmaticClick) {
+            // tab, shift, ctrl, alt, caps, cmd
+            var nonKeys = [9, 16, 17, 18, 20, 91];
+
+            if (e || keyCode && nonKeys.indexOf(keyCode) === -1) {
+                if (this.toggleList.justOpened && !e) {
+                    this.toggleList.justOpened = false;
+                } else {
+                    this.onSelect(e, this.getSelectedValues());
+                }
+            }
+        }
+
+        this.___programmaticClick = false;
+    },
+
+    /**
+     * ## setSelectValueButton
+     *
+     * processes the setting of a value after a keypress event
+     *
+     * @return _Void_
+     */
+    setSelectValueButton: function setSelectValueButton() {
+        var refs = this.refs;
+        var data = refs.data;
+        var select = refs.select;
+        var selectedClass = this.selectedClass;
+
+        var selectedOption = undefined;
+
+        this.removeSelectedClass(data);
+
+        var dataArray = this.getSelectedOptions();
+        var baseOption = dataArray[0];
+
+        if (baseOption) {
+            selectedOption = data[baseOption.index];
+
+            this.addClass(selectedOption, selectedClass);
+
+            this.scrollTo(selectedOption);
+        }
+    },
+
+    /**
+     * ## setSelectValueClick
+     *
+     * processes the setting of a value after a click event
+     *
+     * @param {Object} e event object
+     *
+     * @return _Void_
+     */
+    setSelectValueClick: function setSelectValueClick(e) {
+        var _multiple = this.multiple;
+        var refs = this.refs;
+        var selectedClass = this.selectedClass;
+        var index = undefined,
+            selectedOption = undefined;
+
+        if ((!_multiple || _multiple && !this.multipleTags && !e[this.multiSelect]) && !this.___forceMultiple) {
+            this.deselectAll();
+        }
+
+        this.___forceMultiple = false;
+        var target = e.target;
+
+        this.toggleClass(target, selectedClass);
+        index = target.getAttribute('data-index');
+
+        selectedOption = refs.selectOptions[index];
+
+        selectedOption.selected = selectedOption.selected === true ? false : true;
+    },
+
+    /**
+     * ## toggleList
+     *
+     * on click of flounder--selected, this shows or hides the options list
+     *
+     * @param {String} force toggle can be forced by passing 'open' or 'close'
+     *
+     * @return _Void_
+     */
+    toggleList: function toggleList(e, force) {
+        var refs = this.refs;
+        var optionsList = refs.optionsListWrapper;
+        var wrapper = refs.wrapper;
+        var hasClass = this.hasClass;
+
+        if (force === 'open' || force !== 'close' && hasClass(optionsList, _classes2['default'].HIDDEN)) {
+            if (e.type === 'keydown') {
+                this.toggleList.justOpened = true;
+            }
+
+            this.toggleOpen(e, optionsList, refs, wrapper);
+        } else if (force === 'close' || !hasClass(optionsList, _classes2['default'].HIDDEN)) {
+            this.toggleList.justOpened = false;
+            this.toggleClosed(e, optionsList, refs, wrapper);
+        }
+    },
+
+    /**
+     * ## toggleOpen
+     *
+     * post toggleList, this runs it the list should be opened
+     *
+     * @param {Object} e event object
+     * @param {DOMElement} optionsList the options list
+     * @param {Object} refs contains the references of the elements in flounder
+     * @param {DOMElement} wrapper wrapper of flounder
+     *
+     * @return _Void_
+     */
+    toggleOpen: function toggleOpen(e, optionsList, refs, wrapper) {
+        this.addSelectKeyListener();
+
+        if (!this.isIos || this.multipleTags === true && this.multiple === true) {
+            this.showElement(optionsList);
+            this.addClass(wrapper, 'open');
+
+            var qsHTML = document.querySelector('html');
+
+            qsHTML.addEventListener('click', this.catchBodyClick);
+            qsHTML.addEventListener('touchend', this.catchBodyClick);
+        }
+
+        if (!this.multiple) {
+            var index = refs.select.selectedIndex;
+            var selectedDiv = refs.data[index];
+
+            if (selectedDiv) {
+                this.scrollTo(selectedDiv);
+            }
+        }
+
+        if (this.props.search) {
+            refs.search.focus();
+        }
+
+        this.onOpen(e, this.getSelectedValues());
+    },
+
+    /**
+     * ## toggleClosed
+     *
+     * post toggleList, this runs it the list should be closed
+     *
+     * @param {Object} e event object
+     * @param {DOMElement} optionsList the options list
+     * @param {Object} refs contains the references of the elements in flounder
+     * @param {DOMElement} wrapper wrapper of flounder
+     *
+     * @return _Void_
+     */
+    toggleClosed: function toggleClosed(e, optionsList, refs, wrapper) {
+        this.hideElement(optionsList);
+        this.removeSelectKeyListener();
+        this.removeClass(wrapper, 'open');
+
+        var qsHTML = document.querySelector('html');
+        qsHTML.removeEventListener('click', this.catchBodyClick);
+        qsHTML.removeEventListener('touchend', this.catchBodyClick);
+
+        if (this.props.search) {
+            this.fuzzySearchReset();
+        }
+
+        refs.flounder.focus();
+
+        this.onClose(e, this.getSelectedValues());
+    }
+};
+
+exports['default'] = events;
+module.exports = exports['default'];
+
+},{"./classes":3}],6:[function(require,module,exports){
 
 /* jshint globalstrict: true */
 'use strict';
@@ -320,8 +1123,6 @@ module.exports = exports['default'];
 Object.defineProperty(exports, '__esModule', {
     value: true
 });
-
-var _slicedToArray = (function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i['return']) _i['return'](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError('Invalid attempt to destructure non-iterable instance'); } }; })();
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
@@ -333,10 +1134,6 @@ var _defaults = require('./defaults');
 
 var _defaults2 = _interopRequireDefault(_defaults);
 
-var _classes2 = require('./classes');
-
-var _classes3 = _interopRequireDefault(_classes2);
-
 var _utils = require('./utils');
 
 var _utils2 = _interopRequireDefault(_utils);
@@ -345,90 +1142,23 @@ var _api = require('./api');
 
 var _api2 = _interopRequireDefault(_api);
 
+var _build = require('./build');
+
+var _build2 = _interopRequireDefault(_build);
+
+var _events = require('./events');
+
+var _events2 = _interopRequireDefault(_events);
+
+var _classes2 = require('./classes');
+
+var _classes3 = _interopRequireDefault(_classes2);
+
 var nativeSlice = Array.prototype.slice;
 
 var Flounder = (function () {
     _createClass(Flounder, [{
-        key: 'addOptionDescription',
-
-        /**
-         * ## addOptionDescription
-         *
-         * adds a description to the option
-         *
-         * @param {DOMElement} el option leement to add description to
-         * @param {String} text description
-         *
-         * @return _Void_
-         */
-        value: function addOptionDescription(el, text) {
-            var div = document.createElement('div');
-            div.innerHTML = text;
-            div.className = _classes3['default'].DESCRIPTION;
-            el.appendChild(div);
-        }
-
-        /**
-         * ## addOptionsListeners
-         *
-         * adds listeners to the options
-         *
-         * @return _Void_
-         */
-    }, {
-        key: 'addOptionsListeners',
-        value: function addOptionsListeners() {
-            var _this = this;
-
-            this.refs.data.forEach(function (dataObj, i) {
-                if (dataObj.tagName === 'DIV') {
-                    dataObj.addEventListener('click', _this.clickSet);
-                }
-            });
-        }
-
-        /**
-         * ## addSearch
-         *
-         * checks if a search box is required and attaches it or not
-         *
-         * @param {Object} flounder main element reference
-         *
-         * @return _Mixed_ search node or false
-         */
-    }, {
-        key: 'addSearch',
-        value: function addSearch(flounder) {
-            if (this.props.search) {
-                var search = this.constructElement({
-                    tagname: 'input',
-                    type: 'text',
-                    className: _classes3['default'].SEARCH
-                });
-                flounder.appendChild(search);
-
-                return search;
-            }
-
-            return false;
-        }
-    }, {
-        key: 'addSelectKeyListener',
-
-        /**
-         * ## addSelectKeyListener
-         *
-         * adds a listener to the selectbox to allow for seeking through the native
-         * selectbox on keypress
-         *
-         * @return _Void_
-         */
-        value: function addSelectKeyListener() {
-            var select = this.refs.select;
-            select.addEventListener('keyup', this.setSelectValue);
-            select.addEventListener('keydown', this.setKeypress);
-            select.focus();
-        }
+        key: 'arrayOfFlounders',
 
         /**
          * ## arrayOfFlounders
@@ -441,363 +1171,14 @@ var Flounder = (function () {
          *
          * @return {Array} array of flounders
          */
-    }, {
-        key: 'arrayOfFlounders',
         value: function arrayOfFlounders(targets, props) {
-            var _this2 = this;
+            var _this = this;
 
             targets = nativeSlice.call(targets);
 
             return targets.map(function (el, i) {
-                return new _this2.constructor(el, props);
+                return new _this.constructor(el, props);
             });
-        }
-
-        /**
-         * ## bindThis
-         *
-         * binds this to whatever functions need it.  Arrow functions cannot be used
-         * here due to the react extension needing them as well;
-         *
-         * @return _Void_
-         */
-    }, {
-        key: 'bindThis',
-        value: function bindThis() {
-            this.addClass = this.addClass.bind(this);
-            this.attachAttributes = this.attachAttributes.bind(this);
-            this.catchBodyClick = this.catchBodyClick.bind(this);
-            this.checkClickTarget = this.checkClickTarget.bind(this);
-            this.checkFlounderKeypress = this.checkFlounderKeypress.bind(this);
-            this.checkPlaceholder = this.checkPlaceholder.bind(this);
-            this.clickSet = this.clickSet.bind(this);
-            this.displayMultipleTags = this.displayMultipleTags.bind(this);
-            this.fuzzySearch = this.fuzzySearch.bind(this);
-            this.removeMultiTag = this.removeMultiTag.bind(this);
-            this.setIndex = this.setIndex.bind(this);
-            this.setKeypress = this.setKeypress.bind(this);
-            this.setSelectValue = this.setSelectValue.bind(this);
-            this.setValue = this.setValue.bind(this);
-            this.toggleClass = this.toggleClass.bind(this);
-            this.toggleList = this.toggleList.bind(this);
-        }
-
-        /**
-         * ## buildDom
-         *
-         * builds flounder
-         *
-         * @return _Void_
-         */
-    }, {
-        key: 'buildDom',
-        value: function buildDom() {
-            this.refs = {};
-
-            var constructElement = this.constructElement;
-
-            var wrapperClass = _classes3['default'].MAIN_WRAPPER;
-            var wrapper = this.constructElement({ className: this.wrapperClass ? wrapperClass + ' ' + this.wrapperClass : wrapperClass });
-            var flounderClass = _classes3['default'].MAIN;
-            var flounder = constructElement({ className: this.flounderClass ? flounderClass + '  ' + this.flounderClass : flounderClass });
-
-            flounder.setAttribute('aria-hidden', true);
-            flounder.tabIndex = 0;
-            wrapper.appendChild(flounder);
-
-            var select = this.initSelectBox(wrapper);
-            select.tabIndex = -1;
-
-            if (this.multiple === true) {
-                select.setAttribute('multiple', '');
-            }
-
-            var data = this.data;
-
-            var defaultValue = this._default = this.setDefaultOption(this.props, data);
-
-            var selected = constructElement({ className: _classes3['default'].SELECTED_DISPLAYED,
-                'data-value': defaultValue.value, 'data-index': defaultValue.index || -1 });
-            selected.innerHTML = defaultValue.text;
-
-            var multiTagWrapper = this.props.multiple ? constructElement({ className: _classes3['default'].MULTI_TAG_LIST }) : null;
-
-            if (multiTagWrapper) {
-                multiTagWrapper.style.textIndent = this.defaultTextIndent + 'px';
-            }
-
-            var arrow = constructElement({ className: _classes3['default'].ARROW });
-            var optionsListWrapper = constructElement({ className: _classes3['default'].OPTIONS_WRAPPER + '  ' + _classes3['default'].HIDDEN });
-            var optionsList = constructElement({ className: _classes3['default'].LIST });
-            optionsListWrapper.appendChild(optionsList);
-
-            [selected, multiTagWrapper, arrow, optionsListWrapper].forEach(function (el) {
-                if (el) {
-                    flounder.appendChild(el);
-                }
-            });
-
-            var search = this.addSearch(flounder);
-            var selectOptions = undefined;
-
-            var _buildData = this.buildData(defaultValue, data, optionsList, select);
-
-            var _buildData2 = _slicedToArray(_buildData, 2);
-
-            data = _buildData2[0];
-            selectOptions = _buildData2[1];
-
-            this.target.appendChild(wrapper);
-
-            this.refs = { wrapper: wrapper, flounder: flounder, selected: selected, arrow: arrow, optionsListWrapper: optionsListWrapper,
-                search: search, multiTagWrapper: multiTagWrapper, optionsList: optionsList, select: select, data: data, selectOptions: selectOptions };
-        }
-
-        /**
-         * ## buildData
-         *
-         * builds both the div and select based options. will skip the select box
-         * if it already exists
-         *
-         * @param {Mixed} defaultValue default entry (string or number)
-         * @param {Array} data array with optino information
-         * @param {Object} optionsList reference to the div option wrapper
-         * @param {Object} select reference to the select box
-         *
-         * @return _Array_ refs to both container elements
-         */
-    }, {
-        key: 'buildData',
-        value: function buildData(defaultValue, originalData, optionsList, select) {
-            originalData = originalData || [];
-            var index = 0;
-            var data = [];
-            var selectOptions = [];
-            var constructElement = this.constructElement;
-            var addOptionDescription = this.addOptionDescription;
-            var selectedClass = this.selectedClass;
-            var escapeHTML = this.escapeHTML;
-            var addClass = this.addClass;
-            var selectRef = this.refs.select;
-
-            /**
-             * ## buildDiv
-             *
-             * builds an individual div tag for a flounder dropdown
-             *
-             * @param {Object} dataObj [description]
-             * @param {Number} i index
-             *
-             * @return {DOMElement}
-             */
-            var buildDiv = function buildDiv(dataObj, i) {
-                if (typeof dataObj !== 'object') {
-                    dataObj = {
-                        text: dataObj,
-                        value: dataObj
-                    };
-                }
-                dataObj.index = i;
-
-                var extraClass = i === defaultValue.index ? '  ' + selectedClass : '';
-
-                var res = {
-                    className: _classes3['default'].OPTION + extraClass,
-                    'data-index': i
-                };
-
-                for (var o in dataObj) {
-                    if (o !== 'text' && o !== 'description') {
-                        res[o] = dataObj[o];
-                    }
-                }
-
-                var data = constructElement(res);
-                var escapedText = escapeHTML(dataObj.text);
-                data.innerHTML = escapedText;
-
-                if (dataObj.description) {
-                    addOptionDescription(data, dataObj.description);
-                }
-
-                data.className += dataObj.extraClass ? '  ' + dataObj.extraClass : '';
-
-                return data;
-            };
-
-            /**
-             * ## buildOption
-             *
-             * builds an individual option tag for a flounder dropdown
-             *
-             * @param {Object} dataObj [description]
-             * @param {Number} i index
-             *
-             * @return {DOMElement}
-             */
-            var buildOption = function buildOption(dataObj, i) {
-                var selectOption = undefined;
-
-                if (!selectRef) {
-                    selectOption = constructElement({ tagname: 'option',
-                        className: _classes3['default'].OPTION_TAG,
-                        value: dataObj.value });
-                    var escapedText = escapeHTML(dataObj.text);
-                    selectOption.innerHTML = escapedText;
-                    select.appendChild(selectOption);
-                } else {
-                    var selectChild = select.children[i];
-                    selectOption = selectChild;
-                    selectChild.setAttribute('value', selectChild.value);
-                }
-
-                if (i === defaultValue.index) {
-                    selectOption.selected = true;
-                }
-
-                if (selectOption.getAttribute('disabled')) {
-                    addClass(data[i], _classes3['default'].DISABLED_OPTION);
-                }
-
-                return selectOption;
-            };
-
-            originalData.forEach(function (dataObj) {
-                if (dataObj.header) {
-                    (function () {
-                        var section = constructElement({ tagname: 'div',
-                            className: _classes3['default'].SECTION });
-                        var header = constructElement({ tagname: 'div',
-                            className: _classes3['default'].HEADER });
-                        header.textContent = dataObj.header;
-                        section.appendChild(header);
-                        optionsList.appendChild(section);
-
-                        dataObj.data.forEach(function (d) {
-                            data[index] = buildDiv(d, index);
-                            section.appendChild(data[index]);
-                            selectOptions[index] = buildOption(d, index);
-                            index++;
-                        });
-                    })();
-                } else {
-                    data[index] = buildDiv(dataObj, index);
-                    optionsList.appendChild(data[index]);
-                    selectOptions[index] = buildOption(dataObj, index);
-                    index++;
-                }
-            });
-
-            return [data, selectOptions];
-        }
-
-        /**
-         * ## catchBodyClick
-         *
-         * checks if a click is on the menu and, if it isnt, closes the menu
-         *
-         * @param  {Object} e event object
-         *
-         * @return _Void_
-         */
-    }, {
-        key: 'catchBodyClick',
-        value: function catchBodyClick(e) {
-            if (!this.checkClickTarget(e)) {
-                this.toggleList(e);
-            }
-        }
-
-        /**
-         * ## checkClickTarget
-         *
-         * checks whether the target of a click is the menu or not
-         *
-         * @param  {Object} e event object
-         * @param  {DOMElement} target click target
-         *
-         * @return _Boolean_
-         */
-    }, {
-        key: 'checkClickTarget',
-        value: function checkClickTarget(e, target) {
-            target = target || this.refs.data[e.target.getAttribute('data-index')] || e.target;
-
-            if (target === document) {
-                return false;
-            } else if (target === this.refs.flounder) {
-                return true;
-            }
-
-            return this.checkClickTarget(e, target.parentNode);
-        }
-
-        /**
-         * ## checkFlounderKeypress
-         *
-         * checks flounder focused keypresses and filters all but space and enter
-         *
-         * @return _Void_
-         */
-    }, {
-        key: 'checkFlounderKeypress',
-        value: function checkFlounderKeypress(e) {
-            var keyCode = e.keyCode;
-
-            if (keyCode === 13 || keyCode === 32 && e.target.tagName !== 'INPUT') {
-                e.preventDefault();
-                this.toggleList(e);
-            } else if (keyCode >= 48 && keyCode <= 57 || keyCode >= 65 && keyCode <= 90) // letters - allows native behavior
-                {
-                    var refs = this.refs;
-
-                    if (refs.search && e.target.tagName === 'INPUT') {
-                        refs.selected.innerHTML = '';
-                    }
-                }
-        }
-
-        /**
-         * ## checkPlaceholder
-         *
-         * clears or re-adds the placeholder
-         *
-         * @param {Object} e event object
-         *
-         * @return _Void_
-         */
-    }, {
-        key: 'checkPlaceholder',
-        value: function checkPlaceholder(e) {
-            var type = e.type;
-            var refs = this.refs;
-
-            if (type === 'focus') {
-                refs.selected.innerHTML = '';
-            } else {
-                if (refs.multiTagWrapper && refs.multiTagWrapper.children.length === 0) {
-                    this.refs.selected.innerHTML = this._default.text;
-                }
-            }
-        }
-
-        /**
-         * ## clickSet
-         *
-         * when a flounder option is clicked on it needs to set the option as selected
-         *
-         * @param {Object} e event object
-         *
-         * @return _Void_
-         */
-    }, {
-        key: 'clickSet',
-        value: function clickSet(e) {
-            this.setSelectValue({}, e);
-
-            if (!this.multiple || !e[this.multiSelect]) {
-                this.toggleList(e);
-            }
         }
 
         /**
@@ -872,7 +1253,7 @@ var Flounder = (function () {
     /**
      * ## displayMultipleTags
      *
-     * handles the display and management of multiple choice tage
+     * handles the display and management of tags
      *
      * @param  {Array} selectedOptions currently selected options
      * @param  {DOMElement} selected div to display currently selected options
@@ -982,7 +1363,7 @@ var Flounder = (function () {
         key: 'fuzzySearch',
         value: function fuzzySearch(e) // disclaimer: not actually fuzzy
         {
-            var _this3 = this;
+            var _this2 = this;
 
             var refs = this.refs;
 
@@ -998,9 +1379,9 @@ var Flounder = (function () {
                             var text = dataObj.innerHTML.toLowerCase();
 
                             if (term !== '' && text.indexOf(term) === -1) {
-                                _this3.addClass(dataObj, _classes3['default'].SEARCH_HIDDEN);
+                                _this2.addClass(dataObj, _classes3['default'].SEARCH_HIDDEN);
                             } else {
-                                _this3.removeClass(dataObj, _classes3['default'].SEARCH_HIDDEN);
+                                _this2.removeClass(dataObj, _classes3['default'].SEARCH_HIDDEN);
                             }
                         });
                     })();
@@ -1023,56 +1404,15 @@ var Flounder = (function () {
     }, {
         key: 'fuzzySearchReset',
         value: function fuzzySearchReset() {
-            var _this4 = this;
+            var _this3 = this;
 
             var refs = this.refs;
 
             refs.data.forEach(function (dataObj) {
-                _this4.removeClass(dataObj, _classes3['default'].SEARCH_HIDDEN);
+                _this3.removeClass(dataObj, _classes3['default'].SEARCH_HIDDEN);
             });
 
             refs.search.value = '';
-        }
-
-        /**
-         * ## getActualWidth
-         *
-         * gets the width adjusted for margins
-         *
-         * @param {DOMElement} el target element
-         *
-         * @return _Integer_ adjusted width
-         */
-    }, {
-        key: 'getActualWidth',
-        value: function getActualWidth(el) {
-            var style = getComputedStyle(el);
-
-            if (el.offsetWidth === 0) {
-                if (this.__checkWidthAgain !== true) {
-                    setTimeout(this.setTextMultiTagIndent.bind(this), 1500);
-                    this.__checkWidthAgain === true;
-                }
-            } else {
-                this.__checkWidthAgain !== false;
-            }
-
-            return el.offsetWidth + parseInt(style['margin-left']) + parseInt(style['margin-right']);
-        }
-
-        /**
-         * hideElement
-         *
-         * hides an element offscreen
-         *
-         * @param {Object} el element to hide
-         *
-         * @return _Void_
-         */
-    }, {
-        key: 'hideElement',
-        value: function hideElement(el) {
-            this.addClass(el, _classes3['default'].HIDDEN);
         }
 
         /**
@@ -1123,16 +1463,16 @@ var Flounder = (function () {
     }, {
         key: 'initSelectBox',
         value: function initSelectBox(wrapper) {
-            var _this5 = this;
+            var _this4 = this;
 
             var target = this.target;
             var select = undefined;
 
             if (target.tagName === 'SELECT') {
                 (function () {
-                    _this5.addClass(target, _classes3['default'].SELECT_TAG);
-                    _this5.addClass(target, _classes3['default'].HIDDEN);
-                    _this5.refs.select = target;
+                    _this4.addClass(target, _classes3['default'].SELECT_TAG);
+                    _this4.addClass(target, _classes3['default'].HIDDEN);
+                    _this4.refs.select = target;
 
                     var data = [],
                         selectOptions = [];
@@ -1145,12 +1485,12 @@ var Flounder = (function () {
                         });
                     });
 
-                    _this5.data = data;
-                    _this5.target = target.parentNode;
-                    _this5.refs.selectOptions = selectOptions;
+                    _this4.data = data;
+                    _this4.target = target.parentNode;
+                    _this4.refs.selectOptions = selectOptions;
 
-                    select = _this5.refs.select;
-                    _this5.addClass(select, _classes3['default'].HIDDEN);
+                    select = _this4.refs.select;
+                    _this4.addClass(select, _classes3['default'].HIDDEN);
                 })();
             } else {
                 select = this.constructElement({ tagname: 'select', className: _classes3['default'].SELECT_TAG + '  ' + _classes3['default'].HIDDEN });
@@ -1180,59 +1520,7 @@ var Flounder = (function () {
                 this.addClass(sel, _classes3['default'].HIDDEN_IOS);
             }
 
-            var self = this;
-            var divertTarget = function divertTarget(e) {
-                var index = this.selectedIndex;
-
-                var _e = {
-                    target: data[index]
-                };
-
-                if (self.multipleTags) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                }
-
-                self.setSelectValue(_e);
-
-                if (!self.multiple) {
-                    self.toggleList(e, 'close');
-                }
-            };
-
-            refs.select.addEventListener('change', divertTarget);
-
-            this.addOptionsListeners();
-
-            refs.flounder.addEventListener('keydown', this.checkFlounderKeypress);
-            refs.selected.addEventListener('click', this.toggleList);
-
-            if (props.search) {
-                var search = refs.search;
-                search.addEventListener('click', this.toggleList);
-                search.addEventListener('keyup', this.fuzzySearch);
-                search.addEventListener('focus', this.checkPlaceholder);
-                search.addEventListener('blur', this.checkPlaceholder);
-            }
-        }
-
-        /**
-         * ## removeOptionsListeners
-         *
-         * removes event listeners on the data divs
-         *
-         * @return _Void_
-         */
-    }, {
-        key: 'removeOptionsListeners',
-        value: function removeOptionsListeners() {
-            var _this6 = this;
-
-            this.refs.data.forEach(function (dataObj) {
-                if (dataObj.tagName === 'DIV') {
-                    dataObj.removeEventListener('click', _this6.clickSet);
-                }
-            });
+            this.addListeners(refs, props);
         }
 
         /**
@@ -1292,20 +1580,6 @@ var Flounder = (function () {
         }
 
         /**
-         * ## removeSelectKeyListener
-         *
-         * disables the event listener on the native select box
-         *
-         * @return _Void_
-         */
-    }, {
-        key: 'removeSelectKeyListener',
-        value: function removeSelectKeyListener() {
-            var select = this.refs.select;
-            select.removeEventListener('keyup', this.setSelectValue);
-        }
-
-        /**
          * ## removeSelectedClass
          *
          * removes the [[this.selectedClass]] from all data
@@ -1315,12 +1589,12 @@ var Flounder = (function () {
     }, {
         key: 'removeSelectedClass',
         value: function removeSelectedClass(data) {
-            var _this7 = this;
+            var _this5 = this;
 
             data = data || this.refs.data;
 
             data.forEach(function (dataObj, i) {
-                _this7.removeClass(dataObj, _this7.selectedClass);
+                _this5.removeClass(dataObj, _this5.selectedClass);
             });
         }
 
@@ -1334,12 +1608,12 @@ var Flounder = (function () {
     }, {
         key: 'removeSelectedValue',
         value: function removeSelectedValue(data) {
-            var _this8 = this;
+            var _this6 = this;
 
             data = data || this.refs.data;
 
             data.forEach(function (d, i) {
-                _this8.refs.select[i].selected = false;
+                _this6.refs.select[i].selected = false;
             });
         }
 
@@ -1481,204 +1755,6 @@ var Flounder = (function () {
         }
 
         /**
-         * ## setKeypress
-         *
-         * handles arrow key selection
-         *
-         * @param {Object} e event object
-         *
-         * @return _Void_
-         */
-    }, {
-        key: 'setKeypress',
-        value: function setKeypress(e) {
-            var refs = this.refs;
-
-            var increment = 0;
-            var keyCode = e.keyCode;
-
-            if (this.multipleTags) {
-                e.preventDefault();
-                return false;
-            }
-
-            if (keyCode === 13 || keyCode === 27 || keyCode === 32) // space enter escape
-                {
-                    this.toggleList(e);
-                    return false;
-                } else if (!window.sidebar && keyCode === 38 || keyCode === 40) // up and down
-                {
-                    e.preventDefault();
-                    var search = refs.search;
-
-                    if (search) {
-                        search.value = '';
-                    }
-
-                    increment = keyCode - 39;
-                } else if (keyCode >= 48 && keyCode <= 57 || keyCode >= 65 && keyCode <= 90) // letters - allows native behavior
-                {
-                    return true;
-                }
-
-            var selectTag = refs.select;
-            var data = refs.data;
-            var dataMaxIndex = data.length - 1;
-            var index = selectTag.selectedIndex + increment;
-
-            if (index > dataMaxIndex) {
-                index = 0;
-            } else if (index < 0) {
-                index = dataMaxIndex;
-            }
-
-            selectTag.selectedIndex = index;
-            var hasClass = this.hasClass;
-            var dataAtIndex = data[index];
-
-            if (hasClass(dataAtIndex, _classes3['default'].HIDDEN) || hasClass(dataAtIndex, _classes3['default'].SELECTED_HIDDEN) || hasClass(dataAtIndex, _classes3['default'].SEARCH_HIDDEN) || hasClass(dataAtIndex, _classes3['default'].DISABLED)) {
-                this.setKeypress(e);
-            }
-        }
-
-        /**
-         * ## setSelectValue
-         *
-         * sets the selected value in flounder.  when activated by a click, the event
-         * object is moved to the second variable.  this gives us the ability to
-         * discern between triggered events (keyup) and processed events (click)
-         * for the sake of choosing our targets
-         *
-         * @param {Object} obj possible event object
-         * @param {Object} e event object
-         *
-         * @return _Void_
-         */
-    }, {
-        key: 'setSelectValue',
-        value: function setSelectValue(obj, e) {
-            var refs = this.refs;
-            var keyCode = undefined;
-
-            if (e) // click
-                {
-                    this.setSelectValueClick(e);
-                } else // keypress
-                {
-                    keyCode = obj.keyCode;
-                    this.setSelectValueButton(obj);
-                }
-
-            this.displaySelected(refs.selected, refs);
-
-            if (!this.___programmaticClick) {
-                // tab, shift, ctrl, alt, caps, cmd
-                var nonKeys = [9, 16, 17, 18, 20, 91];
-
-                if (e || keyCode && nonKeys.indexOf(keyCode) === -1) {
-                    if (this.toggleList.justOpened && !e) {
-                        this.toggleList.justOpened = false;
-                    } else {
-                        this.onSelect(e, this.getSelectedValues());
-                    }
-                }
-            }
-
-            this.___programmaticClick = false;
-        }
-
-        /**
-         * ## setSelectValueButton
-         *
-         * processes the setting of a value after a keypress event
-         *
-         * @return _Void_
-         */
-    }, {
-        key: 'setSelectValueButton',
-        value: function setSelectValueButton() {
-            var refs = this.refs;
-            var data = refs.data;
-            var select = refs.select;
-            var selectedClass = this.selectedClass;
-
-            var selectedOption = undefined;
-
-            this.removeSelectedClass(data);
-
-            var dataArray = this.getSelectedOptions();
-            var baseOption = dataArray[0];
-
-            if (baseOption) {
-                selectedOption = data[baseOption.index];
-
-                this.addClass(selectedOption, selectedClass);
-
-                this.scrollTo(selectedOption);
-            }
-        }
-
-        /**
-         * ## setSelectValueClick
-         *
-         * processes the setting of a value after a click event
-         *
-         * @param {Object} e event object
-         *
-         * @return _Void_
-         */
-    }, {
-        key: 'setSelectValueClick',
-        value: function setSelectValueClick(e) {
-            var _multiple = this.multiple;
-            var refs = this.refs;
-            var selectedClass = this.selectedClass;
-            var index = undefined,
-                selectedOption = undefined;
-
-            if ((!_multiple || _multiple && !this.multipleTags && !e[this.multiSelect]) && !this.___forceMultiple) {
-                this.deselectAll();
-            }
-
-            this.___forceMultiple = false;
-            var target = e.target;
-
-            this.toggleClass(target, selectedClass);
-            index = target.getAttribute('data-index');
-
-            selectedOption = refs.selectOptions[index];
-
-            selectedOption.selected = selectedOption.selected === true ? false : true;
-        }
-
-        /**
-         * ## Set Target
-         *
-         * sets the target related
-         *
-         * @param {DOMElement} target  the actual to-be-flounderized element
-         *
-         * @return _Void_
-         */
-    }, {
-        key: 'setTarget',
-        value: function setTarget(target) {
-            target = target.nodeType === 1 ? target : document.querySelector(target);
-
-            this.originalTarget = target;
-            target.flounder = this;
-
-            if (target.tagName === 'INPUT') {
-                this.addClass(target, _classes3['default'].HIDDEN);
-                target.setAttribute('aria-hidden', true);
-                target.tabIndex = -1;
-                target = target.parentNode;
-            }
-
-            this.target = target;
-        }
-
-        /**
          * ## setTextMultiTagIndent
          *
          * sets the text-indent on the search field to go around selected tags
@@ -1688,7 +1764,7 @@ var Flounder = (function () {
     }, {
         key: 'setTextMultiTagIndent',
         value: function setTextMultiTagIndent() {
-            var _this9 = this;
+            var _this7 = this;
 
             var search = this.refs.search;
             var offset = this.defaultTextIndent;
@@ -1696,147 +1772,35 @@ var Flounder = (function () {
             if (search) {
                 var _els = document.getElementsByClassName(_classes3['default'].MULTIPLE_SELECT_TAG);
                 _els.each(function (i, e) {
-                    offset += _this9.getActualWidth(e);
+                    offset += _this7.getElWidth(e);
                 });
 
                 search.style.textIndent = offset + 'px';
             }
-        }
-
-        /**
-         * ## showElement
-         *
-         * remove classes.HIDDEN from a given element
-         *
-         * @param {Object} _el element to show
-         *
-         * @return _Void_
-         */
-    }, {
-        key: 'showElement',
-        value: function showElement(_el) {
-            this.removeClass(_el, _classes3['default'].HIDDEN);
-        }
-
-        /**
-         * ## toggleList
-         *
-         * on click of flounder--selected, this shows or hides the options list
-         *
-         * @param {String} force toggle can be forced by passing 'open' or 'close'
-         *
-         * @return _Void_
-         */
-    }, {
-        key: 'toggleList',
-        value: function toggleList(e, force) {
-            var refs = this.refs;
-            var optionsList = refs.optionsListWrapper;
-            var wrapper = refs.wrapper;
-            var hasClass = this.hasClass;
-
-            if (force === 'open' || force !== 'close' && hasClass(optionsList, _classes3['default'].HIDDEN)) {
-                if (e.type === 'keydown') {
-                    this.toggleList.justOpened = true;
-                }
-
-                this.toggleOpen(e, optionsList, refs, wrapper);
-            } else if (force === 'close' || !hasClass(optionsList, _classes3['default'].HIDDEN)) {
-                this.toggleList.justOpened = false;
-                this.toggleClosed(e, optionsList, refs, wrapper);
-            }
-        }
-
-        /**
-         * ## toggleOpen
-         *
-         * post toggleList, this runs it the list should be opened
-         *
-         * @param {Object} e event object
-         * @param {DOMElement} optionsList the options list
-         * @param {Object} refs contains the references of the elements in flounder
-         * @param {DOMElement} wrapper wrapper of flounder
-         *
-         * @return _Void_
-         */
-    }, {
-        key: 'toggleOpen',
-        value: function toggleOpen(e, optionsList, refs, wrapper) {
-            this.addSelectKeyListener();
-
-            if (!this.isIos || this.multipleTags === true && this.multiple === true) {
-                this.showElement(optionsList);
-                this.addClass(wrapper, 'open');
-
-                var qsHTML = document.querySelector('html');
-
-                qsHTML.addEventListener('click', this.catchBodyClick);
-                qsHTML.addEventListener('touchend', this.catchBodyClick);
-            }
-
-            if (!this.multiple) {
-                var index = refs.select.selectedIndex;
-                var selectedDiv = refs.data[index];
-
-                if (selectedDiv) {
-                    this.scrollTo(selectedDiv);
-                }
-            }
-
-            if (this.props.search) {
-                refs.search.focus();
-            }
-
-            this.onOpen(e, this.getSelectedValues());
-        }
-
-        /**
-         * ## toggleClosed
-         *
-         * post toggleList, this runs it the list should be closed
-         *
-         * @param {Object} e event object
-         * @param {DOMElement} optionsList the options list
-         * @param {Object} refs contains the references of the elements in flounder
-         * @param {DOMElement} wrapper wrapper of flounder
-         *
-         * @return _Void_
-         */
-    }, {
-        key: 'toggleClosed',
-        value: function toggleClosed(e, optionsList, refs, wrapper) {
-            this.hideElement(optionsList);
-            this.removeSelectKeyListener();
-            this.removeClass(wrapper, 'open');
-
-            var qsHTML = document.querySelector('html');
-            qsHTML.removeEventListener('click', this.catchBodyClick);
-            qsHTML.removeEventListener('touchend', this.catchBodyClick);
-
-            if (this.props.search) {
-                this.fuzzySearchReset();
-            }
-
-            refs.flounder.focus();
-
-            this.onClose(e, this.getSelectedValues());
         }
     }]);
 
     return Flounder;
 })();
 
-_utils2['default'].extendClass(Flounder, _utils2['default'], _api2['default']);
+_utils2['default'].extendClass(Flounder, _utils2['default'], _api2['default'], _build2['default'], _events2['default']);
 
 exports['default'] = Flounder;
 module.exports = exports['default'];
 
-},{"./api":1,"./classes":2,"./defaults":3,"./utils":5}],5:[function(require,module,exports){
+},{"./api":1,"./build":2,"./classes":3,"./defaults":4,"./events":5,"./utils":7}],7:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
     value: true
 });
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _classes = require('./classes');
+
+var _classes2 = _interopRequireDefault(_classes);
+
 var utils = {
     /**
      * ## addClass
@@ -1938,6 +1902,30 @@ var utils = {
     },
 
     /**
+     * ## getElWidth
+     *
+     * gets the width adjusted for margins
+     *
+     * @param {DOMElement} el target element
+     *
+     * @return _Integer_ adjusted width
+     */
+    getElWidth: function getElWidth(el) {
+        var style = getComputedStyle(el);
+
+        if (el.offsetWidth === 0) {
+            if (this.__checkWidthAgain !== true) {
+                setTimeout(this.setTextMultiTagIndent.bind(this), 1500);
+                this.__checkWidthAgain === true;
+            }
+        } else {
+            this.__checkWidthAgain !== false;
+        }
+
+        return el.offsetWidth + parseInt(style['margin-left']) + parseInt(style['margin-right']);
+    },
+
+    /**
      * ## hasClass
      *
      * on the quest to nuke jquery, a wild helper function appears
@@ -1951,6 +1939,19 @@ var utils = {
         var _elClass = _el.className;
         var regex = new RegExp('(^' + _class + ' )|( ' + _class + '$)|( ' + _class + ' )|(^' + _class + '$)');
         return !!_elClass.match(regex);
+    },
+
+    /**
+     * hideElement
+     *
+     * hides an element offscreen
+     *
+     * @param {Object} el element to hide
+     *
+     * @return _Void_
+     */
+    hideElement: function hideElement(el) {
+        this.addClass(el, _classes2['default'].HIDDEN);
     },
 
     /**
@@ -2042,6 +2043,19 @@ var utils = {
     },
 
     /**
+     * ## showElement
+     *
+     * remove classes.HIDDEN from a given element
+     *
+     * @param {Object} _el element to show
+     *
+     * @return _Void_
+     */
+    showElement: function showElement(_el) {
+        this.removeClass(_el, _classes2['default'].HIDDEN);
+    },
+
+    /**
      * ## toggleClass
      *
      * in a world moving away from jquery, a wild helper function appears
@@ -2066,7 +2080,7 @@ var utils = {
 exports['default'] = utils;
 module.exports = exports['default'];
 
-},{}],6:[function(require,module,exports){
+},{"./classes":3}],8:[function(require,module,exports){
 
 /* jshint globalstrict: true */
 'use strict';
@@ -2084,4 +2098,4 @@ var _coreFlounderJsx2 = _interopRequireDefault(_coreFlounderJsx);
     };
 })(µ);
 
-},{"../core/flounder.jsx":4}]},{},[6]);
+},{"../core/flounder.jsx":6}]},{},[8]);
