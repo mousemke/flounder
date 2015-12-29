@@ -471,6 +471,42 @@ const events = {
 
 
     /**
+     * ## toggleClosed
+     *
+     * post toggleList, this runs it the list should be closed
+     *
+     * @param {Object} e event object
+     * @param {DOMElement} optionsList the options list
+     * @param {Object} refs contains the references of the elements in flounder
+     * @param {DOMElement} wrapper wrapper of flounder
+     *
+     * @return _Void_
+     */
+    toggleClosed : function( e, optionsList, refs, wrapper )
+    {
+        this.hideElement( optionsList );
+        this.removeSelectKeyListener();
+        this.removeClass( wrapper, 'open' );
+
+        let qsHTML = document.querySelector( 'html' );
+        qsHTML.removeEventListener( 'click', this.catchBodyClick );
+        qsHTML.removeEventListener( 'touchend', this.catchBodyClick );
+
+        if ( this.props.search )
+        {
+            this.fuzzySearchReset();
+        }
+
+        refs.flounder.focus();
+
+        if ( this.ready )
+        {
+            this.onClose( e, this.getSelectedValues() );
+        }
+    },
+
+
+    /**
      * ## toggleOpen
      *
      * post toggleList, this runs it the list should be opened
@@ -514,40 +550,10 @@ const events = {
             refs.search.focus();
         }
 
-        this.onOpen( e, this.getSelectedValues() );
-    },
-
-
-    /**
-     * ## toggleClosed
-     *
-     * post toggleList, this runs it the list should be closed
-     *
-     * @param {Object} e event object
-     * @param {DOMElement} optionsList the options list
-     * @param {Object} refs contains the references of the elements in flounder
-     * @param {DOMElement} wrapper wrapper of flounder
-     *
-     * @return _Void_
-     */
-    toggleClosed : function( e, optionsList, refs, wrapper )
-    {
-        this.hideElement( optionsList );
-        this.removeSelectKeyListener();
-        this.removeClass( wrapper, 'open' );
-
-        let qsHTML = document.querySelector( 'html' );
-        qsHTML.removeEventListener( 'click', this.catchBodyClick );
-        qsHTML.removeEventListener( 'touchend', this.catchBodyClick );
-
-        if ( this.props.search )
+        if ( this.ready )
         {
-            this.fuzzySearchReset();
+            this.onOpen( e, this.getSelectedValues() );
         }
-
-        refs.flounder.focus();
-
-        this.onClose( e, this.getSelectedValues() );
     }
 };
 

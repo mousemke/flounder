@@ -1,5 +1,5 @@
 /*!
- * Flounder JavaScript Styleable Selectbox v0.2.5
+ * Flounder JavaScript Styleable Selectbox v0.2.6
  * https://github.com/sociomantic/flounder
  *
  * Copyright 2015 Sociomantic Labs and other contributors
@@ -19054,12 +19054,21 @@ var api = {
 
         if (originalTarget.tagName === 'INPUT' || originalTarget.tagName === 'SELECT') {
             var target = originalTarget.nextElementSibling;
-            target.parentNode.removeChild(target);
-            originalTarget.tabIndex = 0;
-            this.removeClass(originalTarget, _classes2['default'].HIDDEN);
+            try {
+                target.parentNode.removeChild(target);
+                originalTarget.tabIndex = 0;
+                this.removeClass(originalTarget, _classes2['default'].HIDDEN);
+            } catch (e) {
+                throw ' : this flounder may have already been removed';
+            }
         } else {
-            var target = this.target;
-            target.innerHTML = '';
+            try {
+                var wrapper = this.refs.wrapper;
+                var _parent = wrapper.parentNode;
+                _parent.removeChild(wrapper);
+            } catch (e) {
+                throw ' : this flounder may have already been removed';
+            }
         }
     },
 
@@ -20056,6 +20065,38 @@ var events = {
     },
 
     /**
+     * ## toggleClosed
+     *
+     * post toggleList, this runs it the list should be closed
+     *
+     * @param {Object} e event object
+     * @param {DOMElement} optionsList the options list
+     * @param {Object} refs contains the references of the elements in flounder
+     * @param {DOMElement} wrapper wrapper of flounder
+     *
+     * @return _Void_
+     */
+    toggleClosed: function toggleClosed(e, optionsList, refs, wrapper) {
+        this.hideElement(optionsList);
+        this.removeSelectKeyListener();
+        this.removeClass(wrapper, 'open');
+
+        var qsHTML = document.querySelector('html');
+        qsHTML.removeEventListener('click', this.catchBodyClick);
+        qsHTML.removeEventListener('touchend', this.catchBodyClick);
+
+        if (this.props.search) {
+            this.fuzzySearchReset();
+        }
+
+        refs.flounder.focus();
+
+        if (this.ready) {
+            this.onClose(e, this.getSelectedValues());
+        }
+    },
+
+    /**
      * ## toggleOpen
      *
      * post toggleList, this runs it the list should be opened
@@ -20093,37 +20134,9 @@ var events = {
             refs.search.focus();
         }
 
-        this.onOpen(e, this.getSelectedValues());
-    },
-
-    /**
-     * ## toggleClosed
-     *
-     * post toggleList, this runs it the list should be closed
-     *
-     * @param {Object} e event object
-     * @param {DOMElement} optionsList the options list
-     * @param {Object} refs contains the references of the elements in flounder
-     * @param {DOMElement} wrapper wrapper of flounder
-     *
-     * @return _Void_
-     */
-    toggleClosed: function toggleClosed(e, optionsList, refs, wrapper) {
-        this.hideElement(optionsList);
-        this.removeSelectKeyListener();
-        this.removeClass(wrapper, 'open');
-
-        var qsHTML = document.querySelector('html');
-        qsHTML.removeEventListener('click', this.catchBodyClick);
-        qsHTML.removeEventListener('touchend', this.catchBodyClick);
-
-        if (this.props.search) {
-            this.fuzzySearchReset();
+        if (this.ready) {
+            this.onOpen(e, this.getSelectedValues());
         }
-
-        refs.flounder.focus();
-
-        this.onClose(e, this.getSelectedValues());
     }
 };
 
@@ -20190,7 +20203,6 @@ var Flounder = (function () {
             var _this = this;
 
             targets = nativeSlice.call(targets);
-
             return targets.map(function (el, i) {
                 return new _this.constructor(el, props);
             });
@@ -20206,21 +20218,13 @@ var Flounder = (function () {
     }, {
         key: 'componentWillUnmount',
         value: function componentWillUnmount() {
-            var props = this.props;
             var refs = this.refs;
-
-            var events = props.events;
-            var div = refs.flounder;
-
-            for (var _event in events) {
-                div.removeEventListener(_event, events[_event]);
-            }
 
             this.removeOptionsListeners();
 
             refs.selected.removeEventListener('click', this.toggleList);
 
-            if (props.search) {
+            if (this.props.search) {
                 var search = refs.search;
                 search.removeEventListener('click', this.toggleList);
                 search.removeEventListener('keyup', this.fuzzySearch);
@@ -20244,25 +20248,24 @@ var Flounder = (function () {
 
         if (!target && !props) {
             return this.constructor;
+        } else if (target) {
+            if (target.length && typeof target !== 'string' && target.tagName !== 'SELECT') {
+                return this.arrayOfFlounders(target, props);
+            } else if (!target.length && target.length !== 0 || target.tagName === 'SELECT') {
+                this.props = props;
+                this.setTarget(target);
+                this.bindThis();
+                this.initialzeOptions();
+                this.onInit();
+                this.buildDom();
+                this.setPlatform();
+                this.onRender();
+                this.onComponentDidMount();
+                this.ready = true;
+
+                return this.refs.flounder.flounder = this.originalTarget.flounder = this;
+            }
         }
-
-        if (target.length && typeof target !== 'string' && target.tagName !== 'SELECT') {
-            return this.arrayOfFlounders(target, props);
-        } else if (target.length === 0) {
-            throw ': target length cannot equal 0. Flounder cannot continue';
-        }
-
-        this.props = props;
-        this.setTarget(target);
-        this.bindThis();
-        this.initialzeOptions();
-        this.onInit();
-        this.buildDom();
-        this.setPlatform();
-        this.onRender();
-        this.onComponentDidMount();
-
-        return this.refs.flounder.flounder = this.originalTarget.flounder = this;
     }
 
     /**
@@ -20785,8 +20788,9 @@ var Flounder = (function () {
             var offset = this.defaultTextIndent;
 
             if (search) {
-                var _els = document.getElementsByClassName(_classes3['default'].MULTIPLE_SELECT_TAG);
-                _els.each(function (i, e) {
+                var els = document.getElementsByClassName(_classes3['default'].MULTIPLE_SELECT_TAG);
+
+                nativeSlice.call(els).forEach(function (e, i) {
                     offset += _this7.getElWidth(e);
                 });
 

@@ -7,7 +7,6 @@ import utils            from './utils';
 import api              from './api';
 import build            from './build';
 import events           from './events';
-
 import classes          from './classes';
 
 const nativeSlice = Array.prototype.slice;
@@ -28,7 +27,6 @@ class Flounder
     arrayOfFlounders( targets, props )
     {
         targets = nativeSlice.call( targets );
-
         return targets.map( ( el, i ) => new this.constructor( el, props ) );
     }
 
@@ -73,27 +71,28 @@ class Flounder
         {
             return this.constructor;
         }
-
-        if ( target.length && typeof target !== 'string' && target.tagName !== 'SELECT' )
+        else if ( target )
         {
-            return this.arrayOfFlounders( target, props );
-        }
-        else if ( target.length === 0 )
-        {
-            throw ': target length cannot equal 0. Flounder cannot continue';
-        }
+            if ( target.length && typeof target !== 'string' && target.tagName !== 'SELECT' )
+            {
+                return this.arrayOfFlounders( target, props );
+            }
+            else if ( ( !target.length && target.length !== 0 ) || target.tagName === 'SELECT' )
+            {
+                this.props = props;
+                this.setTarget( target );
+                this.bindThis();
+                this.initialzeOptions();
+                this.onInit();
+                this.buildDom();
+                this.setPlatform();
+                this.onRender();
+                this.onComponentDidMount();
+                this.ready = true;
 
-        this.props = props;
-        this.setTarget( target );
-        this.bindThis();
-        this.initialzeOptions();
-        this.onInit();
-        this.buildDom();
-        this.setPlatform();
-        this.onRender();
-        this.onComponentDidMount();
-
-        return this.refs.flounder.flounder = this.originalTarget.flounder = this;
+                return this.refs.flounder.flounder = this.originalTarget.flounder = this;
+            }
+        }
     }
 
 
@@ -668,8 +667,9 @@ class Flounder
 
         if ( search )
         {
-            let _els = document.getElementsByClassName( classes.MULTIPLE_SELECT_TAG );
-            _els.each( ( i, e ) =>
+            let els = document.getElementsByClassName( classes.MULTIPLE_SELECT_TAG );
+
+            nativeSlice.call( els ).forEach( ( e, i ) =>
             {
                 offset += this.getElWidth( e );
             } );
