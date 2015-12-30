@@ -315,8 +315,9 @@ Change Log
 -----
 
 + fixed a destroy event leak
++ fixed a selectbox event leak
 + added "destroy all" demo button
-+ changed flounder <-> element binding in react
++ changed flounder <-> element references in react
 
 
 0.2.6

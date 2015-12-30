@@ -41,7 +41,7 @@ class FlounderReact extends Component
         refs.data           = slice.call( refs.optionsList.children, 0 );
         refs.selectOptions  = slice.call( refs.select.children, 0 );
 
-        refs.flounder.flounder = this.originalTarget.flounder = this;
+        refs.flounder.flounder = this.originalTarget.flounder = this.target.flounder = this;
 
         let multiTagWrapper = refs.multiTagWrapper;
 

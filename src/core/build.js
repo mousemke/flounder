@@ -66,6 +66,7 @@ const build = {
         this.checkFlounderKeypress  = this.checkFlounderKeypress.bind( this );
         this.checkPlaceholder       = this.checkPlaceholder.bind( this );
         this.clickSet               = this.clickSet.bind( this );
+        this.divertTarget           = this.divertTarget.bind( this );
         this.displayMultipleTags    = this.displayMultipleTags.bind( this );
         this.fuzzySearch            = this.fuzzySearch.bind( this );
         this.removeMultiTag         = this.removeMultiTag.bind( this );

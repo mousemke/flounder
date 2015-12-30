@@ -36,7 +36,7 @@ const events = {
         };
 
 
-        refs.select.addEventListener( 'change', divertTarget  );
+        refs.select.addEventListener( 'change', this.divertTarget  );
 
         this.addOptionsListeners();
 
@@ -212,6 +212,38 @@ const events = {
             this.toggleList( e );
         }
     },
+
+
+    /**
+     * ## divertTarget
+     *
+     * on interaction with the raw select box, the target will be diverted to
+     * the corresponding flounder list element
+     *
+     * @return _Void_
+     */
+    divertTarget : function( e )
+    {
+        let index   = e.target.selectedIndex;
+
+        let _e      = {
+            target          : data[ index ]
+        };
+
+        if ( this.multipleTags )
+        {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        this.setSelectValue( _e );
+
+        if ( !this.multiple )
+        {
+            this.toggleList( e, 'close' );
+        }
+    },
+
 
     /**
      * ## removeOptionsListeners

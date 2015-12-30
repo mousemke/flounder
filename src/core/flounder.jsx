@@ -50,12 +50,16 @@ class Flounder
         qsHTML.removeEventListener( 'touchend', catchBodyClick );
 
         refs.selected.removeEventListener( 'click', this.toggleList );
+        refs.select.removeEventListener( 'change', this.divertTarget  );
+        refs.flounder.removeEventListener( 'keydown', this.checkFlounderKeypress );
 
         if ( this.props.search )
         {
             let search = refs.search;
             search.removeEventListener( 'click', this.toggleList );
             search.removeEventListener( 'keyup', this.fuzzySearch );
+            search.removeEventListener( 'focus', this.checkPlaceholder );
+            search.removeEventListener( 'blur', this.checkPlaceholder );
         }
     }
 
@@ -100,7 +104,7 @@ class Flounder
                 this.onComponentDidMount();
                 this.ready = true;
 
-                return this.refs.flounder.flounder = this.originalTarget.flounder = this;
+                return this.refs.flounder.flounder = this.originalTarget.flounder = this.target.flounder = this;
             }
         }
     }
