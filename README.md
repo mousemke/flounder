@@ -363,6 +363,7 @@ Change Log
 + changed flounder <-> element references in react
 + $ now sets flounder as 'flounder' with data
 + µ now sets flounder as 'flounder' with set
++ flounder now detects, destroys, and re-instantiates with the new optins if it is given an element that already has a flounder 
 
 
 0.2.6
