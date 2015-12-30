@@ -9,7 +9,7 @@ import Flounder from '../core/flounder.jsx';
     $.fn.flounder = function( options )
     {
         let flounderDestroy = Flounder.prototype.destroy;
-        let flounder = new Flounder( this, options );
+        let flounder        = new Flounder( this, options );
 
         this.each( function( i, el )
         {
@@ -24,7 +24,7 @@ import Flounder from '../core/flounder.jsx';
             };
         } );
 
-        return flounder;
+        return flounder.length === 1 ? flounder[0] : flounder;
     };
 
 }( jQuery ) );

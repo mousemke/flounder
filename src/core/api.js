@@ -14,7 +14,8 @@ const api = {
     {
         this.componentWillUnmount();
         let originalTarget      = this.originalTarget;
-        originalTarget.flounder = this.refs.flounder = null;
+
+        this.refs.flounder.flounder = this.originalTarget.flounder = this.target.flounder = null;
 
         if ( originalTarget.tagName === 'INPUT' || originalTarget.tagName === 'SELECT' )
         {

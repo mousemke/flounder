@@ -1,4 +1,4 @@
-Flounder.js 0.2.6
+Flounder.js 0.2.7
 =================
 
 (for modern browsers and ie9+)
@@ -46,6 +46,49 @@ Flounder also saves a copy of itself to its target element.  So if you lose the 
 ```
 document.querySelector( '#vanilla--select' ).flounder.destroy()
 ```
+
+
+###Target options
+
+Flounder's target is quite flexible.  
+
+you can give it an element:
+
+```
+new Flounder( document.getElementsByTagName( 'input--el' )[0], options );
+```
+
+an array:
+
+```
+new Flounder( [ el1, el2, el3 ], options );
+```
+
+an HTML collection:
+
+```
+new Flounder( document.getElementsByTagName( 'input' ), options );
+```
+
+a jQuery object:
+
+```
+new Flounder( $( 'input' ), options );
+```
+
+a microbe:
+
+```
+new Flounder( µ( 'input' ), options );
+```
+
+or, just a selector string:
+
+```
+new Flounder( 'input', options );
+```
+
+If flounder is fed an element that already has a flounder, it will destroy it and re initialize it with the new options.
 
 
 ###Available config options
@@ -318,6 +361,8 @@ Change Log
 + fixed a selectbox event leak
 + added "destroy all" demo button
 + changed flounder <-> element references in react
++ $ now sets flounder as 'flounder' with data
++ µ now sets flounder as 'flounder' with set
 
 
 0.2.6

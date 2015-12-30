@@ -93,6 +93,11 @@ class Flounder
             }
             else if ( ( !target.length && target.length !== 0 ) || target.tagName === 'SELECT' )
             {
+                if ( target.flounder )
+                {
+                    target.flounder.destroy();
+                }
+
                 this.props = props;
                 this.setTarget( target );
                 this.bindThis();
