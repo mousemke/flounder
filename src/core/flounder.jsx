@@ -78,7 +78,12 @@ class Flounder
         }
         else if ( target )
         {
-            if ( target.length && typeof target !== 'string' && target.tagName !== 'SELECT' )
+            if ( typeof target === 'string' )
+            {
+                target = document.querySelectorAll( target );
+            }
+
+            if ( target.length && target.tagName !== 'SELECT' )
             {
                 return this.arrayOfFlounders( target, props );
             }

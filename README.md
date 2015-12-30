@@ -311,6 +311,13 @@ See more examples on the [demo page](./demo/index.html)
 Change Log
 ==========
 
+0.2.7
+-----
+
++ fixed a destroy event leak
++ added "destroy all" demo button
++ changed flounder <-> element binding in react
+
 
 0.2.6
 -----

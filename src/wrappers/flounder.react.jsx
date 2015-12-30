@@ -36,14 +36,14 @@ class FlounderReact extends Component
     {
         let refs            = this.refs;
 
-        this.target         = refs.wrapper.parentNode;
+        this.target         = this.originalTarget = refs.wrapper.parentNode;
 
         refs.data           = slice.call( refs.optionsList.children, 0 );
         refs.selectOptions  = slice.call( refs.select.children, 0 );
 
-        this.refs.select.flounder = this.refs.selected.flounder = this.target.flounder = this;
+        refs.flounder.flounder = this.originalTarget.flounder = this;
 
-        let multiTagWrapper = this.refs.multiTagWrapper;
+        let multiTagWrapper = refs.multiTagWrapper;
 
         if ( multiTagWrapper )
         {
@@ -57,10 +57,7 @@ class FlounderReact extends Component
 
         this.onRender();
 
-        if ( this.onComponentDidMount )
-        {
-            this.onComponentDidMount();
-        }
+        this.onComponentDidMount();
 
         this.setPlatform();
     }

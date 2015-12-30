@@ -224,7 +224,7 @@ requirejs.config( {
  */
 requirejs( [ 'flounder' ], function( Flounder )
 {
-    new Flounder( document.getElementById( 'AMD--desc' ), {
+    new Flounder( '#AMD--desc', {
         placeholder          : 'placeholders!',
 
         onInit               : function()
@@ -277,6 +277,14 @@ requirejs( [ 'flounder' ], function( Flounder )
 {
     µ( '.flounder--select--tag' ).removeClass( 'flounder--hidden' );
     µ( '.flounder' ).css( 'display', 'inline-block' )
+} );
+
+µ( '.destroy--all' ).on( 'click', function()
+{
+    µ( '.flounder' ).each( function( el )
+    {
+        el.flounder.destroy();
+    } );
 } );
 
 export default { React, Component, ReactDOM, FlounderReact, Flounder };

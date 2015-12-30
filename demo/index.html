@@ -15,15 +15,15 @@
     </head>
     <body>
         <div>
-            <span class="demo--label">Vanilla from Input (sections, unique classes, default value)</span>
+            <span class="demo--label">Vanilla from Input (sections, unique classes, default value, built from string)</span>
             <input class="vanilla--input--tags" id="vanilla--input--tags" type="text">
         </div>
         <div>
-            <span class="demo--label">Vanilla from Input (multiple, no tags, dynamic options, default index)</span>
+            <span class="demo--label">Vanilla from Input (multiple, no tags, dynamic options, default index, built from element)</span>
             <input id="vanilla--input" type="text">
         </div>
         <div>
-            <span class="demo--label">Vanilla from Select (default value, custom classes)</span>
+            <span class="demo--label">Vanilla from Select (default value, custom classes, built from element)</span>
             <select id="vanilla--select" class="test--class--one  test--class--two">
                 <option value="1">1</option>
                 <option value="2">2</option>
@@ -33,23 +33,23 @@
             </select>
         </div>
         <div>
-            <span class="demo--label">React from Div (multiple, tags, placeholder)</span>
+            <span class="demo--label">React from Div (multiple, tags, placeholder, built from element)</span>
             <div style="display:inline-block;" id="react--multiple--tags"></div>
         </div>
         <div>
-            <span class="demo--label">React from Span (default value)</span>
+            <span class="demo--label">React from Span (default value, built from element)</span>
             <span style="display:inline-block;" id="react--span"></span>
         </div>
         <div>
-            <span class="demo--label">React from Div (multiple, no-tags, desciption, default index)</span>
+            <span class="demo--label">React from Div (multiple, no-tags, desciption, default index, built from element)</span>
             <div style="display:inline-block;" id="react--multiple--desc"></div>
         </div>
         <div>
-            <span class="demo--label">AMD required vanilla from Div (desciption, placeholder)</span>
+            <span class="demo--label">AMD required vanilla from Div (desciption, placeholder, built from string)</span>
             <div style="display:inline-block;" id="AMD--desc"></div>
         </div>
         <div>
-            <span class="demo--label">AMD required vanilla from select (onSelect, placeholder)</span>
+            <span class="demo--label">AMD required vanilla from select (onSelect, placeholder, built from element)</span>
             <select id="AMD--select" class="test--class--one  test--class--two">
                 <option value="1">1</option>
                 <option value="2">2</option>
@@ -59,15 +59,16 @@
             </select>
         </div>
         <div>
-            <span class="demo--label">Microbe plugin from Div (multiple, no-tags, desciption)</span>
+            <span class="demo--label">Microbe plugin from Div (multiple, no-tags, desciption, built from microbe)</span>
             <div style="display:inline-block;" id="microbe--multiple--desc"></div>
         </div>
         <div>
-            <span class="demo--label">jQuery plugin from Div (search, placeholder)</span>
+            <span class="demo--label">jQuery plugin from Div (search, placeholder, built from jquery object)</span>
             <div style="display:inline-block;" id="jquery--div"></div>
         </div>
 
         <button class="debug--mode">debug mode</button>
+        <button class="destroy--all">destroy all</button>
         <script type="text/javascript" src="./vendor/jquery.js"></script>
         <script type="text/javascript" src="../dist/flounder.jquery.js"></script>
         <script type="text/javascript" src="./vendor/microbe.js"></script>
