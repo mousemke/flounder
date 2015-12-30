@@ -44,6 +44,11 @@ class Flounder
 
         this.removeOptionsListeners();
 
+        let qsHTML          = document.querySelector( 'html' );
+        let catchBodyClick  = this.catchBodyClick;
+        qsHTML.removeEventListener( 'click', catchBodyClick );
+        qsHTML.removeEventListener( 'touchend', catchBodyClick );
+
         refs.selected.removeEventListener( 'click', this.toggleList );
 
         if ( this.props.search )
