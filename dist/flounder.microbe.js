@@ -6,7 +6,7 @@
  * Released under the MIT license
  * https://github.com/sociomantic/flounder/license
  *
- * Date: Tue Dec 29 2015
+ * Date: Wed Dec 30 2015
  */
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 'use strict';
@@ -35,7 +35,8 @@ var api = {
     destroy: function destroy() {
         this.componentWillUnmount();
         var originalTarget = this.originalTarget;
-        originalTarget.flounder = this.refs.flounder = null;
+
+        this.refs.flounder.flounder = this.originalTarget.flounder = this.target.flounder = null;
 
         if (originalTarget.tagName === 'INPUT' || originalTarget.tagName === 'SELECT') {
             var target = originalTarget.nextElementSibling;
@@ -330,6 +331,7 @@ var build = {
         this.checkFlounderKeypress = this.checkFlounderKeypress.bind(this);
         this.checkPlaceholder = this.checkPlaceholder.bind(this);
         this.clickSet = this.clickSet.bind(this);
+        this.divertTarget = this.divertTarget.bind(this);
         this.displayMultipleTags = this.displayMultipleTags.bind(this);
         this.fuzzySearch = this.fuzzySearch.bind(this);
         this.removeMultiTag = this.removeMultiTag.bind(this);
@@ -683,7 +685,7 @@ var events = {
             }
         };
 
-        refs.select.addEventListener('change', divertTarget);
+        refs.select.addEventListener('change', this.divertTarget);
 
         this.addOptionsListeners();
 
@@ -827,6 +829,33 @@ var events = {
 
         if (!this.multiple || !e[this.multiSelect]) {
             this.toggleList(e);
+        }
+    },
+
+    /**
+     * ## divertTarget
+     *
+     * on interaction with the raw select box, the target will be diverted to
+     * the corresponding flounder list element
+     *
+     * @return _Void_
+     */
+    divertTarget: function divertTarget(e) {
+        var index = e.target.selectedIndex;
+
+        var _e = {
+            target: data[index]
+        };
+
+        if (this.multipleTags) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        this.setSelectValue(_e);
+
+        if (!this.multiple) {
+            this.toggleList(e, 'close');
         }
     },
 
@@ -1207,12 +1236,21 @@ var Flounder = (function () {
 
             this.removeOptionsListeners();
 
+            var qsHTML = document.querySelector('html');
+            var catchBodyClick = this.catchBodyClick;
+            qsHTML.removeEventListener('click', catchBodyClick);
+            qsHTML.removeEventListener('touchend', catchBodyClick);
+
             refs.selected.removeEventListener('click', this.toggleList);
+            refs.select.removeEventListener('change', this.divertTarget);
+            refs.flounder.removeEventListener('keydown', this.checkFlounderKeypress);
 
             if (this.props.search) {
                 var search = refs.search;
                 search.removeEventListener('click', this.toggleList);
                 search.removeEventListener('keyup', this.fuzzySearch);
+                search.removeEventListener('focus', this.checkPlaceholder);
+                search.removeEventListener('blur', this.checkPlaceholder);
             }
         }
 
@@ -1234,9 +1272,17 @@ var Flounder = (function () {
         if (!target && !props) {
             return this.constructor;
         } else if (target) {
-            if (target.length && typeof target !== 'string' && target.tagName !== 'SELECT') {
+            if (typeof target === 'string') {
+                target = document.querySelectorAll(target);
+            }
+
+            if (target.length && target.tagName !== 'SELECT') {
                 return this.arrayOfFlounders(target, props);
             } else if (!target.length && target.length !== 0 || target.tagName === 'SELECT') {
+                if (target.flounder) {
+                    target.flounder.destroy();
+                }
+
                 this.props = props;
                 this.setTarget(target);
                 this.bindThis();
@@ -1248,7 +1294,7 @@ var Flounder = (function () {
                 this.onComponentDidMount();
                 this.ready = true;
 
-                return this.refs.flounder.flounder = this.originalTarget.flounder = this;
+                return this.refs.flounder.flounder = this.originalTarget.flounder = this.target.flounder = this;
             }
         }
     }
@@ -2098,7 +2144,22 @@ var _coreFlounderJsx2 = _interopRequireDefault(_coreFlounderJsx);
 (function (µ) {
 
     µ.core.flounder = function (options) {
-        return new _coreFlounderJsx2['default'](this, options);
+        var flounderDestroy = _coreFlounderJsx2['default'].prototype.destroy;
+        var flounder = new _coreFlounderJsx2['default'](this, options);
+
+        this.each(function (el, i) {
+            var _f = flounder[i];
+            el.data = el.data || {};
+            el.data.flounder = el.data.flounder || {};
+            el.data.flounder.flounder = _f;
+
+            _f.destroy = function () {
+                el.data.flounder.flounder = false;
+                flounderDestroy.call(_f);
+            };
+        });
+
+        return flounder;
     };
 })(µ);
 

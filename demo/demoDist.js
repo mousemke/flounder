@@ -214,7 +214,7 @@ requirejs.config({
  * vanilla Flounder with descriptions attached to a div
  */
 requirejs(['flounder'], function (Flounder) {
-    new Flounder(document.getElementById('AMD--desc'), {
+    new Flounder('#AMD--desc', {
         placeholder: 'placeholders!',
 
         onInit: function onInit() {
@@ -261,6 +261,12 @@ requirejs(['flounder'], function (Flounder) {
 µ('.debug--mode').on('click', function () {
     µ('.flounder--select--tag').removeClass('flounder--hidden');
     µ('.flounder').css('display', 'inline-block');
+});
+
+µ('.destroy--all').on('click', function () {
+    µ('.flounder').each(function (el) {
+        el.flounder.destroy();
+    });
 });
 
 exports['default'] = { React: _react2['default'], Component: _react.Component, ReactDOM: _reactDom2['default'], FlounderReact: _srcWrappersFlounderReactJsx.FlounderReact, Flounder: _srcCoreFlounderJsx2['default'] };
@@ -19308,7 +19314,8 @@ var api = {
     destroy: function destroy() {
         this.componentWillUnmount();
         var originalTarget = this.originalTarget;
-        originalTarget.flounder = this.refs.flounder = null;
+
+        this.refs.flounder.flounder = this.originalTarget.flounder = this.target.flounder = null;
 
         if (originalTarget.tagName === 'INPUT' || originalTarget.tagName === 'SELECT') {
             var target = originalTarget.nextElementSibling;
@@ -19603,6 +19610,7 @@ var build = {
         this.checkFlounderKeypress = this.checkFlounderKeypress.bind(this);
         this.checkPlaceholder = this.checkPlaceholder.bind(this);
         this.clickSet = this.clickSet.bind(this);
+        this.divertTarget = this.divertTarget.bind(this);
         this.displayMultipleTags = this.displayMultipleTags.bind(this);
         this.fuzzySearch = this.fuzzySearch.bind(this);
         this.removeMultiTag = this.removeMultiTag.bind(this);
@@ -19956,7 +19964,7 @@ var events = {
             }
         };
 
-        refs.select.addEventListener('change', divertTarget);
+        refs.select.addEventListener('change', this.divertTarget);
 
         this.addOptionsListeners();
 
@@ -20100,6 +20108,33 @@ var events = {
 
         if (!this.multiple || !e[this.multiSelect]) {
             this.toggleList(e);
+        }
+    },
+
+    /**
+     * ## divertTarget
+     *
+     * on interaction with the raw select box, the target will be diverted to
+     * the corresponding flounder list element
+     *
+     * @return _Void_
+     */
+    divertTarget: function divertTarget(e) {
+        var index = e.target.selectedIndex;
+
+        var _e = {
+            target: data[index]
+        };
+
+        if (this.multipleTags) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        this.setSelectValue(_e);
+
+        if (!this.multiple) {
+            this.toggleList(e, 'close');
         }
     },
 
@@ -20480,12 +20515,21 @@ var Flounder = (function () {
 
             this.removeOptionsListeners();
 
+            var qsHTML = document.querySelector('html');
+            var catchBodyClick = this.catchBodyClick;
+            qsHTML.removeEventListener('click', catchBodyClick);
+            qsHTML.removeEventListener('touchend', catchBodyClick);
+
             refs.selected.removeEventListener('click', this.toggleList);
+            refs.select.removeEventListener('change', this.divertTarget);
+            refs.flounder.removeEventListener('keydown', this.checkFlounderKeypress);
 
             if (this.props.search) {
                 var search = refs.search;
                 search.removeEventListener('click', this.toggleList);
                 search.removeEventListener('keyup', this.fuzzySearch);
+                search.removeEventListener('focus', this.checkPlaceholder);
+                search.removeEventListener('blur', this.checkPlaceholder);
             }
         }
 
@@ -20507,9 +20551,17 @@ var Flounder = (function () {
         if (!target && !props) {
             return this.constructor;
         } else if (target) {
-            if (target.length && typeof target !== 'string' && target.tagName !== 'SELECT') {
+            if (typeof target === 'string') {
+                target = document.querySelectorAll(target);
+            }
+
+            if (target.length && target.tagName !== 'SELECT') {
                 return this.arrayOfFlounders(target, props);
             } else if (!target.length && target.length !== 0 || target.tagName === 'SELECT') {
+                if (target.flounder) {
+                    target.flounder.destroy();
+                }
+
                 this.props = props;
                 this.setTarget(target);
                 this.bindThis();
@@ -20521,7 +20573,7 @@ var Flounder = (function () {
                 this.onComponentDidMount();
                 this.ready = true;
 
-                return this.refs.flounder.flounder = this.originalTarget.flounder = this;
+                return this.refs.flounder.flounder = this.originalTarget.flounder = this.target.flounder = this;
             }
         }
     }
@@ -21425,14 +21477,14 @@ var FlounderReact = (function (_Component) {
         value: function componentDidMount() {
             var refs = this.refs;
 
-            this.target = refs.wrapper.parentNode;
+            this.target = this.originalTarget = refs.wrapper.parentNode;
 
             refs.data = slice.call(refs.optionsList.children, 0);
             refs.selectOptions = slice.call(refs.select.children, 0);
 
-            this.refs.select.flounder = this.refs.selected.flounder = this.target.flounder = this;
+            refs.flounder.flounder = this.originalTarget.flounder = this.target.flounder = this;
 
-            var multiTagWrapper = this.refs.multiTagWrapper;
+            var multiTagWrapper = refs.multiTagWrapper;
 
             if (multiTagWrapper) {
                 multiTagWrapper.style.textIndent = this.defaultTextIndent + 'px';
@@ -21444,9 +21496,7 @@ var FlounderReact = (function (_Component) {
 
             this.onRender();
 
-            if (this.onComponentDidMount) {
-                this.onComponentDidMount();
-            }
+            this.onComponentDidMount();
 
             this.setPlatform();
         }

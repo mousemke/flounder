@@ -1197,6 +1197,11 @@ var Flounder = (function () {
 
             this.removeOptionsListeners();
 
+            var qsHTML = document.querySelector('html');
+            var catchBodyClick = this.catchBodyClick;
+            qsHTML.removeEventListener('click', catchBodyClick);
+            qsHTML.removeEventListener('touchend', catchBodyClick);
+
             refs.selected.removeEventListener('click', this.toggleList);
 
             if (this.props.search) {
