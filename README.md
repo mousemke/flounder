@@ -1,4 +1,4 @@
-Flounder.js 0.2.7
+Flounder.js 0.2.8
 =================
 
 (for modern browsers and ie9+)
@@ -354,6 +354,12 @@ See more examples on the [demo page](./demo/index.html)
 Change Log
 ==========
 
+0.2.8
+-----
+
++ structure style tweaked
+
+
 0.2.7
 -----
 
@@ -372,7 +378,7 @@ Change Log
 + split file structure
 + removed the checks for 0 length flounder creation objects.  If there is nothing to render, flounder will just render nothing
 + onOpen and onClose will now not fire until flounder is set up
-+ destroy now preserves the container it was buit in
++ destroy now preserves the container it was built in
 + better checks for target
 
 

@@ -39,7 +39,6 @@
     position:                       absolute;
     max-height:                     200px;
     overflow-x:                     hidden;
-    overflow-y:                     scroll;
     left:                           -1px;
     border:                         1px solid;
     background-color:               #fff;
