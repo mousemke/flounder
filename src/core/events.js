@@ -36,20 +36,15 @@ const events = {
         };
 
 
-        refs.select.addEventListener( 'change', this.divertTarget  );
-
-        this.addOptionsListeners();
-
+        refs.select.addEventListener( 'change', this.divertTarget );
         refs.flounder.addEventListener( 'keydown', this.checkFlounderKeypress );
         refs.selected.addEventListener( 'click', this.toggleList );
 
+        this.addOptionsListeners();
+
         if ( props.search )
         {
-            let search = refs.search;
-            search.addEventListener( 'click', this.toggleList );
-            search.addEventListener( 'keyup', this.fuzzySearch );
-            search.addEventListener( 'focus', this.checkPlaceholder );
-            search.addEventListener( 'blur', this.checkPlaceholder );
+            this.addSearchListeners();
         }
     },
 
@@ -70,6 +65,23 @@ const events = {
                 dataObj.addEventListener( 'click', this.clickSet );
             }
         } );
+    },
+
+
+    /**
+     * ## addSearchListeners
+     *
+     * adds listeners to the search box
+     *
+     * @return _Void_
+     */
+    addSearchListeners : function()
+    {
+        let search = this.refs.search;
+        search.addEventListener( 'click', this.toggleList );
+        search.addEventListener( 'keyup', this.fuzzySearch );
+        search.addEventListener( 'focus', this.checkPlaceholder );
+        search.addEventListener( 'blur', this.checkPlaceholder );
     },
 
 

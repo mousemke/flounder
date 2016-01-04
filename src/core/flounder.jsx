@@ -142,11 +142,11 @@ class Flounder
         {
             if ( option.value !== '' )
             {
-                span           = document.createElement( 'span' )
-                span.className = classes.MULTIPLE_SELECT_TAG;
+                let span        = document.createElement( 'span' )
+                span.className  = classes.MULTIPLE_SELECT_TAG;
 
-                a              = document.createElement( 'a' )
-                a.className    = classes.MULTIPLE_TAG_CLOSE;
+                let a           = document.createElement( 'a' )
+                a.className     = classes.MULTIPLE_TAG_CLOSE;
                 a.setAttribute( 'data-index', option.index );
 
                 span.appendChild( a );
@@ -444,6 +444,8 @@ class Flounder
 
         this.removeClass( data[ targetIndex ], classes.SELECTED_HIDDEN );
         this.removeClass( data[ targetIndex ], classes.SELECTED );
+
+        target.removeEventListener( 'click', this.removeMultiTag );
 
         let span = target.parentNode;
         span.parentNode.removeChild( span );

@@ -358,6 +358,8 @@ Change Log
 -----
 
 + structure style tweaked
++ internal abstractions
++ fixed a multi-tag event leak
 
 
 0.2.7
