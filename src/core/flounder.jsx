@@ -343,55 +343,6 @@ class Flounder
 
 
     /**
-     * ## initSelectBox
-     *
-     * builds the initial select box.  if the given wrapper element is a select
-     * box, this instead scrapes that, thus allowing php fed elements
-     *
-     * @param {DOMElement} wrapper main wrapper element
-     *
-     * @return _DOMElement_ select box
-     */
-    initSelectBox( wrapper )
-    {
-        let target = this.target;
-        let select;
-
-        if ( target.tagName === 'SELECT' )
-        {
-            this.addClass( target, classes.SELECT_TAG );
-            this.addClass( target, classes.HIDDEN );
-            this.refs.select    = target;
-
-            let data = [], selectOptions = [];
-
-            nativeSlice.apply( target.children ).forEach( function( optionEl )
-            {
-                selectOptions.push( optionEl );
-                data.push( {
-                    text    : optionEl.innerHTML,
-                    value   : optionEl.value
-                } );
-            } );
-
-            this.data               = data;
-            this.target             = target.parentNode;
-            this.refs.selectOptions = selectOptions;
-
-            select = this.refs.select;
-            this.addClass( select, classes.HIDDEN );
-        }
-        else
-        {
-            select = this.constructElement( { tagname : 'select', className : classes.SELECT_TAG + '  ' + classes.HIDDEN } );
-            wrapper.appendChild( select );
-        }
-
-        return select;
-    }
-
-
-    /**
      * ## onRender
      *
      * attaches necessary events to the built DOM

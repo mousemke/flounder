@@ -51,6 +51,19 @@ var data = [{
     text: 'Month'
 }];
 
+// new Flounder( this.view.$( prop.selectorClass ),
+//  {
+//    data: data,
+//    defaultValue: defaultValue,
+//    classes: {
+//      wrapper: extraWrapperClasses
+//    },
+//    onSelect: (function( e, value ){
+//      var newValue = value[0] === 'inherit' ? null : value[0];
+//      this.view.model.set( prop.modelProperty, newValue, { flounderChange : true }  );
+//    }).bind( this )
+//  });
+
 /**
  * vanilla multi-Flounder with tags attached to an input
  */
@@ -134,11 +147,7 @@ new _srcCoreFlounderJsx2['default'](document.getElementById('vanilla--select'), 
         hidden: 'class--to--denote--hidden',
         selected: 'class--to--denote--selected--option',
         wrapper: 'additional--class--to--give--the--wrapper'
-    },
-
-    onSelect: (function (a, b) {
-        console.log(this, a, b);
-    }).bind(window)
+    }
 });
 
 /**
@@ -19551,6 +19560,8 @@ var _classes = require('./classes');
 
 var _classes2 = _interopRequireDefault(_classes);
 
+var nativeSlice = Array.prototype.slice;
+
 var build = {
 
     /**
@@ -19667,6 +19678,7 @@ var build = {
         var arrow = constructElement({ className: _classes2['default'].ARROW });
         var optionsListWrapper = constructElement({ className: _classes2['default'].OPTIONS_WRAPPER + '  ' + _classes2['default'].HIDDEN });
         var optionsList = constructElement({ className: _classes2['default'].LIST });
+        optionsList.setAttribute('role', 'listbox');
         optionsListWrapper.appendChild(optionsList);
 
         [selected, multiTagWrapper, arrow, optionsListWrapper].forEach(function (el) {
@@ -19757,6 +19769,7 @@ var build = {
             }
 
             data.className += dataObj.extraClass ? '  ' + dataObj.extraClass : '';
+            data.setAttribute('role', 'option');
 
             return data;
         };
@@ -19825,6 +19838,54 @@ var build = {
         });
 
         return [data, selectOptions];
+    },
+
+    /**
+     * ## initSelectBox
+     *
+     * builds the initial select box.  if the given wrapper element is a select
+     * box, this instead scrapes that, thus allowing php fed elements
+     *
+     * @param {DOMElement} wrapper main wrapper element
+     *
+     * @return _DOMElement_ select box
+     */
+    initSelectBox: function initSelectBox(wrapper) {
+        var _this = this;
+
+        var target = this.target;
+        var select = undefined;
+
+        if (target.tagName === 'SELECT') {
+            (function () {
+                _this.addClass(target, _classes2['default'].SELECT_TAG);
+                _this.addClass(target, _classes2['default'].HIDDEN);
+                _this.refs.select = target;
+
+                var data = [],
+                    selectOptions = [];
+
+                nativeSlice.apply(target.children).forEach(function (optionEl) {
+                    selectOptions.push(optionEl);
+                    data.push({
+                        text: optionEl.innerHTML,
+                        value: optionEl.value
+                    });
+                });
+
+                _this.data = data;
+                _this.target = target.parentNode;
+                _this.refs.selectOptions = selectOptions;
+
+                select = _this.refs.select;
+                _this.addClass(select, _classes2['default'].HIDDEN);
+            })();
+        } else {
+            select = this.constructElement({ tagname: 'select', className: _classes2['default'].SELECT_TAG + '  ' + _classes2['default'].HIDDEN });
+            wrapper.appendChild(select);
+        }
+
+        return select;
     },
 
     /**
@@ -19965,18 +20026,13 @@ var events = {
         };
 
         refs.select.addEventListener('change', this.divertTarget);
-
-        this.addOptionsListeners();
-
         refs.flounder.addEventListener('keydown', this.checkFlounderKeypress);
         refs.selected.addEventListener('click', this.toggleList);
 
+        this.addOptionsListeners();
+
         if (props.search) {
-            var search = refs.search;
-            search.addEventListener('click', this.toggleList);
-            search.addEventListener('keyup', this.fuzzySearch);
-            search.addEventListener('focus', this.checkPlaceholder);
-            search.addEventListener('blur', this.checkPlaceholder);
+            this.addSearchListeners();
         }
     },
 
@@ -19995,6 +20051,21 @@ var events = {
                 dataObj.addEventListener('click', _this.clickSet);
             }
         });
+    },
+
+    /**
+     * ## addSearchListeners
+     *
+     * adds listeners to the search box
+     *
+     * @return _Void_
+     */
+    addSearchListeners: function addSearchListeners() {
+        var search = this.refs.search;
+        search.addEventListener('click', this.toggleList);
+        search.addEventListener('keyup', this.fuzzySearch);
+        search.addEventListener('focus', this.checkPlaceholder);
+        search.addEventListener('blur', this.checkPlaceholder);
     },
 
     /**
@@ -20605,18 +20676,18 @@ var Flounder = (function () {
 
             selectedOptions.forEach(function (option) {
                 if (option.value !== '') {
-                    span = document.createElement('span');
-                    span.className = _classes3['default'].MULTIPLE_SELECT_TAG;
+                    var _span = document.createElement('span');
+                    _span.className = _classes3['default'].MULTIPLE_SELECT_TAG;
 
-                    a = document.createElement('a');
-                    a.className = _classes3['default'].MULTIPLE_TAG_CLOSE;
-                    a.setAttribute('data-index', option.index);
+                    var _a = document.createElement('a');
+                    _a.className = _classes3['default'].MULTIPLE_TAG_CLOSE;
+                    _a.setAttribute('data-index', option.index);
 
-                    span.appendChild(a);
+                    _span.appendChild(_a);
 
-                    span.innerHTML += option.innerHTML;
+                    _span.innerHTML += option.innerHTML;
 
-                    multiTagWrapper.appendChild(span);
+                    multiTagWrapper.appendChild(_span);
                 } else {
                     option.selected = false;
                 }
@@ -20779,56 +20850,6 @@ var Flounder = (function () {
         }
 
         /**
-         * ## initSelectBox
-         *
-         * builds the initial select box.  if the given wrapper element is a select
-         * box, this instead scrapes that, thus allowing php fed elements
-         *
-         * @param {DOMElement} wrapper main wrapper element
-         *
-         * @return _DOMElement_ select box
-         */
-    }, {
-        key: 'initSelectBox',
-        value: function initSelectBox(wrapper) {
-            var _this4 = this;
-
-            var target = this.target;
-            var select = undefined;
-
-            if (target.tagName === 'SELECT') {
-                (function () {
-                    _this4.addClass(target, _classes3['default'].SELECT_TAG);
-                    _this4.addClass(target, _classes3['default'].HIDDEN);
-                    _this4.refs.select = target;
-
-                    var data = [],
-                        selectOptions = [];
-
-                    nativeSlice.apply(target.children).forEach(function (optionEl) {
-                        selectOptions.push(optionEl);
-                        data.push({
-                            text: optionEl.innerHTML,
-                            value: optionEl.value
-                        });
-                    });
-
-                    _this4.data = data;
-                    _this4.target = target.parentNode;
-                    _this4.refs.selectOptions = selectOptions;
-
-                    select = _this4.refs.select;
-                    _this4.addClass(select, _classes3['default'].HIDDEN);
-                })();
-            } else {
-                select = this.constructElement({ tagname: 'select', className: _classes3['default'].SELECT_TAG + '  ' + _classes3['default'].HIDDEN });
-                wrapper.appendChild(select);
-            }
-
-            return select;
-        }
-
-        /**
          * ## onRender
          *
          * attaches necessary events to the built DOM
@@ -20882,6 +20903,8 @@ var Flounder = (function () {
             this.removeClass(data[targetIndex], _classes3['default'].SELECTED_HIDDEN);
             this.removeClass(data[targetIndex], _classes3['default'].SELECTED);
 
+            target.removeEventListener('click', this.removeMultiTag);
+
             var span = target.parentNode;
             span.parentNode.removeChild(span);
 
@@ -20917,12 +20940,12 @@ var Flounder = (function () {
     }, {
         key: 'removeSelectedClass',
         value: function removeSelectedClass(data) {
-            var _this5 = this;
+            var _this4 = this;
 
             data = data || this.refs.data;
 
             data.forEach(function (dataObj, i) {
-                _this5.removeClass(dataObj, _this5.selectedClass);
+                _this4.removeClass(dataObj, _this4.selectedClass);
             });
         }
 
@@ -20936,12 +20959,12 @@ var Flounder = (function () {
     }, {
         key: 'removeSelectedValue',
         value: function removeSelectedValue(data) {
-            var _this6 = this;
+            var _this5 = this;
 
             data = data || this.refs.data;
 
             data.forEach(function (d, i) {
-                _this6.refs.select[i].selected = false;
+                _this5.refs.select[i].selected = false;
             });
         }
 
@@ -21092,7 +21115,7 @@ var Flounder = (function () {
     }, {
         key: 'setTextMultiTagIndent',
         value: function setTextMultiTagIndent() {
-            var _this7 = this;
+            var _this6 = this;
 
             var search = this.refs.search;
             var offset = this.defaultTextIndent;
@@ -21101,7 +21124,7 @@ var Flounder = (function () {
                 var els = document.getElementsByClassName(_classes3['default'].MULTIPLE_SELECT_TAG);
 
                 nativeSlice.call(els).forEach(function (e, i) {
-                    offset += _this7.getElWidth(e);
+                    offset += _this6.getElWidth(e);
                 });
 
                 search.style.textIndent = offset + 'px';

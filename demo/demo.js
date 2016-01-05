@@ -38,6 +38,18 @@ let data = [
     }
 ];
 
+// new Flounder( this.view.$( prop.selectorClass ),
+//  {
+//    data: data,
+//    defaultValue: defaultValue,
+//    classes: {
+//      wrapper: extraWrapperClasses
+//    },
+//    onSelect: (function( e, value ){
+//      var newValue = value[0] === 'inherit' ? null : value[0];
+//      this.view.model.set( prop.modelProperty, newValue, { flounderChange : true }  );
+//    }).bind( this )
+//  });
 
 /**
  * vanilla multi-Flounder with tags attached to an input
@@ -132,9 +144,7 @@ new Flounder( document.getElementById( 'vanilla--select' ), {
         hidden          : 'class--to--denote--hidden',
         selected        : 'class--to--denote--selected--option',
         wrapper         : 'additional--class--to--give--the--wrapper'
-    },
-
-    onSelect : (function( a, b ){ console.log( this, a, b ) }).bind( window )
+    }
 } );
 
 
