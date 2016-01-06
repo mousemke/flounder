@@ -51,19 +51,6 @@ var data = [{
     text: 'Month'
 }];
 
-// new Flounder( this.view.$( prop.selectorClass ),
-//  {
-//    data: data,
-//    defaultValue: defaultValue,
-//    classes: {
-//      wrapper: extraWrapperClasses
-//    },
-//    onSelect: (function( e, value ){
-//      var newValue = value[0] === 'inherit' ? null : value[0];
-//      this.view.model.set( prop.modelProperty, newValue, { flounderChange : true }  );
-//    }).bind( this )
-//  });
-
 /**
  * vanilla multi-Flounder with tags attached to an input
  */
@@ -259,11 +246,7 @@ requirejs(['flounder'], function (Flounder) {
             });
 
             this.data = res;
-        },
-
-        onSelect: (function (a, b) {
-            console.log(this, a, b);
-        }).bind(window)
+        }
     });
 });
 
@@ -20117,7 +20100,13 @@ var events = {
             return true;
         }
 
-        return this.checkClickTarget(e, target.parentNode);
+        target = target.parentNode;
+
+        if (target) {
+            return this.checkClickTarget(e, target);
+        } else {
+            return false;
+        }
     },
 
     /**

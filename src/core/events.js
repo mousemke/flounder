@@ -143,8 +143,16 @@ const events = {
             return true;
         }
 
+        target = target.parentNode;
 
-        return this.checkClickTarget( e, target.parentNode );
+        if ( target )
+        {
+            return this.checkClickTarget( e, target );
+        }
+        else
+        {
+            return false;
+        }
     },
 
 

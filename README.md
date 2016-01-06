@@ -1,4 +1,4 @@
-Flounder.js 0.2.8
+Flounder.js 0.2.9
 =================
 
 (for modern browsers and ie9+)
@@ -353,6 +353,13 @@ See more examples on the [demo page](./demo/index.html)
 
 Change Log
 ==========
+
+
+0.2.9
+-----
+
++ checkClickTarget now fails better
+
 
 0.2.8
 -----
