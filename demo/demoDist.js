@@ -119,14 +119,14 @@ new _srcCoreFlounderJsx2['default'](document.getElementById('vanilla--input'), {
         var _o = this.data.map(rand);
 
         this.data = _o;
-        this.rebuildSelect(_o);
+        this.rebuild(_o);
     }
 });
 
 /**
  * vanilla Flounder attached pre built select box
  */
-new _srcCoreFlounderJsx2['default'](document.getElementById('vanilla--select'), {
+var a = new _srcCoreFlounderJsx2['default'](document.getElementById('vanilla--select'), {
     defaultValue: 2,
 
     classes: {
@@ -136,6 +136,7 @@ new _srcCoreFlounderJsx2['default'](document.getElementById('vanilla--select'), 
         wrapper: 'additional--class--to--give--the--wrapper'
     }
 });
+console.log(a);
 
 /**
  * react multi-Flounder with tags attached to an div
@@ -210,7 +211,7 @@ requirejs.config({
  * vanilla Flounder with descriptions attached to a div
  */
 requirejs(['flounder'], function (Flounder) {
-    var a = new Flounder('#AMD--desc', {
+    new Flounder('#AMD--desc', {
         placeholder: 'placeholders!',
 
         onInit: function onInit() {
@@ -226,7 +227,6 @@ requirejs(['flounder'], function (Flounder) {
             this.data = res;
         }
     });
-    console.log(a);
 });
 
 /**
@@ -19464,11 +19464,11 @@ var api = {
      *
      * after editing the data, this can be used to rebuild them
      *
-     * @param {Array} _data array with optino information
+     * @param {Array} data array with optino information
      *
-     * @return _Void_
+     * @return _Object_ rebuilt flounder object
      */
-    rebuild: function rebuild(_data) {
+    rebuild: function rebuild(data) {
         var _this2 = this;
 
         var refs = this.refs;
@@ -19485,7 +19485,7 @@ var api = {
         var _select = refs.select;
         refs.select = false;
 
-        var _buildData = this.buildData(this._default, _data, refs.optionsList, _select);
+        var _buildData = this.buildData(this._default, data, refs.optionsList, _select);
 
         var _buildData2 = _slicedToArray(_buildData, 2);
 
@@ -19508,6 +19508,23 @@ var api = {
         });
 
         this.addOptionsListeners();
+
+        return this;
+    },
+
+    /**
+     * ## reconfigure
+     *
+     * after editing the data, this can be used to rebuild them
+     *
+     * @param {Object} props object containing config options
+     *
+     * @return _Object_ rebuilt flounder object
+     */
+    reconfigure: function reconfigure(props) {
+        props.data = props.data || this.data;
+
+        return this.constructor(this.originalTarget, props);
     },
 
     /**

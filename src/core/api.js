@@ -199,11 +199,11 @@ const api = {
      *
      * after editing the data, this can be used to rebuild them
      *
-     * @param {Array} _data array with optino information
+     * @param {Array} data array with optino information
      *
-     * @return _Void_
+     * @return _Object_ rebuilt flounder object
      */
-    rebuild : function( _data )
+    rebuild : function( data )
     {
         let refs        = this.refs;
         let selected    = refs.select.selectedOptions;
@@ -216,7 +216,7 @@ const api = {
 
         let _select                 = refs.select;
         refs.select                 = false;
-        [ refs.data, refs.selectOptions ] = this.buildData( this._default, _data, refs.optionsList, _select );
+        [ refs.data, refs.selectOptions ] = this.buildData( this._default, data, refs.optionsList, _select );
         refs.select                 = _select;
 
         this.removeSelectedValue();
@@ -235,6 +235,25 @@ const api = {
         } );
 
         this.addOptionsListeners();
+
+        return this;
+    },
+
+
+    /**
+     * ## reconfigure
+     *
+     * after editing the data, this can be used to rebuild them
+     *
+     * @param {Object} props object containing config options
+     *
+     * @return _Object_ rebuilt flounder object
+     */
+    reconfigure : function( props )
+    {
+        props.data = props.data || this.data;
+
+        return this.constructor( this.originalTarget, props );
     },
 
 

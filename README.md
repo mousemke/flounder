@@ -217,6 +217,7 @@ this.getSelected()
 this.getSelectedValues()
 this.props
 this.rebuild( data )
+this.reconfigure( props )
 this.refs
 this.setIndex( index, multiple )
 this.setValue( value, multiple )
@@ -227,7 +228,7 @@ this.setValue( value, multiple )
 `clickValue( value, multiple )` sets the item with the passed value as selected.  If multiple is true and it is a multi-select box, it is selected additionally.  Otherwise it's selected instead. This accepts arrays as well.  Without multiple equaling true it will only select the last option. This fires the onClick event
 
 
-`deselectAll()` deselects all options
+`deselectAll()` deselects all data
 
 `destroy()` removes event listeners, then flounder
 
@@ -241,8 +242,10 @@ this.setValue( value, multiple )
  
 `props` the props set in the initial constructor
 
-`rebuild( options )` completely rebuilds the select boxes with new or altered options
+`rebuild( data )` completely rebuilds the select boxes with new or altered data
  
+`reconfigure( props )` rebuilds the flounder object with new options
+
 `refs` contains references to all flounder elements
 
 `setIndex( index, multiple )` sets the item with the passed index as selected.  If multiple is true and it is a multi-select box, it is selected additionally.  Otherwise it's selected instead.  This accepts arrays as well.  Without multiple equaling true it will only select the last option. This does not fire the onClick event
@@ -373,6 +376,7 @@ Change Log
 + [api] rebuildSelect is now rebuild
 + [api] added clickIndex and clickValue
 + [api] added props
++ [api] added reconfigure
 + [default] multipleTags is now false by default
 + [search] added Sole (a ROVer derivitive) for fuzzy search
 

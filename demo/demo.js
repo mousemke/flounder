@@ -116,7 +116,7 @@ new Flounder( document.getElementById( 'vanilla--input' ), {
         let _o       = this.data.map( rand );
 
         this.data    = _o;
-        this.rebuildSelect( _o );
+        this.rebuild( _o );
     }
 } );
 
@@ -124,7 +124,7 @@ new Flounder( document.getElementById( 'vanilla--input' ), {
 /**
  * vanilla Flounder attached pre built select box
  */
-new Flounder( document.getElementById( 'vanilla--select' ), {
+let a = new Flounder( document.getElementById( 'vanilla--select' ), {
     defaultValue    : 2,
 
     classes         : {
@@ -134,7 +134,7 @@ new Flounder( document.getElementById( 'vanilla--select' ), {
         wrapper         : 'additional--class--to--give--the--wrapper'
     }
 } );
-
+console.log( a );
 
 /**
  * react multi-Flounder with tags attached to an div
@@ -222,7 +222,7 @@ requirejs.config( {
  */
 requirejs( [ 'flounder' ], function( Flounder )
 {
-    let a = new Flounder( '#AMD--desc', {
+    new Flounder( '#AMD--desc', {
         placeholder          : 'placeholders!',
 
         onInit               : function()
@@ -240,7 +240,6 @@ requirejs( [ 'flounder' ], function( Flounder )
             this.data = res;
         }
      } );
-    console.log( a );
 } );
 
 
