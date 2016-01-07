@@ -1,12 +1,13 @@
 /*!
- * Flounder JavaScript Styleable Selectbox v0.2.9
+ * Flounder JavaScript Styleable Selectbox v0.3.0
  * https://github.com/sociomantic/flounder
  *
  * Copyright 2015-2016 Sociomantic Labs and other contributors
  * Released under the MIT license
  * https://github.com/sociomantic/flounder/license
  *
- * Date: Wed Jan 06 2016
+ * Date: Thu Jan 07 2016
+ * "This, so far, is the best Flounder ever"
  */
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 'use strict';
@@ -26,6 +27,34 @@ var _classes2 = _interopRequireDefault(_classes);
 var api = {
 
     /**
+     * ## clickIndex
+     *
+     * programatically sets the value by index.  If there are not enough elements
+     * to match the index, then nothing is selected. Fires the onClick event
+     *
+     * @param {Mixed} index index to set flounder to.  _Number, or Array of numbers_
+     *
+     * return _Void_
+     */
+    clickIndex: function clickIndex(index, multiple) {
+        return this.setIndex(index, multiple, false);
+    },
+
+    /**
+     * ## clickValue
+     *
+     * programatically sets the value by string.  If the value string
+     * is not matched to an element, nothing will be selected. Fires the onClick event
+     *
+     * @param {Mixed} value value to set flounder to.  _Number, or Array of numbers_
+     *
+     * return _Void_
+     */
+    clickValue: function clickValue(index, multiple) {
+        return this.setValue(index, multiple, false);
+    },
+
+    /**
      * ## destroy
      *
      * removes flounder and all it's events from the dom
@@ -34,9 +63,11 @@ var api = {
      */
     destroy: function destroy() {
         this.componentWillUnmount();
+
+        var refs = this.refs;
         var originalTarget = this.originalTarget;
 
-        this.refs.flounder.flounder = this.originalTarget.flounder = this.target.flounder = null;
+        refs.flounder.flounder = originalTarget.flounder = this.target.flounder = null;
 
         if (originalTarget.tagName === 'INPUT' || originalTarget.tagName === 'SELECT') {
             var target = originalTarget.nextElementSibling;
@@ -49,7 +80,7 @@ var api = {
             }
         } else {
             try {
-                var wrapper = this.refs.wrapper;
+                var wrapper = refs.wrapper;
                 var _parent = wrapper.parentNode;
                 _parent.removeChild(wrapper);
             } catch (e) {
@@ -98,7 +129,7 @@ var api = {
     },
 
     /**
-     * ## getOption
+     * ## getData
      *
      * returns the option and div tags related to an option
      *
@@ -106,20 +137,28 @@ var api = {
      *
      * @return _Object_ option and div tage
      */
-    getOption: function getOption(_i) {
+    getData: function getData(_i) {
+        var _this = this;
+
         var refs = this.refs;
 
-        return { option: refs.selectOptions[_i], div: refs.data[_i] };
+        if (typeof _i === 'number') {
+            return { option: refs.selectOptions[_i], div: refs.data[_i] };
+        } else {
+            return refs.selectOptions.map(function (el, i) {
+                return _this.getData(i);
+            });
+        }
     },
 
     /**
-     * ## getSelectedOptions
+     * ## getSelected
      *
      * returns the currently selected data of a SELECT box
      *
      * @return _Void_
      */
-    getSelectedOptions: function getSelectedOptions() {
+    getSelected: function getSelected() {
         var _el = this.refs.select;
         var opts = [],
             opt = undefined;
@@ -144,13 +183,13 @@ var api = {
      * @return _Void_
      */
     getSelectedValues: function getSelectedValues() {
-        return this.getSelectedOptions().map(function (_v) {
+        return this.getSelected().map(function (_v) {
             return _v.value;
         });
     },
 
     /**
-     * ## rebuildSelect
+     * ## rebuild
      *
      * after editing the data, this can be used to rebuild them
      *
@@ -158,8 +197,8 @@ var api = {
      *
      * @return _Void_
      */
-    rebuildSelect: function rebuildSelect(_data) {
-        var _this = this;
+    rebuild: function rebuild(_data) {
+        var _this2 = this;
 
         var refs = this.refs;
         var selected = refs.select.selectedOptions;
@@ -193,7 +232,7 @@ var api = {
             if (valuePosition !== -1) {
                 selected.splice(valuePosition, 1);
                 el.selected = true;
-                _this.addClass(refs.data[i], _this.selectedClass);
+                _this2.addClass(refs.data[i], _this2.selectedClass);
             }
         });
 
@@ -211,6 +250,8 @@ var api = {
      * return _Void_
      */
     setIndex: function setIndex(index, multiple) {
+        var programmatic = arguments.length <= 2 || arguments[2] === undefined ? true : arguments[2];
+
         var refs = this.refs;
 
         if (typeof index !== 'string' && index.length) {
@@ -223,7 +264,7 @@ var api = {
                 var isOpen = this.hasClass(refs.wrapper, 'open');
                 this.toggleList(isOpen ? 'close' : 'open');
                 this.___forceMultiple = multiple;
-                this.___programmaticClick = true;
+                this.___programmaticClick = programmatic;
                 el.click();
 
                 return el;
@@ -244,12 +285,14 @@ var api = {
      * return _Void_
      */
     setValue: function setValue(value, multiple) {
+        var programmatic = arguments.length <= 2 || arguments[2] === undefined ? true : arguments[2];
+
         if (typeof value !== 'string' && value.length) {
             var _setValue = this.setValue;
             return value.map(_setValue);
         } else {
             value = this.refs.select.querySelector('[value="' + value + '"]');
-            return value ? this.setIndex(value.index, multiple) : null;
+            return value ? this.setIndex(value.index, multiple, programmatic) : null;
         }
     }
 };
@@ -680,7 +723,7 @@ var defaults = {
     data: [],
     defaultTextIndent: 0,
     multiple: false,
-    multipleTags: true,
+    multipleTags: false,
     multipleMessage: '(Multiple Items Selected)',
     onClose: function onClose() {},
     onComponentDidMount: function onComponentDidMount() {},
@@ -706,6 +749,10 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'd
 var _classes = require('./classes');
 
 var _classes2 = _interopRequireDefault(_classes);
+
+var _search2 = require('./search');
+
+var _search3 = _interopRequireDefault(_search2);
 
 var events = {
 
@@ -983,10 +1030,10 @@ var events = {
             } else if (!window.sidebar && keyCode === 38 || keyCode === 40) // up and down
             {
                 e.preventDefault();
-                var search = refs.search;
+                var _search = refs.search;
 
-                if (search) {
-                    search.value = '';
+                if (_search) {
+                    _search.value = '';
                 }
 
                 increment = keyCode - 39;
@@ -1076,7 +1123,7 @@ var events = {
 
         this.removeSelectedClass(data);
 
-        var dataArray = this.getSelectedOptions();
+        var dataArray = this.getSelected();
         var baseOption = dataArray[0];
 
         if (baseOption) {
@@ -1169,6 +1216,7 @@ var events = {
 
         if (this.props.search) {
             this.fuzzySearchReset();
+            this.setSelectValue(e);
         }
 
         refs.flounder.focus();
@@ -1225,7 +1273,7 @@ var events = {
 exports['default'] = events;
 module.exports = exports['default'];
 
-},{"./classes":3}],6:[function(require,module,exports){
+},{"./classes":3,"./search":7}],6:[function(require,module,exports){
 
 /* jshint globalstrict: true */
 'use strict';
@@ -1264,7 +1312,12 @@ var _classes2 = require('./classes');
 
 var _classes3 = _interopRequireDefault(_classes2);
 
+var _search2 = require('./search');
+
+var _search3 = _interopRequireDefault(_search2);
+
 var nativeSlice = Array.prototype.slice;
+var search = undefined;
 
 var Flounder = (function () {
     _createClass(Flounder, [{
@@ -1314,11 +1367,11 @@ var Flounder = (function () {
             refs.flounder.removeEventListener('keydown', this.checkFlounderKeypress);
 
             if (this.props.search) {
-                var search = refs.search;
-                search.removeEventListener('click', this.toggleList);
-                search.removeEventListener('keyup', this.fuzzySearch);
-                search.removeEventListener('focus', this.checkPlaceholder);
-                search.removeEventListener('blur', this.checkPlaceholder);
+                var _search = refs.search;
+                _search.removeEventListener('click', this.toggleList);
+                _search.removeEventListener('keyup', this.fuzzySearch);
+                _search.removeEventListener('focus', this.checkPlaceholder);
+                _search.removeEventListener('blur', this.checkPlaceholder);
             }
         }
 
@@ -1350,6 +1403,7 @@ var Flounder = (function () {
                 if (target.flounder) {
                     target.flounder.destroy();
                 }
+                search = new _search3['default'](this);
 
                 this.props = props;
                 this.setTarget(target);
@@ -1432,7 +1486,7 @@ var Flounder = (function () {
             var value = [];
             var index = -1;
 
-            var selectedOption = this.getSelectedOptions();
+            var selectedOption = this.getSelected();
 
             var selectedLength = selectedOption.length;
 
@@ -1470,7 +1524,7 @@ var Flounder = (function () {
         /**
          * ## fuzzySearch
          *
-         * searches each option element to see whether it contains a string
+         * searches for things
          *
          * @param {Object} e event object
          *
@@ -1478,8 +1532,7 @@ var Flounder = (function () {
          */
     }, {
         key: 'fuzzySearch',
-        value: function fuzzySearch(e) // disclaimer: not actually fuzzy
-        {
+        value: function fuzzySearch(e) {
             var _this2 = this;
 
             var refs = this.refs;
@@ -1489,19 +1542,24 @@ var Flounder = (function () {
                 var keyCode = e.keyCode;
 
                 if (keyCode !== 38 && keyCode !== 40 && keyCode !== 13 && keyCode !== 27) {
-                    (function () {
-                        var term = e.target.value.toLowerCase();
+                    var val = e.target.value.trim();
 
-                        refs.data.forEach(function (dataObj) {
-                            var text = dataObj.innerHTML.toLowerCase();
+                    if (val.length >= search.defaults.minimumValueLength) {
+                        (function () {
+                            var matches = search.isThereAnythingRelatedTo(val);
+                            var data = refs.data;
 
-                            if (term !== '' && text.indexOf(term) === -1) {
-                                _this2.addClass(dataObj, _classes3['default'].SEARCH_HIDDEN);
-                            } else {
-                                _this2.removeClass(dataObj, _classes3['default'].SEARCH_HIDDEN);
-                            }
-                        });
-                    })();
+                            data.forEach(function (el, i) {
+                                _this2.addClass(el, _classes3['default'].SEARCH_HIDDEN);
+                            });
+
+                            matches.forEach(function (e) {
+                                _this2.removeClass(data[e.i], _classes3['default'].SEARCH_HIDDEN);
+                            });
+                        })();
+                    } else {
+                        this.fuzzySearchReset();
+                    }
                 } else {
                     this.setKeypress(e);
                     this.setSelectValue(e);
@@ -1616,7 +1674,7 @@ var Flounder = (function () {
             var targetIndex = target.getAttribute('data-index');
             select[targetIndex].selected = false;
 
-            var selectedOptions = this.getSelectedOptions();
+            var selectedOptions = this.getSelected();
 
             this.removeClass(data[targetIndex], _classes3['default'].SELECTED_HIDDEN);
             this.removeClass(data[targetIndex], _classes3['default'].SELECTED);
@@ -1858,7 +1916,266 @@ _utils2['default'].extendClass(Flounder, _utils2['default'], _api2['default'], _
 exports['default'] = Flounder;
 module.exports = exports['default'];
 
-},{"./api":1,"./build":2,"./classes":3,"./defaults":4,"./events":5,"./utils":7}],7:[function(require,module,exports){
+},{"./api":1,"./build":2,"./classes":3,"./defaults":4,"./events":5,"./search":7,"./utils":8}],7:[function(require,module,exports){
+/* global µ, window */
+/*jshint globalstrict: true*/
+'use strict';
+
+/**
+ * ROVer - fuzzy search
+ */
+Object.defineProperty(exports, '__esModule', {
+    value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+var defaults = {
+    /*
+     * minimum input value to search with
+     *
+     * _Number_
+     */
+    minimumValueLength: 1,
+
+    /*
+     * minimum score to display
+     *
+     * _Number_
+     */
+    minimumScore: 0,
+
+    /*
+     * scoring weight
+     */
+    weights: {
+        text: 30,
+        textStartsWith: 50,
+        textFlatCase: 10,
+        textSplit: 10,
+
+        value: 30,
+        valueStartsWith: 50,
+        valueFlat: 10,
+        valueSplit: 10,
+
+        description: 5,
+        descriptionSplit: 10
+    }
+};
+
+var Sole = (function () {
+    _createClass(Sole, [{
+        key: 'compareScoreCards',
+
+        /**
+         * ## compareScoreCards
+         *
+         * Sorts out results by the score
+         *
+         * @param {Object} a result
+         * @param {Object} b result to compare with
+         *
+         * @return _Number_ comparison result
+         */
+        value: function compareScoreCards(a, b) {
+            a = a.score;
+            b = b.score;
+
+            if (a && b) {
+                if (a > b) {
+                    return 1;
+                } else if (a < b) {
+                    return -1;
+                }
+
+                return 0;
+            }
+        }
+
+        /**
+         * ## constructor
+         *
+         * initial setup of ROVer object
+         *
+         * @param {Object} options option object
+         *
+         * @return _Object_ this
+         */
+    }]);
+
+    function Sole(flounder) {
+        var _this = this;
+
+        _classCallCheck(this, Sole);
+
+        this.scoreThis = function (target, weight, noPunishment) {
+            var score = 0;
+
+            if (target) {
+                _this.query.forEach(function (queryWord) {
+                    queryWord = _this.escapeRegExp(queryWord);
+                    var count = 0;
+
+                    if (typeof target === 'string') {
+                        queryWord = new RegExp(queryWord, 'g');
+                        count = (target.match(queryWord) || []).length;
+                    } else if (target[0]) // array.  what if the words obj has the word length?
+                        {
+                            target.forEach(function (word) {
+                                count = word.indexOf(queryWord) !== -1 ? 1 : 0;
+                            });
+                        } else {
+                        count = target[queryWord] || 0.000001;
+                    }
+
+                    if (count && count > 0) {
+                        score += weight * count * 10;
+                    } else if (noPunishment !== true) {
+                        score = -weight;
+                    }
+                });
+            }
+
+            return Math.floor(score);
+        };
+
+        this.flounder = flounder;
+        this.defaults = defaults;
+
+        return this;
+    }
+
+    /**
+     * ## escapeRegExp
+     *
+     * escapes a string to be compatible with regex
+     *
+     * @param {String} string string to be escaped
+     *
+     * return _String_ escaped string
+     */
+
+    _createClass(Sole, [{
+        key: 'escapeRegExp',
+        value: function escapeRegExp(string) {
+            return string.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
+        }
+
+        /**
+         * ## isThereAnythingRelatedTo
+         *
+         * Check our search content for related query words,
+         * here it applies the various weightings to the portions of the search
+         * content.  Triggers show results
+         *
+         * @param {Array} query  array of words to search the content for
+         *
+         * @return _Array_ results returns array of relevant search results
+         */
+    }, {
+        key: 'isThereAnythingRelatedTo',
+        value: function isThereAnythingRelatedTo(query) {
+            this.query = query.toLowerCase().split(' ');
+
+            var scoreThis = this.scoreThis;
+            var startsWith = this.startsWith;
+
+            var ratedResults = this.ratedResults = this.flounder.data.map(function (d, i) {
+                var score = 0;
+                var res = { i: i, d: d };
+                var search = d.search = d.search || {};
+                var weights = defaults.weights;
+
+                search.text = d.text;
+                search.textFlat = d.text.toLowerCase();
+                search.textSplit = search.textFlat.split(' ');
+
+                search.value = d.value;
+                search.valueFlat = d.value.toLowerCase();
+                search.valueSplit = search.valueFlat.split(' ');
+
+                search.description = d.description ? d.description.toLowerCase() : null;
+                search.descriptionSplit = d.description ? search.description.split(' ') : null;
+
+                score += scoreThis(search.text, weights.text);
+                score += scoreThis(search.textFlat, weights.textFlatCase);
+                score += scoreThis(search.textSplit, weights.textSplit);
+                score += startsWith(query, search.text, weights.textStartsWith);
+
+                score += scoreThis(search.value, weights.value);
+                score += scoreThis(search.valueFlat, weights.valueFlat);
+                score += scoreThis(search.valueSplit, weights.valueSplit);
+                score += startsWith(query, search.value, weights.valueStartsWith);
+
+                score += scoreThis(search.description, weights.description);
+                score += scoreThis(search.descriptionSplit, weights.descriptionSplit);
+
+                res.score = score;
+
+                return res;
+            });
+
+            ratedResults.sort(this.compareScoreCards);
+            ratedResults = ratedResults.filter(this.removeItemsUnderMinimum);
+
+            return this.ratedResults = ratedResults;
+        }
+    }, {
+        key: 'startsWith',
+        value: function startsWith(query, value, weight) {
+            var valLength = value.length;
+            var queryLength = query.length;
+
+            if (queryLength <= valLength) {
+                var valStr = value.toLowerCase().slice(0, valLength);
+
+                if (valStr === query) {
+                    return weight;
+                }
+            }
+
+            return 0;
+        }
+
+        /**
+         * ## removeItemsUnderMinimum
+         *
+         * removes the items that have recieved a score lower than the set minimum
+         *
+         * @return _Boolean_ under the minimum or not
+         */
+    }, {
+        key: 'removeItemsUnderMinimum',
+        value: function removeItemsUnderMinimum(d) {
+            return d.score >= defaults.minimumScore ? true : false;
+        }
+
+        /**
+         * ## scoreThis
+         *
+         * Queries a string or array for a set of search options and assigns a
+         * weighted score.
+         *
+         * @param {String} target string to be search
+         * @param {Integer} weight weighting of importance for this target.
+         *                   higher is more important
+         * @param {Boolean} noPunishment when passed true, this does not give
+         *                               negative points for non-matches
+         *
+         * @return _Integer_ the final weight adjusted score
+         */
+    }]);
+
+    return Sole;
+})();
+
+exports.Sole = Sole;
+exports['default'] = Sole;
+
+},{}],8:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {

@@ -24,12 +24,14 @@ let defaults = {
      * scoring weight
      */
     weights             : {
-        text                : 30, // score for matches in the text
-        textFlatCase        : 15, // score for matches in the text with flattened case
-        textSplit           : 10, // score for each instance of an exact word (including spaces)
+        text                : 30,
+        textStartsWith      : 50,
+        textFlatCase        : 10,
+        textSplit           : 10,
 
         value               : 30,
-        valueFlat           : 15,
+        valueStartsWith     : 50,
+        valueFlat           : 10,
         valueSplit          : 10,
 
         description         : 5,
@@ -121,6 +123,7 @@ export class Sole
         this.query          = query.toLowerCase().split( ' ' );
 
         let scoreThis       = this.scoreThis;
+        let startsWith      = this.startsWith;
 
         let ratedResults    = this.ratedResults = this.flounder.data.map( function( d, i )
         {
@@ -143,10 +146,12 @@ export class Sole
             score += scoreThis( search.text,        weights.text );
             score += scoreThis( search.textFlat,    weights.textFlatCase );
             score += scoreThis( search.textSplit,   weights.textSplit );
+            score += startsWith( query, search.text, weights.textStartsWith );
 
             score += scoreThis( search.value, weights.value );
             score += scoreThis( search.valueFlat, weights.valueFlat );
             score += scoreThis( search.valueSplit, weights.valueSplit );
+            score += startsWith( query, search.value, weights.valueStartsWith )
 
             score += scoreThis( search.description,  weights.description );
             score += scoreThis( search.descriptionSplit, weights.descriptionSplit );
@@ -160,6 +165,25 @@ export class Sole
         ratedResults = ratedResults.filter( this.removeItemsUnderMinimum );
 
         return ( this.ratedResults = ratedResults );
+    }
+
+
+    startsWith( query, value, weight )
+    {
+        let valLength   = value.length;
+        let queryLength = query.length;
+
+        if ( queryLength <= valLength )
+        {
+            let valStr = value.toLowerCase().slice( 0, valLength );
+
+            if ( valStr === query )
+            {
+                return weight;
+            }
+        }
+
+        return 0;
     }
 
 

@@ -236,13 +236,13 @@ class Flounder
     /**
      * ## fuzzySearch
      *
-     * searches each option element to see whether it contains a string
+     * searches for things
      *
      * @param {Object} e event object
      *
      * @return _Void_
      */
-    fuzzySearch( e ) // disclaimer: not actually fuzzy
+    fuzzySearch( e )
     {
         let refs = this.refs;
 
