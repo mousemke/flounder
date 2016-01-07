@@ -8,7 +8,7 @@ const defaults = {
     data                : [],
     defaultTextIndent   : 0,
     multiple            : false,
-    multipleTags        : true,
+    multipleTags        : false,
     multipleMessage     : '(Multiple Items Selected)',
     onClose             : function(){ },
     onComponentDidMount : function(){ },

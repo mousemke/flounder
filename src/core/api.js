@@ -45,9 +45,11 @@ const api = {
     destroy : function()
     {
         this.componentWillUnmount();
+
+        let refs                = this.refs;
         let originalTarget      = this.originalTarget;
 
-        this.refs.flounder.flounder = this.originalTarget.flounder = this.target.flounder = null;
+        refs.flounder.flounder  = originalTarget.flounder = this.target.flounder = null;
 
         if ( originalTarget.tagName === 'INPUT' || originalTarget.tagName === 'SELECT' )
         {
@@ -67,7 +69,7 @@ const api = {
         {
             try
             {
-                let wrapper = this.refs.wrapper;
+                let wrapper = refs.wrapper;
                 let parent  = wrapper.parentNode;
                 parent.removeChild( wrapper );
             }

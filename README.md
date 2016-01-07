@@ -1,4 +1,4 @@
-Flounder.js 0.2.9
+Flounder.js 0.3.0
 =================
 
 (for modern browsers and ie9+)
@@ -207,17 +207,25 @@ API
 These functions are intended for use in the user provided event callbacks
 
 ```
+this.clickIndex( index, multiple )
+this.clickValue( value, multiple )
 this.deselectAll()
 this.destroy()
 this.disable( bool )
-this.getData( num )
-this.getSelectedOptions()
+this.getData( [ num ] )
+this.getSelected()
 this.getSelectedValues()
-this.rebuildSelect( data )
+this.props
+this.rebuild( data )
 this.refs
 this.setIndex( index, multiple )
 this.setValue( value, multiple )
 ```
+
+`clickIndex( index, multiple )` sets the item with the passed index as selected.  If multiple is true and it is a multi-select box, it is selected additionally.  Otherwise it's selected instead.  This accepts arrays as well.  Without multiple equaling true it will only select the last option. This fires the onClick event
+ 
+`clickValue( value, multiple )` sets the item with the passed value as selected.  If multiple is true and it is a multi-select box, it is selected additionally.  Otherwise it's selected instead. This accepts arrays as well.  Without multiple equaling true it will only select the last option. This fires the onClick event
+
 
 `deselectAll()` deselects all options
 
@@ -225,19 +233,21 @@ this.setValue( value, multiple )
 
 `disable( bool )` disables or reenables flounder
 
-`getData( num )` returns the option element and the div element at a specified index as an object `{ option : option element, div : div element }`
+`getData( [ num ] )` returns the option element and the div element at a specified index as an object `{ option : option element, div : div element }`. If no number is given, it will return all data.
 
-`getSelectedOptions()` returns the currently selected option tags in an array
+`getSelected()` returns the currently selected option tags in an array
 
 `getSelectedValues()` returns the currently selected values in an array
  
- `rebuildOptions( options )` completely rebuilds the select boxes with new or altered options
+`props` the props set in the initial constructor
+
+`rebuild( options )` completely rebuilds the select boxes with new or altered options
  
 `refs` contains references to all flounder elements
 
-`setIndex( index, multiple )` sets the item with the passed index as selected.  If multiple is true and it is a multi-select box, it is selected additionally.  Otherwise it's selected instead.  This accepts arrays as well.  Without multiple equaling true it will only select the last option.
+`setIndex( index, multiple )` sets the item with the passed index as selected.  If multiple is true and it is a multi-select box, it is selected additionally.  Otherwise it's selected instead.  This accepts arrays as well.  Without multiple equaling true it will only select the last option. This does not fire the onClick event
  
-`setValue( value, multiple )` sets the item with the passed value as selected.  If multiple is true and it is a multi-select box, it is selected additionally.  Otherwise it's selected instead. This accepts arrays as well.  Without multiple equaling true it will only select the last option.
+`setValue( value, multiple )` sets the item with the passed value as selected.  If multiple is true and it is a multi-select box, it is selected additionally.  Otherwise it's selected instead. This accepts arrays as well.  Without multiple equaling true it will only select the last option. This does not fire the onClick event
 
 
 Contributing
@@ -361,6 +371,10 @@ Change Log
 + [api] getData now provides all data when no number is given
 + [api] getSelectedOptions is now getSelected
 + [api] rebuildSelect is now rebuild
++ [api] added clickIndex and clickValue
++ [api] added props
++ [default] multipleTags is now false by default
++ [search] added Sole (a ROVer derivitive) for fuzzy search
 
 
 0.2.9

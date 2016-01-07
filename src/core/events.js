@@ -1,5 +1,6 @@
 
 import classes          from './classes';
+import search           from './search';
 
 const events = {
 
@@ -442,7 +443,7 @@ const events = {
 
         this.removeSelectedClass( data );
 
-        let dataArray       = this.getSelectedOptions();
+        let dataArray       = this.getSelected();
         let baseOption      = dataArray[ 0 ];
 
         if ( baseOption )
@@ -547,6 +548,7 @@ const events = {
         if ( this.props.search )
         {
             this.fuzzySearchReset();
+            this.setSelectValue( e );
         }
 
         refs.flounder.focus();

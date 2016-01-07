@@ -8,8 +8,10 @@ import api              from './api';
 import build            from './build';
 import events           from './events';
 import classes          from './classes';
+import Search           from './search';
 
 const nativeSlice = Array.prototype.slice;
+let search;
 
 class Flounder
 {
@@ -97,6 +99,7 @@ class Flounder
                 {
                     target.flounder.destroy();
                 }
+                search = new Search( this );
 
                 this.props = props;
                 this.setTarget( target );
@@ -184,7 +187,7 @@ class Flounder
         let value = [];
         let index = -1;
 
-        let selectedOption  = this.getSelectedOptions();
+        let selectedOption  = this.getSelected();
 
         let selectedLength  = selectedOption.length;
 
@@ -251,21 +254,27 @@ class Flounder
             if ( keyCode !== 38 && keyCode !== 40 &&
                     keyCode !== 13 && keyCode !== 27 )
             {
-                let term        = e.target.value.toLowerCase();
+                let val = e.target.value.trim();
 
-                refs.data.forEach( dataObj =>
+                if ( val.length >= search.defaults.minimumValueLength )
                 {
-                    let text    = dataObj.innerHTML.toLowerCase();
+                    let matches = search.isThereAnythingRelatedTo( val );
+                    let data    = refs.data;
 
-                    if ( term !== '' && text.indexOf( term ) === -1 )
+                    data.forEach( ( el, i ) =>
                     {
-                        this.addClass( dataObj, classes.SEARCH_HIDDEN );
-                    }
-                    else
+                        this.addClass( el, classes.SEARCH_HIDDEN );
+                    } );
+
+                    matches.forEach( e =>
                     {
-                        this.removeClass( dataObj, classes.SEARCH_HIDDEN );
-                    }
-                } );
+                        this.removeClass( data[ e.i ], classes.SEARCH_HIDDEN );
+                    } );
+                }
+                else
+                {
+                    this.fuzzySearchReset();
+                }
             }
             else
             {
@@ -391,7 +400,7 @@ class Flounder
         let targetIndex     = target.getAttribute( 'data-index' );
         select[ targetIndex ].selected = false;
 
-        let selectedOptions = this.getSelectedOptions();
+        let selectedOptions = this.getSelected();
 
         this.removeClass( data[ targetIndex ], classes.SELECTED_HIDDEN );
         this.removeClass( data[ targetIndex ], classes.SELECTED );

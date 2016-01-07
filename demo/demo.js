@@ -222,7 +222,7 @@ requirejs.config( {
  */
 requirejs( [ 'flounder' ], function( Flounder )
 {
-    new Flounder( '#AMD--desc', {
+    let a = new Flounder( '#AMD--desc', {
         placeholder          : 'placeholders!',
 
         onInit               : function()
@@ -240,6 +240,7 @@ requirejs( [ 'flounder' ], function( Flounder )
             this.data = res;
         }
      } );
+    console.log( a );
 } );
 
 
