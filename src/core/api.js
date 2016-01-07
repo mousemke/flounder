@@ -4,6 +4,38 @@ import classes          from './classes';
 const api = {
 
     /**
+     * ## clickIndex
+     *
+     * programatically sets the value by index.  If there are not enough elements
+     * to match the index, then nothing is selected. Fires the onClick event
+     *
+     * @param {Mixed} index index to set flounder to.  _Number, or Array of numbers_
+     *
+     * return _Void_
+     */
+    clickIndex : function( index, multiple )
+    {
+        return this.setIndex( index, multiple, false );
+    },
+
+
+    /**
+     * ## clickValue
+     *
+     * programatically sets the value by string.  If the value string
+     * is not matched to an element, nothing will be selected. Fires the onClick event
+     *
+     * @param {Mixed} value value to set flounder to.  _Number, or Array of numbers_
+     *
+     * return _Void_
+     */
+    clickValue : function( index, multiple )
+    {
+        return this.setValue( index, multiple, false );
+    },
+
+
+    /**
      * ## destroy
      *
      * removes flounder and all it's events from the dom
@@ -94,7 +126,7 @@ const api = {
 
 
     /**
-     * ## getOption
+     * ## getData
      *
      * returns the option and div tags related to an option
      *
@@ -102,22 +134,32 @@ const api = {
      *
      * @return _Object_ option and div tage
      */
-    getOption : function( _i )
+    getData : function( _i )
     {
         let refs = this.refs;
 
-        return { option : refs.selectOptions[ _i ], div : refs.data[ _i ] };
+        if ( typeof _i === 'number' )
+        {
+            return { option : refs.selectOptions[ _i ], div : refs.data[ _i ] };
+        }
+        else
+        {
+            return refs.selectOptions.map( ( el, i ) =>
+            {
+                return this.getData( i );
+            } );
+        }
     },
 
 
     /**
-     * ## getSelectedOptions
+     * ## getSelected
      *
      * returns the currently selected data of a SELECT box
      *
      * @return _Void_
      */
-    getSelectedOptions : function()
+    getSelected : function()
     {
         let _el         = this.refs.select;
         let opts        = [], opt;
@@ -146,12 +188,12 @@ const api = {
      */
     getSelectedValues : function()
     {
-        return this.getSelectedOptions().map( ( _v ) => _v.value )
+        return this.getSelected().map( ( _v ) => _v.value )
     },
 
 
     /**
-     * ## rebuildSelect
+     * ## rebuild
      *
      * after editing the data, this can be used to rebuild them
      *
@@ -159,7 +201,7 @@ const api = {
      *
      * @return _Void_
      */
-    rebuildSelect : function( _data )
+    rebuild : function( _data )
     {
         let refs        = this.refs;
         let selected    = refs.select.selectedOptions;
@@ -204,7 +246,7 @@ const api = {
      *
      * return _Void_
      */
-    setIndex : function( index, multiple )
+    setIndex : function( index, multiple, programmatic = true )
     {
         let refs = this.refs;
 
@@ -222,7 +264,7 @@ const api = {
                 let isOpen = this.hasClass( refs.wrapper, 'open' );
                 this.toggleList( isOpen ? 'close' : 'open' );
                 this.___forceMultiple       = multiple;
-                this.___programmaticClick   = true;
+                this.___programmaticClick   = programmatic;
                 el.click();
 
                 return el;
@@ -231,7 +273,6 @@ const api = {
             return null;
         }
     },
-
 
 
     /**
@@ -244,7 +285,7 @@ const api = {
      *
      * return _Void_
      */
-    setValue : function( value, multiple )
+    setValue : function( value, multiple, programmatic = true )
     {
         if ( typeof value !== 'string' && value.length )
         {
@@ -254,7 +295,7 @@ const api = {
         else
         {
             value = this.refs.select.querySelector( '[value="' + value + '"]' );
-            return value ? this.setIndex( value.index, multiple ) : null;
+            return value ? this.setIndex( value.index, multiple, programmatic ) : null;
         }
     }
 };

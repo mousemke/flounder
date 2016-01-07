@@ -10,7 +10,7 @@ var _package        = require( './package.json' );
 var now             = new Date();
 var year            = now.getUTCFullYear();
 
-var liscenceLong    = '/*!\n' +
+var licenceLong     = '/*!\n' +
                       ' * Flounder JavaScript Styleable Selectbox v' + _package.version + '\n' +
                       ' * ' + _package.homepage + '\n' +
                       ' *\n' +
@@ -19,9 +19,10 @@ var liscenceLong    = '/*!\n' +
                       ' * https://github.com/sociomantic/flounder/license\n' +
                       ' *\n' +
                       ' * Date: ' + now.toDateString() + '\n' +
+                      ' * "This, so far, is the best Flounder ever"\n' +
                       ' */\n';
 
-var liscenceShort   = '/*! Flounder v' + _package.version + ' | (c) ' + ( 2015 === year ? year : '2015-' + year ) + ' Sociomantic Labs | https://github.com/sociomantic/flounder/license */\n';
+var licenceShort    = '/*! Flounder v' + _package.version + ' | (c) ' + ( 2015 === year ? year : '2015-' + year ) + ' Sociomantic Labs | https://github.com/sociomantic/flounder/license */\n';
 
 
 function build( folder, filename )
@@ -40,7 +41,7 @@ function browserifyFiles( folder, filename )
         .on( 'finish', function()
         {
             gulp.src( './dist/' + filename + '.js' )
-                .pipe( header( liscenceLong ) )
+                .pipe( header( licenceLong ) )
                 .pipe( gulp.dest( './dist/' ) )
         } );
 };
@@ -56,7 +57,7 @@ function min( folder, filename )
         {
             gulp.src( './dist/' + filename + '.min.js' )
                 .pipe( uglify() )
-                .pipe( header( liscenceShort ) )
+                .pipe( header( licenceShort ) )
                 .pipe( gulp.dest( './dist/' ) )
         } );
 }
