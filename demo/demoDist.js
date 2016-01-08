@@ -19321,8 +19321,8 @@ var api = {
      *
      * return _Void_
      */
-    clickValue: function clickValue(index, multiple) {
-        return this.setValue(index, multiple, false);
+    clickValue: function clickValue(value, multiple) {
+        return this.setValue(value, multiple, false);
     },
 
     /**
@@ -19397,6 +19397,89 @@ var api = {
             this.removeClass(selected, _classes2['default'].DISABLED);
             this.removeClass(flounder, _classes2['default'].DISABLED);
         }
+    },
+
+    /**
+     * ## disableIndex
+     *
+     * disables the options with the given index
+     *
+     * @param {Mixed} i index of the option
+     * @param {Boolean} reenable enables the option instead
+     *
+     * return _Void_
+     */
+    disableIndex: function disableIndex(i, reenable) {
+        var refs = this.refs;
+
+        if (typeof i !== 'string' && i.length) {
+            var _setIndex = this.setIndex;
+            return i.map(_setIndex);
+        } else {
+            var el = refs.data[i];
+
+            if (el) {
+                var opt = refs.selectOptions[i];
+
+                if (reenable) {
+                    opt.disabled = false;
+                    this.removeClass(el, 'flounder__disabled');
+                } else {
+                    opt.disabled = true;
+                    this.addClass(el, 'flounder__disabled');
+                }
+
+                return [el, opt];
+            }
+
+            return null;
+        }
+    },
+
+    /**
+     * ## enableIndex
+     *
+     * shortcut syntax to enable an index
+     *
+     * @param {Mixed} i index of the option to enable
+     *
+     * @return {Object} flounder(s)
+     */
+    enableIndex: function enableIndex(i) {
+        return this.disableIndex(i, true);
+    },
+
+    /**
+     * ## disableValue
+     *
+     * disables THE FIRST option that has the given value
+     *
+     * @param {Mixed} value value of the option
+     * @param {Boolean} reenable enables the option instead
+     *
+     * return _Void_
+     */
+    disableValue: function disableValue(value, reenable) {
+        if (typeof value !== 'string' && value.length) {
+            var _setValue = this.setValue;
+            return value.map(_setValue);
+        } else {
+            value = this.refs.select.querySelector('[value="' + value + '"]');
+            return value ? this.disableIndex(value, reenable) : null;
+        }
+    },
+
+    /**
+     * ## enableValue
+     *
+     * shortcut syntax to enable a value
+     *
+     * @param {Mixed} value value of the option to enable
+     *
+     * @return {Object} flounder(s)
+     */
+    enableValue: function enableValue(value) {
+        this.disableValue(value, true);
     },
 
     /**
@@ -21205,13 +21288,8 @@ exports['default'] = Flounder;
 module.exports = exports['default'];
 
 },{"./api":160,"./build":161,"./classes":162,"./defaults":163,"./events":164,"./search":166,"./utils":167}],166:[function(require,module,exports){
-/* global µ, window */
-/*jshint globalstrict: true*/
 'use strict';
 
-/**
- * ROVer - fuzzy search
- */
 Object.defineProperty(exports, '__esModule', {
     value: true
 });
@@ -21236,12 +21314,28 @@ var defaults = {
     minimumScore: 0,
 
     /*
+     * params to test for score
+     *
+     * called as:
+     * score += this.scoreThis( search[ param ], weights[ param ] );
+     */
+    scoreProperties: ['text', 'textFlat', 'textSplit', 'value', 'valueFlat', 'valueSplit', 'description', 'descriptionSplit'],
+
+    /*
+     * params to test with startsWith
+     *
+     * called as:
+     * score += startsWith( query, search[ param ], weights[ param + 'StartsWith' ] );
+     */
+    startsWithProperties: ['text', 'value'],
+
+    /*
      * scoring weight
      */
     weights: {
         text: 30,
         textStartsWith: 50,
-        textFlatCase: 10,
+        textFlat: 10,
         textSplit: 10,
 
         value: 30,
@@ -21253,6 +21347,12 @@ var defaults = {
         descriptionSplit: 10
     }
 };
+
+/**
+ * ## Sole
+ *
+ * turns out there's all kinds of flounders
+ */
 
 var Sole = (function () {
     _createClass(Sole, [{
@@ -21388,18 +21488,13 @@ var Sole = (function () {
                 search.description = d.description ? d.description.toLowerCase() : null;
                 search.descriptionSplit = d.description ? search.description.split(' ') : null;
 
-                score += scoreThis(search.text, weights.text);
-                score += scoreThis(search.textFlat, weights.textFlatCase);
-                score += scoreThis(search.textSplit, weights.textSplit);
-                score += startsWith(query, search.text, weights.textStartsWith);
+                defaults.scoreProperties.forEach(function (param) {
+                    score += scoreThis(search[param], weights[param]);
+                });
 
-                score += scoreThis(search.value, weights.value);
-                score += scoreThis(search.valueFlat, weights.valueFlat);
-                score += scoreThis(search.valueSplit, weights.valueSplit);
-                score += startsWith(query, search.value, weights.valueStartsWith);
-
-                score += scoreThis(search.description, weights.description);
-                score += scoreThis(search.descriptionSplit, weights.descriptionSplit);
+                defaults.startsWithProperties.forEach(function (param) {
+                    score += startsWith(query, search[param], weights[param + 'StartsWith']);
+                });
 
                 res.score = score;
 
@@ -21411,6 +21506,18 @@ var Sole = (function () {
 
             return this.ratedResults = ratedResults;
         }
+
+        /**
+         * ## startsWith
+         *
+         * checks the beginning of the given text to see if the query matches exactly
+         *
+         * @param {String} query string to search for
+         * @param {String} value string to search in
+         * @param {Integer} weight amount of points to give an exact match
+         *
+         * @return {Integer} points to award
+         */
     }, {
         key: 'startsWith',
         value: function startsWith(query, value, weight) {

@@ -29,9 +29,9 @@ const api = {
      *
      * return _Void_
      */
-    clickValue : function( index, multiple )
+    clickValue : function( value, multiple )
     {
-        return this.setValue( index, multiple, false );
+        return this.setValue( value, multiple, false );
     },
 
 
@@ -124,6 +124,107 @@ const api = {
             this.removeClass( selected, classes.DISABLED );
             this.removeClass( flounder, classes.DISABLED );
         }
+    },
+
+
+    /**
+     * ## disableIndex
+     *
+     * disables the options with the given index
+     *
+     * @param {Mixed} i index of the option
+     * @param {Boolean} reenable enables the option instead
+     *
+     * return _Void_
+     */
+    disableIndex : function( i, reenable )
+    {
+        let refs = this.refs;
+
+        if ( typeof i !== 'string' && i.length )
+        {
+            let _setIndex = this.setIndex;
+            return i.map( _setIndex );
+        }
+        else
+        {
+            let el  = refs.data[ i ];
+
+            if ( el )
+            {
+                let opt = refs.selectOptions[ i ];
+
+                if ( reenable )
+                {
+                    opt.disabled = false;
+                    this.removeClass( el, 'flounder__disabled' );
+                }
+                else
+                {
+                    opt.disabled = true;
+                    this.addClass( el, 'flounder__disabled' );
+                }
+
+                return [ el, opt ];
+            }
+
+            return null;
+        }
+    },
+
+
+    /**
+     * ## disableValue
+     *
+     * disables THE FIRST option that has the given value
+     *
+     * @param {Mixed} value value of the option
+     * @param {Boolean} reenable enables the option instead
+     *
+     * return _Void_
+     */
+    disableValue : function( value, reenable )
+    {
+        if ( typeof value !== 'string' && value.length )
+        {
+            let _setValue = this.setValue;
+            return value.map( _setValue );
+        }
+        else
+        {
+            value = this.refs.select.querySelector( '[value="' + value + '"]' );
+            return value ? this.disableIndex( value, reenable ) : null;
+        }
+    },
+
+
+    /**
+     * ## enableIndex
+     *
+     * shortcut syntax to enable an index
+     *
+     * @param {Mixed} i index of the option to enable
+     *
+     * @return {Object} flounder(s)
+     */
+    enableIndex : function( i )
+    {
+        return this.disableIndex( i, true );
+    },
+
+
+    /**
+     * ## enableValue
+     *
+     * shortcut syntax to enable a value
+     *
+     * @param {Mixed} value value of the option to enable
+     *
+     * @return {Object} flounder(s)
+     */
+    enableValue : function( value )
+    {
+        this.disableValue( value, true );
     },
 
 
@@ -278,7 +379,7 @@ const api = {
         }
         else
         {
-            var el = refs.data[ index ];
+            let el = refs.data[ index ];
 
             if ( el )
             {

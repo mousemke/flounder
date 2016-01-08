@@ -367,6 +367,13 @@ See more examples on the [demo page](./demo/index.html)
 Change Log
 ==========
 
+0.3.1
+-----
+
++ [api] added disableIndex and disableValue
++ [api] added enableIndex and enableValue
+
+
 0.3.0
 -----
 

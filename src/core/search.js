@@ -1,10 +1,3 @@
-/* global µ, window */
-/*jshint globalstrict: true*/
-'use strict';
-
-/**
- * ROVer - fuzzy search
- */
 let defaults = {
     /*
      * minimum input value to search with
@@ -20,13 +13,31 @@ let defaults = {
      */
     minimumScore        : 0,
 
+
+    /*
+     * params to test for score
+     *
+     * called as:
+     * score += this.scoreThis( search[ param ], weights[ param ] );
+     */
+    scoreProperties     : [ 'text', 'textFlat', 'textSplit', 'value', 'valueFlat',
+                                    'valueSplit', 'description', 'descriptionSplit' ],
+
+    /*
+     * params to test with startsWith
+     *
+     * called as:
+     * score += startsWith( query, search[ param ], weights[ param + 'StartsWith' ] );
+     */
+    startsWithProperties : [ 'text', 'value' ],
+
     /*
      * scoring weight
      */
     weights             : {
         text                : 30,
         textStartsWith      : 50,
-        textFlatCase        : 10,
+        textFlat            : 10,
         textSplit           : 10,
 
         value               : 30,
@@ -40,7 +51,11 @@ let defaults = {
 };
 
 
-
+/**
+ * ## Sole
+ *
+ * turns out there's all kinds of flounders
+ */
 export class Sole
 {
     /**
@@ -143,18 +158,15 @@ export class Sole
             search.description      = d.description ? d.description.toLowerCase() : null;
             search.descriptionSplit = d.description ? search.description.split( ' ' ) : null;
 
-            score += scoreThis( search.text,        weights.text );
-            score += scoreThis( search.textFlat,    weights.textFlatCase );
-            score += scoreThis( search.textSplit,   weights.textSplit );
-            score += startsWith( query, search.text, weights.textStartsWith );
+            defaults.scoreProperties.forEach( function( param )
+            {
+                score += scoreThis( search[ param ], weights[ param ] );
+            } );
 
-            score += scoreThis( search.value, weights.value );
-            score += scoreThis( search.valueFlat, weights.valueFlat );
-            score += scoreThis( search.valueSplit, weights.valueSplit );
-            score += startsWith( query, search.value, weights.valueStartsWith )
-
-            score += scoreThis( search.description,  weights.description );
-            score += scoreThis( search.descriptionSplit, weights.descriptionSplit );
+            defaults.startsWithProperties.forEach( function( param )
+            {
+                score += startsWith( query, search[ param ], weights[ param + 'StartsWith' ] );
+            } );
 
             res.score = score;
 
@@ -168,6 +180,17 @@ export class Sole
     }
 
 
+    /**
+     * ## startsWith
+     *
+     * checks the beginning of the given text to see if the query matches exactly
+     *
+     * @param {String} query string to search for
+     * @param {String} value string to search in
+     * @param {Integer} weight amount of points to give an exact match
+     *
+     * @return {Integer} points to award
+     */
     startsWith( query, value, weight )
     {
         let valLength   = value.length;
