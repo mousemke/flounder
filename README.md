@@ -212,6 +212,10 @@ this.clickValue( value, multiple )
 this.deselectAll()
 this.destroy()
 this.disable( bool )
+this.disableIndex( index )
+this.disableValue( value )
+this.enableIndex( index )
+this.enableValue( value )
 this.getData( [ num ] )
 this.getSelected()
 this.getSelectedValues()
@@ -227,12 +231,19 @@ this.setValue( value, multiple )
  
 `clickValue( value, multiple )` sets the item with the passed value as selected.  If multiple is true and it is a multi-select box, it is selected additionally.  Otherwise it's selected instead. This accepts arrays as well.  Without multiple equaling true it will only select the last option. This fires the onClick event
 
-
 `deselectAll()` deselects all data
 
 `destroy()` removes event listeners, then flounder
 
 `disable( bool )` disables or reenables flounder
+
+`disableIndex( index )` disables a flounder option by index
+
+`disableValue( value )` disables a flounder option by value
+
+`enableIndex( index )` enables a flounder option by index
+
+`enableValue( value )` enables a flounder option by value
 
 `getData( [ num ] )` returns the option element and the div element at a specified index as an object `{ option : option element, div : div element }`. If no number is given, it will return all data.
 
