@@ -193,7 +193,7 @@ const api = {
         else
         {
             value = this.refs.select.querySelector( '[value="' + value + '"]' );
-            return value ? this.disableIndex( value, reenable ) : null;
+            return value ? this.disableIndex( value.index, reenable ) : null;
         }
     },
 
@@ -370,6 +370,7 @@ const api = {
      */
     setIndex : function( index, multiple, programmatic = true )
     {
+        console.log( index );
         let refs = this.refs;
 
         if ( typeof index !== 'string' && index.length )

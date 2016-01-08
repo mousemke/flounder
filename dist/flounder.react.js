@@ -19181,19 +19181,6 @@ var api = {
     },
 
     /**
-     * ## enableIndex
-     *
-     * shortcut syntax to enable an index
-     *
-     * @param {Mixed} i index of the option to enable
-     *
-     * @return {Object} flounder(s)
-     */
-    enableIndex: function enableIndex(i) {
-        return this.disableIndex(i, true);
-    },
-
-    /**
      * ## disableValue
      *
      * disables THE FIRST option that has the given value
@@ -19209,8 +19196,21 @@ var api = {
             return value.map(_setValue);
         } else {
             value = this.refs.select.querySelector('[value="' + value + '"]');
-            return value ? this.disableIndex(value, reenable) : null;
+            return value ? this.disableIndex(value.index, reenable) : null;
         }
+    },
+
+    /**
+     * ## enableIndex
+     *
+     * shortcut syntax to enable an index
+     *
+     * @param {Mixed} i index of the option to enable
+     *
+     * @return {Object} flounder(s)
+     */
+    enableIndex: function enableIndex(i) {
+        return this.disableIndex(i, true);
     },
 
     /**
@@ -19367,6 +19367,7 @@ var api = {
     setIndex: function setIndex(index, multiple) {
         var programmatic = arguments.length <= 2 || arguments[2] === undefined ? true : arguments[2];
 
+        console.log(index);
         var refs = this.refs;
 
         if (typeof index !== 'string' && index.length) {
