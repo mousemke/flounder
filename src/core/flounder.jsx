@@ -644,7 +644,7 @@ class Flounder
     setTextMultiTagIndent()
     {
         let search = this.refs.search;
-        let offset = this.defaultTextIndent;
+        let offset = 0;
 
         if ( search )
         {

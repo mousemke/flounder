@@ -117,15 +117,10 @@ const build = {
         let defaultValue        = this._default = this.setDefaultOption( this.props, data );
 
         let selected            = constructElement( { className : classes.SELECTED_DISPLAYED,
-                                        'data-value' : defaultValue.value, 'data-index' : defaultValue.index || -1  } );
+                                        'data-value' : defaultValue.value, 'data-index' : defaultValue.index || -1 } );
             selected.innerHTML  = defaultValue.text;
 
         let multiTagWrapper     = this.props.multiple ? constructElement( { className : classes.MULTI_TAG_LIST } ) : null;
-
-        if ( multiTagWrapper )
-        {
-            multiTagWrapper.style.textIndent = this.defaultTextIndent + 'px';
-        }
 
         let arrow               = constructElement( { className : classes.ARROW } );
         let optionsListWrapper  = constructElement( { className : classes.OPTIONS_WRAPPER + '  ' + classes.HIDDEN } );

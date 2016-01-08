@@ -124,7 +124,7 @@ new Flounder( document.getElementById( 'vanilla--input' ), {
 /**
  * vanilla Flounder attached pre built select box
  */
-let a = new Flounder( document.getElementById( 'vanilla--select' ), {
+new Flounder( document.getElementById( 'vanilla--select' ), {
     defaultValue    : 2,
 
     classes         : {
@@ -134,7 +134,7 @@ let a = new Flounder( document.getElementById( 'vanilla--select' ), {
         wrapper         : 'additional--class--to--give--the--wrapper'
     }
 } );
-console.log( a );
+
 
 /**
  * react multi-Flounder with tags attached to an div

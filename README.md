@@ -1,4 +1,4 @@
-Flounder.js 0.3.0
+Flounder.js 0.3.1
 =================
 
 (for modern browsers and ie9+)
@@ -381,6 +381,8 @@ Change Log
 0.3.1
 -----
 
++ [search] fixed a bug in value length detection
++ [defaults] removed defaultTextIndent.  this can be handled by css
 + [api] added disableIndex and disableValue
 + [api] added enableIndex and enableValue
 

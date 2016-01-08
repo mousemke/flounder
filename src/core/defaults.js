@@ -6,7 +6,6 @@ const defaults = {
         wrapper     : ''
     },
     data                : [],
-    defaultTextIndent   : 0,
     multiple            : false,
     multipleTags        : false,
     multipleMessage     : '(Multiple Items Selected)',

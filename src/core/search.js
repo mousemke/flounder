@@ -1,6 +1,6 @@
 let defaults = {
     /*
-     * minimum input value to search with
+     * minimum value length to search
      *
      * _Number_
      */

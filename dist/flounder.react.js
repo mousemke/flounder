@@ -1,5 +1,5 @@
 /*!
- * Flounder JavaScript Styleable Selectbox v0.3.0
+ * Flounder JavaScript Styleable Selectbox v0.3.1
  * https://github.com/sociomantic/flounder
  *
  * Copyright 2015-2016 Sociomantic Labs and other contributors
@@ -19542,10 +19542,6 @@ var build = {
 
         var multiTagWrapper = this.props.multiple ? constructElement({ className: _classes2['default'].MULTI_TAG_LIST }) : null;
 
-        if (multiTagWrapper) {
-            multiTagWrapper.style.textIndent = this.defaultTextIndent + 'px';
-        }
-
         var arrow = constructElement({ className: _classes2['default'].ARROW });
         var optionsListWrapper = constructElement({ className: _classes2['default'].OPTIONS_WRAPPER + '  ' + _classes2['default'].HIDDEN });
         var optionsList = constructElement({ className: _classes2['default'].LIST });
@@ -19837,7 +19833,6 @@ var defaults = {
         wrapper: ''
     },
     data: [],
-    defaultTextIndent: 0,
     multiple: false,
     multipleTags: false,
     multipleMessage: '(Multiple Items Selected)',
@@ -21010,7 +21005,7 @@ var Flounder = (function () {
             var _this6 = this;
 
             var search = this.refs.search;
-            var offset = this.defaultTextIndent;
+            var offset = 0;
 
             if (search) {
                 var els = document.getElementsByClassName(_classes3['default'].MULTIPLE_SELECT_TAG);
@@ -21045,7 +21040,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var defaults = {
     /*
-     * minimum input value to search with
+     * minimum value length to search
      *
      * _Number_
      */
