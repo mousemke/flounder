@@ -1,4 +1,4 @@
-Flounder.js 0.3.1
+Flounder.js 0.3.2
 =================
 
 (for modern browsers and ie9+)
@@ -92,7 +92,7 @@ If flounder is fed an element that already has a flounder, it will destroy it an
 
 
 ###Available config options
-
+ 
 ```
 {
     classes             : {
@@ -208,13 +208,16 @@ These functions are intended for use in the user provided event callbacks
 
 ```
 this.clickIndex( index, multiple )
+this.clickText( text, multiple )
 this.clickValue( value, multiple )
 this.deselectAll()
 this.destroy()
 this.disable( bool )
 this.disableIndex( index )
+this.disableText( text )
 this.disableValue( value )
 this.enableIndex( index )
+this.enableText( text )
 this.enableValue( value )
 this.getData( [ num ] )
 this.getSelected()
@@ -224,11 +227,14 @@ this.rebuild( data )
 this.reconfigure( props )
 this.refs
 this.setIndex( index, multiple )
+this.setText( text, multiple )
 this.setValue( value, multiple )
 ```
 
 `clickIndex( index, multiple )` sets the item with the passed index as selected.  If multiple is true and it is a multi-select box, it is selected additionally.  Otherwise it's selected instead.  This accepts arrays as well.  Without multiple equaling true it will only select the last option. This fires the onClick event
  
+`clickText( text, multiple )` sets the item with the passed text as selected.  If multiple is true and it is a multi-select box, it is selected additionally.  Otherwise it's selected instead. This accepts arrays as well.  Without multiple equaling true it will only select the last option. This fires the onClick event
+
 `clickValue( value, multiple )` sets the item with the passed value as selected.  If multiple is true and it is a multi-select box, it is selected additionally.  Otherwise it's selected instead. This accepts arrays as well.  Without multiple equaling true it will only select the last option. This fires the onClick event
 
 `deselectAll()` deselects all data
@@ -239,9 +245,13 @@ this.setValue( value, multiple )
 
 `disableIndex( index )` disables a flounder option by index
 
+`disableText( text )` disables a flounder option by text
+
 `disableValue( value )` disables a flounder option by value
 
 `enableIndex( index )` enables a flounder option by index
+
+`enableText( text )` enables a flounder option by text 
 
 `enableValue( value )` enables a flounder option by value
 
@@ -261,6 +271,8 @@ this.setValue( value, multiple )
 
 `setIndex( index, multiple )` sets the item with the passed index as selected.  If multiple is true and it is a multi-select box, it is selected additionally.  Otherwise it's selected instead.  This accepts arrays as well.  Without multiple equaling true it will only select the last option. This does not fire the onClick event
  
+`setText( text, multiple )` sets the item with the passed text as selected.  If multiple is true and it is a multi-select box, it is selected additionally.  Otherwise it's selected instead. This accepts arrays as well.  Without multiple equaling true it will only select the last option. This does not fire the onClick event
+
 `setValue( value, multiple )` sets the item with the passed value as selected.  If multiple is true and it is a multi-select box, it is selected additionally.  Otherwise it's selected instead. This accepts arrays as well.  Without multiple equaling true it will only select the last option. This does not fire the onClick event
 
 
@@ -378,6 +390,13 @@ See more examples on the [demo page](./demo/index.html)
 Change Log
 ==========
 
+0.3.2
+-----
+
++ [api] added clickText, disableText, enableText, and setText
++ [api] correctly bound this to mapped set and click functions
+
+
 0.3.1
 -----
 
@@ -424,7 +443,7 @@ Change Log
 + changed flounder <-> element references in react
 + $ now sets flounder as 'flounder' with data
 + µ now sets flounder as 'flounder' with set
-+ flounder now detects, destroys, and re-instantiates with the new optins if it is given an element that already has a flounder 
++ flounder now detects, destroys, and re-instantiates with the new options if it is given an element that already has a flounder 
 
 
 0.2.6

@@ -6,7 +6,7 @@ const api = {
     /**
      * ## clickIndex
      *
-     * programatically sets the value by index.  If there are not enough elements
+     * programatically sets selected by index.  If there are not enough elements
      * to match the index, then nothing is selected. Fires the onClick event
      *
      * @param {Mixed} index index to set flounder to.  _Number, or Array of numbers_
@@ -20,12 +20,28 @@ const api = {
 
 
     /**
-     * ## clickValue
+     * ## clickText
      *
-     * programatically sets the value by string.  If the value string
+     * programatically sets selected by text string.  If the text string
      * is not matched to an element, nothing will be selected. Fires the onClick event
      *
-     * @param {Mixed} value value to set flounder to.  _Number, or Array of numbers_
+     * @param {Mixed} text text to set flounder to.  _String, or Array of strings_
+     *
+     * return _Void_
+     */
+    clickText : function( text, multiple )
+    {
+        return this.setText( text, multiple, false );
+    },
+
+
+    /**
+     * ## clickValue
+     *
+     * programatically sets selected by value string.  If the value string
+     * is not matched to an element, nothing will be selected. Fires the onClick event
+     *
+     * @param {Mixed} value value to set flounder to.  _String, or Array of strings_
      *
      * return _Void_
      */
@@ -137,22 +153,22 @@ const api = {
      *
      * return _Void_
      */
-    disableIndex : function( i, reenable )
+    disableIndex : function( index, reenable )
     {
         let refs = this.refs;
 
-        if ( typeof i !== 'string' && i.length )
+        if ( typeof index !== 'string' && index.length )
         {
-            let _setIndex = this.setIndex;
-            return i.map( _setIndex );
+            let disableIndex = this.disableIndex.bind( this );
+            return index.map( _i => disableIndex( _i, reenable ) );
         }
         else
         {
-            let el  = refs.data[ i ];
+            let el  = refs.data[ index ];
 
             if ( el )
             {
-                let opt = refs.selectOptions[ i ];
+                let opt = refs.selectOptions[ index ];
 
                 if ( reenable )
                 {
@@ -174,6 +190,43 @@ const api = {
 
 
     /**
+     * ## disableText
+     *
+     * disables THE FIRST option that has the given value
+     *
+     * @param {Mixed} value value of the option
+     * @param {Boolean} reenable enables the option instead
+     *
+     * return _Void_
+     */
+    disableText : function( text, reenable )
+    {
+        if ( typeof text !== 'string' && text.length )
+        {
+            let disableText = this.disableText.bind( this );
+            return text.map( _t => disableText( _t, reenable ) );
+        }
+        else
+        {
+            let res     = [];
+            let getText = document.all ? 'innerText' : 'textContent'
+
+            this.refs.selectOptions.forEach( function( el )
+            {
+                let _elText = el[ getText ];
+
+                if ( _elText === text )
+                {
+                    res.push( el.index );
+                }
+            } );
+
+            return res.length ? this.disableIndex( res, reenable ) : null;
+        }
+    },
+
+
+    /**
      * ## disableValue
      *
      * disables THE FIRST option that has the given value
@@ -187,8 +240,8 @@ const api = {
     {
         if ( typeof value !== 'string' && value.length )
         {
-            let _setValue = this.setValue;
-            return value.map( _setValue );
+            let disableValue = this.disableValue.bind( this );
+            return value.map( _v => disableValue( _v, reenable ) );
         }
         else
         {
@@ -203,13 +256,28 @@ const api = {
      *
      * shortcut syntax to enable an index
      *
-     * @param {Mixed} i index of the option to enable
+     * @param {Mixed} index index of the option to enable
      *
      * @return {Object} flounder(s)
      */
-    enableIndex : function( i )
+    enableIndex : function( index )
     {
-        return this.disableIndex( i, true );
+        return this.disableIndex( index, true );
+    },
+
+
+    /**
+     * ## enabletext
+     *
+     * shortcut syntax to enable by text
+     *
+     * @param {Mixed} text text of the option to enable
+     *
+     * @return {Object} flounder(s)
+     */
+    enableText : function( text )
+    {
+        return this.disableText( text, true );
     },
 
 
@@ -370,13 +438,12 @@ const api = {
      */
     setIndex : function( index, multiple, programmatic = true )
     {
-        console.log( index );
         let refs = this.refs;
 
         if ( typeof index !== 'string' && index.length )
         {
-            let _setIndex = this.setIndex;
-            return index.map( _setIndex );
+            let _setIndex = this.setIndex.bind( this );
+            return index.map( _i => _setIndex( _i, multiple, programmatic ) );
         }
         else
         {
@@ -399,12 +466,49 @@ const api = {
 
 
     /**
+     * ## setText
+     *
+     * programatically sets the text by string.  If the text string
+     * is not matched to an element, nothing will be selected
+     *
+     * @param {Mixed} text text to set flounder to.  _String, or Array of strings_
+     *
+     * return _Void_
+     */
+    setText : function( text, multiple, programmatic = true )
+    {
+        if ( typeof text !== 'string' && text.length )
+        {
+            let _setText = this.setText.bind( this );
+            return text.map( _i => _setText( _i, multiple, programmatic ) );
+        }
+        else
+        {
+            let res     = [];
+            let getText = document.all ? 'innerText' : 'textContent'
+
+            this.refs.selectOptions.forEach( function( el )
+            {
+                let _elText = el[ getText ];
+
+                if ( _elText === text )
+                {
+                    res.push( el.index );
+                }
+            } );
+
+            return res.length ? this.setIndex( res, multiple, programmatic ) : null;
+        }
+    },
+
+
+    /**
      * ## setValue
      *
      * programatically sets the value by string.  If the value string
      * is not matched to an element, nothing will be selected
      *
-     * @param {Mixed} value value to set flounder to.  _Number, or Array of numbers_
+     * @param {Mixed} value value to set flounder to.  _String, or Array of strings_
      *
      * return _Void_
      */
@@ -412,8 +516,8 @@ const api = {
     {
         if ( typeof value !== 'string' && value.length )
         {
-            let _setValue = this.setValue;
-            return value.map( _setValue );
+            let _setValue = this.setValue.bind( this );
+            return value.map( _i => _setValue( _i, multiple, programmatic ) );
         }
         else
         {

@@ -19299,7 +19299,7 @@ var api = {
     /**
      * ## clickIndex
      *
-     * programatically sets the value by index.  If there are not enough elements
+     * programatically sets selected by index.  If there are not enough elements
      * to match the index, then nothing is selected. Fires the onClick event
      *
      * @param {Mixed} index index to set flounder to.  _Number, or Array of numbers_
@@ -19311,12 +19311,26 @@ var api = {
     },
 
     /**
-     * ## clickValue
+     * ## clickText
      *
-     * programatically sets the value by string.  If the value string
+     * programatically sets selected by text string.  If the text string
      * is not matched to an element, nothing will be selected. Fires the onClick event
      *
-     * @param {Mixed} value value to set flounder to.  _Number, or Array of numbers_
+     * @param {Mixed} text text to set flounder to.  _String, or Array of strings_
+     *
+     * return _Void_
+     */
+    clickText: function clickText(text, multiple) {
+        return this.setText(text, multiple, false);
+    },
+
+    /**
+     * ## clickValue
+     *
+     * programatically sets selected by value string.  If the value string
+     * is not matched to an element, nothing will be selected. Fires the onClick event
+     *
+     * @param {Mixed} value value to set flounder to.  _String, or Array of strings_
      *
      * return _Void_
      */
@@ -19408,17 +19422,27 @@ var api = {
      *
      * return _Void_
      */
-    disableIndex: function disableIndex(i, reenable) {
+    disableIndex: function disableIndex(index, reenable) {
+        var _this = this;
+
         var refs = this.refs;
 
-        if (typeof i !== 'string' && i.length) {
-            var _setIndex = this.setIndex;
-            return i.map(_setIndex);
+        if (typeof index !== 'string' && index.length) {
+            var _ret = (function () {
+                var disableIndex = _this.disableIndex.bind(_this);
+                return {
+                    v: index.map(function (_i) {
+                        return disableIndex(_i, reenable);
+                    })
+                };
+            })();
+
+            if (typeof _ret === 'object') return _ret.v;
         } else {
-            var el = refs.data[i];
+            var el = refs.data[index];
 
             if (el) {
-                var opt = refs.selectOptions[i];
+                var opt = refs.selectOptions[index];
 
                 if (reenable) {
                     opt.disabled = false;
@@ -19436,6 +19460,52 @@ var api = {
     },
 
     /**
+     * ## disableText
+     *
+     * disables THE FIRST option that has the given value
+     *
+     * @param {Mixed} value value of the option
+     * @param {Boolean} reenable enables the option instead
+     *
+     * return _Void_
+     */
+    disableText: function disableText(text, reenable) {
+        var _this2 = this;
+
+        if (typeof text !== 'string' && text.length) {
+            var _ret2 = (function () {
+                var disableText = _this2.disableText.bind(_this2);
+                return {
+                    v: text.map(function (_t) {
+                        return disableText(_t, reenable);
+                    })
+                };
+            })();
+
+            if (typeof _ret2 === 'object') return _ret2.v;
+        } else {
+            var _ret3 = (function () {
+                var res = [];
+                var getText = document.all ? 'innerText' : 'textContent';
+
+                _this2.refs.selectOptions.forEach(function (el) {
+                    var _elText = el[getText];
+
+                    if (_elText === text) {
+                        res.push(el.index);
+                    }
+                });
+
+                return {
+                    v: res.length ? _this2.disableIndex(res, reenable) : null
+                };
+            })();
+
+            if (typeof _ret3 === 'object') return _ret3.v;
+        }
+    },
+
+    /**
      * ## disableValue
      *
      * disables THE FIRST option that has the given value
@@ -19446,9 +19516,19 @@ var api = {
      * return _Void_
      */
     disableValue: function disableValue(value, reenable) {
+        var _this3 = this;
+
         if (typeof value !== 'string' && value.length) {
-            var _setValue = this.setValue;
-            return value.map(_setValue);
+            var _ret4 = (function () {
+                var disableValue = _this3.disableValue.bind(_this3);
+                return {
+                    v: value.map(function (_v) {
+                        return disableValue(_v, reenable);
+                    })
+                };
+            })();
+
+            if (typeof _ret4 === 'object') return _ret4.v;
         } else {
             value = this.refs.select.querySelector('[value="' + value + '"]');
             return value ? this.disableIndex(value.index, reenable) : null;
@@ -19460,12 +19540,25 @@ var api = {
      *
      * shortcut syntax to enable an index
      *
-     * @param {Mixed} i index of the option to enable
+     * @param {Mixed} index index of the option to enable
      *
      * @return {Object} flounder(s)
      */
-    enableIndex: function enableIndex(i) {
-        return this.disableIndex(i, true);
+    enableIndex: function enableIndex(index) {
+        return this.disableIndex(index, true);
+    },
+
+    /**
+     * ## enabletext
+     *
+     * shortcut syntax to enable by text
+     *
+     * @param {Mixed} text text of the option to enable
+     *
+     * @return {Object} flounder(s)
+     */
+    enableText: function enableText(text) {
+        return this.disableText(text, true);
     },
 
     /**
@@ -19491,7 +19584,7 @@ var api = {
      * @return _Object_ option and div tage
      */
     getData: function getData(_i) {
-        var _this = this;
+        var _this4 = this;
 
         var refs = this.refs;
 
@@ -19499,7 +19592,7 @@ var api = {
             return { option: refs.selectOptions[_i], div: refs.data[_i] };
         } else {
             return refs.selectOptions.map(function (el, i) {
-                return _this.getData(i);
+                return _this4.getData(i);
             });
         }
     },
@@ -19551,7 +19644,7 @@ var api = {
      * @return _Object_ rebuilt flounder object
      */
     rebuild: function rebuild(data) {
-        var _this2 = this;
+        var _this5 = this;
 
         var refs = this.refs;
         var selected = refs.select.selectedOptions;
@@ -19585,7 +19678,7 @@ var api = {
             if (valuePosition !== -1) {
                 selected.splice(valuePosition, 1);
                 el.selected = true;
-                _this2.addClass(refs.data[i], _this2.selectedClass);
+                _this5.addClass(refs.data[i], _this5.selectedClass);
             }
         });
 
@@ -19620,14 +19713,23 @@ var api = {
      * return _Void_
      */
     setIndex: function setIndex(index, multiple) {
+        var _this6 = this;
+
         var programmatic = arguments.length <= 2 || arguments[2] === undefined ? true : arguments[2];
 
-        console.log(index);
         var refs = this.refs;
 
         if (typeof index !== 'string' && index.length) {
-            var _setIndex = this.setIndex;
-            return index.map(_setIndex);
+            var _ret5 = (function () {
+                var _setIndex = _this6.setIndex.bind(_this6);
+                return {
+                    v: index.map(function (_i) {
+                        return _setIndex(_i, multiple, programmatic);
+                    })
+                };
+            })();
+
+            if (typeof _ret5 === 'object') return _ret5.v;
         } else {
             var el = refs.data[index];
 
@@ -19646,21 +19748,79 @@ var api = {
     },
 
     /**
+     * ## setText
+     *
+     * programatically sets the text by string.  If the text string
+     * is not matched to an element, nothing will be selected
+     *
+     * @param {Mixed} text text to set flounder to.  _String, or Array of strings_
+     *
+     * return _Void_
+     */
+    setText: function setText(text, multiple) {
+        var _this7 = this;
+
+        var programmatic = arguments.length <= 2 || arguments[2] === undefined ? true : arguments[2];
+
+        if (typeof text !== 'string' && text.length) {
+            var _ret6 = (function () {
+                var _setText = _this7.setText.bind(_this7);
+                return {
+                    v: text.map(function (_i) {
+                        return _setText(_i, multiple, programmatic);
+                    })
+                };
+            })();
+
+            if (typeof _ret6 === 'object') return _ret6.v;
+        } else {
+            var _ret7 = (function () {
+                var res = [];
+                var getText = document.all ? 'innerText' : 'textContent';
+
+                _this7.refs.selectOptions.forEach(function (el) {
+                    var _elText = el[getText];
+
+                    if (_elText === text) {
+                        res.push(el.index);
+                    }
+                });
+
+                return {
+                    v: res.length ? _this7.setIndex(res, multiple, programmatic) : null
+                };
+            })();
+
+            if (typeof _ret7 === 'object') return _ret7.v;
+        }
+    },
+
+    /**
      * ## setValue
      *
      * programatically sets the value by string.  If the value string
      * is not matched to an element, nothing will be selected
      *
-     * @param {Mixed} value value to set flounder to.  _Number, or Array of numbers_
+     * @param {Mixed} value value to set flounder to.  _String, or Array of strings_
      *
      * return _Void_
      */
     setValue: function setValue(value, multiple) {
+        var _this8 = this;
+
         var programmatic = arguments.length <= 2 || arguments[2] === undefined ? true : arguments[2];
 
         if (typeof value !== 'string' && value.length) {
-            var _setValue = this.setValue;
-            return value.map(_setValue);
+            var _ret8 = (function () {
+                var _setValue = _this8.setValue.bind(_this8);
+                return {
+                    v: value.map(function (_i) {
+                        return _setValue(_i, multiple, programmatic);
+                    })
+                };
+            })();
+
+            if (typeof _ret8 === 'object') return _ret8.v;
         } else {
             value = this.refs.select.querySelector('[value="' + value + '"]');
             return value ? this.setIndex(value.index, multiple, programmatic) : null;
