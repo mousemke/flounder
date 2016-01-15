@@ -19763,7 +19763,6 @@ var build = {
          * @return {DOMElement}
          */
         var buildDiv = function buildDiv(dataObj, i) {
-            console.log(dataObj);
             if (typeof dataObj !== 'object') {
                 dataObj = {
                     text: dataObj,
@@ -20913,7 +20912,7 @@ var Flounder = (function () {
                     }
                 }
             }
-            console.log(this.data);
+
             if (!this.multiple) {
                 this.multipleTags = false;
             }

@@ -170,6 +170,7 @@ const build = {
         let addClass                = this.addClass;
         let selectRef               = this.refs.select;
 
+
         /**
          * ## buildDiv
          *
@@ -182,7 +183,6 @@ const build = {
          */
         let buildDiv = function( dataObj, i )
         {
-            console.log( dataObj );
             if ( typeof dataObj !== 'object' )
             {
                 dataObj = {

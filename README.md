@@ -448,36 +448,6 @@ Change Log
 + fixed a multi-tag event leak
 
 
-0.2.7
------
-
-+ fixed a destroy event leak
-+ fixed a selectbox event leak
-+ added "destroy all" demo button
-+ changed flounder <-> element references in react
-+ $ now sets flounder as 'flounder' with data
-+ µ now sets flounder as 'flounder' with set
-+ flounder now detects, destroys, and re-instantiates with the new options if it is given an element that already has a flounder 
-
-
-0.2.6
------
-
-+ split file structure
-+ removed the checks for 0 length flounder creation objects.  If there is nothing to render, flounder will just render nothing
-+ onOpen and onClose will now not fire until flounder is set up
-+ destroy now preserves the container it was built in
-+ better checks for target
-
-
-0.2.5
------
-
-+ fixed removeClass
-+ added qunit
-+ added nightmare testing
-
-
 Older Changes
 =============
 

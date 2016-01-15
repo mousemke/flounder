@@ -362,7 +362,7 @@ class Flounder
                 }
             }
         }
-console.log( this.data );
+
         if ( !this.multiple )
         {
             this.multipleTags = false;

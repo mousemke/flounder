@@ -196,15 +196,15 @@ const utils = {
     iosVersion : function()
     {
 
-      if ( /iPad|iPhone|iPod/.test( navigator.platform ) )
-      {
-        if ( !!window.indexedDB ) { return '8+'; }
-        if ( !!window.SpeechSynthesisUtterance ) { return '7'; }
-        if ( !!window.webkitAudioContext ) { return '6'; }
-        return '5-';
-      }
+        if ( /iPad|iPhone|iPod/.test( navigator.platform ) )
+        {
+            if ( !!window.indexedDB ) { return '8+'; }
+            if ( !!window.SpeechSynthesisUtterance ) { return '7'; }
+            if ( !!window.webkitAudioContext ) { return '6'; }
+            return '5-';
+        }
 
-      return false;
+        return false;
     },
 
 
