@@ -95,25 +95,26 @@ If flounder is fed an element that already has a flounder, it will destroy it an
  
 ```
 {
-    classes             : {
-        flounder        : 'class--to--give--the--main--flounder--element',
-        hidden          : 'class--to--denote--hidden',
-        selected        : 'class--to--denote--selected--option',
-        wrapper         : 'additional--class--to--give--the--wrapper'
+    classes                 : {
+        flounder            : 'class--to--give--the--main--flounder--element',
+        hidden              : 'class--to--denote--hidden',
+        selected            : 'class--to--denote--selected--option',
+        wrapper             : 'additional--class--to--give--the--wrapper'
     },
-    data                : dataObject,
-    defaultValue        : defaultValue,
-    defaultIndex        : defaultIndex,
-    multiple            : false,
-    multipleTags        : true,
-    multipleMessage     : '(Multiple Items Selected)',
-    onClose             : function( e, valueArray ){},
-    onComponentDidMount : function(){},
-    onInit              : function(){},
-    onOpen              : function( e, valueArray ){},
-    onSelect            : function( e, valueArray ){}
-    placeholder         : 'Please choose an option',
-    search              : true
+    data                    : dataObject,
+    defaultValue            : defaultValue,
+    defaultIndex            : defaultIndex,
+    multiple                : false,
+    multipleTags            : true,
+    multipleMessage         : '(Multiple Items Selected)',
+    onClose                 : function( e, valueArray ){},
+    onComponentDidMount     : function(){},
+    onComponentWillUnmount  : function(){},
+    onInit                  : function(){},
+    onOpen                  : function( e, valueArray ){},
+    onSelect                : function( e, valueArray ){}
+    placeholder             : 'Please choose an option',
+    search                  : true
 }
 ```
 
@@ -134,6 +135,8 @@ If flounder is fed an element that already has a flounder, it will destroy it an
 `onClose` - (function) Triggered when the selectbox is closed
 
 `onComponentDidMount` - (function) Triggered when the selectbox is finished building
+
+`onComponentWillUnmount` - (function) Triggered right before flounder is removed from the dom
 
 `onInit` - (function) Triggered when the selectbox is initiated, but before it's built
 
@@ -351,7 +354,7 @@ react flounder can only be attached to container elements (div, span, etc)
 ```
 
     ReactDOM.render( React.createElement( FlounderReact, {
-        defaultValue        : 'placeholders!',
+        placeholder         : 'placeholders!',
 
         onInit              : function()
         {
@@ -389,6 +392,17 @@ See more examples on the [demo page](./demo/index.html)
 
 Change Log
 ==========
+
+0.4.0
+-----
+
++ [api] changed language of all contextual statements `setIndex` becomes `setByIndex`, etc
++ [config] added onComponentWillUnmount()
++ [config] added try/catch to all config functions
++ [build] placeholder will only be added to selectboxes that do not have a first option with '' as a value.  otherwise the text will be changed to the new placeholder value.
++ [build] fixed bugs in construction when using a selectbox as a target
++ [utils] tweaked addClass
+
 
 0.3.2
 -----

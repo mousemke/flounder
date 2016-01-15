@@ -20021,6 +20021,7 @@ var build = {
          * @return {DOMElement}
          */
         var buildDiv = function buildDiv(dataObj, i) {
+            console.log(dataObj);
             if (typeof dataObj !== 'object') {
                 dataObj = {
                     text: dataObj,
@@ -20094,7 +20095,6 @@ var build = {
             return selectOption;
         };
 
-        console.log(originalData);
         originalData.forEach(function (dataObj) {
             if (dataObj.header) {
                 (function () {
@@ -21171,7 +21171,7 @@ var Flounder = (function () {
                     }
                 }
             }
-
+            console.log(this.data);
             if (!this.multiple) {
                 this.multipleTags = false;
             }
@@ -21371,11 +21371,12 @@ var Flounder = (function () {
 
                         select.insertBefore(defaultOption, select[0]);
                         self.refs.selectOptions.unshift(defaultOption);
-
                         data.unshift(_default);
                     } else {
-                        select[0].innerHTML = escapedText;
+                        data[0] = _default;
                     }
+                } else {
+                    data.unshift(_default);
                 }
 
                 return _default;

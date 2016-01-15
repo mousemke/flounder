@@ -1,12 +1,12 @@
 /*!
- * Flounder JavaScript Styleable Selectbox v0.3.2
+ * Flounder JavaScript Styleable Selectbox v0.4.0
  * https://github.com/sociomantic/flounder
  *
  * Copyright 2015-2016 Sociomantic Labs and other contributors
  * Released under the MIT license
  * https://github.com/sociomantic/flounder/license
  *
- * Date: Thu Jan 14 2016
+ * Date: Fri Jan 15 2016
  * "This, so far, is the best Flounder ever"
  */
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
@@ -19042,7 +19042,7 @@ var _classes2 = _interopRequireDefault(_classes);
 var api = {
 
     /**
-     * ## clickIndex
+     * ## clickByIndex
      *
      * programatically sets selected by index.  If there are not enough elements
      * to match the index, then nothing is selected. Fires the onClick event
@@ -19051,12 +19051,12 @@ var api = {
      *
      * return _Void_
      */
-    clickIndex: function clickIndex(index, multiple) {
-        return this.setIndex(index, multiple, false);
+    clickByIndex: function clickByIndex(index, multiple) {
+        return this.setByIndex(index, multiple, false);
     },
 
     /**
-     * ## clickText
+     * ## clickByText
      *
      * programatically sets selected by text string.  If the text string
      * is not matched to an element, nothing will be selected. Fires the onClick event
@@ -19065,12 +19065,12 @@ var api = {
      *
      * return _Void_
      */
-    clickText: function clickText(text, multiple) {
-        return this.setText(text, multiple, false);
+    clickByText: function clickByText(text, multiple) {
+        return this.setByText(text, multiple, false);
     },
 
     /**
-     * ## clickValue
+     * ## clickByValue
      *
      * programatically sets selected by value string.  If the value string
      * is not matched to an element, nothing will be selected. Fires the onClick event
@@ -19079,8 +19079,8 @@ var api = {
      *
      * return _Void_
      */
-    clickValue: function clickValue(value, multiple) {
-        return this.setValue(value, multiple, false);
+    clickByValue: function clickByValue(value, multiple) {
+        return this.setByValue(value, multiple, false);
     },
 
     /**
@@ -19158,7 +19158,7 @@ var api = {
     },
 
     /**
-     * ## disableIndex
+     * ## disableByIndex
      *
      * disables the options with the given index
      *
@@ -19167,17 +19167,17 @@ var api = {
      *
      * return _Void_
      */
-    disableIndex: function disableIndex(index, reenable) {
+    disableByIndex: function disableByIndex(index, reenable) {
         var _this = this;
 
         var refs = this.refs;
 
         if (typeof index !== 'string' && index.length) {
             var _ret = (function () {
-                var disableIndex = _this.disableIndex.bind(_this);
+                var disableByIndex = _this.disableByIndex.bind(_this);
                 return {
                     v: index.map(function (_i) {
-                        return disableIndex(_i, reenable);
+                        return disableByIndex(_i, reenable);
                     })
                 };
             })();
@@ -19205,7 +19205,7 @@ var api = {
     },
 
     /**
-     * ## disableText
+     * ## disableByText
      *
      * disables THE FIRST option that has the given value
      *
@@ -19214,15 +19214,15 @@ var api = {
      *
      * return _Void_
      */
-    disableText: function disableText(text, reenable) {
+    disableByText: function disableByText(text, reenable) {
         var _this2 = this;
 
         if (typeof text !== 'string' && text.length) {
             var _ret2 = (function () {
-                var disableText = _this2.disableText.bind(_this2);
+                var disableByText = _this2.disableByText.bind(_this2);
                 return {
                     v: text.map(function (_t) {
-                        return disableText(_t, reenable);
+                        return disableByText(_t, reenable);
                     })
                 };
             })();
@@ -19242,7 +19242,7 @@ var api = {
                 });
 
                 return {
-                    v: res.length ? _this2.disableIndex(res, reenable) : null
+                    v: res.length ? _this2.disableByIndex(res, reenable) : null
                 };
             })();
 
@@ -19251,7 +19251,7 @@ var api = {
     },
 
     /**
-     * ## disableValue
+     * ## disableByValue
      *
      * disables THE FIRST option that has the given value
      *
@@ -19260,15 +19260,15 @@ var api = {
      *
      * return _Void_
      */
-    disableValue: function disableValue(value, reenable) {
+    disableByValue: function disableByValue(value, reenable) {
         var _this3 = this;
 
         if (typeof value !== 'string' && value.length) {
             var _ret4 = (function () {
-                var disableValue = _this3.disableValue.bind(_this3);
+                var disableByValue = _this3.disableByValue.bind(_this3);
                 return {
                     v: value.map(function (_v) {
-                        return disableValue(_v, reenable);
+                        return disableByValue(_v, reenable);
                     })
                 };
             })();
@@ -19276,12 +19276,12 @@ var api = {
             if (typeof _ret4 === 'object') return _ret4.v;
         } else {
             value = this.refs.select.querySelector('[value="' + value + '"]');
-            return value ? this.disableIndex(value.index, reenable) : null;
+            return value ? this.disableByIndex(value.index, reenable) : null;
         }
     },
 
     /**
-     * ## enableIndex
+     * ## enableByIndex
      *
      * shortcut syntax to enable an index
      *
@@ -19289,12 +19289,12 @@ var api = {
      *
      * @return {Object} flounder(s)
      */
-    enableIndex: function enableIndex(index) {
-        return this.disableIndex(index, true);
+    enableByIndex: function enableByIndex(index) {
+        return this.disableByIndex(index, true);
     },
 
     /**
-     * ## enabletext
+     * ## enableByText
      *
      * shortcut syntax to enable by text
      *
@@ -19302,12 +19302,12 @@ var api = {
      *
      * @return {Object} flounder(s)
      */
-    enableText: function enableText(text) {
-        return this.disableText(text, true);
+    enableByText: function enableByText(text) {
+        return this.disableByText(text, true);
     },
 
     /**
-     * ## enableValue
+     * ## enableByValue
      *
      * shortcut syntax to enable a value
      *
@@ -19315,8 +19315,8 @@ var api = {
      *
      * @return {Object} flounder(s)
      */
-    enableValue: function enableValue(value) {
-        this.disableValue(value, true);
+    enableByValue: function enableByValue(value) {
+        this.disableByValue(value, true);
     },
 
     /**
@@ -19448,7 +19448,7 @@ var api = {
     },
 
     /**
-     * ## setIndex
+     * ## setByIndex
      *
      * programatically sets the value by index.  If there are not enough elements
      * to match the index, then nothing is selected.
@@ -19457,7 +19457,7 @@ var api = {
      *
      * return _Void_
      */
-    setIndex: function setIndex(index, multiple) {
+    setByIndex: function setByIndex(index, multiple) {
         var _this6 = this;
 
         var programmatic = arguments.length <= 2 || arguments[2] === undefined ? true : arguments[2];
@@ -19466,10 +19466,10 @@ var api = {
 
         if (typeof index !== 'string' && index.length) {
             var _ret5 = (function () {
-                var _setIndex = _this6.setIndex.bind(_this6);
+                var setByIndex = _this6.setByIndex.bind(_this6);
                 return {
                     v: index.map(function (_i) {
-                        return _setIndex(_i, multiple, programmatic);
+                        return setByIndex(_i, multiple, programmatic);
                     })
                 };
             })();
@@ -19493,7 +19493,7 @@ var api = {
     },
 
     /**
-     * ## setText
+     * ## setByText
      *
      * programatically sets the text by string.  If the text string
      * is not matched to an element, nothing will be selected
@@ -19502,17 +19502,17 @@ var api = {
      *
      * return _Void_
      */
-    setText: function setText(text, multiple) {
+    setByText: function setByText(text, multiple) {
         var _this7 = this;
 
         var programmatic = arguments.length <= 2 || arguments[2] === undefined ? true : arguments[2];
 
         if (typeof text !== 'string' && text.length) {
             var _ret6 = (function () {
-                var _setText = _this7.setText.bind(_this7);
+                var setByText = _this7.setByText.bind(_this7);
                 return {
                     v: text.map(function (_i) {
-                        return _setText(_i, multiple, programmatic);
+                        return setByText(_i, multiple, programmatic);
                     })
                 };
             })();
@@ -19532,7 +19532,7 @@ var api = {
                 });
 
                 return {
-                    v: res.length ? _this7.setIndex(res, multiple, programmatic) : null
+                    v: res.length ? _this7.setByIndex(res, multiple, programmatic) : null
                 };
             })();
 
@@ -19541,7 +19541,7 @@ var api = {
     },
 
     /**
-     * ## setValue
+     * ## setByValue
      *
      * programatically sets the value by string.  If the value string
      * is not matched to an element, nothing will be selected
@@ -19550,17 +19550,17 @@ var api = {
      *
      * return _Void_
      */
-    setValue: function setValue(value, multiple) {
+    setByValue: function setByValue(value, multiple) {
         var _this8 = this;
 
         var programmatic = arguments.length <= 2 || arguments[2] === undefined ? true : arguments[2];
 
         if (typeof value !== 'string' && value.length) {
             var _ret8 = (function () {
-                var _setValue = _this8.setValue.bind(_this8);
+                var setByValue = _this8.setByValue.bind(_this8);
                 return {
                     v: value.map(function (_i) {
-                        return _setValue(_i, multiple, programmatic);
+                        return setByValue(_i, multiple, programmatic);
                     })
                 };
             })();
@@ -19568,7 +19568,7 @@ var api = {
             if (typeof _ret8 === 'object') return _ret8.v;
         } else {
             value = this.refs.select.querySelector('[value="' + value + '"]');
-            return value ? this.setIndex(value.index, multiple, programmatic) : null;
+            return value ? this.setByIndex(value.index, multiple, programmatic) : null;
         }
     }
 };
@@ -19656,10 +19656,7 @@ var build = {
         this.displayMultipleTags = this.displayMultipleTags.bind(this);
         this.fuzzySearch = this.fuzzySearch.bind(this);
         this.removeMultiTag = this.removeMultiTag.bind(this);
-        this.setIndex = this.setIndex.bind(this);
         this.setKeypress = this.setKeypress.bind(this);
-        this.setSelectValue = this.setSelectValue.bind(this);
-        this.setValue = this.setValue.bind(this);
         this.toggleClass = this.toggleClass.bind(this);
         this.toggleList = this.toggleList.bind(this);
     },
@@ -19766,6 +19763,7 @@ var build = {
          * @return {DOMElement}
          */
         var buildDiv = function buildDiv(dataObj, i) {
+            console.log(dataObj);
             if (typeof dataObj !== 'object') {
                 dataObj = {
                     text: dataObj,
@@ -19822,9 +19820,10 @@ var build = {
                 selectOption.innerHTML = escapedText;
                 select.appendChild(selectOption);
             } else {
-                var selectChild = select.children[i];
+                var selectChild = selectRef.children[i];
                 selectOption = selectChild;
                 selectChild.setAttribute('value', selectChild.value);
+                addClass(selectChild, 'flounder--option--tag');
             }
 
             if (i === defaultValue.index) {
@@ -19996,11 +19995,12 @@ var defaults = {
     multiple: false,
     multipleTags: false,
     multipleMessage: '(Multiple Items Selected)',
-    onClose: function onClose() {},
+    onClose: function onClose(e, selectedValues) {},
     onComponentDidMount: function onComponentDidMount() {},
+    onComponentWillUnmount: function onComponentWillUnmount() {},
     onInit: function onInit() {},
-    onOpen: function onOpen() {},
-    onSelect: function onSelect() {},
+    onOpen: function onOpen(e, selectedValues) {},
+    onSelect: function onSelect(e, selectedValues) {},
     placeholder: 'Please choose an option',
     search: false
 };
@@ -20369,7 +20369,11 @@ var events = {
                 if (this.toggleList.justOpened && !e) {
                     this.toggleList.justOpened = false;
                 } else {
-                    this.onSelect(e, this.getSelectedValues());
+                    try {
+                        this.onSelect(e, this.getSelectedValues());
+                    } catch (e) {
+                        console.log('something may be wrong in "onSelect"', e);
+                    }
                 }
             }
         }
@@ -20493,7 +20497,11 @@ var events = {
         refs.flounder.focus();
 
         if (this.ready) {
-            this.onClose(e, this.getSelectedValues());
+            try {
+                this.onClose(e, this.getSelectedValues());
+            } catch (e) {
+                console.log('something may be wrong in "onClose"', e);
+            }
         }
     },
 
@@ -20536,7 +20544,11 @@ var events = {
         }
 
         if (this.ready) {
-            this.onOpen(e, this.getSelectedValues());
+            try {
+                this.onOpen(e, this.getSelectedValues());
+            } catch (e) {
+                console.log('something may be wrong in "onOpen"', e);
+            }
         }
     }
 };
@@ -20624,6 +20636,12 @@ var Flounder = (function () {
     }, {
         key: 'componentWillUnmount',
         value: function componentWillUnmount() {
+            try {
+                this.onComponentWillUnmount();
+            } catch (e) {
+                console.log('something may be wrong in "onComponentWillUnmount"', e);
+            }
+
             var refs = this.refs;
 
             this.removeOptionsListeners();
@@ -20680,11 +20698,20 @@ var Flounder = (function () {
                 this.setTarget(target);
                 this.bindThis();
                 this.initialzeOptions();
-                this.onInit();
+                try {
+                    this.onInit();
+                } catch (e) {
+                    console.log('something may be wrong in "onInit"', e);
+                }
+
                 this.buildDom();
                 this.setPlatform();
                 this.onRender();
-                this.onComponentDidMount();
+                try {
+                    this.onComponentDidMount();
+                } catch (e) {
+                    console.log('something may be wrong in "onComponentDidMount"', e);
+                }
                 this.ready = true;
 
                 return this.refs.flounder.flounder = this.originalTarget.flounder = this.target.flounder = this;
@@ -20886,7 +20913,7 @@ var Flounder = (function () {
                     }
                 }
             }
-
+            console.log(this.data);
             if (!this.multiple) {
                 this.multipleTags = false;
             }
@@ -20974,7 +21001,11 @@ var Flounder = (function () {
             selected.setAttribute('data-value', value);
             selected.setAttribute('data-index', index);
 
-            this.onSelect(e, this.getSelectedValues());
+            try {
+                this.onSelect(e, this.getSelectedValues());
+            } catch (e) {
+                console.log('something may be wrong in "onSelect"', e);
+            }
         }
 
         /**
@@ -21073,16 +21104,22 @@ var Flounder = (function () {
 
                 if (select) {
                     var escapedText = self.escapeHTML(_default.text);
-                    var defaultOption = self.constructElement({ tagname: 'option',
-                        className: _classes3['default'].OPTION_TAG,
-                        value: _default.value });
-                    defaultOption.innerHTML = escapedText;
 
-                    select.insertBefore(defaultOption, select[0]);
-                    self.refs.selectOptions.unshift(defaultOption);
+                    if (!select[0] || select[0].value !== '') {
+                        var defaultOption = self.constructElement({ tagname: 'option',
+                            className: _classes3['default'].OPTION_TAG,
+                            value: _default.value });
+                        defaultOption.innerHTML = escapedText;
+
+                        select.insertBefore(defaultOption, select[0]);
+                        self.refs.selectOptions.unshift(defaultOption);
+                        data.unshift(_default);
+                    } else {
+                        data[0] = _default;
+                    }
+                } else {
+                    data.unshift(_default);
                 }
-
-                data.unshift(_default);
 
                 return _default;
             };
@@ -21499,8 +21536,10 @@ var utils = {
         var _elClassLength = _elClass.length;
 
         if (!utils.hasClass(_el, _class) && _elClass.slice(0, _class.length + 1) !== _class + ' ' && _elClass.slice(_elClassLength - _class.length - 1, _elClassLength) !== ' ' + _class) {
-            _el.className += '  ' + _class;
+            _elClass += '  ' + _class;
         }
+
+        _el.className = _elClass.trim();
     },
 
     /**
@@ -21849,7 +21888,11 @@ var FlounderReact = (function (_Component) {
 
             this.onRender();
 
-            this.onComponentDidMount();
+            try {
+                this.onComponentDidMount();
+            } catch (e) {
+                console.log('something may be wrong in "onComponentDidMount"', e);
+            }
 
             this.setPlatform();
         }
@@ -21928,8 +21971,10 @@ var FlounderReact = (function (_Component) {
 
             this.initialzeOptions();
 
-            if (this.onInit) {
+            try {
                 this.onInit();
+            } catch (e) {
+                console.log('something may be wrong in "onInit"', e);
             }
 
             var optionsCollection = [];

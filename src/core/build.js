@@ -182,6 +182,7 @@ const build = {
          */
         let buildDiv = function( dataObj, i )
         {
+            console.log( dataObj );
             if ( typeof dataObj !== 'object' )
             {
                 dataObj = {
@@ -265,7 +266,6 @@ const build = {
 
             return selectOption;
         };
-
 
 
         originalData.forEach( ( dataObj ) =>

@@ -362,7 +362,7 @@ class Flounder
                 }
             }
         }
-
+console.log( this.data );
         if ( !this.multiple )
         {
             this.multipleTags = false;
@@ -581,13 +581,16 @@ class Flounder
 
                     select.insertBefore( defaultOption, select[ 0 ] );
                     self.refs.selectOptions.unshift( defaultOption );
-
                     data.unshift( _default );
                 }
                 else
                 {
-                    select[ 0 ].innerHTML = escapedText;
+                    data[ 0 ] = _default;
                 }
+            }
+            else
+            {
+                data.unshift( _default );
             }
 
             return _default;
