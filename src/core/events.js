@@ -416,7 +416,14 @@ const events = {
                 }
                 else
                 {
-                    this.onSelect( e, this.getSelectedValues() );
+                    try
+                    {
+                        this.onSelect( e, this.getSelectedValues() );
+                    }
+                    catch( e )
+                    {
+                        console.log( 'something may be wrong in "onSelect"', e );
+                    }
                 }
             }
         }
@@ -555,7 +562,14 @@ const events = {
 
         if ( this.ready )
         {
-            this.onClose( e, this.getSelectedValues() );
+            try
+            {
+                this.onClose( e, this.getSelectedValues() );
+            }
+            catch( e )
+            {
+                console.log( 'something may be wrong in "onClose"', e );
+            }
         }
     },
 
@@ -606,7 +620,14 @@ const events = {
 
         if ( this.ready )
         {
-            this.onOpen( e, this.getSelectedValues() );
+            try
+            {
+                this.onOpen( e, this.getSelectedValues() );
+            }
+            catch( e )
+            {
+                console.log( 'something may be wrong in "onOpen"', e );
+            }
         }
     }
 };

@@ -42,6 +42,15 @@ class Flounder
      */
     componentWillUnmount()
     {
+        try
+        {
+            this.onComponentWillUnmount();
+        }
+        catch( e )
+        {
+            console.log( 'something may be wrong in "onComponentWillUnmount"', e );
+        }
+
         let refs        = this.refs;
 
         this.removeOptionsListeners();
@@ -105,11 +114,26 @@ class Flounder
                 this.setTarget( target );
                 this.bindThis();
                 this.initialzeOptions();
-                this.onInit();
+                try
+                {
+                    this.onInit();
+                }
+                catch( e )
+                {
+                    console.log( 'something may be wrong in "onInit"', e );
+                }
+
                 this.buildDom();
                 this.setPlatform();
                 this.onRender();
-                this.onComponentDidMount();
+                try
+                {
+                    this.onComponentDidMount();
+                }
+                catch( e )
+                {
+                    console.log( 'something may be wrong in "onComponentDidMount"', e );
+                }
                 this.ready = true;
 
                 return this.refs.flounder.flounder = this.originalTarget.flounder = this.target.flounder = this;
@@ -434,7 +458,14 @@ class Flounder
         selected.setAttribute( 'data-value', value );
         selected.setAttribute( 'data-index', index );
 
-        this.onSelect( e, this.getSelectedValues() );
+        try
+        {
+            this.onSelect( e, this.getSelectedValues() );
+        }
+        catch( e )
+        {
+            console.log( 'something may be wrong in "onSelect"', e );
+        }
     }
 
 

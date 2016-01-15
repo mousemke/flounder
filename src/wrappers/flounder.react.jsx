@@ -57,7 +57,14 @@ class FlounderReact extends Component
 
         this.onRender();
 
-        this.onComponentDidMount();
+        try
+        {
+            this.onComponentDidMount();
+        }
+        catch( e )
+        {
+            console.log( 'something may be wrong in "onComponentDidMount"', e );
+        }
 
         this.setPlatform();
     }
@@ -134,9 +141,13 @@ class FlounderReact extends Component
 
         this.initialzeOptions();
 
-        if ( this.onInit )
+        try
         {
             this.onInit();
+        }
+        catch( e )
+        {
+            console.log( 'something may be wrong in "onInit"', e );
         }
 
         let optionsCollection       = [];
