@@ -174,7 +174,7 @@ ReactDOM.render( React.createElement( FlounderReact, {
             res.push( {
                 text        : dataObj.text,
                 value       : dataObj.id,
-                description : dataObj.text + ' - ' + dataObj.text
+                description : dataObj.id + ' could be described as "' + dataObj.text + '"'
             } );
         } );
 
@@ -193,6 +193,10 @@ ReactDOM.render( React.createElement( FlounderReact, {
 
     multipleTags        : false,
 
+    onSelect            : function()
+    {
+        console.log( this.setByIndex( 0 ) );
+    },
     onInit              : function()
     {
         let res = [];
@@ -233,7 +237,7 @@ requirejs( [ 'flounder' ], function( Flounder )
                 res.push( {
                     text        : dataObj.text,
                     value       : dataObj.id,
-                    description : dataObj.text + ' - ' + dataObj.text
+                    description : dataObj.id + ' could be described as "' + dataObj.text + '"'
                 } );
             } );
 
