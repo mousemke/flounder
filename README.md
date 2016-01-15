@@ -1,4 +1,4 @@
-Flounder.js 0.3.2
+Flounder.js 0.4.0
 =================
 
 (for modern browsers and ie9+)
@@ -207,18 +207,18 @@ API
 These functions are intended for use in the user provided event callbacks
 
 ```
-this.clickIndex( index, multiple )
-this.clickText( text, multiple )
-this.clickValue( value, multiple )
+this.clickByIndex( index, multiple )
+this.clickByText( text, multiple )
+this.clickByValue( value, multiple )
 this.deselectAll()
 this.destroy()
 this.disable( bool )
-this.disableIndex( index )
-this.disableText( text )
-this.disableValue( value )
-this.enableIndex( index )
-this.enableText( text )
-this.enableValue( value )
+this.disableByIndex( index )
+this.disableByText( text )
+this.disableByValue( value )
+this.enableByIndex( index )
+this.enableByText( text )
+this.enableByValue( value )
 this.getData( [ num ] )
 this.getSelected()
 this.getSelectedValues()
@@ -226,16 +226,16 @@ this.props
 this.rebuild( data )
 this.reconfigure( props )
 this.refs
-this.setIndex( index, multiple )
-this.setText( text, multiple )
-this.setValue( value, multiple )
+this.setByIndex( index, multiple )
+this.setByText( text, multiple )
+this.setByValue( value, multiple )
 ```
 
-`clickIndex( index, multiple )` sets the item with the passed index as selected.  If multiple is true and it is a multi-select box, it is selected additionally.  Otherwise it's selected instead.  This accepts arrays as well.  Without multiple equaling true it will only select the last option. This fires the onClick event
+`clickByIndex( index, multiple )` sets the item with the passed index as selected.  If multiple is true and it is a multi-select box, it is selected additionally.  Otherwise it's selected instead.  This accepts arrays as well.  Without multiple equaling true it will only select the last option. This fires the onClick event
  
-`clickText( text, multiple )` sets the item with the passed text as selected.  If multiple is true and it is a multi-select box, it is selected additionally.  Otherwise it's selected instead. This accepts arrays as well.  Without multiple equaling true it will only select the last option. This fires the onClick event
+`clickByText( text, multiple )` sets the item with the passed text as selected.  If multiple is true and it is a multi-select box, it is selected additionally.  Otherwise it's selected instead. This accepts arrays as well.  Without multiple equaling true it will only select the last option. This fires the onClick event
 
-`clickValue( value, multiple )` sets the item with the passed value as selected.  If multiple is true and it is a multi-select box, it is selected additionally.  Otherwise it's selected instead. This accepts arrays as well.  Without multiple equaling true it will only select the last option. This fires the onClick event
+`clickByValue( value, multiple )` sets the item with the passed value as selected.  If multiple is true and it is a multi-select box, it is selected additionally.  Otherwise it's selected instead. This accepts arrays as well.  Without multiple equaling true it will only select the last option. This fires the onClick event
 
 `deselectAll()` deselects all data
 
@@ -243,17 +243,17 @@ this.setValue( value, multiple )
 
 `disable( bool )` disables or reenables flounder
 
-`disableIndex( index )` disables a flounder option by index
+`disableByIndex( index )` disables a flounder option by index
 
-`disableText( text )` disables a flounder option by text
+`disableByText( text )` disables a flounder option by text
 
-`disableValue( value )` disables a flounder option by value
+`disableByValue( value )` disables a flounder option by value
 
-`enableIndex( index )` enables a flounder option by index
+`enableByIndex( index )` enables a flounder option by index
 
-`enableText( text )` enables a flounder option by text 
+`enableByText( text )` enables a flounder option by text 
 
-`enableValue( value )` enables a flounder option by value
+`enableByValue( value )` enables a flounder option by value
 
 `getData( [ num ] )` returns the option element and the div element at a specified index as an object `{ option : option element, div : div element }`. If no number is given, it will return all data.
 
@@ -269,11 +269,11 @@ this.setValue( value, multiple )
 
 `refs` contains references to all flounder elements
 
-`setIndex( index, multiple )` sets the item with the passed index as selected.  If multiple is true and it is a multi-select box, it is selected additionally.  Otherwise it's selected instead.  This accepts arrays as well.  Without multiple equaling true it will only select the last option. This does not fire the onClick event
+`setByIndex( index, multiple )` sets the item with the passed index as selected.  If multiple is true and it is a multi-select box, it is selected additionally.  Otherwise it's selected instead.  This accepts arrays as well.  Without multiple equaling true it will only select the last option. This does not fire the onClick event
  
-`setText( text, multiple )` sets the item with the passed text as selected.  If multiple is true and it is a multi-select box, it is selected additionally.  Otherwise it's selected instead. This accepts arrays as well.  Without multiple equaling true it will only select the last option. This does not fire the onClick event
+`setByText( text, multiple )` sets the item with the passed text as selected.  If multiple is true and it is a multi-select box, it is selected additionally.  Otherwise it's selected instead. This accepts arrays as well.  Without multiple equaling true it will only select the last option. This does not fire the onClick event
 
-`setValue( value, multiple )` sets the item with the passed value as selected.  If multiple is true and it is a multi-select box, it is selected additionally.  Otherwise it's selected instead. This accepts arrays as well.  Without multiple equaling true it will only select the last option. This does not fire the onClick event
+`setByValue( value, multiple )` sets the item with the passed value as selected.  If multiple is true and it is a multi-select box, it is selected additionally.  Otherwise it's selected instead. This accepts arrays as well.  Without multiple equaling true it will only select the last option. This does not fire the onClick event
 
 
 Contributing

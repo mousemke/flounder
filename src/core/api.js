@@ -4,7 +4,7 @@ import classes          from './classes';
 const api = {
 
     /**
-     * ## clickIndex
+     * ## clickByIndex
      *
      * programatically sets selected by index.  If there are not enough elements
      * to match the index, then nothing is selected. Fires the onClick event
@@ -13,14 +13,14 @@ const api = {
      *
      * return _Void_
      */
-    clickIndex : function( index, multiple )
+    clickByIndex : function( index, multiple )
     {
-        return this.setIndex( index, multiple, false );
+        return this.setByIndex( index, multiple, false );
     },
 
 
     /**
-     * ## clickText
+     * ## clickByText
      *
      * programatically sets selected by text string.  If the text string
      * is not matched to an element, nothing will be selected. Fires the onClick event
@@ -29,14 +29,14 @@ const api = {
      *
      * return _Void_
      */
-    clickText : function( text, multiple )
+    clickByText : function( text, multiple )
     {
-        return this.setText( text, multiple, false );
+        return this.setByText( text, multiple, false );
     },
 
 
     /**
-     * ## clickValue
+     * ## clickByValue
      *
      * programatically sets selected by value string.  If the value string
      * is not matched to an element, nothing will be selected. Fires the onClick event
@@ -45,9 +45,9 @@ const api = {
      *
      * return _Void_
      */
-    clickValue : function( value, multiple )
+    clickByValue : function( value, multiple )
     {
-        return this.setValue( value, multiple, false );
+        return this.setByValue( value, multiple, false );
     },
 
 
@@ -144,7 +144,7 @@ const api = {
 
 
     /**
-     * ## disableIndex
+     * ## disableByIndex
      *
      * disables the options with the given index
      *
@@ -153,14 +153,14 @@ const api = {
      *
      * return _Void_
      */
-    disableIndex : function( index, reenable )
+    disableByIndex : function( index, reenable )
     {
         let refs = this.refs;
 
         if ( typeof index !== 'string' && index.length )
         {
-            let disableIndex = this.disableIndex.bind( this );
-            return index.map( _i => disableIndex( _i, reenable ) );
+            let disableByIndex = this.disableByIndex.bind( this );
+            return index.map( _i => disableByIndex( _i, reenable ) );
         }
         else
         {
@@ -190,7 +190,7 @@ const api = {
 
 
     /**
-     * ## disableText
+     * ## disableByText
      *
      * disables THE FIRST option that has the given value
      *
@@ -199,12 +199,12 @@ const api = {
      *
      * return _Void_
      */
-    disableText : function( text, reenable )
+    disableByText : function( text, reenable )
     {
         if ( typeof text !== 'string' && text.length )
         {
-            let disableText = this.disableText.bind( this );
-            return text.map( _t => disableText( _t, reenable ) );
+            let disableByText = this.disableByText.bind( this );
+            return text.map( _t => disableByText( _t, reenable ) );
         }
         else
         {
@@ -221,13 +221,13 @@ const api = {
                 }
             } );
 
-            return res.length ? this.disableIndex( res, reenable ) : null;
+            return res.length ? this.disableByIndex( res, reenable ) : null;
         }
     },
 
 
     /**
-     * ## disableValue
+     * ## disableByValue
      *
      * disables THE FIRST option that has the given value
      *
@@ -236,23 +236,23 @@ const api = {
      *
      * return _Void_
      */
-    disableValue : function( value, reenable )
+    disableByValue : function( value, reenable )
     {
         if ( typeof value !== 'string' && value.length )
         {
-            let disableValue = this.disableValue.bind( this );
-            return value.map( _v => disableValue( _v, reenable ) );
+            let disableByValue = this.disableByValue.bind( this );
+            return value.map( _v => disableByValue( _v, reenable ) );
         }
         else
         {
             value = this.refs.select.querySelector( '[value="' + value + '"]' );
-            return value ? this.disableIndex( value.index, reenable ) : null;
+            return value ? this.disableByIndex( value.index, reenable ) : null;
         }
     },
 
 
     /**
-     * ## enableIndex
+     * ## enableByIndex
      *
      * shortcut syntax to enable an index
      *
@@ -260,14 +260,14 @@ const api = {
      *
      * @return {Object} flounder(s)
      */
-    enableIndex : function( index )
+    enableByIndex : function( index )
     {
-        return this.disableIndex( index, true );
+        return this.disableByIndex( index, true );
     },
 
 
     /**
-     * ## enabletext
+     * ## enableByText
      *
      * shortcut syntax to enable by text
      *
@@ -275,14 +275,14 @@ const api = {
      *
      * @return {Object} flounder(s)
      */
-    enableText : function( text )
+    enableByText : function( text )
     {
-        return this.disableText( text, true );
+        return this.disableByText( text, true );
     },
 
 
     /**
-     * ## enableValue
+     * ## enableByValue
      *
      * shortcut syntax to enable a value
      *
@@ -290,9 +290,9 @@ const api = {
      *
      * @return {Object} flounder(s)
      */
-    enableValue : function( value )
+    enableByValue : function( value )
     {
-        this.disableValue( value, true );
+        this.disableByValue( value, true );
     },
 
 
@@ -427,7 +427,7 @@ const api = {
 
 
     /**
-     * ## setIndex
+     * ## setByIndex
      *
      * programatically sets the value by index.  If there are not enough elements
      * to match the index, then nothing is selected.
@@ -436,14 +436,14 @@ const api = {
      *
      * return _Void_
      */
-    setIndex : function( index, multiple, programmatic = true )
+    setByIndex : function( index, multiple, programmatic = true )
     {
         let refs = this.refs;
 
         if ( typeof index !== 'string' && index.length )
         {
-            let _setIndex = this.setIndex.bind( this );
-            return index.map( _i => _setIndex( _i, multiple, programmatic ) );
+            let setByIndex = this.setByIndex.bind( this );
+            return index.map( _i => setByIndex( _i, multiple, programmatic ) );
         }
         else
         {
@@ -466,7 +466,7 @@ const api = {
 
 
     /**
-     * ## setText
+     * ## setByText
      *
      * programatically sets the text by string.  If the text string
      * is not matched to an element, nothing will be selected
@@ -475,12 +475,12 @@ const api = {
      *
      * return _Void_
      */
-    setText : function( text, multiple, programmatic = true )
+    setByText : function( text, multiple, programmatic = true )
     {
         if ( typeof text !== 'string' && text.length )
         {
-            let _setText = this.setText.bind( this );
-            return text.map( _i => _setText( _i, multiple, programmatic ) );
+            let setByText = this.setByText.bind( this );
+            return text.map( _i => setByText( _i, multiple, programmatic ) );
         }
         else
         {
@@ -497,13 +497,13 @@ const api = {
                 }
             } );
 
-            return res.length ? this.setIndex( res, multiple, programmatic ) : null;
+            return res.length ? this.setByIndex( res, multiple, programmatic ) : null;
         }
     },
 
 
     /**
-     * ## setValue
+     * ## setByValue
      *
      * programatically sets the value by string.  If the value string
      * is not matched to an element, nothing will be selected
@@ -512,17 +512,17 @@ const api = {
      *
      * return _Void_
      */
-    setValue : function( value, multiple, programmatic = true )
+    setByValue : function( value, multiple, programmatic = true )
     {
         if ( typeof value !== 'string' && value.length )
         {
-            let _setValue = this.setValue.bind( this );
-            return value.map( _i => _setValue( _i, multiple, programmatic ) );
+            let setByValue = this.setByValue.bind( this );
+            return value.map( _i => setByValue( _i, multiple, programmatic ) );
         }
         else
         {
             value = this.refs.select.querySelector( '[value="' + value + '"]' );
-            return value ? this.setIndex( value.index, multiple, programmatic ) : null;
+            return value ? this.setByIndex( value.index, multiple, programmatic ) : null;
         }
     }
 };
