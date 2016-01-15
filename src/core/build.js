@@ -71,10 +71,7 @@ const build = {
         this.displayMultipleTags    = this.displayMultipleTags.bind( this );
         this.fuzzySearch            = this.fuzzySearch.bind( this );
         this.removeMultiTag         = this.removeMultiTag.bind( this );
-        // this.setByIndex             = this.setByIndex.bind( this );
-        // this.setValue               = this.setValue.bind( this );
         this.setKeypress            = this.setKeypress.bind( this );
-        this.setSelectValue         = this.setSelectValue.bind( this );
         this.toggleClass            = this.toggleClass.bind( this );
         this.toggleList             = this.toggleList.bind( this );
     },
@@ -215,7 +212,6 @@ const build = {
 
             if ( dataObj.description )
             {
-                console.log( dataObj.description );
                 addOptionDescription( data, dataObj.description );
             }
 
@@ -251,9 +247,10 @@ const build = {
             }
             else
             {
-                let selectChild     = select.children[ i ];
+                let selectChild     = selectRef.children[ i ];
                 selectOption        = selectChild;
                 selectChild.setAttribute( 'value', selectChild.value );
+                addClass( selectChild, 'flounder--option--tag' );
             }
 
             if ( i === defaultValue.index )

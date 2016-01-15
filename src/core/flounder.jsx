@@ -571,16 +571,24 @@ class Flounder
             if ( select )
             {
                 let escapedText     = self.escapeHTML( _default.text );
-                let defaultOption   = self.constructElement( { tagname : 'option',
-                                            className   : classes.OPTION_TAG,
-                                            value       :  _default.value } );
-                defaultOption.innerHTML = escapedText;
 
-                select.insertBefore( defaultOption, select[0] );
-                self.refs.selectOptions.unshift( defaultOption );
+                if ( !select[ 0 ] || select[ 0 ].value !== '' )
+                {
+                    let defaultOption   = self.constructElement( { tagname : 'option',
+                                                className   : classes.OPTION_TAG,
+                                                value       :  _default.value } );
+                    defaultOption.innerHTML = escapedText;
+
+                    select.insertBefore( defaultOption, select[ 0 ] );
+                    self.refs.selectOptions.unshift( defaultOption );
+
+                    data.unshift( _default );
+                }
+                else
+                {
+                    select[ 0 ].innerHTML = escapedText;
+                }
             }
-
-            data.unshift( _default );
 
             return _default;
         };

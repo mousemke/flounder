@@ -20,8 +20,10 @@ const utils = {
         if ( !utils.hasClass( _el, _class ) && _elClass.slice( 0, _class.length + 1 ) !== _class + ' ' &&
             _elClass.slice( _elClassLength - _class.length - 1, _elClassLength ) !== ' ' + _class )
         {
-            _el.className += '  ' + _class;
+            _elClass += ( '  ' + _class );
         }
+
+        _el.className = _elClass.trim();
     },
 
 
