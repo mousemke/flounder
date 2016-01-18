@@ -72,6 +72,7 @@ const build = {
         this.fuzzySearch            = this.fuzzySearch.bind( this );
         this.removeMultiTag         = this.removeMultiTag.bind( this );
         this.setKeypress            = this.setKeypress.bind( this );
+        this.setSelectValue         = this.setSelectValue.bind( this );
         this.toggleClass            = this.toggleClass.bind( this );
         this.toggleList             = this.toggleList.bind( this );
     },

@@ -393,6 +393,12 @@ See more examples on the [demo page](./demo/index.html)
 Change Log
 ==========
 
+0.4.1
+-----
+
++ [build] setSelectValue is now bound to flounder again
+
+
 0.4.0
 -----
 
