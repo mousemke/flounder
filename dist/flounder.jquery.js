@@ -1093,6 +1093,30 @@ var _classes2 = _interopRequireDefault(_classes);
 var api = {
 
     /**
+     * ## buildFromUrl
+     *
+     * uses loadDataFromUrl and completes the entire build with the new data
+     *
+     * @param {String} url address to get the data from
+     * @param {Function} callback function to run after getting the data
+     *
+     * @return _Void_
+     */
+    buildFromUrl: function buildFromUrl(url, callback) {
+        var _this = this;
+
+        this.loadDataFromUrl(url, function (data) {
+            _this.data = data;
+
+            if (callback) {
+                callback(_this.data);
+            }
+
+            _this.rebuild(_this.data);
+        });
+    },
+
+    /**
      * ## clickByIndex
      *
      * programatically sets selected by index.  If there are not enough elements
@@ -1219,13 +1243,13 @@ var api = {
      * return _Void_
      */
     disableByIndex: function disableByIndex(index, reenable) {
-        var _this = this;
+        var _this2 = this;
 
         var refs = this.refs;
 
         if (typeof index !== 'string' && index.length) {
             var _ret = (function () {
-                var disableByIndex = _this.disableByIndex.bind(_this);
+                var disableByIndex = _this2.disableByIndex.bind(_this2);
                 return {
                     v: index.map(function (_i) {
                         return disableByIndex(_i, reenable);
@@ -1266,11 +1290,11 @@ var api = {
      * return _Void_
      */
     disableByText: function disableByText(text, reenable) {
-        var _this2 = this;
+        var _this3 = this;
 
         if (typeof text !== 'string' && text.length) {
             var _ret2 = (function () {
-                var disableByText = _this2.disableByText.bind(_this2);
+                var disableByText = _this3.disableByText.bind(_this3);
                 return {
                     v: text.map(function (_t) {
                         return disableByText(_t, reenable);
@@ -1284,7 +1308,7 @@ var api = {
                 var res = [];
                 var getText = document.all ? 'innerText' : 'textContent';
 
-                _this2.refs.selectOptions.forEach(function (el) {
+                _this3.refs.selectOptions.forEach(function (el) {
                     var _elText = el[getText];
 
                     if (_elText === text) {
@@ -1293,7 +1317,7 @@ var api = {
                 });
 
                 return {
-                    v: res.length ? _this2.disableByIndex(res, reenable) : null
+                    v: res.length ? _this3.disableByIndex(res, reenable) : null
                 };
             })();
 
@@ -1312,11 +1336,11 @@ var api = {
      * return _Void_
      */
     disableByValue: function disableByValue(value, reenable) {
-        var _this3 = this;
+        var _this4 = this;
 
         if (typeof value !== 'string' && value.length) {
             var _ret4 = (function () {
-                var disableByValue = _this3.disableByValue.bind(_this3);
+                var disableByValue = _this4.disableByValue.bind(_this4);
                 return {
                     v: value.map(function (_v) {
                         return disableByValue(_v, reenable);
@@ -1380,7 +1404,7 @@ var api = {
      * @return _Object_ option and div tage
      */
     getData: function getData(_i) {
-        var _this4 = this;
+        var _this5 = this;
 
         var refs = this.refs;
 
@@ -1388,7 +1412,7 @@ var api = {
             return { option: refs.selectOptions[_i], div: refs.data[_i] };
         } else {
             return refs.selectOptions.map(function (el, i) {
-                return _this4.getData(i);
+                return _this5.getData(i);
             });
         }
     },
@@ -1441,13 +1465,15 @@ var api = {
      * @return _Void_
      */
     loadDataFromUrl: function loadDataFromUrl(url, callback) {
-        var _this5 = this;
+        var _this6 = this;
 
         try {
             this.http.get(url).then(function (data) {
                 if (data) {
-                    _this5.data = JSON.parse(data);
-                    callback(_this5.data);
+                    _this6.data = JSON.parse(data);
+                    if (callback) {
+                        callback(_this6.data);
+                    }
                 } else {
                     console.log('no data recieved');
                 }
@@ -1459,7 +1485,7 @@ var api = {
         }
 
         return [{
-            text: 'Loading',
+            text: 'Loading...',
             value: '',
             index: 0,
             extraClass: _classes2['default'].HIDDEN
@@ -1476,7 +1502,7 @@ var api = {
      * @return _Object_ rebuilt flounder object
      */
     rebuild: function rebuild(data) {
-        var _this6 = this;
+        var _this7 = this;
 
         data = data || this.data;
         var refs = this.refs;
@@ -1511,11 +1537,12 @@ var api = {
             if (valuePosition !== -1) {
                 selected.splice(valuePosition, 1);
                 el.selected = true;
-                _this6.addClass(refs.data[i], _this6.selectedClass);
+                _this7.addClass(refs.data[i], _this7.selectedClass);
             }
         });
 
         this.addOptionsListeners();
+        this.data = data;
 
         return this;
     },
@@ -1530,6 +1557,7 @@ var api = {
      * @return _Object_ rebuilt flounder object
      */
     reconfigure: function reconfigure(props) {
+        props = props || {};
         props.data = props.data || this.data;
 
         return this.constructor(this.originalTarget, props);
@@ -1546,7 +1574,7 @@ var api = {
      * return _Void_
      */
     setByIndex: function setByIndex(index, multiple) {
-        var _this7 = this;
+        var _this8 = this;
 
         var programmatic = arguments.length <= 2 || arguments[2] === undefined ? true : arguments[2];
 
@@ -1554,7 +1582,7 @@ var api = {
 
         if (typeof index !== 'string' && index.length) {
             var _ret5 = (function () {
-                var setByIndex = _this7.setByIndex.bind(_this7);
+                var setByIndex = _this8.setByIndex.bind(_this8);
                 return {
                     v: index.map(function (_i) {
                         return setByIndex(_i, multiple, programmatic);
@@ -1591,13 +1619,13 @@ var api = {
      * return _Void_
      */
     setByText: function setByText(text, multiple) {
-        var _this8 = this;
+        var _this9 = this;
 
         var programmatic = arguments.length <= 2 || arguments[2] === undefined ? true : arguments[2];
 
         if (typeof text !== 'string' && text.length) {
             var _ret6 = (function () {
-                var setByText = _this8.setByText.bind(_this8);
+                var setByText = _this9.setByText.bind(_this9);
                 return {
                     v: text.map(function (_i) {
                         return setByText(_i, multiple, programmatic);
@@ -1611,7 +1639,7 @@ var api = {
                 var res = [];
                 var getText = document.all ? 'innerText' : 'textContent';
 
-                _this8.refs.selectOptions.forEach(function (el) {
+                _this9.refs.selectOptions.forEach(function (el) {
                     var _elText = el[getText];
 
                     if (_elText === text) {
@@ -1620,7 +1648,7 @@ var api = {
                 });
 
                 return {
-                    v: res.length ? _this8.setByIndex(res, multiple, programmatic) : null
+                    v: res.length ? _this9.setByIndex(res, multiple, programmatic) : null
                 };
             })();
 
@@ -1639,13 +1667,13 @@ var api = {
      * return _Void_
      */
     setByValue: function setByValue(value, multiple) {
-        var _this9 = this;
+        var _this10 = this;
 
         var programmatic = arguments.length <= 2 || arguments[2] === undefined ? true : arguments[2];
 
         if (typeof value !== 'string' && value.length) {
             var _ret8 = (function () {
-                var setByValue = _this9.setByValue.bind(_this9);
+                var setByValue = _this10.setByValue.bind(_this10);
                 return {
                     v: value.map(function (_i) {
                         return setByValue(_i, multiple, programmatic);
@@ -1969,32 +1997,36 @@ var build = {
         var _this = this;
 
         var target = this.target;
-        var select = undefined;
+        var refs = this.refs;
+        var select = refs.select;
 
         if (target.tagName === 'SELECT') {
-            (function () {
-                _this.addClass(target, _classes2['default'].SELECT_TAG);
-                _this.addClass(target, _classes2['default'].HIDDEN);
-                _this.refs.select = target;
+            this.addClass(target, _classes2['default'].SELECT_TAG);
+            this.addClass(target, _classes2['default'].HIDDEN);
+            select = target;
 
-                var data = [],
-                    selectOptions = [];
+            if (target.length > 0 && !this.selectDataOverride) {
+                (function () {
+                    _this.refs.select = select;
+                    var data = [],
+                        selectOptions = [];
 
-                nativeSlice.apply(target.children).forEach(function (optionEl) {
-                    selectOptions.push(optionEl);
-                    data.push({
-                        text: optionEl.innerHTML,
-                        value: optionEl.value
+                    nativeSlice.apply(target.children).forEach(function (optionEl) {
+                        selectOptions.push(optionEl);
+                        data.push({
+                            text: optionEl.innerHTML,
+                            value: optionEl.value
+                        });
                     });
-                });
 
-                _this.data = data;
-                _this.target = target.parentNode;
-                _this.refs.selectOptions = selectOptions;
+                    _this.refs.selectOptions = selectOptions;
 
-                select = _this.refs.select;
-                _this.addClass(select, _classes2['default'].HIDDEN);
-            })();
+                    _this.data = data;
+                })();
+            }
+
+            this.target = target.parentNode;
+            this.addClass(select || target, _classes2['default'].HIDDEN);
         } else {
             select = this.constructElement({ tagname: 'select', className: _classes2['default'].SELECT_TAG + '  ' + _classes2['default'].HIDDEN });
             wrapper.appendChild(select);
@@ -2092,7 +2124,8 @@ var defaults = {
     onOpen: function onOpen(e, selectedValues) {},
     onSelect: function onSelect(e, selectedValues) {},
     placeholder: 'Please choose an option',
-    search: false
+    search: false,
+    selectDataOverride: false
 };
 
 exports['default'] = defaults;
@@ -3221,7 +3254,7 @@ var Flounder = (function () {
                 var select = refs.select;
 
                 var _default = {
-                    text: configObj.placeholder,
+                    text: configObj.placeholder || _defaults2['default'].placeholder,
                     value: '',
                     index: 0,
                     extraClass: _classes3['default'].HIDDEN
@@ -3313,15 +3346,17 @@ var Flounder = (function () {
 
             _data = sortData(data);
 
-            if (configObj.placeholder) {
+            if (configObj.placeholder || _data.length === 0) {
                 defaultObj = setPlaceholderDefault(_data);
             } else if (configObj.defaultIndex) {
                 defaultObj = setIndexDefault(_data);
             } else if (configObj.defaultValue) {
                 defaultObj = setValueDefault(_data);
+            } else {
+                defaultObj = setIndexDefault(_data, 0);
             }
 
-            return defaultObj || setIndexDefault(_data, 0) || setPlaceholderDefault();
+            return defaultObj;
         }
 
         /**
