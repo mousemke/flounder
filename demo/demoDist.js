@@ -19914,6 +19914,7 @@ var build = {
         this.displayMultipleTags = this.displayMultipleTags.bind(this);
         this.fuzzySearch = this.fuzzySearch.bind(this);
         this.removeMultiTag = this.removeMultiTag.bind(this);
+        this.firstTouchController = this.firstTouchController.bind(this);
         this.setKeypress = this.setKeypress.bind(this);
         this.setSelectValue = this.setSelectValue.bind(this);
         this.toggleClass = this.toggleClass.bind(this);
@@ -20256,6 +20257,7 @@ var defaults = {
     onClose: function onClose(e, selectedValues) {},
     onComponentDidMount: function onComponentDidMount() {},
     onComponentWillUnmount: function onComponentWillUnmount() {},
+    onFirstTouch: function onFirstTouch(e) {},
     onInit: function onInit() {},
     onOpen: function onOpen(e, selectedValues) {},
     onSelect: function onSelect(e, selectedValues) {},
@@ -20284,6 +20286,19 @@ var _search2 = require('./search');
 var _search3 = _interopRequireDefault(_search2);
 
 var events = {
+
+    /**
+     * ## addFirstTouchListeners
+     *
+     * adds the listeners for onFirstTouch
+     *
+     * @return _Void_
+     */
+    addFirstTouchListeners: function addFirstTouchListeners() {
+        var refs = this.refs;
+        refs.selected.addEventListener('click', this.firstTouchController);
+        refs.select.addEventListener('focus', this.firstTouchController);
+    },
 
     /**
      * ## addListeners
@@ -20317,6 +20332,9 @@ var events = {
         refs.flounder.addEventListener('keydown', this.checkFlounderKeypress);
         refs.selected.addEventListener('click', this.toggleList);
 
+        refs.selected.addEventListener('click', this.toggleList);
+
+        this.addFirstTouchListeners();
         this.addOptionsListeners();
 
         if (props.search) {
@@ -20501,6 +20519,25 @@ var events = {
         if (!this.multiple) {
             this.toggleList(e, 'close');
         }
+    },
+
+    /**
+     * ## firstTouchController
+     *
+     * on first interaction, onFirstTouch is run, then the event listener is
+     * removed
+     *
+     * @param {Object} e event object
+     *
+     * @return _Void_
+     */
+    firstTouchController: function firstTouchController(e) {
+        var refs = this.refs;
+
+        this.onFirstTouch(e);
+
+        refs.selected.removeEventListener('click', this.firstTouchController);
+        refs.select.removeEventListener('focus', this.firstTouchController);
     },
 
     /**

@@ -1,4 +1,4 @@
-Flounder.js 0.4.1
+Flounder.js 0.4.2
 =================
 
 (for modern browsers and ie9+)
@@ -96,10 +96,10 @@ If flounder is fed an element that already has a flounder, it will destroy it an
 ```
 {
     classes                 : {
-        flounder            : 'class--to--give--the--main--flounder--element',
-        hidden              : 'class--to--denote--hidden',
-        selected            : 'class--to--denote--selected--option',
-        wrapper             : 'additional--class--to--give--the--wrapper'
+        flounder    : 'class--to--give--the--main--flounder--element',
+        hidden      : 'class--to--denote--hidden',
+        selected    : 'class--to--denote--selected--option',
+        wrapper     : 'additional--class--to--give--the--wrapper'
     },
     data                    : dataObject,
     defaultValue            : defaultValue,
@@ -110,6 +110,7 @@ If flounder is fed an element that already has a flounder, it will destroy it an
     onClose                 : function( e, valueArray ){},
     onComponentDidMount     : function(){},
     onComponentWillUnmount  : function(){},
+    <!-- onFirstTouch            : function(){}, -->
     onInit                  : function(){},
     onOpen                  : function( e, valueArray ){},
     onSelect                : function( e, valueArray ){}
@@ -137,6 +138,8 @@ If flounder is fed an element that already has a flounder, it will destroy it an
 `onComponentDidMount` - (function) Triggered when the selectbox is finished building
 
 `onComponentWillUnmount` - (function) Triggered right before flounder is removed from the dom
+
+<!-- `onFirstTouch` - (function) Triggered the first time flounder is interacted with. An example usage would be calling an api for a list of data to populate a drop down, but waiting to see if the user interacts with it -->
 
 `onInit` - (function) Triggered when the selectbox is initiated, but before it's built
 
@@ -392,6 +395,13 @@ See more examples on the [demo page](./demo/index.html)
 
 Change Log
 ==========
+
+0.4.2
+-----
+
+<!-- + [api] added onFirstTouch -->
+<!-- + [build] added AJAX data retrieval -->
+
 
 0.4.1
 -----

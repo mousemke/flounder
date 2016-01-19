@@ -71,6 +71,7 @@ const build = {
         this.displayMultipleTags    = this.displayMultipleTags.bind( this );
         this.fuzzySearch            = this.fuzzySearch.bind( this );
         this.removeMultiTag         = this.removeMultiTag.bind( this );
+        this.firstTouchController   = this.firstTouchController.bind( this );
         this.setKeypress            = this.setKeypress.bind( this );
         this.setSelectValue         = this.setSelectValue.bind( this );
         this.toggleClass            = this.toggleClass.bind( this );

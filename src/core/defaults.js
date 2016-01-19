@@ -12,6 +12,7 @@ const defaults = {
     onClose                 : function( e, selectedValues ){},
     onComponentDidMount     : function(){},
     onComponentWillUnmount  : function(){},
+    onFirstTouch            : function( e ){},
     onInit                  : function(){},
     onOpen                  : function( e, selectedValues ){},
     onSelect                : function( e, selectedValues ){},

@@ -5,6 +5,21 @@ import search           from './search';
 const events = {
 
     /**
+     * ## addFirstTouchListeners
+     *
+     * adds the listeners for onFirstTouch
+     *
+     * @return _Void_
+     */
+    addFirstTouchListeners : function()
+    {
+        let refs = this.refs;
+        refs.selected.addEventListener( 'click', this.firstTouchController );
+        refs.select.addEventListener( 'focus', this.firstTouchController );
+    },
+
+
+    /**
      * ## addListeners
      *
      * adds listeners on render
@@ -41,6 +56,9 @@ const events = {
         refs.flounder.addEventListener( 'keydown', this.checkFlounderKeypress );
         refs.selected.addEventListener( 'click', this.toggleList );
 
+        refs.selected.addEventListener( 'click', this.toggleList );
+
+        this.addFirstTouchListeners();
         this.addOptionsListeners();
 
         if ( props.search )
@@ -263,6 +281,27 @@ const events = {
         {
             this.toggleList( e, 'close' );
         }
+    },
+
+
+    /**
+     * ## firstTouchController
+     *
+     * on first interaction, onFirstTouch is run, then the event listener is
+     * removed
+     *
+     * @param {Object} e event object
+     *
+     * @return _Void_
+     */
+    firstTouchController : function( e )
+    {
+        let refs = this.refs;
+
+        this.onFirstTouch( e );
+
+        refs.selected.removeEventListener( 'click', this.firstTouchController );
+        refs.select.removeEventListener( 'focus', this.firstTouchController );
     },
 
 
