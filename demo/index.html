@@ -110,17 +110,13 @@
 
                 onInit               : function()
                 {
-                    var res = [];
-                    data.forEach( function( option )
-                    {
-                        res.push( {
-                            text        : option.text,
-                            value       : option.id,
-                            description : option.id + ' could be described as "' + option.text + '"'
-                        } );
-                    } );
+                    var self = this;
 
-                    this.data = res;
+                    this.data = this.loadDataFromUrl( './dummyData.json', function( data )
+                    {
+                        self.data = data.dummyData;
+                        self.rebuild();
+                    } );
                 },
 
                 multiple            : true,

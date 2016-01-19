@@ -631,7 +631,7 @@ class Flounder
 
 
         /**
-         * ## detectHeaders
+         * ## sortData
          *
          * checks the data object for header options, and sorts it accordingly
          *
@@ -647,7 +647,19 @@ class Flounder
                 }
                 else
                 {
-                    d.index = i;
+                    try
+                    {
+                        d.index = i;
+                    }
+                    catch( e ) // d is a string
+                    {
+                        d = {
+                            text    : d,
+                            value   : d,
+                            index   : i
+                        };
+                    }
+
                     res.push( d );
                     i++;
                 }

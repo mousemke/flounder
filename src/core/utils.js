@@ -1,5 +1,6 @@
 
 import classes          from './classes';
+import microbeHttp      from '../../node_modules/microbejs/src/modules/http';
 
 const utils = {
     /**
@@ -186,6 +187,9 @@ const utils = {
     },
 
 
+    http : {},
+
+
     /**
      * ## iosVersion
      *
@@ -325,5 +329,7 @@ const utils = {
         }
     }
 }
+
+microbeHttp( utils );
 
 export default utils;

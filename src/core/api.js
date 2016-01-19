@@ -364,6 +364,47 @@ const api = {
 
 
     /**
+     * ## loadDataFromUrl
+     *
+     * loads data from a passed url
+     *
+     * @param {String} url address to get the data from
+     * @param {Function} callback function to run after getting the data
+     *
+     * @return _Void_
+     */
+    loadDataFromUrl : function( url, callback )
+    {
+        try
+        {
+            this.http.get( url ).then( data =>
+            {
+                if ( data )
+                {
+                    this.data = JSON.parse( data );
+                    callback( this.data );
+                }
+                else
+                {
+                    console.log( 'no data recieved' );
+                }
+            } ).catch( e => console.log( 'something happened: ', e ) );
+        }
+        catch ( e )
+        {
+            console.log( 'something happened.  check your loadDataFromUrl callback ', e );
+        }
+
+        return [ {
+            text        : 'Loading',
+            value       : '',
+            index       : 0,
+            extraClass  : classes.HIDDEN
+        } ];
+    },
+
+
+    /**
      * ## rebuild
      *
      * after editing the data, this can be used to rebuild them
@@ -374,6 +415,7 @@ const api = {
      */
     rebuild : function( data )
     {
+        data            = data || this.data;
         let refs        = this.refs;
         let selected    = refs.select.selectedOptions;
         selected        = Array.prototype.slice.call( selected ).map( function( e ){ return e.value; } );

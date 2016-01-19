@@ -1,0 +1,20 @@
+{
+    "dummyData" : [
+        {
+            "value"   : "m",
+            "text"    : "m"
+        },
+        {
+            "value"   : "o",
+            "text"    : "o"
+        },
+        {
+            "value"   : "o",
+            "text"    : "o"
+        },
+        {
+            "value"   : "n",
+            "text"    : "n"
+        }
+    ]
+}

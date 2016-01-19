@@ -110,7 +110,7 @@ If flounder is fed an element that already has a flounder, it will destroy it an
     onClose                 : function( e, valueArray ){},
     onComponentDidMount     : function(){},
     onComponentWillUnmount  : function(){},
-    <!-- onFirstTouch            : function(){}, -->
+    onFirstTouch            : function( e ){},
     onInit                  : function(){},
     onOpen                  : function( e, valueArray ){},
     onSelect                : function( e, valueArray ){}
@@ -139,7 +139,7 @@ If flounder is fed an element that already has a flounder, it will destroy it an
 
 `onComponentWillUnmount` - (function) Triggered right before flounder is removed from the dom
 
-<!-- `onFirstTouch` - (function) Triggered the first time flounder is interacted with. An example usage would be calling an api for a list of data to populate a drop down, but waiting to see if the user interacts with it -->
+`onFirstTouch` - (function) Triggered the first time flounder is interacted with. An example usage would be calling an api for a list of data to populate a drop down, but waiting to see if the user interacts with it
 
 `onInit` - (function) Triggered when the selectbox is initiated, but before it's built
 
@@ -228,6 +228,7 @@ this.enableByValue( value )
 this.getData( [ num ] )
 this.getSelected()
 this.getSelectedValues()
+this.loadDataFromUrl( url, callback )
 this.props
 this.rebuild( data )
 this.reconfigure( props )
@@ -267,6 +268,8 @@ this.setByValue( value, multiple )
 
 `getSelectedValues()` returns the currently selected values in an array
  
+`loadDataFromUrl( url, callback )` loads data from a remote address and returns it to a passed callback. 
+
 `props` the props set in the initial constructor
 
 `rebuild( data )` completely rebuilds the select boxes with new or altered data
@@ -399,8 +402,10 @@ Change Log
 0.4.2
 -----
 
-<!-- + [api] added onFirstTouch -->
-<!-- + [build] added AJAX data retrieval -->
++ [api] added onFirstTouch
++ [flounder] changed sortData to not break with strings
++ [build] added loadDataFromUrl for AJAX data retrieval
++ [flounder] microbe and promise now required to build 
 
 
 0.4.1
