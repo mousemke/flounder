@@ -4,6 +4,32 @@ import classes          from './classes';
 const api = {
 
     /**
+     * ## buildFromUrl
+     *
+     * uses loadDataFromUrl and completes the entire build with the new data
+     *
+     * @param {String} url address to get the data from
+     * @param {Function} callback function to run after getting the data
+     *
+     * @return _Void_
+     */
+    buildFromUrl : function( url, callback )
+    {
+        this.loadDataFromUrl( url, data =>
+        {
+            this.data = data;
+
+            if ( callback )
+            {
+                callback( this.data );
+            }
+
+            this.rebuild( this.data );
+        } );
+    },
+
+
+    /**
      * ## clickByIndex
      *
      * programatically sets selected by index.  If there are not enough elements
@@ -382,7 +408,10 @@ const api = {
                 if ( data )
                 {
                     this.data = JSON.parse( data );
-                    callback( this.data );
+                    if ( callback )
+                    {
+                        callback( this.data );
+                    }
                 }
                 else
                 {
@@ -396,7 +425,7 @@ const api = {
         }
 
         return [ {
-            text        : 'Loading',
+            text        : 'Loading...',
             value       : '',
             index       : 0,
             extraClass  : classes.HIDDEN
@@ -446,6 +475,7 @@ const api = {
         } );
 
         this.addOptionsListeners();
+        this.data = data;
 
         return this;
     },
@@ -462,7 +492,8 @@ const api = {
      */
     reconfigure : function( props )
     {
-        props.data = props.data || this.data;
+        props       = props || {};
+        props.data  = props.data || this.data;
 
         return this.constructor( this.originalTarget, props );
     },

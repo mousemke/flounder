@@ -216,6 +216,7 @@ API
 These functions are intended for use in the user provided event callbacks
 
 ```
+this.buildFromUrl( url, callback )
 this.clickByIndex( index, multiple )
 this.clickByText( text, multiple )
 this.clickByValue( value, multiple )
@@ -240,6 +241,8 @@ this.setByIndex( index, multiple )
 this.setByText( text, multiple )
 this.setByValue( value, multiple )
 ```
+
+`buildFromUrl( url, callback )` loads data from a remote address, passes it to a callback, then builds the flounder object
 
 `clickByIndex( index, multiple )` sets the item with the passed index as selected.  If multiple is true and it is a multi-select box, it is selected additionally.  Otherwise it's selected instead.  This accepts arrays as well.  Without multiple equaling true it will only select the last option. This fires the onClick event
  
@@ -405,12 +408,15 @@ Change Log
 0.4.2
 -----
 
++ [api] added buildFromUrl
++ [api] added loadDataFromUrl
 + [api] added onFirstTouch
-+ [build] added loadDataFromUrl for AJAX data retrieval
 + [build] select boxes that have no options as targets now use data
++ [build] the default option when not specified if the data set is empty is the default placeholder
++ [build] changed the default value priority
 + [flounder] changed sortData to not break with strings
 + [flounder] microbe and promise now required to build 
-+ [config] add selectDataOverride for empty select boxes
++ [config] added selectDataOverride for empty select boxes
 
 
 0.4.1

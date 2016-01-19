@@ -524,7 +524,6 @@ class Flounder
         let self        = this;
         let _data;  // internally reorganized data options
 
-
         /**
          * ## setIndexDefault
          *
@@ -562,7 +561,7 @@ class Flounder
             let select      = refs.select;
 
             let _default    = {
-                text        : configObj.placeholder,
+                text        : configObj.placeholder || defaultOptions.placeholder,
                 value       : '',
                 index       : 0,
                 extraClass  : classes.HIDDEN
@@ -592,6 +591,7 @@ class Flounder
             {
                 data.unshift( _default );
             }
+
 
             return _default;
         };
@@ -671,20 +671,24 @@ class Flounder
 
         _data = sortData( data );
 
-        if ( configObj.placeholder )
+        if ( configObj.placeholder || _data.length === 0 )
         {
-            defaultObj =  setPlaceholderDefault( _data );
+            defaultObj = setPlaceholderDefault( _data );
         }
         else if ( configObj.defaultIndex )
         {
-            defaultObj =  setIndexDefault( _data );
+            defaultObj = setIndexDefault( _data );
         }
         else if ( configObj.defaultValue )
         {
-            defaultObj =  setValueDefault( _data );
+            defaultObj = setValueDefault( _data );
+        }
+        else
+        {
+            defaultObj = setIndexDefault( _data, 0 )
         }
 
-        return defaultObj || setIndexDefault( _data, 0 ) || setPlaceholderDefault();
+        return defaultObj;
     }
 
 

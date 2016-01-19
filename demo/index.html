@@ -108,15 +108,10 @@
              */
             µ( '#microbe--multiple--desc' ).flounder( {
 
-                onInit               : function()
+                onComponentDidMount    : function()
                 {
-                    var self = this;
-
-                    this.data = this.loadDataFromUrl( './dummyData.json', function( data )
-                    {
-                        self.data = data.dummyData;
-                        self.rebuild();
-                    } );
+                    this.data = this.buildFromUrl( './dummyData.json',
+                                            _d => this.data =_d.dummyData );
                 },
 
                 multiple            : true,
@@ -130,18 +125,14 @@
              */
              $( '#jquery--div' ).flounder( {
 
-                onInit              : function()
+                onInit               : function()
                 {
-                    var res = [];
-                    data.forEach( function( option )
-                    {
-                        res.push( {
-                            text        : option.text,
-                            value       : option.id
-                        } );
-                    } );
+                    var self = this;
 
-                    this.data = res;
+                    this.data = this.loadDataFromUrl( './dummyData.json', function( data )
+                    {
+                        self.rebuild( data.dummyData );
+                    } );
                 },
 
                 placeholder         : 'placeholders!',

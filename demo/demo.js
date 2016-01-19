@@ -1,7 +1,4 @@
-import React, { Component }     from 'react';
-import ReactDOM                 from 'react-dom';
-import { FlounderReact }        from '../src/wrappers/flounder.react.jsx';
-import Flounder                 from '../src/core/flounder.jsx';
+import { React, Component, ReactDOM, FlounderReact, Flounder }  from '../src/wrappers/flounder.react.jsx';
 
 window.Flounder = Flounder;
 
@@ -43,8 +40,6 @@ let data = [
  * vanilla multi-Flounder with tags attached to an input
  */
 new Flounder( '.vanilla--input--tags', {
-
-    defaultValue    : 'All',
 
     onInit          : function()
     {
@@ -222,7 +217,7 @@ requirejs.config( {
 } );
 
 /**
- * vanilla Flounder with descriptions attached to a div
+ * AMD Flounder with descriptions attached to a div
  */
 requirejs( [ 'flounder' ], function( Flounder )
 {
@@ -248,7 +243,7 @@ requirejs( [ 'flounder' ], function( Flounder )
 
 
 /**
- * vanilla Flounder with descriptions attached to a div
+ * AMD Flounder with descriptions attached to a select
  */
 requirejs( [ 'flounder' ], function( Flounder )
 {
@@ -268,7 +263,9 @@ requirejs( [ 'flounder' ], function( Flounder )
             } );
 
             this.data = res;
-        }
+        },
+
+        selectDataOverride : true
      } );
 } );
 

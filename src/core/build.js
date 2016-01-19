@@ -324,7 +324,7 @@ const build = {
             this.addClass( target, classes.SELECT_TAG );
             this.addClass( target, classes.HIDDEN );
             select = target;
-console.log( this );
+
             if ( target.length > 0 && !this.selectDataOverride )
             {
                 this.refs.select = select;
