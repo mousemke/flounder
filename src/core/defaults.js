@@ -17,7 +17,8 @@ const defaults = {
     onOpen                  : function( e, selectedValues ){},
     onSelect                : function( e, selectedValues ){},
     placeholder             : 'Please choose an option',
-    search                  : false
+    search                  : false,
+    selectDataOverride      : false
 };
 
 export default defaults;

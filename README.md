@@ -115,7 +115,8 @@ If flounder is fed an element that already has a flounder, it will destroy it an
     onOpen                  : function( e, valueArray ){},
     onSelect                : function( e, valueArray ){}
     placeholder             : 'Please choose an option',
-    search                  : true
+    search                  : false,
+    selectDataOverride      : false
 }
 ```
 
@@ -150,6 +151,8 @@ If flounder is fed an element that already has a flounder, it will destroy it an
 `placeholder` - (string) Builds a blank option with the placeholder text that is selected by default.  This overrides defaultIndex
 
 `search` - (boolean) Determines whether the select box is searchable
+
+`selectDataOverride` - (boolean) If this is true, flounder will ignore sleect box options tags and just apply the passed data
 
 
 
@@ -403,9 +406,11 @@ Change Log
 -----
 
 + [api] added onFirstTouch
-+ [flounder] changed sortData to not break with strings
 + [build] added loadDataFromUrl for AJAX data retrieval
++ [build] select boxes that have no options as targets now use data
++ [flounder] changed sortData to not break with strings
 + [flounder] microbe and promise now required to build 
++ [config] add selectDataOverride for empty select boxes
 
 
 0.4.1

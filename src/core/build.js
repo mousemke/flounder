@@ -315,32 +315,37 @@ const build = {
      */
     initSelectBox : function( wrapper )
     {
-        let target = this.target;
-        let select;
+        let target  = this.target;
+        let refs    = this.refs;
+        let select  = refs.select;
 
         if ( target.tagName === 'SELECT' )
         {
             this.addClass( target, classes.SELECT_TAG );
             this.addClass( target, classes.HIDDEN );
-            this.refs.select    = target;
-
-            let data = [], selectOptions = [];
-
-            nativeSlice.apply( target.children ).forEach( function( optionEl )
+            select = target;
+console.log( this );
+            if ( target.length > 0 && !this.selectDataOverride )
             {
-                selectOptions.push( optionEl );
-                data.push( {
-                    text    : optionEl.innerHTML,
-                    value   : optionEl.value
+                this.refs.select = select;
+                let data = [], selectOptions = [];
+
+                nativeSlice.apply( target.children ).forEach( function( optionEl )
+                {
+                    selectOptions.push( optionEl );
+                    data.push( {
+                        text    : optionEl.innerHTML,
+                        value   : optionEl.value
+                    } );
                 } );
-            } );
 
-            this.data               = data;
+                this.refs.selectOptions = selectOptions;
+
+                this.data               = data;
+            }
+
             this.target             = target.parentNode;
-            this.refs.selectOptions = selectOptions;
-
-            select = this.refs.select;
-            this.addClass( select, classes.HIDDEN );
+            this.addClass( select || target, classes.HIDDEN );
         }
         else
         {
