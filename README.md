@@ -29,6 +29,8 @@ ReactDOM.render( React.createElement( FlounderReact, configOptions ), target );
 // react (JSX)
 React.render( <FlounderReact option1="" option2="">, target );
 
+// react has some caveats.  If you want to use react flounder, you should build it from thw source file.  ./dist/flounder.react.js is so large because it already has a copy of react included.  Additionally, react flounder can only be attached to a container, and not an INPUT or SELECT
+
 // requirejs
 requirejs( [ 'flounder' ], function( Flounder )
 {
@@ -120,39 +122,39 @@ If flounder is fed an element that already has a flounder, it will destroy it an
 }
 ```
 
-`classes`- (object) Contains configurable classes for various elements.  The are additional classes, not replacement classes.
++ `classes`- (object) Contains configurable classes for various elements.  The are additional classes, not replacement classes.
 
-`data` - (array) select box options to build in the select box.  Can be organized various ways
++ `data` - (array) select box options to build in the select box.  Can be organized various ways
 
-`defaultValue` - (string) Sets the default value to the passed value but only if it matches one of the select box options. Multi-tag select boxes only support placeholders
++ `defaultValue` - (string) Sets the default value to the passed value but only if it matches one of the select box options. Multi-tag select boxes only support placeholders
 
-`defaultIndex` - (number) Sets the default option to the passed index but only if it exists.  This overrides defaultValue. Multi-tag select boxes only support placeholders.
++ `defaultIndex` - (number) Sets the default option to the passed index but only if it exists.  This overrides defaultValue. Multi-tag select boxes only support placeholders.
 
-`multiple` - (boolean) Determines whether it is a multi-select box or single
++ `multiple` - (boolean) Determines whether it is a multi-select box or single
 
-`multipleTags` - (boolean) Determines how a multi-select box is displayed
++ `multipleTags` - (boolean) Determines how a multi-select box is displayed
 
-`multipleMessage` - (string) If there are no tags, this is the message that will be displayed in the selected area when there are multiple options selected
++ `multipleMessage` - (string) If there are no tags, this is the message that will be displayed in the selected area when there are multiple options selected
 
-`onClose` - (function) Triggered when the selectbox is closed
++ `onClose` - (function) Triggered when the selectbox is closed
 
-`onComponentDidMount` - (function) Triggered when the selectbox is finished building
++ `onComponentDidMount` - (function) Triggered when the selectbox is finished building
 
-`onComponentWillUnmount` - (function) Triggered right before flounder is removed from the dom
++ `onComponentWillUnmount` - (function) Triggered right before flounder is removed from the dom
 
-`onFirstTouch` - (function) Triggered the first time flounder is interacted with. An example usage would be calling an api for a list of data to populate a drop down, but waiting to see if the user interacts with it
++ `onFirstTouch` - (function) Triggered the first time flounder is interacted with. An example usage would be calling an api for a list of data to populate a drop down, but waiting to see if the user interacts with it
 
-`onInit` - (function) Triggered when the selectbox is initiated, but before it's built
++ `onInit` - (function) Triggered when the selectbox is initiated, but before it's built
 
-`onOpen` - (function) Triggered when the selectbox is opened
++ `onOpen` - (function) Triggered when the selectbox is opened
 
-`onSelect` - (function) Triggered when an option selectbox is closed
++ `onSelect` - (function) Triggered when an option selectbox is closed
 
-`placeholder` - (string) Builds a blank option with the placeholder text that is selected by default.  This overrides defaultIndex
++ `placeholder` - (string) Builds a blank option with the placeholder text that is selected by default.  This overrides defaultIndex
 
-`search` - (boolean) Determines whether the select box is searchable
++ `search` - (boolean) Determines whether the select box is searchable
 
-`selectDataOverride` - (boolean) If this is true, flounder will ignore sleect box options tags and just apply the passed data
++ `selectDataOverride` - (boolean) If this is true, flounder will ignore sleect box options tags and just apply the passed data
 
 
 
@@ -242,53 +244,53 @@ this.setByText( text, multiple )
 this.setByValue( value, multiple )
 ```
 
-`buildFromUrl( url, callback )` loads data from a remote address, passes it to a callback, then builds the flounder object
++ `buildFromUrl( url, callback )` loads data from a remote address, passes it to a callback, then builds the flounder object
 
-`clickByIndex( index, multiple )` sets the item with the passed index as selected.  If multiple is true and it is a multi-select box, it is selected additionally.  Otherwise it's selected instead.  This accepts arrays as well.  Without multiple equaling true it will only select the last option. This fires the onClick event
++ `clickByIndex( index, multiple )` sets the item with the passed index as selected.  If multiple is true and it is a multi-select box, it is selected additionally.  Otherwise it's selected instead.  This accepts arrays as well.  Without multiple equaling true it will only select the last option. This fires the onClick event
  
-`clickByText( text, multiple )` sets the item with the passed text as selected.  If multiple is true and it is a multi-select box, it is selected additionally.  Otherwise it's selected instead. This accepts arrays as well.  Without multiple equaling true it will only select the last option. This fires the onClick event
++ `clickByText( text, multiple )` sets the item with the passed text as selected.  If multiple is true and it is a multi-select box, it is selected additionally.  Otherwise it's selected instead. This accepts arrays as well.  Without multiple equaling true it will only select the last option. This fires the onClick event
 
-`clickByValue( value, multiple )` sets the item with the passed value as selected.  If multiple is true and it is a multi-select box, it is selected additionally.  Otherwise it's selected instead. This accepts arrays as well.  Without multiple equaling true it will only select the last option. This fires the onClick event
++ `clickByValue( value, multiple )` sets the item with the passed value as selected.  If multiple is true and it is a multi-select box, it is selected additionally.  Otherwise it's selected instead. This accepts arrays as well.  Without multiple equaling true it will only select the last option. This fires the onClick event
 
-`deselectAll()` deselects all data
++ `deselectAll()` deselects all data
 
-`destroy()` removes event listeners, then flounder
++ `destroy()` removes event listeners, then flounder
 
-`disable( bool )` disables or reenables flounder
++ `disable( bool )` disables or reenables flounder
 
-`disableByIndex( index )` disables a flounder option by index
++ `disableByIndex( index )` disables a flounder option by index
 
-`disableByText( text )` disables a flounder option by text
++ `disableByText( text )` disables a flounder option by text
 
-`disableByValue( value )` disables a flounder option by value
++ `disableByValue( value )` disables a flounder option by value
 
-`enableByIndex( index )` enables a flounder option by index
++ `enableByIndex( index )` enables a flounder option by index
 
-`enableByText( text )` enables a flounder option by text 
++ `enableByText( text )` enables a flounder option by text 
 
-`enableByValue( value )` enables a flounder option by value
++ `enableByValue( value )` enables a flounder option by value
 
-`getData( [ num ] )` returns the option element and the div element at a specified index as an object `{ option : option element, div : div element }`. If no number is given, it will return all data.
++ `getData( [ num ] )` returns the option element and the div element at a specified index as an object `{ option : option element, div : div element }`. If no number is given, it will return all data.
 
-`getSelected()` returns the currently selected option tags in an array
++ `getSelected()` returns the currently selected option tags in an array
 
-`getSelectedValues()` returns the currently selected values in an array
++ `getSelectedValues()` returns the currently selected values in an array
  
-`loadDataFromUrl( url, callback )` loads data from a remote address and returns it to a passed callback. 
++ `loadDataFromUrl( url, callback )` loads data from a remote address and returns it to a passed callback. 
 
-`props` the props set in the initial constructor
++ `props` the props set in the initial constructor
 
-`rebuild( data )` completely rebuilds the select boxes with new or altered data
++ `rebuild( data )` completely rebuilds the select boxes with new or altered data
  
-`reconfigure( props )` rebuilds the flounder object with new options
++ `reconfigure( props )` rebuilds the flounder object with new options
 
-`refs` contains references to all flounder elements
++ `refs` contains references to all flounder elements
 
-`setByIndex( index, multiple )` sets the item with the passed index as selected.  If multiple is true and it is a multi-select box, it is selected additionally.  Otherwise it's selected instead.  This accepts arrays as well.  Without multiple equaling true it will only select the last option. This does not fire the onClick event
++ `setByIndex( index, multiple )` sets the item with the passed index as selected.  If multiple is true and it is a multi-select box, it is selected additionally.  Otherwise it's selected instead.  This accepts arrays as well.  Without multiple equaling true it will only select the last option. This does not fire the onClick event
  
-`setByText( text, multiple )` sets the item with the passed text as selected.  If multiple is true and it is a multi-select box, it is selected additionally.  Otherwise it's selected instead. This accepts arrays as well.  Without multiple equaling true it will only select the last option. This does not fire the onClick event
+`+ setByText( text, multiple )` sets the item with the passed text as selected.  If multiple is true and it is a multi-select box, it is selected additionally.  Otherwise it's selected instead. This accepts arrays as well.  Without multiple equaling true it will only select the last option. This does not fire the onClick event
 
-`setByValue( value, multiple )` sets the item with the passed value as selected.  If multiple is true and it is a multi-select box, it is selected additionally.  Otherwise it's selected instead. This accepts arrays as well.  Without multiple equaling true it will only select the last option. This does not fire the onClick event
++ `setByValue( value, multiple )` sets the item with the passed value as selected.  If multiple is true and it is a multi-select box, it is selected additionally.  Otherwise it's selected instead. This accepts arrays as well.  Without multiple equaling true it will only select the last option. This does not fire the onClick event
 
 
 Contributing
