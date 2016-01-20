@@ -37,7 +37,7 @@ let tests = function( Flounder )
         let secondCheck = refs.wrapper.className.indexOf( 'open' );
         flounder.destroy();
 
-        assert.ok( firstCheck === secondCheck, 'multiple targets returns an array' );
+        assert.ok( firstCheck === secondCheck, 'events are removed' );
     });
 };
 

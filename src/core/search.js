@@ -92,7 +92,7 @@ export class Sole
     /**
      * ## constructor
      *
-     * initial setup of ROVer object
+     * initial setup of Sole object
      *
      * @param {Object} options option object
      *

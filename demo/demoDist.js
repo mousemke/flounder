@@ -22113,12 +22113,16 @@ var Flounder = (function () {
                 if (target.flounder) {
                     target.flounder.destroy();
                 }
-                search = new _search3['default'](this);
 
                 this.props = props;
                 this.setTarget(target);
                 this.bindThis();
                 this.initialzeOptions();
+
+                if (props) {
+                    search = new _search3['default'](this);
+                }
+
                 try {
                     this.onInit();
                 } catch (e) {
@@ -22128,11 +22132,13 @@ var Flounder = (function () {
                 this.buildDom();
                 this.setPlatform();
                 this.onRender();
+
                 try {
                     this.onComponentDidMount();
                 } catch (e) {
                     console.log('something may be wrong in "onComponentDidMount"', e);
                 }
+
                 this.ready = true;
 
                 return this.refs.flounder.flounder = this.originalTarget.flounder = this.target.flounder = this;
@@ -22768,7 +22774,7 @@ var Sole = (function () {
         /**
          * ## constructor
          *
-         * initial setup of ROVer object
+         * initial setup of Sole object
          *
          * @param {Object} options option object
          *
@@ -23257,7 +23263,7 @@ module.exports = exports['default'];
 },{"../../node_modules/microbejs/src/modules/http":3,"./classes":173}],179:[function(require,module,exports){
 'use strict';
 
-module.exports = '0.4.2';
+module.exports = '0.4.3';
 
 },{}],180:[function(require,module,exports){
 

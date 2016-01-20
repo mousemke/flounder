@@ -109,12 +109,17 @@ class Flounder
                 {
                     target.flounder.destroy();
                 }
-                search = new Search( this );
 
                 this.props = props;
                 this.setTarget( target );
                 this.bindThis();
                 this.initialzeOptions();
+
+                if ( props )
+                {
+                    search = new Search( this );
+                }
+
                 try
                 {
                     this.onInit();
@@ -127,6 +132,7 @@ class Flounder
                 this.buildDom();
                 this.setPlatform();
                 this.onRender();
+
                 try
                 {
                     this.onComponentDidMount();
@@ -135,6 +141,7 @@ class Flounder
                 {
                     console.log( 'something may be wrong in "onComponentDidMount"', e );
                 }
+
                 this.ready = true;
 
                 return this.refs.flounder.flounder = this.originalTarget.flounder = this.target.flounder = this;
