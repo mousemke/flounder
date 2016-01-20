@@ -253,7 +253,7 @@ requirejs(['flounder'], function (Flounder) {
 exports['default'] = { React: _srcWrappersFlounderReactJsx.React, Component: _srcWrappersFlounderReactJsx.Component, ReactDOM: _srcWrappersFlounderReactJsx.ReactDOM, FlounderReact: _srcWrappersFlounderReactJsx.FlounderReact, Flounder: _srcWrappersFlounderReactJsx.Flounder };
 module.exports = exports['default'];
 
-},{"../src/wrappers/flounder.react.jsx":179}],2:[function(require,module,exports){
+},{"../src/wrappers/flounder.react.jsx":180}],2:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -22016,6 +22016,10 @@ var _search2 = require('./search');
 
 var _search3 = _interopRequireDefault(_search2);
 
+var _version = require('./version');
+
+var _version2 = _interopRequireDefault(_version);
+
 var nativeSlice = Array.prototype.slice;
 var search = undefined;
 
@@ -22648,12 +22652,24 @@ var Flounder = (function () {
     return Flounder;
 })();
 
+Object.defineProperty(Flounder, 'version', {
+    get: function get() {
+        return _version2['default'];
+    }
+});
+
+Object.defineProperty(Flounder.prototype, 'version', {
+    get: function get() {
+        return _version2['default'];
+    }
+});
+
 _utils2['default'].extendClass(Flounder, _utils2['default'], _api2['default'], _build2['default'], _events2['default']);
 
 exports['default'] = Flounder;
 module.exports = exports['default'];
 
-},{"./api":171,"./build":172,"./classes":173,"./defaults":174,"./events":175,"./search":177,"./utils":178}],177:[function(require,module,exports){
+},{"./api":171,"./build":172,"./classes":173,"./defaults":174,"./events":175,"./search":177,"./utils":178,"./version":179}],177:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -23239,6 +23255,11 @@ exports['default'] = utils;
 module.exports = exports['default'];
 
 },{"../../node_modules/microbejs/src/modules/http":3,"./classes":173}],179:[function(require,module,exports){
+'use strict';
+
+module.exports = '0.4.2';
+
+},{}],180:[function(require,module,exports){
 
 /* jshint globalstrict: true */
 'use strict';

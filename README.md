@@ -1,4 +1,4 @@
-Flounder.js 0.4.2
+Flounder.js 0.4.3
 =================
 
 (for modern browsers and ie9+)
@@ -29,7 +29,11 @@ ReactDOM.render( React.createElement( FlounderReact, configOptions ), target );
 // react (JSX)
 React.render( <FlounderReact option1="" option2="">, target );
 
-// react has some caveats.  If you want to use react flounder, you should build it from thw source file.  ./dist/flounder.react.js is so large because it already has a copy of react included.  Additionally, react flounder can only be attached to a container, and not an INPUT or SELECT
+// react has some caveats.  If you want to use react flounder, you should
+// build it from the source file.  ./dist/flounder.react.js is so 
+// large because it already has a copy of react included.  Additionally, 
+// react flounder can only be attached to a container, and not an 
+// INPUT or SELECT
 
 // requirejs
 requirejs( [ 'flounder' ], function( Flounder )
@@ -288,7 +292,7 @@ this.setByValue( value, multiple )
 
 + `setByIndex( index, multiple )` sets the item with the passed index as selected.  If multiple is true and it is a multi-select box, it is selected additionally.  Otherwise it's selected instead.  This accepts arrays as well.  Without multiple equaling true it will only select the last option. This does not fire the onClick event
  
-`+ setByText( text, multiple )` sets the item with the passed text as selected.  If multiple is true and it is a multi-select box, it is selected additionally.  Otherwise it's selected instead. This accepts arrays as well.  Without multiple equaling true it will only select the last option. This does not fire the onClick event
++ setByText( text, multiple )` sets the item with the passed text as selected.  If multiple is true and it is a multi-select box, it is selected additionally.  Otherwise it's selected instead. This accepts arrays as well.  Without multiple equaling true it will only select the last option. This does not fire the onClick event
 
 + `setByValue( value, multiple )` sets the item with the passed value as selected.  If multiple is true and it is a multi-select box, it is selected additionally.  Otherwise it's selected instead. This accepts arrays as well.  Without multiple equaling true it will only select the last option. This does not fire the onClick event
 
@@ -406,6 +410,14 @@ See more examples on the [demo page](./demo/index.html)
 
 Change Log
 ==========
+
+0.4.3
+-----
+
++ [flounder] added read-only version number
++ [version] added src/core/version.js
++ [version] added scripts/version_bump.js
+
 
 0.4.2
 -----

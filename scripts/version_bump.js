@@ -90,8 +90,10 @@ function updateVersion( url )
 
 var readmeUrl       = './README.md';
 var packageUrl      = './package.json';
+var versionUrl      = './src/core/version.js';
 
 var newVersion      = process.argv[ 2 ] || updateVersion( versionUrl );
 
+updateLine( versionUrl, 0, 'module.exports = \'' + newVersion + '\';' );
 updateLine( readmeUrl, 0, 'Flounder.js ' + newVersion );
 updateLine( packageUrl, 2, '  "version": "' + newVersion + '",' );

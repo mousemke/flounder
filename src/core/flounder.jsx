@@ -9,6 +9,7 @@ import build            from './build';
 import events           from './events';
 import classes          from './classes';
 import Search           from './search';
+import version          from './version';
 
 const nativeSlice = Array.prototype.slice;
 let search;
@@ -717,6 +718,21 @@ class Flounder
         }
     }
 }
+
+
+Object.defineProperty( Flounder, 'version', {
+    get : function()
+    {
+        return version;
+    }
+} );
+
+Object.defineProperty( Flounder.prototype, 'version', {
+    get : function()
+    {
+        return version;
+    }
+} );
 
 utils.extendClass( Flounder, utils, api, build, events );
 
