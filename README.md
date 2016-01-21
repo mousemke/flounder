@@ -160,7 +160,13 @@ If flounder is fed an element that already has a flounder, it will destroy it an
 
 + `selectDataOverride` - (boolean) If this is true, flounder will ignore sleect box options tags and just apply the passed data
 
-
+*IMPORTANT DEFAULT PRIORITY*
+```
+1 ) placeholder
+2 ) defaultIndex
+3 ) defaultValue
+4 ) whatever is at index 0
+```
 
 Building the select box
 =======================
@@ -485,20 +491,6 @@ Change Log
 + [api] added reconfigure
 + [default] multipleTags is now false by default
 + [search] added Sole (a ROVer derivitive) for fuzzy search
-
-
-0.2.9
------
-
-+ checkClickTarget now fails better
-
-
-0.2.8
------
-
-+ structure style tweaked
-+ internal abstractions
-+ fixed a multi-tag event leak
 
 
 Older Changes

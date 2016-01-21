@@ -4,6 +4,20 @@ Older changes
 This is truncated from the readme file to keep down the size
 
 
+0.2.9
+-----
+
++ checkClickTarget now fails better
+
+
+0.2.8
+-----
+
++ structure style tweaked
++ internal abstractions
++ fixed a multi-tag event leak
+
+
 0.2.7
 -----
 
