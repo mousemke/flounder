@@ -418,6 +418,7 @@ Change Log
 + [test] added constructor tests
 + [flounder] added read-only version number
 + [flounder] multiTag flounders now get a default placeholder if not supplied
++ [flounder] fixed a bug affecting defaultValues with an index 0
 + [version] added `src/core/version.js`
 + [version] added `scripts/version_bump.js`
 + [search] search is now initialized only when it will be used

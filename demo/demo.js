@@ -120,7 +120,7 @@ new Flounder( document.getElementById( 'vanilla--input' ), {
  * vanilla Flounder attached pre built select box
  */
 new Flounder( document.getElementById( 'vanilla--select' ), {
-    defaultValue    : 2,
+    defaultValue    : '1',
 
     classes         : {
         flounder        : 'class--to--give--the--main--flounder--element',

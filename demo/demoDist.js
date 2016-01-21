@@ -111,7 +111,7 @@ new _srcWrappersFlounderReactJsx.Flounder(document.getElementById('vanilla--inpu
  * vanilla Flounder attached pre built select box
  */
 new _srcWrappersFlounderReactJsx.Flounder(document.getElementById('vanilla--select'), {
-    defaultValue: 2,
+    defaultValue: '1',
 
     classes: {
         flounder: 'class--to--give--the--main--flounder--element',
@@ -21020,22 +21020,12 @@ var build = {
      * @return _Void_
      */
     bindThis: function bindThis() {
-        this.addClass = this.addClass.bind(this);
-        this.attachAttributes = this.attachAttributes.bind(this);
-        this.catchBodyClick = this.catchBodyClick.bind(this);
-        this.checkClickTarget = this.checkClickTarget.bind(this);
-        this.checkFlounderKeypress = this.checkFlounderKeypress.bind(this);
-        this.checkPlaceholder = this.checkPlaceholder.bind(this);
-        this.clickSet = this.clickSet.bind(this);
-        this.divertTarget = this.divertTarget.bind(this);
-        this.displayMultipleTags = this.displayMultipleTags.bind(this);
-        this.fuzzySearch = this.fuzzySearch.bind(this);
-        this.removeMultiTag = this.removeMultiTag.bind(this);
-        this.firstTouchController = this.firstTouchController.bind(this);
-        this.setKeypress = this.setKeypress.bind(this);
-        this.setSelectValue = this.setSelectValue.bind(this);
-        this.toggleClass = this.toggleClass.bind(this);
-        this.toggleList = this.toggleList.bind(this);
+        var _this = this;
+
+        ['addClass', 'attachAttributes', 'catchBodyClick', 'checkClickTarget', 'checkFlounderKeypress', 'checkPlaceholder', 'clickSet', 'divertTarget', 'displayMultipleTags', 'fuzzySearch', 'removeMultiTag', 'firstTouchController', 'setKeypress', 'setSelectValue', 'toggleClass', 'toggleList'].forEach(function (func) {
+            _this[func] = _this[func].bind(_this);
+            _this[func].___isBound = true;
+        });
     },
 
     /**
@@ -21213,7 +21203,14 @@ var build = {
             return selectOption;
         };
 
-        originalData.forEach(function (dataObj) {
+        originalData.forEach(function (dataObj, i) {
+            if (typeof dataObj === 'string') {
+                dataObj = originalData[i] = {
+                    text: dataObj,
+                    value: dataObj
+                };
+            }
+
             if (dataObj.header) {
                 (function () {
                     var section = constructElement({ tagname: 'div',
@@ -21253,7 +21250,7 @@ var build = {
      * @return _DOMElement_ select box
      */
     initSelectBox: function initSelectBox(wrapper) {
-        var _this = this;
+        var _this2 = this;
 
         var target = this.target;
         var refs = this.refs;
@@ -21266,7 +21263,7 @@ var build = {
 
             if (target.length > 0 && !this.selectDataOverride) {
                 (function () {
-                    _this.refs.select = select;
+                    _this2.refs.select = select;
                     var data = [],
                         selectOptions = [];
 
@@ -21278,9 +21275,9 @@ var build = {
                         });
                     });
 
-                    _this.refs.selectOptions = selectOptions;
+                    _this2.refs.selectOptions = selectOptions;
 
-                    _this.data = data;
+                    _this2.data = data;
                 })();
             }
 
@@ -21628,7 +21625,7 @@ var events = {
         var index = e.target.selectedIndex;
 
         var _e = {
-            target: data[index]
+            target: this.data[index]
         };
 
         if (this.multipleTags) {
@@ -22119,7 +22116,7 @@ var Flounder = (function () {
                 this.bindThis();
                 this.initialzeOptions();
 
-                if (props) {
+                if (props && props.search) {
                     search = new _search3['default'](this);
                 }
 
@@ -22347,6 +22344,10 @@ var Flounder = (function () {
 
             if (this.multipleTags) {
                 this.selectedClass += '  ' + _classes3['default'].SELECTED_HIDDEN;
+
+                if (!props.placeholder) {
+                    props.placeholder = _defaults2['default'].placeholder;
+                }
             }
         }
 
@@ -22569,7 +22570,7 @@ var Flounder = (function () {
                     }
                 });
 
-                var defaultValue = index ? data[index] : null;
+                var defaultValue = index || index === 0 ? data[index] : null;
 
                 if (defaultValue) {
                     defaultValue.index = index;

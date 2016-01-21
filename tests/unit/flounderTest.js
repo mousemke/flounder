@@ -11,19 +11,21 @@ let tests = function( Flounder )
 
 
     /*
-     * constructor tests
+     * arrayOfFlounders tests
      *
-     * @test    constructor exists
-     * @test    constructor returns constructor with no args
+     * @test    exists
+     * @test    multiple targets returns an array
+     * @test    of flounders
      */
     QUnit.test( 'arrayOfFlounders', function( assert )
     {
         let flounder    = ( new Flounder( document.body ) );
         assert.ok( flounder.arrayOfFlounders, 'exists' );
+
         let flounders   = flounder.arrayOfFlounders( [ document.body ], flounder.props );
-        // flounder.destroy();
         assert.ok( Array.isArray( flounders ), 'multiple targets returns an array' );
         assert.ok( flounders[0] instanceof Flounder, 'of flounders' );
+
         flounders.forEach( function( el ){ el.destroy() } );
     });
 
@@ -54,17 +56,21 @@ let tests = function( Flounder )
 
         assert.ok( flounder.displayMultipleTags, 'exists' );
 
-        // let refs        = flounder.refs;
-        // refs.selected.click();
+        let refs        = flounder.refs;
+        refs.data[ 1 ].click();
+        refs.data[ 2 ].click();
 
-        // let firstCheck = refs.wrapper.className.indexOf( 'open' );
-        // flounder.componentWillUnmount();
-        // refs.selected.click();
+        assert.equal( document.querySelectorAll( '.flounder__multiple--select--tag' ).length,
+                                        2, "tags are created for all clicks" )
 
-        // let secondCheck = refs.wrapper.className.indexOf( 'open' );
-        // flounder.destroy();
+        var closeDivs = document.querySelectorAll( '.flounder__multiple__tag__close' );
+        closeDivs = Array.prototype.slice.call( closeDivs );
+        closeDivs.forEach( function( el )
+        {
+            el.click();
+        } );
 
-        // assert.ok( firstCheck === secondCheck, 'events are removed' );
+        flounder.destroy();
     });
 };
 

@@ -631,7 +631,7 @@ class Flounder
                 }
             } );
 
-            let defaultValue = index ? data[ index ] : null;
+            let defaultValue = index >= 0 ? data[ index ] : null;
 
             if ( defaultValue )
             {
