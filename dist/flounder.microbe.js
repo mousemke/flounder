@@ -1,12 +1,12 @@
 /*!
- * Flounder JavaScript Styleable Selectbox v0.4.2
+ * Flounder JavaScript Styleable Selectbox v0.4.3
  * https://github.com/sociomantic/flounder
  *
  * Copyright 2015-2016 Sociomantic Labs and other contributors
  * Released under the MIT license
  * https://github.com/sociomantic/flounder/license
  *
- * Date: Tue Jan 19 2016
+ * Date: Thu Jan 21 2016
  * "This, so far, is the best Flounder ever"
  */
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
@@ -1761,22 +1761,12 @@ var build = {
      * @return _Void_
      */
     bindThis: function bindThis() {
-        this.addClass = this.addClass.bind(this);
-        this.attachAttributes = this.attachAttributes.bind(this);
-        this.catchBodyClick = this.catchBodyClick.bind(this);
-        this.checkClickTarget = this.checkClickTarget.bind(this);
-        this.checkFlounderKeypress = this.checkFlounderKeypress.bind(this);
-        this.checkPlaceholder = this.checkPlaceholder.bind(this);
-        this.clickSet = this.clickSet.bind(this);
-        this.divertTarget = this.divertTarget.bind(this);
-        this.displayMultipleTags = this.displayMultipleTags.bind(this);
-        this.fuzzySearch = this.fuzzySearch.bind(this);
-        this.removeMultiTag = this.removeMultiTag.bind(this);
-        this.firstTouchController = this.firstTouchController.bind(this);
-        this.setKeypress = this.setKeypress.bind(this);
-        this.setSelectValue = this.setSelectValue.bind(this);
-        this.toggleClass = this.toggleClass.bind(this);
-        this.toggleList = this.toggleList.bind(this);
+        var _this = this;
+
+        ['addClass', 'attachAttributes', 'catchBodyClick', 'checkClickTarget', 'checkFlounderKeypress', 'checkPlaceholder', 'clickSet', 'divertTarget', 'displayMultipleTags', 'fuzzySearch', 'removeMultiTag', 'firstTouchController', 'setKeypress', 'setSelectValue', 'toggleClass', 'toggleList'].forEach(function (func) {
+            _this[func] = _this[func].bind(_this);
+            _this[func].___isBound = true;
+        });
     },
 
     /**
@@ -1954,7 +1944,14 @@ var build = {
             return selectOption;
         };
 
-        originalData.forEach(function (dataObj) {
+        originalData.forEach(function (dataObj, i) {
+            if (typeof dataObj === 'string') {
+                dataObj = originalData[i] = {
+                    text: dataObj,
+                    value: dataObj
+                };
+            }
+
             if (dataObj.header) {
                 (function () {
                     var section = constructElement({ tagname: 'div',
@@ -1994,7 +1991,7 @@ var build = {
      * @return _DOMElement_ select box
      */
     initSelectBox: function initSelectBox(wrapper) {
-        var _this = this;
+        var _this2 = this;
 
         var target = this.target;
         var refs = this.refs;
@@ -2007,7 +2004,7 @@ var build = {
 
             if (target.length > 0 && !this.selectDataOverride) {
                 (function () {
-                    _this.refs.select = select;
+                    _this2.refs.select = select;
                     var data = [],
                         selectOptions = [];
 
@@ -2019,9 +2016,9 @@ var build = {
                         });
                     });
 
-                    _this.refs.selectOptions = selectOptions;
+                    _this2.refs.selectOptions = selectOptions;
 
-                    _this.data = data;
+                    _this2.data = data;
                 })();
             }
 
@@ -2369,7 +2366,7 @@ var events = {
         var index = e.target.selectedIndex;
 
         var _e = {
-            target: data[index]
+            target: this.data[index]
         };
 
         if (this.multipleTags) {
@@ -2757,6 +2754,10 @@ var _search2 = require('./search');
 
 var _search3 = _interopRequireDefault(_search2);
 
+var _version = require('./version');
+
+var _version2 = _interopRequireDefault(_version);
+
 var nativeSlice = Array.prototype.slice;
 var search = undefined;
 
@@ -2850,12 +2851,16 @@ var Flounder = (function () {
                 if (target.flounder) {
                     target.flounder.destroy();
                 }
-                search = new _search3['default'](this);
 
                 this.props = props;
                 this.setTarget(target);
                 this.bindThis();
                 this.initialzeOptions();
+
+                if (props && props.search) {
+                    search = new _search3['default'](this);
+                }
+
                 try {
                     this.onInit();
                 } catch (e) {
@@ -2865,11 +2870,13 @@ var Flounder = (function () {
                 this.buildDom();
                 this.setPlatform();
                 this.onRender();
+
                 try {
                     this.onComponentDidMount();
                 } catch (e) {
                     console.log('something may be wrong in "onComponentDidMount"', e);
                 }
+
                 this.ready = true;
 
                 return this.refs.flounder.flounder = this.originalTarget.flounder = this.target.flounder = this;
@@ -2935,7 +2942,9 @@ var Flounder = (function () {
          *
          * @param {DOMElement} selected display area for the selected option(s)
          * @param {Object} refs element references
-          */
+         *
+         * @return _Void_
+         */
     }, {
         key: 'displaySelected',
         value: function displaySelected(selected, refs) {
@@ -2967,7 +2976,6 @@ var Flounder = (function () {
                 index = selectedOption.map(function (option) {
                     return option.index;
                 });
-
                 value = selectedOption.map(function (option) {
                     return option.value;
                 });
@@ -3078,6 +3086,10 @@ var Flounder = (function () {
 
             if (this.multipleTags) {
                 this.selectedClass += '  ' + _classes3['default'].SELECTED_HIDDEN;
+
+                if (!props.placeholder) {
+                    props.placeholder = _defaults2['default'].placeholder;
+                }
             }
         }
 
@@ -3300,7 +3312,7 @@ var Flounder = (function () {
                     }
                 });
 
-                var defaultValue = index ? data[index] : null;
+                var defaultValue = index >= 0 ? data[index] : null;
 
                 if (defaultValue) {
                     defaultValue.index = index;
@@ -3389,12 +3401,24 @@ var Flounder = (function () {
     return Flounder;
 })();
 
+Object.defineProperty(Flounder, 'version', {
+    get: function get() {
+        return _version2['default'];
+    }
+});
+
+Object.defineProperty(Flounder.prototype, 'version', {
+    get: function get() {
+        return _version2['default'];
+    }
+});
+
 _utils2['default'].extendClass(Flounder, _utils2['default'], _api2['default'], _build2['default'], _events2['default']);
 
 exports['default'] = Flounder;
 module.exports = exports['default'];
 
-},{"./api":12,"./build":13,"./classes":14,"./defaults":15,"./events":16,"./search":18,"./utils":19}],18:[function(require,module,exports){
+},{"./api":12,"./build":13,"./classes":14,"./defaults":15,"./events":16,"./search":18,"./utils":19,"./version":20}],18:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -3493,7 +3517,7 @@ var Sole = (function () {
         /**
          * ## constructor
          *
-         * initial setup of ROVer object
+         * initial setup of Sole object
          *
          * @param {Object} options option object
          *
@@ -3980,6 +4004,11 @@ exports['default'] = utils;
 module.exports = exports['default'];
 
 },{"../../node_modules/microbejs/src/modules/http":1,"./classes":14}],20:[function(require,module,exports){
+'use strict';
+
+module.exports = '0.4.3';
+
+},{}],21:[function(require,module,exports){
 
 /* jshint globalstrict: true */
 'use strict';
@@ -4012,4 +4041,4 @@ var _coreFlounderJsx2 = _interopRequireDefault(_coreFlounderJsx);
     };
 })(µ);
 
-},{"../core/flounder.jsx":17}]},{},[20]);
+},{"../core/flounder.jsx":17}]},{},[21]);
