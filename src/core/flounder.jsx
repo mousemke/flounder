@@ -212,7 +212,8 @@ class Flounder
      *
      * @param {DOMElement} selected display area for the selected option(s)
      * @param {Object} refs element references
-
+     *
+     * @return _Void_
      */
     displaySelected( selected, refs )
     {
@@ -249,15 +250,8 @@ class Flounder
                 selected.innerHTML  = this.multipleMessage;
             }
 
-            index = selectedOption.map( function( option )
-            {
-                return option.index;
-            } );
-
-            value = selectedOption.map( function( option )
-            {
-                return option.value;
-            } );
+            index = selectedOption.map( option => option.index );
+            value = selectedOption.map( option => option.value );
         }
 
         selected.setAttribute( 'data-value', value );

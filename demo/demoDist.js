@@ -22201,7 +22201,9 @@ var Flounder = (function () {
          *
          * @param {DOMElement} selected display area for the selected option(s)
          * @param {Object} refs element references
-          */
+         *
+         * @return _Void_
+         */
     }, {
         key: 'displaySelected',
         value: function displaySelected(selected, refs) {
@@ -22233,7 +22235,6 @@ var Flounder = (function () {
                 index = selectedOption.map(function (option) {
                     return option.index;
                 });
-
                 value = selectedOption.map(function (option) {
                     return option.value;
                 });
@@ -22570,7 +22571,7 @@ var Flounder = (function () {
                     }
                 });
 
-                var defaultValue = index || index === 0 ? data[index] : null;
+                var defaultValue = index >= 0 ? data[index] : null;
 
                 if (defaultValue) {
                     defaultValue.index = index;

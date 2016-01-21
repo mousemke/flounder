@@ -2931,7 +2931,9 @@ var Flounder = (function () {
          *
          * @param {DOMElement} selected display area for the selected option(s)
          * @param {Object} refs element references
-          */
+         *
+         * @return _Void_
+         */
     }, {
         key: 'displaySelected',
         value: function displaySelected(selected, refs) {
@@ -2963,7 +2965,6 @@ var Flounder = (function () {
                 index = selectedOption.map(function (option) {
                     return option.index;
                 });
-
                 value = selectedOption.map(function (option) {
                     return option.value;
                 });
@@ -3300,7 +3301,7 @@ var Flounder = (function () {
                     }
                 });
 
-                var defaultValue = index || index === 0 ? data[index] : null;
+                var defaultValue = index >= 0 ? data[index] : null;
 
                 if (defaultValue) {
                     defaultValue.index = index;
@@ -4097,23 +4098,29 @@ exports['default'] = tests;
 module.exports = exports['default'];
 
 },{}],23:[function(require,module,exports){
-/* global document, window, µ, $, QUnit, Benchmark, buildTest  */
+/* global document, window, QUnit, Benchmark, buildTest  */
+
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
     value: true
 });
-var data = ['doge', 'moon'];
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _srcCoreClassesJs = require('../../src/core/classes.js');
+
+var _srcCoreClassesJs2 = _interopRequireDefault(_srcCoreClassesJs);
 
 var tests = function tests(Flounder) {
     QUnit.module('flounder.jsx');
 
     /*
-     * arrayOfFlounders tests
+     * ## arrayOfFlounders tests
      *
-     * @test    exists
-     * @test    multiple targets returns an array
-     * @test    of flounders
+     * @test exists
+     * @test multiple targets returns an array
+     * @test of flounders
      */
     QUnit.test('arrayOfFlounders', function (assert) {
         var flounder = new Flounder(document.body);
@@ -4128,6 +4135,12 @@ var tests = function tests(Flounder) {
         });
     });
 
+    /*
+     * ## componentWillUnmount tests
+     *
+     * @test exists
+     * @test events are removed
+     */
     QUnit.test('componentWillUnmount', function (assert) {
         var flounder = new Flounder(document.body);
         assert.ok(flounder.componentWillUnmount, 'exists');
@@ -4145,23 +4158,110 @@ var tests = function tests(Flounder) {
         assert.ok(firstCheck === secondCheck, 'events are removed');
     });
 
+    /*
+     * ## displayMultipleTags tests
+     *
+     * @test exists
+     * @test tags are created for all clicks
+     * @test close events are properly bound
+     */
     QUnit.test('displayMultipleTags', function (assert) {
+        var data = ['doge', 'moon'];
+
         var flounder = new Flounder(document.body, { multiple: true, multipleTags: true, data: data });
 
         assert.ok(flounder.displayMultipleTags, 'exists');
 
-        var refs = flounder.refs;
-        refs.data[1].click();
-        refs.data[2].click();
+        var refsData = flounder.refs.data;
+        refsData[1].click();
+        refsData[2].click();
 
-        assert.equal(document.querySelectorAll('.flounder__multiple--select--tag').length, 2, "tags are created for all clicks");
+        assert.equal(document.querySelectorAll('.flounder__multiple--select--tag').length, 2, 'tags are created for all clicks');
 
         var closeDivs = document.querySelectorAll('.flounder__multiple__tag__close');
         closeDivs = Array.prototype.slice.call(closeDivs);
         closeDivs.forEach(function (el) {
             el.click();
         });
+        assert.equal(document.querySelectorAll('.flounder__multiple--select--tag').length, 0, 'close events are properly bound');
 
+        flounder.destroy();
+    });
+
+    /*
+     * ## displaySelected tests
+     *
+     * @test exists
+     * @test the correct thing is displayed
+     */
+    QUnit.test('displaySelected', function (assert) {
+        var data = ['doge', 'moon'];
+
+        var flounder = new Flounder(document.body, { data: data, defaultIndex: 0 });
+
+        assert.ok(flounder.displaySelected, 'exists');
+        flounder.setByIndex(1);
+
+        assert.equal(flounder.refs.selected.textContent, flounder.refs.data[1].textContent, 'The correct thing is displayed');
+
+        flounder.destroy();
+    });
+
+    /*
+     * ## fuzzySearch tests
+     *
+     * @test exists
+     * @test correctly filters data elements
+     */
+    QUnit.test('fuzzySearch', function (assert) {
+        var data = ['doge', 'moon'];
+
+        var flounder = new Flounder(document.body, { data: data, defaultIndex: 0, search: true });
+
+        assert.ok(flounder.fuzzySearch, 'exists');
+
+        var flounderRefs = flounder.refs;
+
+        flounderRefs.search.click();
+        flounder.fuzzySearch({ keyCode: 77,
+            preventDefault: function preventDefault(e) {
+                return e;
+            },
+            target: { value: 'm  ' }
+        });
+
+        var hiddenOptions = flounderRefs.optionsListWrapper.querySelectorAll('.' + _srcCoreClassesJs2['default'].SEARCH_HIDDEN);
+
+        assert.deepEqual(hiddenOptions[0], flounderRefs.data[0], 'correctly filters data elements');
+        flounder.destroy();
+    });
+
+    /*
+     * ## fuzzySearchReset tests
+     *
+     * @test exists
+     * @test correctly resets search filtered elements
+     */
+    QUnit.test('fuzzySearchReset', function (assert) {
+        var data = ['doge', 'moon'];
+
+        var flounder = new Flounder(document.body, { data: data, defaultIndex: 0, search: true });
+
+        assert.ok(flounder.fuzzySearchReset, 'exists');
+
+        var flounderRefs = flounder.refs;
+
+        flounderRefs.search.click();
+        flounder.fuzzySearch({ keyCode: 77,
+            preventDefault: function preventDefault(e) {
+                return e;
+            },
+            target: { value: 'm  ' }
+        });
+        flounder.fuzzySearchReset();
+        var hiddenOptions = flounderRefs.optionsListWrapper.querySelectorAll('.' + _srcCoreClassesJs2['default'].SEARCH_HIDDEN);
+
+        assert.equal(hiddenOptions.length, 0, 'correctly resets search filtered elements');
         flounder.destroy();
     });
 };
@@ -4169,4 +4269,4 @@ var tests = function tests(Flounder) {
 exports['default'] = tests;
 module.exports = exports['default'];
 
-},{}]},{},[21]);
+},{"../../src/core/classes.js":14}]},{},[21]);
