@@ -1,0 +1,38 @@
+{
+    "name": "flounder",
+    "version": "0.4.3",
+    "authors": [
+        "Mouse Braun <mouse@knoblau.ch>",
+    ],
+    "description": "flounder.js - Style-able dropdown replacement for native dropdowns",
+    "main": "./dist/flounder.min.js",
+    "keywords": [
+        "select2",
+        "dropdown",
+        "plugin",
+        "react",
+        "component",
+        "ui",
+        "frontend",
+        "select",
+        "box",
+        "flounder",
+        "sociomantic"
+    ],
+    "homepage":"https://github.com/sociomantic/flounder",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/sociomantic/flounder.git"
+    },
+    "license": "MIT",
+    "moduleType":"node",
+    "ignore": [
+        "demo/",
+        "node_modules",
+        "bower_components",
+        "package.json",
+        "scripts/",
+        "tests/",
+        ".*"
+    ]
+}

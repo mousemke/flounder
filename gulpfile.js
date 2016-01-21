@@ -113,7 +113,7 @@ gulp.task( 'microbe', function()
 
 gulp.task( 'default', [], function()
 {
-    gulp.start( [ 'vanilla', 'react', 'amd', 'jquery', 'microbe', 'demo' ] );
+    gulp.start( [ 'vanilla', 'react', 'amd', 'jquery', 'microbe', 'demo', 'buildTests' ] );
 } );
 
 

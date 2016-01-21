@@ -60,22 +60,26 @@ const build = {
      */
     bindThis : function()
     {
-        this.addClass               = this.addClass.bind( this );
-        this.attachAttributes       = this.attachAttributes.bind( this );
-        this.catchBodyClick         = this.catchBodyClick.bind( this );
-        this.checkClickTarget       = this.checkClickTarget.bind( this );
-        this.checkFlounderKeypress  = this.checkFlounderKeypress.bind( this );
-        this.checkPlaceholder       = this.checkPlaceholder.bind( this );
-        this.clickSet               = this.clickSet.bind( this );
-        this.divertTarget           = this.divertTarget.bind( this );
-        this.displayMultipleTags    = this.displayMultipleTags.bind( this );
-        this.fuzzySearch            = this.fuzzySearch.bind( this );
-        this.removeMultiTag         = this.removeMultiTag.bind( this );
-        this.firstTouchController   = this.firstTouchController.bind( this );
-        this.setKeypress            = this.setKeypress.bind( this );
-        this.setSelectValue         = this.setSelectValue.bind( this );
-        this.toggleClass            = this.toggleClass.bind( this );
-        this.toggleList             = this.toggleList.bind( this );
+        [   'addClass',
+            'attachAttributes',
+            'catchBodyClick',
+            'checkClickTarget',
+            'checkFlounderKeypress',
+            'checkPlaceholder',
+            'clickSet',
+            'divertTarget',
+            'displayMultipleTags',
+            'fuzzySearch',
+            'removeMultiTag',
+            'firstTouchController',
+            'setKeypress',
+            'setSelectValue',
+            'toggleClass',
+            'toggleList' ].forEach( func =>
+            {
+                this[ func ] = this[ func ].bind( this );
+                this[ func ].___isBound = true;
+            } );
     },
 
 
@@ -270,8 +274,16 @@ const build = {
         };
 
 
-        originalData.forEach( ( dataObj ) =>
+        originalData.forEach( ( dataObj, i ) =>
         {
+            if ( typeof dataObj === 'string' )
+            {
+                dataObj = originalData[ i ] = {
+                    text    : dataObj,
+                    value   : dataObj
+                };
+            }
+
             if ( dataObj.header )
             {
                 let section = constructElement( { tagname   : 'div',

@@ -115,7 +115,7 @@ class Flounder
                 this.bindThis();
                 this.initialzeOptions();
 
-                if ( props )
+                if ( props && props.search )
                 {
                     search = new Search( this );
                 }
@@ -379,6 +379,11 @@ class Flounder
         if ( this.multipleTags )
         {
             this.selectedClass += '  ' + classes.SELECTED_HIDDEN;
+
+            if ( !props.placeholder )
+            {
+                props.placeholder = defaultOptions.placeholder;
+            }
         }
     }
 

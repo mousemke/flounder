@@ -268,7 +268,7 @@ const events = {
         let index   = e.target.selectedIndex;
 
         let _e      = {
-            target          : data[ index ]
+            target          : this.data[ index ]
         };
 
         if ( this.multipleTags )

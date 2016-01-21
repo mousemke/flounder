@@ -111,7 +111,7 @@ If flounder is fed an element that already has a flounder, it will destroy it an
     defaultValue            : defaultValue,
     defaultIndex            : defaultIndex,
     multiple                : false,
-    multipleTags            : true,
+    multipleTags            : false,
     multipleMessage         : '(Multiple Items Selected)',
     onClose                 : function( e, valueArray ){},
     onComponentDidMount     : function(){},
@@ -414,10 +414,15 @@ Change Log
 0.4.3
 -----
 
++ [tests] added flounder tests
++ [test] added constructor tests
 + [flounder] added read-only version number
-+ [version] added src/core/version.js
-+ [version] added scripts/version_bump.js
++ [flounder] multiTag flounders now get a default placeholder if not supplied
++ [version] added `src/core/version.js`
++ [version] added `scripts/version_bump.js`
 + [search] search is now initialized only when it will be used
++ [build] added `___isBound` to `this` bound functions for clarity and testing
++ [build] improves multiTag support for data that's initially supplied as a string
 
 
 0.4.2

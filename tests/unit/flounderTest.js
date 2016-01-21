@@ -1,4 +1,10 @@
 /* global document, window, µ, $, QUnit, Benchmark, buildTest  */
+let data = [
+    'doge',
+    'moon'
+];
+
+
 let tests = function( Flounder )
 {
     QUnit.module( 'flounder.jsx' );
@@ -15,7 +21,7 @@ let tests = function( Flounder )
         let flounder    = ( new Flounder( document.body ) );
         assert.ok( flounder.arrayOfFlounders, 'exists' );
         let flounders   = flounder.arrayOfFlounders( [ document.body ], flounder.props );
-        flounder.destroy();
+        // flounder.destroy();
         assert.ok( Array.isArray( flounders ), 'multiple targets returns an array' );
         assert.ok( flounders[0] instanceof Flounder, 'of flounders' );
         flounders.forEach( function( el ){ el.destroy() } );
@@ -38,6 +44,27 @@ let tests = function( Flounder )
         flounder.destroy();
 
         assert.ok( firstCheck === secondCheck, 'events are removed' );
+    });
+
+
+    QUnit.test( 'displayMultipleTags', function( assert )
+    {
+        let flounder    = new Flounder( document.body,
+                                { multiple : true, multipleTags : true, data : data } );
+
+        assert.ok( flounder.displayMultipleTags, 'exists' );
+
+        // let refs        = flounder.refs;
+        // refs.selected.click();
+
+        // let firstCheck = refs.wrapper.className.indexOf( 'open' );
+        // flounder.componentWillUnmount();
+        // refs.selected.click();
+
+        // let secondCheck = refs.wrapper.className.indexOf( 'open' );
+        // flounder.destroy();
+
+        // assert.ok( firstCheck === secondCheck, 'events are removed' );
     });
 };
 
