@@ -124,10 +124,12 @@
                 {
                     var self = this;
 
-                    this.data = this.loadDataFromUrl( './dummData.json', function( data )
-                    {
-                        self.rebuild( data.dummyData );
-                    } );
+                    // this.data = this.data || this.loadDataFromUrl( './dummData.json', function( data )
+                    // {
+                    //     self.rebuild( data.dummyData );
+                    // } );
+                    //
+                    this.data = [ 1 ];
                 },
 
                 placeholder         : 'placeholders!',

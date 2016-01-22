@@ -1,4 +1,4 @@
-Flounder.js 0.4.3
+Flounder.js 0.4.4
 =================
 
 (for modern browsers and ie9+)
@@ -420,10 +420,16 @@ Change Log
 0.4.4
 -----
 
++ [build] moved reconfigure `reconfigure is depreciated from the api and will be removed in 0.5.0`
 + [build] modified data type detection
++ [build] 
 + [build] selectDataOverride now clears the unused option tags
++ [api] reconfigure is depreciated to an internal function.  rebuild now handles both use cases
 + [api] modified native select rebuilt values
++ [api] rebuild rebuilt
 + [api] destroy now removes placeholder
++ [utils] added removeAllChildren
++ [flounder] unless specified, the default on multiple enabled flounders is nothing selected
 
 
 0.4.3
