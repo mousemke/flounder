@@ -21042,10 +21042,14 @@ var build = {
                         });
                     });
 
-                    _this2.refs.selectOptions = selectOptions;
+                    refs.selectOptions = selectOptions;
 
                     _this2.data = data;
                 })();
+            } else if (this.selectDataOverride) {
+                nativeSlice.call(target.options).forEach(function (el) {
+                    target.removeChild(el);
+                });
             }
 
             this.target = target.parentNode;

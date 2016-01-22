@@ -354,9 +354,16 @@ const build = {
                     } );
                 } );
 
-                this.refs.selectOptions = selectOptions;
+                refs.selectOptions = selectOptions;
 
                 this.data               = data;
+            }
+            else if ( this.selectDataOverride )
+            {
+                nativeSlice.call( target.options ).forEach( function( el )
+                {
+                    target.removeChild( el );
+                } );
             }
 
             this.target             = target.parentNode;

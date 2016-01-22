@@ -421,7 +421,9 @@ Change Log
 -----
 
 + [build] modified data type detection
++ [build] selectDataOverride now clears the unused option tags
 + [api] modified native select rebuilt values
++ [api] destroy now removes placeholder
 
 
 0.4.3
