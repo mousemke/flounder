@@ -128,7 +128,6 @@ class Flounder
                 {
                     console.log( 'something may be wrong in "onInit"', e );
                 }
-
                 this.buildDom();
                 this.setPlatform();
                 this.onRender();
@@ -619,7 +618,14 @@ class Flounder
 
             _data.forEach( function( dataObj, i )
             {
-                if ( dataObj.value === defaultProp )
+                let dataObjValue = dataObj.value;
+
+                if ( typeof dataObjValue === 'number' )
+                {
+                    dataObjValue += '';
+                }
+
+                if ( dataObjValue === defaultProp )
                 {
                     index = i;
                 }
@@ -692,7 +698,14 @@ class Flounder
         }
         else
         {
-            defaultObj = setIndexDefault( _data, 0 )
+            if ( configObj.multiple )
+            {
+                defaultObj = setPlaceholderDefault( _data );
+            }
+            else
+            {
+                defaultObj = setIndexDefault( _data, 0 )
+            }
         }
 
         return defaultObj;

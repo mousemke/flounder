@@ -2,6 +2,8 @@
 import classes          from './classes';
 import microbeHttp      from '../../node_modules/microbejs/src/modules/http';
 
+const nativeSlice = Array.prototype.slice;
+
 const utils = {
     /**
      * ## addClass
@@ -209,6 +211,24 @@ const utils = {
         }
 
         return false;
+    },
+
+
+    /**
+     * ## removeAllChildren
+     *
+     * removes all children from a specified target
+     *
+     * @param {DOMElement} target target element
+     *
+     * @return _Void_
+     */
+    removeAllChildren : function( target )
+    {
+        nativeSlice.call( target.children ).forEach( function( el )
+        {
+            target.removeChild( el );
+        } );
     },
 
 

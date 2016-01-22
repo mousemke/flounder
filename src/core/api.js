@@ -1,6 +1,8 @@
 
 import classes          from './classes';
 
+const nativeSlice =  Array.prototype.slice;
+
 const api = {
 
     /**
@@ -106,7 +108,7 @@ const api = {
                 }
             }
 
-            let target = originalTarget.nextElementSibling;
+            let target = originalTarget.nextElementSibling;g
             try
             {
                 target.parentNode.removeChild( target );
@@ -449,64 +451,49 @@ const api = {
      *
      * after editing the data, this can be used to rebuild them
      *
-     * @param {Array} data array with optino information
+     * @param {Array} data array with option information
      *
      * @return _Object_ rebuilt flounder object
      */
-    rebuild : function( data )
+    rebuild : function( data, props )
     {
-        data            = data || this.data;
+        if ( props || !props && ( typeof data === 'string' || typeof data.length !== 'number' ) )
+        {
+            this.reconfigureFlounder( data, props );
+        }
+
+        props           = this.props;
+        data            = this.data = data || this.data;
         let refs        = this.refs;
-        let selected    = refs.select.selectedOptions;
-        selected        = Array.prototype.slice.call( selected ).map( function( e ){ return e.value; } );
+        let _select     = refs.select;
 
+        this.deselectAll();
         this.removeOptionsListeners();
-
         refs.select.innerHTML       = '';
+
+        refs.select     = false;
+        this._default   = this.setDefaultOption( props, data );
+
         refs.optionsList.innerHTML  = '';
 
-        let _select                 = refs.select;
-        refs.select                 = false;
-        [ refs.data, refs.selectOptions ] = this.buildData( this._default, data, refs.optionsList, _select );
+
+        [ refs.data, refs.selectOptions ] = this.buildData( this._default, this.data, refs.optionsList, _select );
         refs.select                 = _select;
-
-        this.removeSelectedValue();
-        this.removeSelectedClass();
-
-        refs.selectOptions.forEach( ( el, i ) =>
-        {
-            let valuePosition = selected.indexOf( el.value );
-
-            if ( valuePosition !== -1 )
-            {
-                selected.splice( valuePosition, 1 );
-                el.selected = true;
-                this.addClass( refs.data[ i ], this.selectedClass );
-            }
-        } );
 
         this.addOptionsListeners();
         this.data = data;
+
+        this.displaySelected( refs.selected, refs );
 
         return this;
     },
 
 
-    /**
-     * ## reconfigure
-     *
-     * after editing the data, this can be used to rebuild them
-     *
-     * @param {Object} props object containing config options
-     *
-     * @return _Object_ rebuilt flounder object
-     */
-    reconfigure : function( props )
+    ///  TEMPORARY MOVEMENT FOR DEPRECIATION WARNING ///
+    reconfigure : function( data, props )
     {
-        props       = props || {};
-        props.data  = props.data || this.data;
-
-        return this.constructor( this.originalTarget, props );
+        console.log( 'reconfigure is depreciated from the api and will be removed in 0.5.0' );
+        this.reconfigureFlounder( data, props );
     },
 
 
