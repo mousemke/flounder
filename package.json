@@ -1,6 +1,6 @@
 {
   "name": "flounder",
-  "version": "0.4.3",
+  "version": "0.4.4",
   "author": "Mouse Braun <mouse@knoblau.ch>",
   "description": "a native friendly dropdown menu",
   "repository": {
@@ -17,7 +17,8 @@
     "microbe": "./node_modules/.bin/gulp microbe",
     "react": "./node_modules/.bin/gulp react",
     "test": "node --harmony ./scripts/nightmare.js",
-    "vanilla": "./node_modules/.bin/gulp vanilla"
+    "vanilla": "./node_modules/.bin/gulp vanilla",
+    "versionBump": "node ./scripts/version_bump.js"
   },
   "devDependencies": {
     "babelify": "^6.3.0",
