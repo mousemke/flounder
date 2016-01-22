@@ -1159,10 +1159,19 @@ var api = {
 
         var refs = this.refs;
         var originalTarget = this.originalTarget;
+        var tagName = originalTarget.tagName;
 
         refs.flounder.flounder = originalTarget.flounder = this.target.flounder = null;
 
-        if (originalTarget.tagName === 'INPUT' || originalTarget.tagName === 'SELECT') {
+        if (tagName === 'INPUT' || tagName === 'SELECT') {
+            if (tagName === 'SELECT') {
+                var firstOption = originalTarget[0];
+
+                if (firstOption && firstOption.textContent === this.props.placeholder) {
+                    originalTarget.removeChild(firstOption);
+                }
+            }
+
             var target = originalTarget.nextElementSibling;
             try {
                 target.parentNode.removeChild(target);

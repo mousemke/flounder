@@ -421,6 +421,7 @@ Change Log
 -----
 
 + [build] modified data type detection
++ [api] modified native select rebuilt values
 
 
 0.4.3

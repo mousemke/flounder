@@ -90,11 +90,22 @@ const api = {
 
         let refs                = this.refs;
         let originalTarget      = this.originalTarget;
+        let tagName             =  originalTarget.tagName;
 
         refs.flounder.flounder  = originalTarget.flounder = this.target.flounder = null;
 
-        if ( originalTarget.tagName === 'INPUT' || originalTarget.tagName === 'SELECT' )
+        if ( tagName === 'INPUT' || tagName === 'SELECT' )
         {
+            if ( tagName === 'SELECT' )
+            {
+                let firstOption = originalTarget[0];
+
+                if ( firstOption && firstOption.textContent === this.props.placeholder )
+                {
+                    originalTarget.removeChild( firstOption );
+                }
+            }
+
             let target = originalTarget.nextElementSibling;
             try
             {
