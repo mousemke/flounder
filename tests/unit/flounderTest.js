@@ -175,6 +175,7 @@ let tests = function( Flounder )
         flounder.fuzzySearchReset();
         let hiddenOptions = flounderRefs.optionsListWrapper.querySelectorAll( '.' + classes.SEARCH_HIDDEN );
 
+        assert.equal( flounderRefs.search.value, '', 'correctly blanks the search input' );
         assert.equal( hiddenOptions.length, 0, 'correctly resets search filtered elements' );
         flounder.destroy();
     } );

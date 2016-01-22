@@ -274,9 +274,12 @@ const build = {
         };
 
 
+
         originalData.forEach( ( dataObj, i ) =>
         {
-            if ( typeof dataObj === 'string' )
+            let dataObjType = typeof dataObj;
+
+            if ( dataObjType !== 'object' )
             {
                 dataObj = originalData[ i ] = {
                     text    : dataObj,

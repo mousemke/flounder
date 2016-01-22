@@ -233,9 +233,7 @@ requirejs(['flounder'], function (Flounder) {
             });
 
             this.data = res;
-        },
-
-        selectDataOverride: true
+        }
     });
 });
 
@@ -21204,7 +21202,9 @@ var build = {
         };
 
         originalData.forEach(function (dataObj, i) {
-            if (typeof dataObj === 'string') {
+            var dataObjType = typeof dataObj;
+
+            if (dataObjType !== 'object') {
                 dataObj = originalData[i] = {
                     text: dataObj,
                     value: dataObj

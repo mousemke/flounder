@@ -417,6 +417,12 @@ See more examples on the [demo page](./demo/index.html)
 Change Log
 ==========
 
+0.4.4
+-----
+
++ [build] modified data type detection
+
+
 0.4.3
 -----
 

@@ -1934,7 +1934,9 @@ var build = {
         };
 
         originalData.forEach(function (dataObj, i) {
-            if (typeof dataObj === 'string') {
+            var dataObjType = typeof dataObj;
+
+            if (dataObjType !== 'object') {
                 dataObj = originalData[i] = {
                     text: dataObj,
                     value: dataObj
@@ -4261,6 +4263,7 @@ var tests = function tests(Flounder) {
         flounder.fuzzySearchReset();
         var hiddenOptions = flounderRefs.optionsListWrapper.querySelectorAll('.' + _srcCoreClassesJs2['default'].SEARCH_HIDDEN);
 
+        assert.equal(flounderRefs.search.value, '', 'correctly blanks the search input');
         assert.equal(hiddenOptions.length, 0, 'correctly resets search filtered elements');
         flounder.destroy();
     });

@@ -263,9 +263,7 @@ requirejs( [ 'flounder' ], function( Flounder )
             } );
 
             this.data = res;
-        },
-
-        selectDataOverride : true
+        }
      } );
 } );
 
