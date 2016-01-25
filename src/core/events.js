@@ -56,8 +56,6 @@ const events = {
         refs.flounder.addEventListener( 'keydown', this.checkFlounderKeypress );
         refs.selected.addEventListener( 'click', this.toggleList );
 
-        refs.selected.addEventListener( 'click', this.toggleList );
-
         this.addFirstTouchListeners();
         this.addOptionsListeners();
 

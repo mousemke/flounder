@@ -524,7 +524,7 @@ class Flounder
      *
      * @return _Void_
      */
-    setDefaultOption( configObj, data )
+    setDefaultOption( configObj, data = [] )
     {
         let defaultObj;
         let self        = this;
