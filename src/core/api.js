@@ -108,7 +108,7 @@ const api = {
                 }
             }
 
-            let target = originalTarget.nextElementSibling;g
+            let target = originalTarget.nextElementSibling;
             try
             {
                 target.parentNode.removeChild( target );
@@ -430,7 +430,16 @@ const api = {
                 {
                     console.log( 'no data recieved' );
                 }
-            } ).catch( e => console.log( 'something happened: ', e ) );
+            } ).catch( e =>
+            {
+                console.log( 'something happened: ', e );
+                this.rebuild( [ {
+                            text        : '',
+                            value       : '',
+                            index       : 0,
+                            extraClass  : classes.LOADING_FAILED
+                        } ] );
+            } );
         }
         catch ( e )
         {
@@ -438,10 +447,10 @@ const api = {
         }
 
         return [ {
-            text        : 'Loading...',
+            text        : '',
             value       : '',
             index       : 0,
-            extraClass  : classes.HIDDEN
+            extraClass  : classes.LOADING
         } ];
     },
 
@@ -470,10 +479,8 @@ const api = {
         this.deselectAll();
         this.removeOptionsListeners();
         refs.select.innerHTML       = '';
-
-        refs.select     = false;
-        this._default   = this.setDefaultOption( props, data );
-
+        refs.select                 = false;
+        this._default               = this.setDefaultOption( props, data );
         refs.optionsList.innerHTML  = '';
 
 
@@ -492,7 +499,7 @@ const api = {
     ///  TEMPORARY MOVEMENT FOR DEPRECIATION WARNING ///
     reconfigure : function( data, props )
     {
-        console.log( 'reconfigure is depreciated from the api and will be removed in 0.5.0' );
+        console.log( 'reconfigure is depreciated from the api and will be removed in 0.5.0.  Use rebuild' );
         this.reconfigureFlounder( data, props );
     },
 

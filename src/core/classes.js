@@ -8,6 +8,8 @@ const classes =
     HIDDEN              : 'flounder--hidden',
     HIDDEN_IOS          : 'flounder--hidden--ios',
     LIST                : 'flounder__list',
+    LOADING             : 'flounder__loading',
+    LOADING_FAILED      : 'flounder__loading--failed',
     MAIN                : 'flounder',
     MAIN_WRAPPER        : 'flounder--wrapper  flounder__input--select',
     MULTI_TAG_LIST      : 'flounder__multi--tag--list',

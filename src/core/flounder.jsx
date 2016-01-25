@@ -631,7 +631,7 @@ class Flounder
                 }
             } );
 
-            let defaultValue = index >= 0 ? data[ index ] : null;
+            let defaultValue = index >= 0 ? _data[ index ] : null;
 
             if ( defaultValue )
             {
@@ -660,17 +660,17 @@ class Flounder
                 }
                 else
                 {
-                    try
-                    {
-                        d.index = i;
-                    }
-                    catch( e ) // d is a string
+                    if ( typeof d !== 'object' )
                     {
                         d = {
                             text    : d,
                             value   : d,
                             index   : i
                         };
+                    }
+                    else
+                    {
+                        d.index = i;
                     }
 
                     res.push( d );
@@ -680,7 +680,6 @@ class Flounder
 
             return res;
         };
-
 
         _data = sortData( data );
 

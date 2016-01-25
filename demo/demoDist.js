@@ -20442,7 +20442,7 @@ var api = {
                 }
             }
 
-            var target = originalTarget.nextElementSibling;g;
+            var target = originalTarget.nextElementSibling;
             try {
                 target.parentNode.removeChild(target);
                 originalTarget.tabIndex = 0;
@@ -20746,17 +20746,23 @@ var api = {
                     console.log('no data recieved');
                 }
             })['catch'](function (e) {
-                return console.log('something happened: ', e);
+                console.log('something happened: ', e);
+                _this6.rebuild([{
+                    text: '',
+                    value: '',
+                    index: 0,
+                    extraClass: _classes2['default'].LOADING_FAILED
+                }]);
             });
         } catch (e) {
             console.log('something happened.  check your loadDataFromUrl callback ', e);
         }
 
         return [{
-            text: 'Loading...',
+            text: '',
             value: '',
             index: 0,
-            extraClass: _classes2['default'].HIDDEN
+            extraClass: _classes2['default'].LOADING
         }];
     },
 
@@ -20782,10 +20788,8 @@ var api = {
         this.deselectAll();
         this.removeOptionsListeners();
         refs.select.innerHTML = '';
-
         refs.select = false;
         this._default = this.setDefaultOption(props, data);
-
         refs.optionsList.innerHTML = '';
 
         var _buildData = this.buildData(this._default, this.data, refs.optionsList, _select);
@@ -20807,7 +20811,7 @@ var api = {
 
     ///  TEMPORARY MOVEMENT FOR DEPRECIATION WARNING ///
     reconfigure: function reconfigure(data, props) {
-        console.log('reconfigure is depreciated from the api and will be removed in 0.5.0');
+        console.log('reconfigure is depreciated from the api and will be removed in 0.5.0.  Use rebuild');
         this.reconfigureFlounder(data, props);
     },
 
@@ -21349,6 +21353,8 @@ var classes = {
     HIDDEN: 'flounder--hidden',
     HIDDEN_IOS: 'flounder--hidden--ios',
     LIST: 'flounder__list',
+    LOADING: 'flounder__loading',
+    LOADING_FAILED: 'flounder__loading--failed',
     MAIN: 'flounder',
     MAIN_WRAPPER: 'flounder--wrapper  flounder__input--select',
     MULTI_TAG_LIST: 'flounder__multi--tag--list',
@@ -21667,7 +21673,11 @@ var events = {
     firstTouchController: function firstTouchController(e) {
         var refs = this.refs;
 
-        this.onFirstTouch(e);
+        try {
+            this.onFirstTouch(e);
+        } catch (e) {
+            console.log('something may be wrong in "onFirstTouch"', e);
+        }
 
         refs.selected.removeEventListener('click', this.firstTouchController);
         refs.select.removeEventListener('focus', this.firstTouchController);
@@ -22590,7 +22600,7 @@ var Flounder = (function () {
                     }
                 });
 
-                var defaultValue = index >= 0 ? data[index] : null;
+                var defaultValue = index >= 0 ? _data[index] : null;
 
                 if (defaultValue) {
                     defaultValue.index = index;
@@ -22615,15 +22625,14 @@ var Flounder = (function () {
                     if (d.header) {
                         res = sortData(d.data, res, i);
                     } else {
-                        try {
-                            d.index = i;
-                        } catch (e) // d is a string
-                        {
+                        if (typeof d !== 'object') {
                             d = {
                                 text: d,
                                 value: d,
                                 index: i
                             };
+                        } else {
+                            d.index = i;
                         }
 
                         res.push(d);

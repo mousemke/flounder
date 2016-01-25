@@ -51,14 +51,19 @@
         <div>
             <span class="demo--label">AMD required vanilla from select (onSelect, placeholder, built from element)</span>
             <select id="AMD--select" class="test--class--one  test--class--two">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
             </select>
         </div>
         <div>
-            <span class="demo--label">Microbe plugin from Div (multiple, no-tags, desciption, built from microbe)</span>
+            <span class="demo--label">Microbe plugin from Div (multiple, no-tags, microbe, loads JSON onFirstTouch)</span>
             <div style="display:inline-block;" id="microbe--multiple--desc"></div>
         </div>
         <div>
-            <span class="demo--label">jQuery plugin from Div (search, placeholder, built from jquery object)</span>
+            <span class="demo--label">jQuery plugin from Div (search, placeholder, jquery loadData onInit)</span>
             <div style="display:inline-block;" id="jquery--div"></div>
         </div>
 
@@ -71,42 +76,23 @@
         <script type="text/javascript" data-main="../demo/demoDist.js" src="../node_modules/requirejs/require.js"></script>
 
         <script type="text/javascript">
-            var data = [
-                {
-                    cssClass    : 'select-filters',
-                    id          : 'All',
-                    isTaxonomy  : true,
-                    text        : 'All'
-                },
-                {
-                    cssClass    : 'category',
-                    id          : 'category',
-                    isTaxonomy  : true,
-                    text        : 'Categories'
-                },
-                {
-                    cssClass    : 'cag',
-                    id          : 'cag',
-                    isTaxonomy  : true,
-                    text        : 'cags'
-                },
-                {
-                    cssClass    : 'month',
-                    id          : 'month',
-                    isTaxonomy  : true,
-                    text        : 'Month'
-                }
-            ];
-
             /**
              * microbe multi-Flounder with descriptions attached to an input
              */
             µ( '#microbe--multiple--desc' ).flounder( {
 
-                onComponentDidMount    : function()
+                onFirstTouch : function()
                 {
-                    this.data = this.buildFromUrl( './dummyData.json',
-                                            _d => this.data =_d.dummyData );
+                    var self = this;
+                    // this.data = this.buildFromUrl( './dummyData.json',
+                    //                         _d => this.data =_d.dummyData );
+
+                    this.data = this.loadDataFromUrl( './dummyData.json', function( data )
+                    {
+                        setTimeout( function(){self.rebuild( data.dummyData ) }, 10000 );
+                    } );
+
+                    this.rebuild( this.data );
                 },
 
                 multiple            : true,
@@ -124,12 +110,10 @@
                 {
                     var self = this;
 
-                    // this.data = this.data || this.loadDataFromUrl( './dummData.json', function( data )
-                    // {
-                    //     self.rebuild( data.dummyData );
-                    // } );
-                    //
-                    this.data = [ 1 ];
+                    this.data = this.loadDataFromUrl( './dummData.json', function( data )
+                    {
+                        self.rebuild( data.dummyData );
+                    } );
                 },
 
                 placeholder         : 'placeholders!',

@@ -246,8 +246,7 @@ this.getSelected()
 this.getSelectedValues()
 this.loadDataFromUrl( url, callback )
 this.props
-this.rebuild( data )
-this.reconfigure( props )
+this.rebuild( [ data, props ] )
 this.refs
 this.setByIndex( index, multiple )
 this.setByText( text, multiple )
@@ -290,9 +289,7 @@ this.setByValue( value, multiple )
 
 + `props` the props set in the initial constructor
 
-+ `rebuild( data )` completely rebuilds the select boxes with new or altered data
- 
-+ `reconfigure( props )` rebuilds the flounder object with new options
++ `rebuild( data, props )` rebuilds the select box options with new or altered data.  If props are set, this completely rebuilds flounder
 
 + `refs` contains references to all flounder elements
 
@@ -420,16 +417,17 @@ Change Log
 0.4.4
 -----
 
++ [default] adjusted handling of numbers as values
++ [default] unless specified, the default on multiple enabled flounders is nothing selected
 + [build] moved reconfigure `reconfigure is depreciated from the api and will be removed in 0.5.0`
 + [build] modified data type detection
-+ [build] 
 + [build] selectDataOverride now clears the unused option tags
 + [api] reconfigure is depreciated to an internal function.  rebuild now handles both use cases
 + [api] modified native select rebuilt values
 + [api] rebuild rebuilt
 + [api] destroy now removes placeholder
++ [api] added css for loading and failed loading
 + [utils] added removeAllChildren
-+ [flounder] unless specified, the default on multiple enabled flounders is nothing selected
 
 
 0.4.3
@@ -438,8 +436,8 @@ Change Log
 + [tests] added flounder tests
 + [test] added constructor tests
 + [flounder] added read-only version number
-+ [flounder] multiTag flounders now get a default placeholder if not supplied
 + [flounder] fixed a bug affecting defaultValues with an index 0
++ [default] multiTag flounders now get a default placeholder if not supplied
 + [version] added `src/core/version.js`
 + [version] added `scripts/version_bump.js`
 + [search] search is now initialized only when it will be used
@@ -454,8 +452,8 @@ Change Log
 + [api] added loadDataFromUrl
 + [api] added onFirstTouch
 + [build] select boxes that have no options as targets now use data
-+ [build] the default option when not specified if the data set is empty is the default placeholder
-+ [build] changed the default value priority
++ [default] the default option when not specified if the data set is empty is the default placeholder
++ [default] changed the default value priority
 + [flounder] changed sortData to not break with strings
 + [flounder] microbe and promise now required to build 
 + [config] added selectDataOverride for empty select boxes
@@ -476,36 +474,6 @@ Change Log
 + [build] placeholder will only be added to selectboxes that do not have a first option with '' as a value.  otherwise the text will be changed to the new placeholder value.
 + [build] fixed bugs in construction when using a selectbox as a target
 + [utils] tweaked addClass
-
-
-0.3.2
------
-
-+ [api] added clickText, disableText, enableText, and setText
-+ [api] correctly bound this to mapped set and click functions
-
-
-0.3.1
------
-
-+ [search] fixed a bug in value length detection
-+ [defaults] removed defaultTextIndent.  this can be handled by css
-+ [api] added disableIndex and disableValue
-+ [api] added enableIndex and enableValue
-
-
-0.3.0
------
-
-+ [api] getOption is now getData
-+ [api] getData now provides all data when no number is given
-+ [api] getSelectedOptions is now getSelected
-+ [api] rebuildSelect is now rebuild
-+ [api] added clickIndex and clickValue
-+ [api] added props
-+ [api] added reconfigure
-+ [default] multipleTags is now false by default
-+ [search] added Sole (a ROVer derivitive) for fuzzy search
 
 
 Older Changes

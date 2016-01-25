@@ -4,6 +4,36 @@ Older changes
 This is truncated from the readme file to keep down the size
 
 
+0.3.2
+-----
+
++ [api] added clickText, disableText, enableText, and setText
++ [api] correctly bound this to mapped set and click functions
+
+
+0.3.1
+-----
+
++ [search] fixed a bug in value length detection
++ [defaults] removed defaultTextIndent.  this can be handled by css
++ [api] added disableIndex and disableValue
++ [api] added enableIndex and enableValue
+
+
+0.3.0
+-----
+
++ [api] getOption is now getData
++ [api] getData now provides all data when no number is given
++ [api] getSelectedOptions is now getSelected
++ [api] rebuildSelect is now rebuild
++ [api] added clickIndex and clickValue
++ [api] added props
++ [api] added reconfigure
++ [default] multipleTags is now false by default
++ [search] added Sole (a ROVer derivitive) for fuzzy search
+
+
 0.2.9
 -----
 
