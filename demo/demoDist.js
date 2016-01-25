@@ -20347,6 +20347,8 @@ var _classes = require('./classes');
 
 var _classes2 = _interopRequireDefault(_classes);
 
+var nativeSlice = Array.prototype.slice;
+
 var api = {
 
     /**
@@ -20427,10 +20429,19 @@ var api = {
 
         var refs = this.refs;
         var originalTarget = this.originalTarget;
+        var tagName = originalTarget.tagName;
 
         refs.flounder.flounder = originalTarget.flounder = this.target.flounder = null;
 
-        if (originalTarget.tagName === 'INPUT' || originalTarget.tagName === 'SELECT') {
+        if (tagName === 'INPUT' || tagName === 'SELECT') {
+            if (tagName === 'SELECT') {
+                var firstOption = originalTarget[0];
+
+                if (firstOption && firstOption.textContent === this.props.placeholder) {
+                    originalTarget.removeChild(firstOption);
+                }
+            }
+
             var target = originalTarget.nextElementSibling;
             try {
                 target.parentNode.removeChild(target);
@@ -20735,17 +20746,23 @@ var api = {
                     console.log('no data recieved');
                 }
             })['catch'](function (e) {
-                return console.log('something happened: ', e);
+                console.log('something happened: ', e);
+                _this6.rebuild([{
+                    text: '',
+                    value: '',
+                    index: 0,
+                    extraClass: _classes2['default'].LOADING_FAILED
+                }]);
             });
         } catch (e) {
             console.log('something happened.  check your loadDataFromUrl callback ', e);
         }
 
         return [{
-            text: 'Loading...',
+            text: '',
             value: '',
             index: 0,
-            extraClass: _classes2['default'].HIDDEN
+            extraClass: _classes2['default'].LOADING
         }];
     },
 
@@ -20754,29 +20771,28 @@ var api = {
      *
      * after editing the data, this can be used to rebuild them
      *
-     * @param {Array} data array with optino information
+     * @param {Array} data array with option information
      *
      * @return _Object_ rebuilt flounder object
      */
-    rebuild: function rebuild(data) {
-        var _this7 = this;
+    rebuild: function rebuild(data, props) {
+        if (props || !props && (typeof data === 'string' || typeof data.length !== 'number')) {
+            this.reconfigureFlounder(data, props);
+        }
 
-        data = data || this.data;
+        props = this.props;
+        data = this.data = data || this.data;
         var refs = this.refs;
-        var selected = refs.select.selectedOptions;
-        selected = Array.prototype.slice.call(selected).map(function (e) {
-            return e.value;
-        });
+        var _select = refs.select;
 
+        this.deselectAll();
         this.removeOptionsListeners();
-
         refs.select.innerHTML = '';
+        refs.select = false;
+        this._default = this.setDefaultOption(props, data);
         refs.optionsList.innerHTML = '';
 
-        var _select = refs.select;
-        refs.select = false;
-
-        var _buildData = this.buildData(this._default, data, refs.optionsList, _select);
+        var _buildData = this.buildData(this._default, this.data, refs.optionsList, _select);
 
         var _buildData2 = _slicedToArray(_buildData, 2);
 
@@ -20785,39 +20801,18 @@ var api = {
 
         refs.select = _select;
 
-        this.removeSelectedValue();
-        this.removeSelectedClass();
-
-        refs.selectOptions.forEach(function (el, i) {
-            var valuePosition = selected.indexOf(el.value);
-
-            if (valuePosition !== -1) {
-                selected.splice(valuePosition, 1);
-                el.selected = true;
-                _this7.addClass(refs.data[i], _this7.selectedClass);
-            }
-        });
-
         this.addOptionsListeners();
         this.data = data;
+
+        this.displaySelected(refs.selected, refs);
 
         return this;
     },
 
-    /**
-     * ## reconfigure
-     *
-     * after editing the data, this can be used to rebuild them
-     *
-     * @param {Object} props object containing config options
-     *
-     * @return _Object_ rebuilt flounder object
-     */
-    reconfigure: function reconfigure(props) {
-        props = props || {};
-        props.data = props.data || this.data;
-
-        return this.constructor(this.originalTarget, props);
+    ///  TEMPORARY MOVEMENT FOR DEPRECIATION WARNING ///
+    reconfigure: function reconfigure(data, props) {
+        console.log('reconfigure is depreciated from the api and will be removed in 0.5.0.  Use rebuild');
+        this.reconfigureFlounder(data, props);
     },
 
     /**
@@ -20831,7 +20826,7 @@ var api = {
      * return _Void_
      */
     setByIndex: function setByIndex(index, multiple) {
-        var _this8 = this;
+        var _this7 = this;
 
         var programmatic = arguments.length <= 2 || arguments[2] === undefined ? true : arguments[2];
 
@@ -20839,7 +20834,7 @@ var api = {
 
         if (typeof index !== 'string' && index.length) {
             var _ret5 = (function () {
-                var setByIndex = _this8.setByIndex.bind(_this8);
+                var setByIndex = _this7.setByIndex.bind(_this7);
                 return {
                     v: index.map(function (_i) {
                         return setByIndex(_i, multiple, programmatic);
@@ -20876,13 +20871,13 @@ var api = {
      * return _Void_
      */
     setByText: function setByText(text, multiple) {
-        var _this9 = this;
+        var _this8 = this;
 
         var programmatic = arguments.length <= 2 || arguments[2] === undefined ? true : arguments[2];
 
         if (typeof text !== 'string' && text.length) {
             var _ret6 = (function () {
-                var setByText = _this9.setByText.bind(_this9);
+                var setByText = _this8.setByText.bind(_this8);
                 return {
                     v: text.map(function (_i) {
                         return setByText(_i, multiple, programmatic);
@@ -20896,7 +20891,7 @@ var api = {
                 var res = [];
                 var getText = document.all ? 'innerText' : 'textContent';
 
-                _this9.refs.selectOptions.forEach(function (el) {
+                _this8.refs.selectOptions.forEach(function (el) {
                     var _elText = el[getText];
 
                     if (_elText === text) {
@@ -20905,7 +20900,7 @@ var api = {
                 });
 
                 return {
-                    v: res.length ? _this9.setByIndex(res, multiple, programmatic) : null
+                    v: res.length ? _this8.setByIndex(res, multiple, programmatic) : null
                 };
             })();
 
@@ -20924,13 +20919,13 @@ var api = {
      * return _Void_
      */
     setByValue: function setByValue(value, multiple) {
-        var _this10 = this;
+        var _this9 = this;
 
         var programmatic = arguments.length <= 2 || arguments[2] === undefined ? true : arguments[2];
 
         if (typeof value !== 'string' && value.length) {
             var _ret8 = (function () {
-                var setByValue = _this10.setByValue.bind(_this10);
+                var setByValue = _this9.setByValue.bind(_this9);
                 return {
                     v: value.map(function (_i) {
                         return setByValue(_i, multiple, programmatic);
@@ -21055,9 +21050,7 @@ var build = {
         }
 
         var data = this.data;
-
         var defaultValue = this._default = this.setDefaultOption(this.props, data);
-
         var selected = constructElement({ className: _classes2['default'].SELECTED_DISPLAYED,
             'data-value': defaultValue.value, 'data-index': defaultValue.index || -1 });
         selected.innerHTML = defaultValue.text;
@@ -21275,10 +21268,12 @@ var build = {
                         });
                     });
 
-                    _this2.refs.selectOptions = selectOptions;
+                    refs.selectOptions = selectOptions;
 
                     _this2.data = data;
                 })();
+            } else if (this.selectDataOverride) {
+                this.removeAllChildren(target);
             }
 
             this.target = target.parentNode;
@@ -21289,6 +21284,29 @@ var build = {
         }
 
         return select;
+    },
+
+    /**
+     * ## reconfigure
+     *
+     * after editing the data, this can be used to rebuild them
+     *
+     * @param {Object} props object containing config options
+     *
+     * @return _Object_ rebuilt flounder object
+     */
+    reconfigureFlounder: function reconfigureFlounder(data, props) {
+        if (typeof data !== 'string' && typeof data.length === 'number') {
+            props = props = props || this.props;
+            props.data = data;
+        } else if (!props && typeof data === 'object') {
+            props = data;
+            props.data = props.data || this.data;
+        } else {
+            props.data = data || props.data || this.data;
+        }
+
+        return this.constructor(this.originalTarget, props);
     },
 
     /**
@@ -21335,6 +21353,8 @@ var classes = {
     HIDDEN: 'flounder--hidden',
     HIDDEN_IOS: 'flounder--hidden--ios',
     LIST: 'flounder__list',
+    LOADING: 'flounder__loading',
+    LOADING_FAILED: 'flounder__loading--failed',
     MAIN: 'flounder',
     MAIN_WRAPPER: 'flounder--wrapper  flounder__input--select',
     MULTI_TAG_LIST: 'flounder__multi--tag--list',
@@ -21653,7 +21673,11 @@ var events = {
     firstTouchController: function firstTouchController(e) {
         var refs = this.refs;
 
-        this.onFirstTouch(e);
+        try {
+            this.onFirstTouch(e);
+        } catch (e) {
+            console.log('something may be wrong in "onFirstTouch"', e);
+        }
 
         refs.selected.removeEventListener('click', this.firstTouchController);
         refs.select.removeEventListener('focus', this.firstTouchController);
@@ -22125,7 +22149,6 @@ var Flounder = (function () {
                 } catch (e) {
                     console.log('something may be wrong in "onInit"', e);
                 }
-
                 this.buildDom();
                 this.setPlatform();
                 this.onRender();
@@ -22566,12 +22589,18 @@ var Flounder = (function () {
                 var index = undefined;
 
                 _data.forEach(function (dataObj, i) {
-                    if (dataObj.value === defaultProp) {
+                    var dataObjValue = dataObj.value;
+
+                    if (typeof dataObjValue === 'number') {
+                        dataObjValue += '';
+                    }
+
+                    if (dataObjValue === defaultProp) {
                         index = i;
                     }
                 });
 
-                var defaultValue = index >= 0 ? data[index] : null;
+                var defaultValue = index >= 0 ? _data[index] : null;
 
                 if (defaultValue) {
                     defaultValue.index = index;
@@ -22596,15 +22625,14 @@ var Flounder = (function () {
                     if (d.header) {
                         res = sortData(d.data, res, i);
                     } else {
-                        try {
-                            d.index = i;
-                        } catch (e) // d is a string
-                        {
+                        if (typeof d !== 'object') {
                             d = {
                                 text: d,
                                 value: d,
                                 index: i
                             };
+                        } else {
+                            d.index = i;
                         }
 
                         res.push(d);
@@ -22624,7 +22652,11 @@ var Flounder = (function () {
             } else if (configObj.defaultValue) {
                 defaultObj = setValueDefault(_data);
             } else {
-                defaultObj = setIndexDefault(_data, 0);
+                if (configObj.multiple) {
+                    defaultObj = setPlaceholderDefault(_data);
+                } else {
+                    defaultObj = setIndexDefault(_data, 0);
+                }
             }
 
             return defaultObj;
@@ -22977,6 +23009,8 @@ var _node_modulesMicrobejsSrcModulesHttp = require('../../node_modules/microbejs
 
 var _node_modulesMicrobejsSrcModulesHttp2 = _interopRequireDefault(_node_modulesMicrobejsSrcModulesHttp);
 
+var nativeSlice = Array.prototype.slice;
+
 var utils = {
     /**
      * ## addClass
@@ -23160,6 +23194,21 @@ var utils = {
     },
 
     /**
+     * ## removeAllChildren
+     *
+     * removes all children from a specified target
+     *
+     * @param {DOMElement} target target element
+     *
+     * @return _Void_
+     */
+    removeAllChildren: function removeAllChildren(target) {
+        nativeSlice.call(target.children).forEach(function (el) {
+            target.removeChild(el);
+        });
+    },
+
+    /**
      * ## removeClass
      *
      * on the quest to nuke jquery, a wild helper function appears
@@ -23265,7 +23314,7 @@ module.exports = exports['default'];
 },{"../../node_modules/microbejs/src/modules/http":3,"./classes":173}],179:[function(require,module,exports){
 'use strict';
 
-module.exports = '0.4.3';
+module.exports = '0.4.4';
 
 },{}],180:[function(require,module,exports){
 

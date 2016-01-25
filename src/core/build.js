@@ -116,9 +116,7 @@ const build = {
         }
 
         let data                = this.data;
-
         let defaultValue        = this._default = this.setDefaultOption( this.props, data );
-
         let selected            = constructElement( { className : classes.SELECTED_DISPLAYED,
                                         'data-value' : defaultValue.value, 'data-index' : defaultValue.index || -1 } );
             selected.innerHTML  = defaultValue.text;
@@ -141,6 +139,7 @@ const build = {
 
         let search = this.addSearch( flounder );
         let selectOptions;
+
         [ data, selectOptions ] = this.buildData( defaultValue, data, optionsList, select );
 
         this.target.appendChild( wrapper );
@@ -354,9 +353,13 @@ const build = {
                     } );
                 } );
 
-                this.refs.selectOptions = selectOptions;
+                refs.selectOptions = selectOptions;
 
                 this.data               = data;
+            }
+            else if ( this.selectDataOverride )
+            {
+                this.removeAllChildren( target );
             }
 
             this.target             = target.parentNode;
@@ -369,6 +372,37 @@ const build = {
         }
 
         return select;
+    },
+
+
+
+    /**
+     * ## reconfigure
+     *
+     * after editing the data, this can be used to rebuild them
+     *
+     * @param {Object} props object containing config options
+     *
+     * @return _Object_ rebuilt flounder object
+     */
+    reconfigureFlounder : function( data, props )
+    {
+        if ( typeof data !== 'string' && typeof data.length === 'number' )
+        {
+            props       = props       = props || this.props;
+            props.data  = data;
+        }
+        else if ( !props && typeof data === 'object' )
+        {
+            props       = data;
+            props.data  = props.data || this.data;
+        }
+        else
+        {
+            props.data  = data || props.data || this.data;
+        }
+
+        return this.constructor( this.originalTarget, props );
     },
 
 

@@ -128,7 +128,6 @@ class Flounder
                 {
                     console.log( 'something may be wrong in "onInit"', e );
                 }
-
                 this.buildDom();
                 this.setPlatform();
                 this.onRender();
@@ -619,13 +618,20 @@ class Flounder
 
             _data.forEach( function( dataObj, i )
             {
-                if ( dataObj.value === defaultProp )
+                let dataObjValue = dataObj.value;
+
+                if ( typeof dataObjValue === 'number' )
+                {
+                    dataObjValue += '';
+                }
+
+                if ( dataObjValue === defaultProp )
                 {
                     index = i;
                 }
             } );
 
-            let defaultValue = index >= 0 ? data[ index ] : null;
+            let defaultValue = index >= 0 ? _data[ index ] : null;
 
             if ( defaultValue )
             {
@@ -654,17 +660,17 @@ class Flounder
                 }
                 else
                 {
-                    try
-                    {
-                        d.index = i;
-                    }
-                    catch( e ) // d is a string
+                    if ( typeof d !== 'object' )
                     {
                         d = {
                             text    : d,
                             value   : d,
                             index   : i
                         };
+                    }
+                    else
+                    {
+                        d.index = i;
                     }
 
                     res.push( d );
@@ -674,7 +680,6 @@ class Flounder
 
             return res;
         };
-
 
         _data = sortData( data );
 
@@ -692,7 +697,14 @@ class Flounder
         }
         else
         {
-            defaultObj = setIndexDefault( _data, 0 )
+            if ( configObj.multiple )
+            {
+                defaultObj = setPlaceholderDefault( _data );
+            }
+            else
+            {
+                defaultObj = setIndexDefault( _data, 0 )
+            }
         }
 
         return defaultObj;

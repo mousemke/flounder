@@ -300,7 +300,14 @@ const events = {
     {
         let refs = this.refs;
 
-        this.onFirstTouch( e );
+        try
+        {
+            this.onFirstTouch( e );
+        }
+        catch( e )
+        {
+            console.log( 'something may be wrong in "onFirstTouch"', e );
+        }
 
         refs.selected.removeEventListener( 'click', this.firstTouchController );
         refs.select.removeEventListener( 'focus', this.firstTouchController );
