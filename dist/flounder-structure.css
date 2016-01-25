@@ -295,3 +295,44 @@
     font-weight:                    200;
     color:                          #aaa;
 }
+
+
+/* -------------------------------------------------------------------------- */
+/* FLOUNDER - loading                                                     */
+/* -------------------------------------------------------------------------- */
+@keyframes loading
+{
+    0% {
+        content:                    'Loading.';
+    }
+    33% {
+        content:                    'Loading..';
+    }
+    66% {
+        content:                    'Loading...';
+    }
+}
+
+
+.flounder__loading, .flounder__loading--failed
+{
+    display:                        flex;
+    min-height:                     1em;
+    pointer-events:                 none;
+    color:                          #777;
+}
+
+
+.flounder__loading:after
+{
+    display:                        block;
+    content:                        'Loading';
+    animation:                      loading 1s infinite;
+}
+
+
+.flounder__loading--failed:after
+{
+    display:                        block;
+    content:                        'Data load failed';
+}
