@@ -1,4 +1,4 @@
-Flounder.js 0.4.4
+Flounder.js 0.4.5
 =================
 
 (for modern browsers and ie9+)
@@ -413,6 +413,12 @@ See more examples on the [demo page](./demo/index.html)
 
 Change Log
 ==========
+
+0.4.5
+-----
+
++ [default] the default `data` is now `[]` in case of initially empty dropdowns
+
 
 0.4.4
 -----
