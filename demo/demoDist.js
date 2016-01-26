@@ -129,6 +129,8 @@ _srcWrappersFlounderReactJsx.ReactDOM.render(_srcWrappersFlounderReactJsx.React.
 
     multiple: true,
 
+    multipleTags: true,
+
     onInit: function onInit() {
         var res = [];
         data.forEach(function (dataObj) {
@@ -224,15 +226,11 @@ requirejs(['flounder'], function (Flounder) {
         placeholder: 'placeholders!',
 
         onInit: function onInit() {
-            var res = [];
-            data.forEach(function (dataObj) {
-                res.push({
-                    text: dataObj.text,
-                    value: dataObj.id
-                });
+            this.data = this.loadDataFromUrl('./dummData.json', function (data) {
+                setTimeout(function () {
+                    self.rebuild(data.dummyData);
+                }, 10000);
             });
-
-            this.data = res;
         }
     });
 });
@@ -21471,8 +21469,6 @@ var events = {
         refs.flounder.addEventListener('keydown', this.checkFlounderKeypress);
         refs.selected.addEventListener('click', this.toggleList);
 
-        refs.selected.addEventListener('click', this.toggleList);
-
         this.addFirstTouchListeners();
         this.addOptionsListeners();
 
@@ -22510,7 +22506,9 @@ var Flounder = (function () {
          */
     }, {
         key: 'setDefaultOption',
-        value: function setDefaultOption(configObj, data) {
+        value: function setDefaultOption(configObj) {
+            var data = arguments.length <= 1 || arguments[1] === undefined ? [] : arguments[1];
+
             var defaultObj = undefined;
             var self = this;
             var _data = undefined; // internally reorganized data options
@@ -23005,9 +23003,9 @@ var _classes = require('./classes');
 
 var _classes2 = _interopRequireDefault(_classes);
 
-var _node_modulesMicrobejsSrcModulesHttp = require('../../node_modules/microbejs/src/modules/http');
+var _microbejsSrcModulesHttp = require('microbejs/src/modules/http');
 
-var _node_modulesMicrobejsSrcModulesHttp2 = _interopRequireDefault(_node_modulesMicrobejsSrcModulesHttp);
+var _microbejsSrcModulesHttp2 = _interopRequireDefault(_microbejsSrcModulesHttp);
 
 var nativeSlice = Array.prototype.slice;
 
@@ -23306,15 +23304,15 @@ var utils = {
     }
 };
 
-(0, _node_modulesMicrobejsSrcModulesHttp2['default'])(utils);
+(0, _microbejsSrcModulesHttp2['default'])(utils);
 
 exports['default'] = utils;
 module.exports = exports['default'];
 
-},{"../../node_modules/microbejs/src/modules/http":3,"./classes":173}],179:[function(require,module,exports){
+},{"./classes":173,"microbejs/src/modules/http":3}],179:[function(require,module,exports){
 'use strict';
 
-module.exports = '0.4.4';
+module.exports = '0.4.5';
 
 },{}],180:[function(require,module,exports){
 

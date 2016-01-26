@@ -79,12 +79,10 @@
                 onFirstTouch : function()
                 {
                     var self = this;
-                    // this.data = this.buildFromUrl( './dummyData.json',
-                    //                         _d => this.data =_d.dummyData );
 
                     this.data = this.loadDataFromUrl( './dummyData.json', function( data )
                     {
-                        setTimeout( function(){self.rebuild( data.dummyData ) }, 10000 );
+                        setTimeout( function(){ self.rebuild( data.dummyData ) }, 10000 );
                     } );
 
                     this.rebuild( this.data );
@@ -105,10 +103,8 @@
                 {
                     var self = this;
 
-                    this.data = this.loadDataFromUrl( './dummData.json', function( data )
-                    {
-                        self.rebuild( data.dummyData );
-                    } );
+                    this.data = this.buildFromUrl( './dummyData.json',
+                                            _d => this.data =_d.dummyData );
                 },
 
                 placeholder         : 'placeholders!',

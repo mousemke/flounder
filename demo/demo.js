@@ -139,6 +139,8 @@ ReactDOM.render( React.createElement( FlounderReact, {
 
     multiple            : true,
 
+    multipleTags : true,
+
     onInit              : function()
     {
         let res = [];
@@ -253,16 +255,10 @@ requirejs( [ 'flounder' ], function( Flounder )
 
         onInit               : function()
         {
-            let res = [];
-            data.forEach( function( dataObj )
+            this.data = this.loadDataFromUrl( './dummData.json', function( data )
             {
-                res.push( {
-                    text        : dataObj.text,
-                    value       : dataObj.id
-                } );
+                setTimeout( function(){ self.rebuild( data.dummyData ) }, 10000 );
             } );
-
-            this.data = res;
         }
      } );
 } );
@@ -273,6 +269,7 @@ requirejs( [ 'flounder' ], function( Flounder )
     µ( '.flounder--select--tag' ).removeClass( 'flounder--hidden' );
     µ( '.flounder' ).css( 'display', 'inline-block' )
 } );
+
 
 µ( '.destroy--all' ).on( 'click', function()
 {

@@ -27,7 +27,9 @@
     "gulp": "^3.9.0",
     "gulp-header": "^1.7.1",
     "gulp-uglify": "^1.5.1",
+    "microbejs": "^0.4.20",
     "nightmare": "^2.1.1",
+    "promise": "^7.1.1",
     "qunitjs": "^1.20.0",
     "react": "^0.14.2",
     "react-dom": "^0.14.2",
@@ -60,9 +62,5 @@
     "box",
     "flounder",
     "sociomantic"
-  ],
-  "dependencies": {
-    "microbejs": "^0.4.20",
-    "promise": "^7.1.1"
-  }
+  ]
 }

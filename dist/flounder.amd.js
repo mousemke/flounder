@@ -1,12 +1,12 @@
 /*!
- * Flounder JavaScript Styleable Selectbox v0.4.4
+ * Flounder JavaScript Styleable Selectbox v0.4.5
  * https://github.com/sociomantic/flounder
  *
  * Copyright 2015-2016 Sociomantic Labs and other contributors
  * Released under the MIT license
  * https://github.com/sociomantic/flounder/license
  *
- * Date: Mon Jan 25 2016
+ * Date: Tue Jan 26 2016
  * "This, so far, is the best Flounder ever"
  */
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
@@ -2214,8 +2214,6 @@ var events = {
         refs.flounder.addEventListener('keydown', this.checkFlounderKeypress);
         refs.selected.addEventListener('click', this.toggleList);
 
-        refs.selected.addEventListener('click', this.toggleList);
-
         this.addFirstTouchListeners();
         this.addOptionsListeners();
 
@@ -3253,7 +3251,9 @@ var Flounder = (function () {
          */
     }, {
         key: 'setDefaultOption',
-        value: function setDefaultOption(configObj, data) {
+        value: function setDefaultOption(configObj) {
+            var data = arguments.length <= 1 || arguments[1] === undefined ? [] : arguments[1];
+
             var defaultObj = undefined;
             var self = this;
             var _data = undefined; // internally reorganized data options
@@ -3748,9 +3748,9 @@ var _classes = require('./classes');
 
 var _classes2 = _interopRequireDefault(_classes);
 
-var _node_modulesMicrobejsSrcModulesHttp = require('../../node_modules/microbejs/src/modules/http');
+var _microbejsSrcModulesHttp = require('microbejs/src/modules/http');
 
-var _node_modulesMicrobejsSrcModulesHttp2 = _interopRequireDefault(_node_modulesMicrobejsSrcModulesHttp);
+var _microbejsSrcModulesHttp2 = _interopRequireDefault(_microbejsSrcModulesHttp);
 
 var nativeSlice = Array.prototype.slice;
 
@@ -4049,15 +4049,15 @@ var utils = {
     }
 };
 
-(0, _node_modulesMicrobejsSrcModulesHttp2['default'])(utils);
+(0, _microbejsSrcModulesHttp2['default'])(utils);
 
 exports['default'] = utils;
 module.exports = exports['default'];
 
-},{"../../node_modules/microbejs/src/modules/http":1,"./classes":14}],20:[function(require,module,exports){
+},{"./classes":14,"microbejs/src/modules/http":1}],20:[function(require,module,exports){
 'use strict';
 
-module.exports = '0.4.4';
+module.exports = '0.4.5';
 
 },{}],21:[function(require,module,exports){
 

@@ -1,6 +1,6 @@
 
 import classes          from './classes';
-import microbeHttp      from '../../node_modules/microbejs/src/modules/http';
+import microbeHttp      from 'microbejs/src/modules/http';
 
 const nativeSlice = Array.prototype.slice;
 
