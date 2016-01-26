@@ -4046,7 +4046,7 @@ module.exports = exports['default'];
 },{"./classes":14,"microbejs/src/modules/http":1}],20:[function(require,module,exports){
 'use strict';
 
-module.exports = '0.4.5';
+module.exports = '0.4.6';
 
 },{}],21:[function(require,module,exports){
 

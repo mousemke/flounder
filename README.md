@@ -1,4 +1,4 @@
-Flounder.js 0.4.5
+Flounder.js 0.4.6
 =================
 
 (for modern browsers and ie9+)
@@ -418,6 +418,7 @@ Change Log
 -----
 
 + [default] the default `data` is now `[]` in case of initially empty dropdowns
++ changed how microbe is required and installed
 
 
 0.4.4
