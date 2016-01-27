@@ -17,7 +17,7 @@ import Flounder from 'flounder';
 Usage
 =====
 
-Flounder can be used in vanilla js or with react, requirejs, jquery, and microbe
+Flounder can be used in vanilla js or with [react](http://facebook.github.io/react/), [requirejs](http://requirejs.org/), [jquery](http://jquery.com/), and [microbe](https://github.com/sociomantic/microbe).
 
 ```
 // vanilla
