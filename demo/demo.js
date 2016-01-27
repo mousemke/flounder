@@ -36,6 +36,22 @@ let data = [
 ];
 
 
+let buildData = function()
+{
+    let res = [];
+    data.forEach( function( dataObj )
+    {
+        res.push( {
+            text        : dataObj.text,
+            value       : dataObj.id,
+            description : dataObj.id + ' could be described as "' + dataObj.text + '"'
+        } );
+    } );
+
+    return res;
+};
+
+
 /**
  * vanilla multi-Flounder with tags attached to an input
  */
@@ -90,6 +106,8 @@ new Flounder( document.getElementById( 'vanilla--input' ), {
 
     multipleTags        : false,
 
+    onInit              : function(){ this.data = buildData(); },
+
     onSelect            : function( e )
     {
         let selected    = _slice.call( this.refs.select.selectedOptions );
@@ -139,21 +157,11 @@ ReactDOM.render( React.createElement( FlounderReact, {
 
     multiple            : true,
 
-    multipleTags : true,
+    multipleTags        : true,
 
-    onInit              : function()
-    {
-        let res = [];
-        data.forEach( function( dataObj )
-        {
-            res.push( {
-                text        : dataObj.text,
-                value       : dataObj.id
-            } );
-        } );
+    onInit              : function(){ this.data = buildData(); },
 
-        this.data = res;
-    } } ), document.getElementById( 'react--multiple--tags' )
+    } ), document.getElementById( 'react--multiple--tags' )
 );
 
 
@@ -163,20 +171,9 @@ ReactDOM.render( React.createElement( FlounderReact, {
 ReactDOM.render( React.createElement( FlounderReact, {
     defaultValue        : 'tag',
 
-    onInit              : function()
-    {
-        let res = [];
-        data.forEach( function( dataObj )
-        {
-            res.push( {
-                text        : dataObj.text,
-                value       : dataObj.id,
-                description : dataObj.id + ' could be described as "' + dataObj.text + '"'
-            } );
-        } );
+    onInit              : function(){ this.data = buildData(); },
 
-        this.data = res;
-    } } ), document.getElementById( 'react--span' )
+    } ), document.getElementById( 'react--span' )
 );
 
 
@@ -194,6 +191,7 @@ ReactDOM.render( React.createElement( FlounderReact, {
     {
         console.log( this.setByIndex( 0 ) );
     },
+
     onInit              : function()
     {
         let res = [];

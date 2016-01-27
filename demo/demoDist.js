@@ -37,6 +37,19 @@ var data = [{
     text: 'Month'
 }];
 
+var buildData = function buildData() {
+    var res = [];
+    data.forEach(function (dataObj) {
+        res.push({
+            text: dataObj.text,
+            value: dataObj.id,
+            description: dataObj.id + ' could be described as "' + dataObj.text + '"'
+        });
+    });
+
+    return res;
+};
+
 /**
  * vanilla multi-Flounder with tags attached to an input
  */
@@ -85,6 +98,10 @@ new _srcWrappersFlounderReactJsx.Flounder(document.getElementById('vanilla--inpu
 
     multipleTags: false,
 
+    onInit: function onInit() {
+        this.data = buildData();
+    },
+
     onSelect: function onSelect(e) {
         var selected = _slice.call(this.refs.select.selectedOptions);
         selected = selected.map(function (el) {
@@ -132,16 +149,10 @@ _srcWrappersFlounderReactJsx.ReactDOM.render(_srcWrappersFlounderReactJsx.React.
     multipleTags: true,
 
     onInit: function onInit() {
-        var res = [];
-        data.forEach(function (dataObj) {
-            res.push({
-                text: dataObj.text,
-                value: dataObj.id
-            });
-        });
+        this.data = buildData();
+    }
 
-        this.data = res;
-    } }), document.getElementById('react--multiple--tags'));
+}), document.getElementById('react--multiple--tags'));
 
 /**
  * react Flounder attached to an div
@@ -150,17 +161,10 @@ _srcWrappersFlounderReactJsx.ReactDOM.render(_srcWrappersFlounderReactJsx.React.
     defaultValue: 'tag',
 
     onInit: function onInit() {
-        var res = [];
-        data.forEach(function (dataObj) {
-            res.push({
-                text: dataObj.text,
-                value: dataObj.id,
-                description: dataObj.id + ' could be described as "' + dataObj.text + '"'
-            });
-        });
+        this.data = buildData();
+    }
 
-        this.data = res;
-    } }), document.getElementById('react--span'));
+}), document.getElementById('react--span'));
 
 /**
  * react multi-Flounder with description attached to div
@@ -175,6 +179,7 @@ _srcWrappersFlounderReactJsx.ReactDOM.render(_srcWrappersFlounderReactJsx.React.
     onSelect: function onSelect() {
         console.log(this.setByIndex(0));
     },
+
     onInit: function onInit() {
         var res = [];
         data.forEach(function (dataObj, i) {
@@ -20782,7 +20787,7 @@ var api = {
         data = this.data = data || this.data;
         var refs = this.refs;
         var _select = refs.select;
-
+        console.log(this.getSelectedValues());
         this.deselectAll();
         this.removeOptionsListeners();
         refs.select.innerHTML = '';
@@ -23312,7 +23317,7 @@ module.exports = exports['default'];
 },{"./classes":173,"microbejs/src/modules/http":3}],179:[function(require,module,exports){
 'use strict';
 
-module.exports = '0.4.6';
+module.exports = '0.4.7';
 
 },{}],180:[function(require,module,exports){
 

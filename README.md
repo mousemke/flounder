@@ -1,4 +1,4 @@
-Flounder.js 0.4.6
+Flounder.js 0.4.7
 =================
 
 (for modern browsers and ie9+)
@@ -413,6 +413,12 @@ See more examples on the [demo page](./demo/index.html)
 
 Change Log
 ==========
+
+0.4.7
+-----
+
++ fixed a minor issue on the demo page
+
 
 0.4.5
 -----
