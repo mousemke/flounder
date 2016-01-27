@@ -5,7 +5,7 @@ Flounder.js 0.4.6
 
 Flounder is a styled select box replacement aimed at being easily configurable while conforming to native functionality and accessibility standards.
 
-```
+```js
 // npm
 require('flounder');
 
@@ -17,9 +17,9 @@ import Flounder from 'flounder';
 Usage
 =====
 
-Flounder can be used in vanilla js or with react, requirejs, jquery, and microbe
+Flounder can be used in vanilla js or with [react](http://facebook.github.io/react/), [requirejs](http://requirejs.org/), [jquery](http://jquery.com/), and [microbe](https://github.com/sociomantic/microbe).
 
-```
+```js
 // vanilla
 new Flounder( target, configOptions );
 
@@ -49,7 +49,7 @@ $( '.example--class' ).flounder( configOptions );
 ```
 
 Flounder also saves a copy of itself to its target element.  So if you lose the reference, you can just grab it from the element again
-```
+```js
 document.querySelector( '#vanilla--select' ).flounder.destroy()
 ```
 
@@ -60,37 +60,37 @@ Flounder's target is quite flexible.
 
 you can give it an element:
 
-```
+```js
 new Flounder( document.getElementsByTagName( 'input--el' )[0], options );
 ```
 
 an array:
 
-```
+```js
 new Flounder( [ el1, el2, el3 ], options );
 ```
 
 an HTML collection:
 
-```
+```js
 new Flounder( document.getElementsByTagName( 'input' ), options );
 ```
 
 a jQuery object:
 
-```
+```js
 new Flounder( $( 'input' ), options );
 ```
 
 a microbe:
 
-```
+```js
 new Flounder( µ( 'input' ), options );
 ```
 
 or, just a selector string:
 
-```
+```js
 new Flounder( 'input', options );
 ```
 
@@ -99,7 +99,7 @@ If flounder is fed an element that already has a flounder, it will destroy it an
 
 ###Available config options
  
-```
+```js
 {
     classes                 : {
         flounder    : 'class--to--give--the--main--flounder--element',
@@ -173,7 +173,7 @@ Building the select box
 
 selectbox data must be passed as an array of objects
 
-```
+```js
 [
     {
         text        : 'probably the string you want to see',
@@ -188,7 +188,7 @@ selectbox data must be passed as an array of objects
  
 or a simple array of strings. The passed text will be both the text and the value.  There would be no description in this case
 
-```
+```js
 [
     'value 1',
     'value 2',
@@ -199,7 +199,7 @@ or a simple array of strings. The passed text will be both the text and the valu
 
 or, if you want section headers.  You can even add uncatagorized things intermingled
 
-```
+```js
 [
     {
         header : header1,
@@ -227,7 +227,7 @@ API
 
 These functions are intended for use in the user provided event callbacks
 
-```
+```js
 this.buildFromUrl( url, callback )
 this.clickByIndex( index, multiple )
 this.clickByText( text, multiple )
@@ -318,7 +318,7 @@ Example
 
 Given the example data:
 
-```
+```js
 
     var data = [
         {
@@ -346,7 +346,7 @@ a vanilla flounder
 
 flounder can be attached to basically anything
 
-```
+```js
 
     new flounder( document.getElementById( 'example' ), {
         placeholder         : 'placeholders!',
@@ -372,7 +372,7 @@ a react flounder
 react flounder can only be attached to container elements (div, span, etc)
 
 
-```
+```js
 
     ReactDOM.render( React.createElement( FlounderReact, {
         placeholder         : 'placeholders!',
