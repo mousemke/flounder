@@ -417,7 +417,8 @@ Change Log
 0.4.7
 -----
 
-+ fixed a minor issue on the demo page
++ fixed a minor issue on the demo
++ // default is now only applied after rebuild if there is nothing with the value left in the dropdown // pending #39
 
 
 0.4.5

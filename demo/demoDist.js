@@ -20787,7 +20787,7 @@ var api = {
         data = this.data = data || this.data;
         var refs = this.refs;
         var _select = refs.select;
-        console.log(this.getSelectedValues());
+
         this.deselectAll();
         this.removeOptionsListeners();
         refs.select.innerHTML = '';
