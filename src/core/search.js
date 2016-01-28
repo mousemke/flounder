@@ -45,8 +45,8 @@ let defaults = {
         valueFlat           : 10,
         valueSplit          : 10,
 
-        description         : 5,
-        descriptionSplit    : 10
+        description         : 15,
+        descriptionSplit    : 30
     }
 };
 
@@ -161,9 +161,10 @@ export class Sole
 
                 search.description      = d.description ? d.description.toLowerCase() : null;
                 search.descriptionSplit = d.description ? search.description.split( ' ' ) : null;
-
+console.log( search );
                 defaults.scoreProperties.forEach( function( param )
                 {
+                    console.log( param, scoreThis( search[ param ], weights[ param ] ) );
                     score += scoreThis( search[ param ], weights[ param ] );
                 } );
 

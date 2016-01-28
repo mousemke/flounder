@@ -417,12 +417,14 @@ Change Log
 0.5.0
 -----
 
++ [search] adjusted search weights
 + [build] multiple is now automatically  enabled with `multipleTags : true`
 + [build] search works in react
 + [build] search is now mandataory enabled in a multiTag box (#7)
 + [demo] fixed minor issues on the demo
 + [flounder] slowly removing things that are not needed from the main object for the sake of a clearer api later
-+ [default]
++ [search] multiple `setValue` calls taken out
+
 + // default is now only applied after rebuild if there is nothing with the value left in the dropdown // pending #39
 
 
