@@ -161,10 +161,9 @@ export class Sole
 
                 search.description      = d.description ? d.description.toLowerCase() : null;
                 search.descriptionSplit = d.description ? search.description.split( ' ' ) : null;
-console.log( search );
+
                 defaults.scoreProperties.forEach( function( param )
                 {
-                    console.log( param, scoreThis( search[ param ], weights[ param ] ) );
                     score += scoreThis( search[ param ], weights[ param ] );
                 } );
 
