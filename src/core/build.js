@@ -385,7 +385,7 @@ const build = {
      *
      * @return _Object_ rebuilt flounder object
      */
-    reconfigureFlounder : function( data, props )
+    reconfigure : function( data, props )
     {
         if ( typeof data !== 'string' && typeof data.length === 'number' )
         {

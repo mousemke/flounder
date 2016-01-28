@@ -496,14 +496,6 @@ const api = {
     },
 
 
-    ///  TEMPORARY MOVEMENT FOR DEPRECIATION WARNING ///
-    reconfigure : function( data, props )
-    {
-        console.log( 'reconfigure is depreciated from the api and will be removed in 0.5.0.  Use rebuild' );
-        this.reconfigureFlounder( data, props );
-    },
-
-
     /**
      * ## setByIndex
      *

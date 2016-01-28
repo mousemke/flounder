@@ -20814,12 +20814,6 @@ var api = {
         return this;
     },
 
-    ///  TEMPORARY MOVEMENT FOR DEPRECIATION WARNING ///
-    reconfigure: function reconfigure(data, props) {
-        console.log('reconfigure is depreciated from the api and will be removed in 0.5.0.  Use rebuild');
-        this.reconfigureFlounder(data, props);
-    },
-
     /**
      * ## setByIndex
      *
@@ -21300,7 +21294,7 @@ var build = {
      *
      * @return _Object_ rebuilt flounder object
      */
-    reconfigureFlounder: function reconfigureFlounder(data, props) {
+    reconfigure: function reconfigure(data, props) {
         if (typeof data !== 'string' && typeof data.length === 'number') {
             props = props = props || this.props;
             props.data = data;
@@ -22262,8 +22256,6 @@ var Flounder = (function () {
         value: function fuzzySearch(e) {
             var _this2 = this;
 
-            var refs = this.refs;
-
             if (!this.toggleList.justOpened) {
                 e.preventDefault();
                 var keyCode = e.keyCode;
@@ -22275,7 +22267,7 @@ var Flounder = (function () {
 
                     if (matches) {
                         (function () {
-                            var data = refs.data;
+                            var data = _this2.refs.data;
 
                             data.forEach(function (el, i) {
                                 _this2.addClass(el, _classes3['default'].SEARCH_HIDDEN);
@@ -22290,7 +22282,6 @@ var Flounder = (function () {
                     }
                 } else {
                     this.setKeypress(e);
-                    this.setSelectValue(e);
                 }
             } else {
                 this.toggleList.justOpened = false;
@@ -23344,7 +23335,7 @@ module.exports = exports['default'];
 },{"./classes":173,"microbejs/src/modules/http":3}],179:[function(require,module,exports){
 'use strict';
 
-module.exports = '0.4.7';
+module.exports = '0.5.0';
 
 },{}],180:[function(require,module,exports){
 

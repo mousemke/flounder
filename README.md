@@ -1,4 +1,4 @@
-Flounder.js 0.4.7
+Flounder.js 0.5.0
 =================
 
 (for modern browsers and ie9+)
@@ -414,7 +414,7 @@ See more examples on the [demo page](./demo/index.html)
 Change Log
 ==========
 
-0.4.7
+0.5.0
 -----
 
 + [build] multiple is now automatically  enabled with `multipleTags : true`
@@ -422,6 +422,7 @@ Change Log
 + [build] search is now mandataory enabled in a multiTag box (#7)
 + [demo] fixed minor issues on the demo
 + [flounder] slowly removing things that are not needed from the main object for the sake of a clearer api later
++ [default]
 + // default is now only applied after rebuild if there is nothing with the value left in the dropdown // pending #39
 
 

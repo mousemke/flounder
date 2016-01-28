@@ -267,8 +267,6 @@ class Flounder
      */
     fuzzySearch( e )
     {
-        let refs = this.refs;
-
         if ( !this.toggleList.justOpened )
         {
             e.preventDefault();
@@ -283,7 +281,7 @@ class Flounder
 
                 if ( matches )
                 {
-                    let data    = refs.data;
+                    let data    = this.refs.data;
 
                     data.forEach( ( el, i ) =>
                     {
@@ -303,7 +301,6 @@ class Flounder
             else
             {
                 this.setKeypress( e );
-                this.setSelectValue( e );
             }
         }
         else
