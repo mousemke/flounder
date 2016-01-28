@@ -1,12 +1,12 @@
 /*!
- * Flounder JavaScript Styleable Selectbox v0.4.7
+ * Flounder JavaScript Styleable Selectbox v0.5.0
  * https://github.com/sociomantic/flounder
  *
  * Copyright 2015-2016 Sociomantic Labs and other contributors
  * Released under the MIT license
  * https://github.com/sociomantic/flounder/license
  *
- * Date: Wed Jan 27 2016
+ * Date: Thu Jan 28 2016
  * "This, so far, is the best Flounder ever"
  */
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
@@ -1552,12 +1552,6 @@ var api = {
         return this;
     },
 
-    ///  TEMPORARY MOVEMENT FOR DEPRECIATION WARNING ///
-    reconfigure: function reconfigure(data, props) {
-        console.log('reconfigure is depreciated from the api and will be removed in 0.5.0.  Use rebuild');
-        this.reconfigureFlounder(data, props);
-    },
-
     /**
      * ## setByIndex
      *
@@ -1733,7 +1727,7 @@ var build = {
      * @return _Mixed_ search node or false
      */
     addSearch: function addSearch(flounder) {
-        if (this.props.search) {
+        if (this.search) {
             var search = this.constructElement({
                 tagname: 'input',
                 type: 'text',
@@ -1798,7 +1792,7 @@ var build = {
             'data-value': defaultValue.value, 'data-index': defaultValue.index || -1 });
         selected.innerHTML = defaultValue.text;
 
-        var multiTagWrapper = this.props.multiple ? constructElement({ className: _classes2['default'].MULTI_TAG_LIST }) : null;
+        var multiTagWrapper = this.multiple ? constructElement({ className: _classes2['default'].MULTI_TAG_LIST }) : null;
 
         var arrow = constructElement({ className: _classes2['default'].ARROW });
         var optionsListWrapper = constructElement({ className: _classes2['default'].OPTIONS_WRAPPER + '  ' + _classes2['default'].HIDDEN });
@@ -2038,7 +2032,7 @@ var build = {
      *
      * @return _Object_ rebuilt flounder object
      */
-    reconfigureFlounder: function reconfigureFlounder(data, props) {
+    reconfigure: function reconfigure(data, props) {
         if (typeof data !== 'string' && typeof data.length === 'number') {
             props = props = props || this.props;
             props.data = data;
@@ -2190,26 +2184,6 @@ var events = {
      * @return _Void_
      */
     addListeners: function addListeners(refs, props) {
-        var self = this;
-        var divertTarget = function divertTarget(e) {
-            var index = this.selectedIndex;
-
-            var _e = {
-                target: data[index]
-            };
-
-            if (self.multipleTags) {
-                e.preventDefault();
-                e.stopPropagation();
-            }
-
-            self.setSelectValue(_e);
-
-            if (!self.multiple) {
-                self.toggleList(e, 'close');
-            }
-        };
-
         refs.select.addEventListener('change', this.divertTarget);
         refs.flounder.addEventListener('keydown', this.checkFlounderKeypress);
         refs.selected.addEventListener('click', this.toggleList);
@@ -2217,7 +2191,7 @@ var events = {
         this.addFirstTouchListeners();
         this.addOptionsListeners();
 
-        if (props.search) {
+        if (this.search) {
             this.addSearchListeners();
         }
     },
@@ -2477,7 +2451,7 @@ var events = {
             {
                 this.toggleList(e);
                 return false;
-            } else if (!window.sidebar && keyCode === 38 || keyCode === 40) // up and down
+            } else if (!window.sidebar && (keyCode === 38 || keyCode === 40)) // up and down
             {
                 e.preventDefault();
                 var _search = refs.search;
@@ -2621,6 +2595,43 @@ var events = {
     },
 
     /**
+     * ## toggleClosed
+     *
+     * post toggleList, this runs it the list should be closed
+     *
+     * @param {Object} e event object
+     * @param {DOMElement} optionsList the options list
+     * @param {Object} refs contains the references of the elements in flounder
+     * @param {DOMElement} wrapper wrapper of flounder
+     *
+     * @return _Void_
+     */
+    toggleClosed: function toggleClosed(e, optionsList, refs, wrapper) {
+        this.hideElement(optionsList);
+        this.removeSelectKeyListener();
+        this.removeClass(wrapper, 'open');
+
+        var qsHTML = document.querySelector('html');
+        qsHTML.removeEventListener('click', this.catchBodyClick);
+        qsHTML.removeEventListener('touchend', this.catchBodyClick);
+
+        if (this.search) {
+            this.fuzzySearchReset();
+            // this.setSelectValue( e );
+        }
+
+        refs.flounder.focus();
+
+        if (this.ready) {
+            try {
+                this.onClose(e, this.getSelectedValues());
+            } catch (e) {
+                console.log('something may be wrong in "onClose"', e);
+            }
+        }
+    },
+
+    /**
      * ## toggleList
      *
      * on click of flounder--selected, this shows or hides the options list
@@ -2644,43 +2655,6 @@ var events = {
         } else if (force === 'close' || !hasClass(optionsList, _classes2['default'].HIDDEN)) {
             this.toggleList.justOpened = false;
             this.toggleClosed(e, optionsList, refs, wrapper);
-        }
-    },
-
-    /**
-     * ## toggleClosed
-     *
-     * post toggleList, this runs it the list should be closed
-     *
-     * @param {Object} e event object
-     * @param {DOMElement} optionsList the options list
-     * @param {Object} refs contains the references of the elements in flounder
-     * @param {DOMElement} wrapper wrapper of flounder
-     *
-     * @return _Void_
-     */
-    toggleClosed: function toggleClosed(e, optionsList, refs, wrapper) {
-        this.hideElement(optionsList);
-        this.removeSelectKeyListener();
-        this.removeClass(wrapper, 'open');
-
-        var qsHTML = document.querySelector('html');
-        qsHTML.removeEventListener('click', this.catchBodyClick);
-        qsHTML.removeEventListener('touchend', this.catchBodyClick);
-
-        if (this.props.search) {
-            this.fuzzySearchReset();
-            this.setSelectValue(e);
-        }
-
-        refs.flounder.focus();
-
-        if (this.ready) {
-            try {
-                this.onClose(e, this.getSelectedValues());
-            } catch (e) {
-                console.log('something may be wrong in "onClose"', e);
-            }
         }
     },
 
@@ -2718,7 +2692,7 @@ var events = {
             }
         }
 
-        if (this.props.search) {
+        if (this.search) {
             refs.search.focus();
         }
 
@@ -2774,16 +2748,15 @@ var _classes2 = require('./classes');
 
 var _classes3 = _interopRequireDefault(_classes2);
 
-var _search2 = require('./search');
+var _search = require('./search');
 
-var _search3 = _interopRequireDefault(_search2);
+var _search2 = _interopRequireDefault(_search);
 
 var _version = require('./version');
 
 var _version2 = _interopRequireDefault(_version);
 
 var nativeSlice = Array.prototype.slice;
-var search = undefined;
 
 var Flounder = (function () {
     _createClass(Flounder, [{
@@ -2838,12 +2811,12 @@ var Flounder = (function () {
             refs.select.removeEventListener('change', this.divertTarget);
             refs.flounder.removeEventListener('keydown', this.checkFlounderKeypress);
 
-            if (this.props.search) {
-                var _search = refs.search;
-                _search.removeEventListener('click', this.toggleList);
-                _search.removeEventListener('keyup', this.fuzzySearch);
-                _search.removeEventListener('focus', this.checkPlaceholder);
-                _search.removeEventListener('blur', this.checkPlaceholder);
+            if (this.search) {
+                var search = refs.search;
+                search.removeEventListener('click', this.toggleList);
+                search.removeEventListener('keyup', this.fuzzySearch);
+                search.removeEventListener('focus', this.checkPlaceholder);
+                search.removeEventListener('blur', this.checkPlaceholder);
             }
         }
 
@@ -2868,7 +2841,6 @@ var Flounder = (function () {
             if (typeof target === 'string') {
                 target = document.querySelectorAll(target);
             }
-
             if (target.length && target.tagName !== 'SELECT') {
                 return this.arrayOfFlounders(target, props);
             } else if (!target.length && target.length !== 0 || target.tagName === 'SELECT') {
@@ -2881,8 +2853,8 @@ var Flounder = (function () {
                 this.bindThis();
                 this.initialzeOptions();
 
-                if (props && props.search) {
-                    search = new _search3['default'](this);
+                if (this.search) {
+                    this.search = new _search2['default'](this);
                 }
 
                 try {
@@ -3022,8 +2994,6 @@ var Flounder = (function () {
         value: function fuzzySearch(e) {
             var _this2 = this;
 
-            var refs = this.refs;
-
             if (!this.toggleList.justOpened) {
                 e.preventDefault();
                 var keyCode = e.keyCode;
@@ -3031,10 +3001,11 @@ var Flounder = (function () {
                 if (keyCode !== 38 && keyCode !== 40 && keyCode !== 13 && keyCode !== 27) {
                     var val = e.target.value.trim();
 
-                    if (val.length >= search.defaults.minimumValueLength) {
+                    var matches = this.search.isThereAnythingRelatedTo(val);
+
+                    if (matches) {
                         (function () {
-                            var matches = search.isThereAnythingRelatedTo(val);
-                            var data = refs.data;
+                            var data = _this2.refs.data;
 
                             data.forEach(function (el, i) {
                                 _this2.addClass(el, _classes3['default'].SEARCH_HIDDEN);
@@ -3049,7 +3020,6 @@ var Flounder = (function () {
                     }
                 } else {
                     this.setKeypress(e);
-                    this.setSelectValue(e);
                 }
             } else {
                 this.toggleList.justOpened = false;
@@ -3103,11 +3073,9 @@ var Flounder = (function () {
                 }
             }
 
-            if (!this.multiple) {
-                this.multipleTags = false;
-            }
-
             if (this.multipleTags) {
+                this.search = true;
+                this.multiple = true;
                 this.selectedClass += '  ' + _classes3['default'].SELECTED_HIDDEN;
 
                 if (!props.placeholder) {
@@ -3386,7 +3354,7 @@ var Flounder = (function () {
                 return res;
             };
 
-            _data = sortData(data);
+            _data = this.sortData(data);
 
             if (configObj.placeholder || _data.length === 0) {
                 defaultObj = setPlaceholderDefault(_data);
@@ -3429,6 +3397,43 @@ var Flounder = (function () {
 
                 search.style.textIndent = offset + 'px';
             }
+        }
+
+        /**
+         * ## sortData
+         *
+         * checks the data object for header options, and sorts it accordingly
+         *
+         * @return _Boolean_ hasHeaders
+         */
+    }, {
+        key: 'sortData',
+        value: function sortData(data) {
+            var _this7 = this;
+
+            var res = arguments.length <= 1 || arguments[1] === undefined ? [] : arguments[1];
+            var i = arguments.length <= 2 || arguments[2] === undefined ? 0 : arguments[2];
+
+            data.forEach(function (d) {
+                if (d.header) {
+                    res = _this7.sortData(d.data, res, i);
+                } else {
+                    if (typeof d !== 'object') {
+                        d = {
+                            text: d,
+                            value: d,
+                            index: i
+                        };
+                    } else {
+                        d.index = i;
+                    }
+
+                    res.push(d);
+                    i++;
+                }
+            });
+
+            return res;
         }
     }]);
 
@@ -3508,8 +3513,8 @@ var defaults = {
         valueFlat: 10,
         valueSplit: 10,
 
-        description: 5,
-        descriptionSplit: 10
+        description: 15,
+        descriptionSplit: 30
     }
 };
 
@@ -3596,8 +3601,6 @@ var Sole = (function () {
         };
 
         this.flounder = flounder;
-        this.defaults = defaults;
-
         return this;
     }
 
@@ -3631,40 +3634,52 @@ var Sole = (function () {
     }, {
         key: 'isThereAnythingRelatedTo',
         value: function isThereAnythingRelatedTo(query) {
-            this.query = query.toLowerCase().split(' ');
+            var _this2 = this;
 
-            var scoreThis = this.scoreThis;
-            var startsWith = this.startsWith;
+            var ratedResults = undefined;
 
-            var ratedResults = this.ratedResults = this.flounder.data.map(function (d, i) {
-                var score = 0;
-                var res = { i: i, d: d };
-                var search = d.search = d.search || {};
-                var weights = defaults.weights;
+            if (query.length >= defaults.minimumValueLength) {
+                (function () {
+                    _this2.query = query.toLowerCase().split(' ');
 
-                search.text = d.text;
-                search.textFlat = d.text.toLowerCase();
-                search.textSplit = search.textFlat.split(' ');
+                    var scoreThis = _this2.scoreThis;
+                    var startsWith = _this2.startsWith;
+                    var data = _this2.flounder.data;
+                    data = _this2.flounder.sortData(data);
 
-                search.value = d.value;
-                search.valueFlat = d.value.toLowerCase();
-                search.valueSplit = search.valueFlat.split(' ');
+                    ratedResults = _this2.ratedResults = data.map(function (d, i) {
+                        var score = 0;
+                        var res = { i: i, d: d };
+                        var search = d.search = d.search || {};
+                        var weights = defaults.weights;
 
-                search.description = d.description ? d.description.toLowerCase() : null;
-                search.descriptionSplit = d.description ? search.description.split(' ') : null;
+                        search.text = d.text;
+                        search.textFlat = d.text.toLowerCase();
+                        search.textSplit = search.textFlat.split(' ');
 
-                defaults.scoreProperties.forEach(function (param) {
-                    score += scoreThis(search[param], weights[param]);
-                });
+                        search.value = d.value;
+                        search.valueFlat = d.value.toLowerCase();
+                        search.valueSplit = search.valueFlat.split(' ');
 
-                defaults.startsWithProperties.forEach(function (param) {
-                    score += startsWith(query, search[param], weights[param + 'StartsWith']);
-                });
+                        search.description = d.description ? d.description.toLowerCase() : null;
+                        search.descriptionSplit = d.description ? search.description.split(' ') : null;
 
-                res.score = score;
+                        defaults.scoreProperties.forEach(function (param) {
+                            score += scoreThis(search[param], weights[param]);
+                        });
 
-                return res;
-            });
+                        defaults.startsWithProperties.forEach(function (param) {
+                            score += startsWith(query, search[param], weights[param + 'StartsWith']);
+                        });
+
+                        res.score = score;
+
+                        return res;
+                    });
+                })();
+            } else {
+                return false;
+            }
 
             ratedResults.sort(this.compareScoreCards);
             ratedResults = ratedResults.filter(this.removeItemsUnderMinimum);
@@ -3766,6 +3781,7 @@ var utils = {
      * @return _Void_
      */
     addClass: function addClass(_el, _class) {
+
         var _elClass = _el.className;
         var _elClassLength = _elClass.length;
 
@@ -4057,6 +4073,6 @@ module.exports = exports['default'];
 },{"./classes":14,"microbejs/src/modules/http":1}],20:[function(require,module,exports){
 'use strict';
 
-module.exports = '0.4.7';
+module.exports = '0.5.0';
 
 },{}]},{},[17]);

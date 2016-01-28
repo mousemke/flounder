@@ -1541,12 +1541,6 @@ var api = {
         return this;
     },
 
-    ///  TEMPORARY MOVEMENT FOR DEPRECIATION WARNING ///
-    reconfigure: function reconfigure(data, props) {
-        console.log('reconfigure is depreciated from the api and will be removed in 0.5.0.  Use rebuild');
-        this.reconfigureFlounder(data, props);
-    },
-
     /**
      * ## setByIndex
      *
@@ -1787,7 +1781,7 @@ var build = {
             'data-value': defaultValue.value, 'data-index': defaultValue.index || -1 });
         selected.innerHTML = defaultValue.text;
 
-        var multiTagWrapper = this.props.multiple ? constructElement({ className: _classes2['default'].MULTI_TAG_LIST }) : null;
+        var multiTagWrapper = this.multiple ? constructElement({ className: _classes2['default'].MULTI_TAG_LIST }) : null;
 
         var arrow = constructElement({ className: _classes2['default'].ARROW });
         var optionsListWrapper = constructElement({ className: _classes2['default'].OPTIONS_WRAPPER + '  ' + _classes2['default'].HIDDEN });
@@ -2027,7 +2021,7 @@ var build = {
      *
      * @return _Object_ rebuilt flounder object
      */
-    reconfigureFlounder: function reconfigureFlounder(data, props) {
+    reconfigure: function reconfigure(data, props) {
         if (typeof data !== 'string' && typeof data.length === 'number') {
             props = props = props || this.props;
             props.data = data;
@@ -2352,7 +2346,6 @@ var events = {
      * @return _Void_
      */
     divertTarget: function divertTarget(e) {
-        console.log(this.refs.select.selected);
         var index = e.target.selectedIndex;
 
         var _e = {
@@ -2447,7 +2440,7 @@ var events = {
             {
                 this.toggleList(e);
                 return false;
-            } else if (!window.sidebar && keyCode === 38 || keyCode === 40) // up and down
+            } else if (!window.sidebar && (keyCode === 38 || keyCode === 40)) // up and down
             {
                 e.preventDefault();
                 var _search = refs.search;
@@ -2591,6 +2584,43 @@ var events = {
     },
 
     /**
+     * ## toggleClosed
+     *
+     * post toggleList, this runs it the list should be closed
+     *
+     * @param {Object} e event object
+     * @param {DOMElement} optionsList the options list
+     * @param {Object} refs contains the references of the elements in flounder
+     * @param {DOMElement} wrapper wrapper of flounder
+     *
+     * @return _Void_
+     */
+    toggleClosed: function toggleClosed(e, optionsList, refs, wrapper) {
+        this.hideElement(optionsList);
+        this.removeSelectKeyListener();
+        this.removeClass(wrapper, 'open');
+
+        var qsHTML = document.querySelector('html');
+        qsHTML.removeEventListener('click', this.catchBodyClick);
+        qsHTML.removeEventListener('touchend', this.catchBodyClick);
+
+        if (this.search) {
+            this.fuzzySearchReset();
+            // this.setSelectValue( e );
+        }
+
+        refs.flounder.focus();
+
+        if (this.ready) {
+            try {
+                this.onClose(e, this.getSelectedValues());
+            } catch (e) {
+                console.log('something may be wrong in "onClose"', e);
+            }
+        }
+    },
+
+    /**
      * ## toggleList
      *
      * on click of flounder--selected, this shows or hides the options list
@@ -2614,43 +2644,6 @@ var events = {
         } else if (force === 'close' || !hasClass(optionsList, _classes2['default'].HIDDEN)) {
             this.toggleList.justOpened = false;
             this.toggleClosed(e, optionsList, refs, wrapper);
-        }
-    },
-
-    /**
-     * ## toggleClosed
-     *
-     * post toggleList, this runs it the list should be closed
-     *
-     * @param {Object} e event object
-     * @param {DOMElement} optionsList the options list
-     * @param {Object} refs contains the references of the elements in flounder
-     * @param {DOMElement} wrapper wrapper of flounder
-     *
-     * @return _Void_
-     */
-    toggleClosed: function toggleClosed(e, optionsList, refs, wrapper) {
-        this.hideElement(optionsList);
-        this.removeSelectKeyListener();
-        this.removeClass(wrapper, 'open');
-
-        var qsHTML = document.querySelector('html');
-        qsHTML.removeEventListener('click', this.catchBodyClick);
-        qsHTML.removeEventListener('touchend', this.catchBodyClick);
-
-        if (this.search) {
-            this.fuzzySearchReset();
-            this.setSelectValue(e);
-        }
-
-        refs.flounder.focus();
-
-        if (this.ready) {
-            try {
-                this.onClose(e, this.getSelectedValues());
-            } catch (e) {
-                console.log('something may be wrong in "onClose"', e);
-            }
         }
     },
 
@@ -2990,8 +2983,6 @@ var Flounder = (function () {
         value: function fuzzySearch(e) {
             var _this2 = this;
 
-            var refs = this.refs;
-
             if (!this.toggleList.justOpened) {
                 e.preventDefault();
                 var keyCode = e.keyCode;
@@ -2999,10 +2990,11 @@ var Flounder = (function () {
                 if (keyCode !== 38 && keyCode !== 40 && keyCode !== 13 && keyCode !== 27) {
                     var val = e.target.value.trim();
 
-                    if (val.length >= this.search.defaults.minimumValueLength) {
+                    var matches = this.search.isThereAnythingRelatedTo(val);
+
+                    if (matches) {
                         (function () {
-                            var matches = _this2.search.isThereAnythingRelatedTo(val);
-                            var data = refs.data;
+                            var data = _this2.refs.data;
 
                             data.forEach(function (el, i) {
                                 _this2.addClass(el, _classes3['default'].SEARCH_HIDDEN);
@@ -3017,7 +3009,6 @@ var Flounder = (function () {
                     }
                 } else {
                     this.setKeypress(e);
-                    this.setSelectValue(e);
                 }
             } else {
                 this.toggleList.justOpened = false;
@@ -3071,13 +3062,9 @@ var Flounder = (function () {
                 }
             }
 
-            if (!this.multiple) {
-                this.multipleTags = false;
-            }
-
             if (this.multipleTags) {
                 this.search = true;
-                console.log(this.search);
+                this.multiple = true;
                 this.selectedClass += '  ' + _classes3['default'].SELECTED_HIDDEN;
 
                 if (!props.placeholder) {
@@ -3356,7 +3343,7 @@ var Flounder = (function () {
                 return res;
             };
 
-            _data = sortData(data);
+            _data = this.sortData(data);
 
             if (configObj.placeholder || _data.length === 0) {
                 defaultObj = setPlaceholderDefault(_data);
@@ -3399,6 +3386,43 @@ var Flounder = (function () {
 
                 search.style.textIndent = offset + 'px';
             }
+        }
+
+        /**
+         * ## sortData
+         *
+         * checks the data object for header options, and sorts it accordingly
+         *
+         * @return _Boolean_ hasHeaders
+         */
+    }, {
+        key: 'sortData',
+        value: function sortData(data) {
+            var _this7 = this;
+
+            var res = arguments.length <= 1 || arguments[1] === undefined ? [] : arguments[1];
+            var i = arguments.length <= 2 || arguments[2] === undefined ? 0 : arguments[2];
+
+            data.forEach(function (d) {
+                if (d.header) {
+                    res = _this7.sortData(d.data, res, i);
+                } else {
+                    if (typeof d !== 'object') {
+                        d = {
+                            text: d,
+                            value: d,
+                            index: i
+                        };
+                    } else {
+                        d.index = i;
+                    }
+
+                    res.push(d);
+                    i++;
+                }
+            });
+
+            return res;
         }
     }]);
 
@@ -3478,8 +3502,8 @@ var defaults = {
         valueFlat: 10,
         valueSplit: 10,
 
-        description: 5,
-        descriptionSplit: 10
+        description: 15,
+        descriptionSplit: 30
     }
 };
 
@@ -3566,8 +3590,6 @@ var Sole = (function () {
         };
 
         this.flounder = flounder;
-        this.defaults = defaults;
-
         return this;
     }
 
@@ -3601,40 +3623,52 @@ var Sole = (function () {
     }, {
         key: 'isThereAnythingRelatedTo',
         value: function isThereAnythingRelatedTo(query) {
-            this.query = query.toLowerCase().split(' ');
+            var _this2 = this;
 
-            var scoreThis = this.scoreThis;
-            var startsWith = this.startsWith;
+            var ratedResults = undefined;
 
-            var ratedResults = this.ratedResults = this.flounder.data.map(function (d, i) {
-                var score = 0;
-                var res = { i: i, d: d };
-                var search = d.search = d.search || {};
-                var weights = defaults.weights;
+            if (query.length >= defaults.minimumValueLength) {
+                (function () {
+                    _this2.query = query.toLowerCase().split(' ');
 
-                search.text = d.text;
-                search.textFlat = d.text.toLowerCase();
-                search.textSplit = search.textFlat.split(' ');
+                    var scoreThis = _this2.scoreThis;
+                    var startsWith = _this2.startsWith;
+                    var data = _this2.flounder.data;
+                    data = _this2.flounder.sortData(data);
 
-                search.value = d.value;
-                search.valueFlat = d.value.toLowerCase();
-                search.valueSplit = search.valueFlat.split(' ');
+                    ratedResults = _this2.ratedResults = data.map(function (d, i) {
+                        var score = 0;
+                        var res = { i: i, d: d };
+                        var search = d.search = d.search || {};
+                        var weights = defaults.weights;
 
-                search.description = d.description ? d.description.toLowerCase() : null;
-                search.descriptionSplit = d.description ? search.description.split(' ') : null;
+                        search.text = d.text;
+                        search.textFlat = d.text.toLowerCase();
+                        search.textSplit = search.textFlat.split(' ');
 
-                defaults.scoreProperties.forEach(function (param) {
-                    score += scoreThis(search[param], weights[param]);
-                });
+                        search.value = d.value;
+                        search.valueFlat = d.value.toLowerCase();
+                        search.valueSplit = search.valueFlat.split(' ');
 
-                defaults.startsWithProperties.forEach(function (param) {
-                    score += startsWith(query, search[param], weights[param + 'StartsWith']);
-                });
+                        search.description = d.description ? d.description.toLowerCase() : null;
+                        search.descriptionSplit = d.description ? search.description.split(' ') : null;
 
-                res.score = score;
+                        defaults.scoreProperties.forEach(function (param) {
+                            score += scoreThis(search[param], weights[param]);
+                        });
 
-                return res;
-            });
+                        defaults.startsWithProperties.forEach(function (param) {
+                            score += startsWith(query, search[param], weights[param + 'StartsWith']);
+                        });
+
+                        res.score = score;
+
+                        return res;
+                    });
+                })();
+            } else {
+                return false;
+            }
 
             ratedResults.sort(this.compareScoreCards);
             ratedResults = ratedResults.filter(this.removeItemsUnderMinimum);
@@ -3736,6 +3770,7 @@ var utils = {
      * @return _Void_
      */
     addClass: function addClass(_el, _class) {
+
         var _elClass = _el.className;
         var _elClassLength = _elClass.length;
 
@@ -4027,7 +4062,7 @@ module.exports = exports['default'];
 },{"./classes":14,"microbejs/src/modules/http":1}],20:[function(require,module,exports){
 'use strict';
 
-module.exports = '0.4.7';
+module.exports = '0.5.0';
 
 },{}],21:[function(require,module,exports){
 

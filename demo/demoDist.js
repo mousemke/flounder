@@ -21713,7 +21713,7 @@ var events = {
             {
                 this.toggleList(e);
                 return false;
-            } else if (!window.sidebar && keyCode === 38 || keyCode === 40) // up and down
+            } else if (!window.sidebar && (keyCode === 38 || keyCode === 40)) // up and down
             {
                 e.preventDefault();
                 var _search = refs.search;
@@ -21810,7 +21810,7 @@ var events = {
         var selectedClass = this.selectedClass;
 
         var selectedOption = undefined;
-        console.trace();
+
         this.removeSelectedClass(data);
 
         var dataArray = this.getSelected();
@@ -22775,8 +22775,8 @@ var defaults = {
         valueFlat: 10,
         valueSplit: 10,
 
-        description: 5,
-        descriptionSplit: 10
+        description: 15,
+        descriptionSplit: 30
     }
 };
 

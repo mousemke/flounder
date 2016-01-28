@@ -417,7 +417,9 @@ Change Log
 0.5.0
 -----
 
++ [events] fixed a bug with incrementing and firefox
 + [search] adjusted search weights
++ [search] descriptions are now properly searchable
 + [build] multiple is now automatically  enabled with `multipleTags : true`
 + [build] search works in react
 + [build] search is now mandataory enabled in a multiTag box (#7)
