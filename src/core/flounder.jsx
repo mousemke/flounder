@@ -279,9 +279,10 @@ class Flounder
             {
                 let val = e.target.value.trim();
 
-                if ( val.length >= this.search.defaults.minimumValueLength )
+                let matches = this.search.isThereAnythingRelatedTo( val );
+
+                if ( matches )
                 {
-                    let matches = this.search.isThereAnythingRelatedTo( val );
                     let data    = refs.data;
 
                     data.forEach( ( el, i ) =>
@@ -362,16 +363,11 @@ class Flounder
             }
         }
 
-        if ( !this.multiple )
-        {
-            this.multipleTags = false;
-        }
-
         if ( this.multipleTags )
         {
             this.search         = true;
-            console.log( this.search );
-            this.selectedClass += '  ' + classes.SELECTED_HIDDEN;
+            this.multiple       = true;
+            this.selectedClass  += '  ' + classes.SELECTED_HIDDEN;
 
             if ( !props.placeholder )
             {
@@ -473,9 +469,6 @@ class Flounder
             console.log( 'something may be wrong in "onSelect"', e );
         }
     }
-
-
-
 
 
     /**
@@ -681,7 +674,7 @@ class Flounder
             return res;
         };
 
-        _data = sortData( data );
+        _data = this.sortData( data );
 
         if ( configObj.placeholder || _data.length === 0 )
         {
@@ -734,6 +727,45 @@ class Flounder
 
             search.style.textIndent = offset + 'px';
         }
+    }
+
+
+    /**
+     * ## sortData
+     *
+     * checks the data object for header options, and sorts it accordingly
+     *
+     * @return _Boolean_ hasHeaders
+     */
+    sortData( data, res = [], i = 0 )
+    {
+        data.forEach( d =>
+        {
+            if ( d.header )
+            {
+                res = this.sortData( d.data, res, i );
+            }
+            else
+            {
+                if ( typeof d !== 'object' )
+                {
+                    d = {
+                        text    : d,
+                        value   : d,
+                        index   : i
+                    };
+                }
+                else
+                {
+                    d.index = i;
+                }
+
+                res.push( d );
+                i++;
+            }
+        } );
+
+        return res;
     }
 }
 

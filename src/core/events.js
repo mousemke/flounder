@@ -239,7 +239,6 @@ const events = {
      */
     divertTarget : function( e )
     {
-        console.log( this.refs.select.selected );
         let index   = e.target.selectedIndex;
 
         let _e      = {
@@ -470,7 +469,7 @@ const events = {
         let selectedClass   = this.selectedClass;
 
         let selectedOption;
-
+console.trace();
         this.removeSelectedClass( data );
 
         let dataArray       = this.getSelected();
@@ -521,6 +520,50 @@ const events = {
 
 
     /**
+     * ## toggleClosed
+     *
+     * post toggleList, this runs it the list should be closed
+     *
+     * @param {Object} e event object
+     * @param {DOMElement} optionsList the options list
+     * @param {Object} refs contains the references of the elements in flounder
+     * @param {DOMElement} wrapper wrapper of flounder
+     *
+     * @return _Void_
+     */
+    toggleClosed : function( e, optionsList, refs, wrapper )
+    {
+        this.hideElement( optionsList );
+        this.removeSelectKeyListener();
+        this.removeClass( wrapper, 'open' );
+
+        let qsHTML = document.querySelector( 'html' );
+        qsHTML.removeEventListener( 'click', this.catchBodyClick );
+        qsHTML.removeEventListener( 'touchend', this.catchBodyClick );
+
+        if ( this.search )
+        {
+            this.fuzzySearchReset();
+            // this.setSelectValue( e );
+        }
+
+        refs.flounder.focus();
+
+        if ( this.ready )
+        {
+            try
+            {
+                this.onClose( e, this.getSelectedValues() );
+            }
+            catch( e )
+            {
+                console.log( 'something may be wrong in "onClose"', e );
+            }
+        }
+    },
+
+
+    /**
      * ## toggleList
      *
      * on click of flounder--selected, this shows or hides the options list
@@ -549,50 +592,6 @@ const events = {
         {
             this.toggleList.justOpened = false;
             this.toggleClosed( e, optionsList, refs, wrapper );
-        }
-    },
-
-
-    /**
-     * ## toggleClosed
-     *
-     * post toggleList, this runs it the list should be closed
-     *
-     * @param {Object} e event object
-     * @param {DOMElement} optionsList the options list
-     * @param {Object} refs contains the references of the elements in flounder
-     * @param {DOMElement} wrapper wrapper of flounder
-     *
-     * @return _Void_
-     */
-    toggleClosed : function( e, optionsList, refs, wrapper )
-    {
-        this.hideElement( optionsList );
-        this.removeSelectKeyListener();
-        this.removeClass( wrapper, 'open' );
-
-        let qsHTML = document.querySelector( 'html' );
-        qsHTML.removeEventListener( 'click', this.catchBodyClick );
-        qsHTML.removeEventListener( 'touchend', this.catchBodyClick );
-
-        if ( this.search )
-        {
-            this.fuzzySearchReset();
-            this.setSelectValue( e );
-        }
-
-        refs.flounder.focus();
-
-        if ( this.ready )
-        {
-            try
-            {
-                this.onClose( e, this.getSelectedValues() );
-            }
-            catch( e )
-            {
-                console.log( 'something may be wrong in "onClose"', e );
-            }
         }
     },
 

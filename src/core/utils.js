@@ -17,6 +17,7 @@ const utils = {
      */
     addClass : function( _el, _class )
     {
+
         let _elClass        = _el.className;
         let _elClassLength  = _elClass.length;
 
@@ -244,9 +245,9 @@ const utils = {
      */
     removeClass : function( el, _class )
     {
-        var baseClass        = el.className;
-        var baseClassLength  = baseClass.length;
-        var classLength    = _class.length;
+        var baseClass       = el.className;
+        var baseClassLength = baseClass.length;
+        var classLength     = _class.length;
 
         if ( baseClass.slice( 0, classLength + 1 ) === _class + ' ' )
         {

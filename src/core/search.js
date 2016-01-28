@@ -101,8 +101,6 @@ export class Sole
     constructor( flounder )
     {
         this.flounder = flounder;
-        this.defaults = defaults;
-
         return this;
     }
 
@@ -135,43 +133,54 @@ export class Sole
      */
     isThereAnythingRelatedTo( query )
     {
-        this.query          = query.toLowerCase().split( ' ' );
+        let ratedResults;
 
-        let scoreThis       = this.scoreThis;
-        let startsWith      = this.startsWith;
-
-        let ratedResults    = this.ratedResults = this.flounder.data.map( function( d, i )
+        if ( query.length >= defaults.minimumValueLength )
         {
-            let score   = 0 ;
-            let res     = { i : i, d : d };
-            let search  = d.search  = d.search || {};
-            let weights = defaults.weights;
+            this.query          = query.toLowerCase().split( ' ' );
 
-            search.text             = d.text;
-            search.textFlat         = d.text.toLowerCase();
-            search.textSplit        = search.textFlat.split( ' ' );
+            let scoreThis       = this.scoreThis;
+            let startsWith      = this.startsWith;
+            let data            = this.flounder.data;
+                data            = this.flounder.sortData( data );
 
-            search.value            = d.value;
-            search.valueFlat        = d.value.toLowerCase();
-            search.valueSplit       = search.valueFlat.split( ' ' );
-
-            search.description      = d.description ? d.description.toLowerCase() : null;
-            search.descriptionSplit = d.description ? search.description.split( ' ' ) : null;
-
-            defaults.scoreProperties.forEach( function( param )
+            ratedResults    = this.ratedResults = data.map( function( d, i )
             {
-                score += scoreThis( search[ param ], weights[ param ] );
+                let score   = 0 ;
+                let res     = { i : i, d : d };
+                let search  = d.search  = d.search || {};
+                let weights = defaults.weights;
+
+                search.text             = d.text;
+                search.textFlat         = d.text.toLowerCase();
+                search.textSplit        = search.textFlat.split( ' ' );
+
+                search.value            = d.value;
+                search.valueFlat        = d.value.toLowerCase();
+                search.valueSplit       = search.valueFlat.split( ' ' );
+
+                search.description      = d.description ? d.description.toLowerCase() : null;
+                search.descriptionSplit = d.description ? search.description.split( ' ' ) : null;
+
+                defaults.scoreProperties.forEach( function( param )
+                {
+                    score += scoreThis( search[ param ], weights[ param ] );
+                } );
+
+                defaults.startsWithProperties.forEach( function( param )
+                {
+                    score += startsWith( query, search[ param ], weights[ param + 'StartsWith' ] );
+                } );
+
+                res.score = score;
+
+                return res;
             } );
-
-            defaults.startsWithProperties.forEach( function( param )
-            {
-                score += startsWith( query, search[ param ], weights[ param + 'StartsWith' ] );
-            } );
-
-            res.score = score;
-
-            return res;
-        } );
+        }
+        else
+        {
+            return false;
+        }
 
         ratedResults.sort( this.compareScoreCards );
         ratedResults = ratedResults.filter( this.removeItemsUnderMinimum );

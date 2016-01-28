@@ -57,6 +57,8 @@ let buildData = function()
  */
 new Flounder( '.vanilla--input--tags', {
 
+    multipleTags    : true,
+
     onInit          : function()
     {
         let res = [];

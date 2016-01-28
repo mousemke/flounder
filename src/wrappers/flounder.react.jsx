@@ -47,11 +47,6 @@ class FlounderReact extends Component
 
         let multiTagWrapper = refs.multiTagWrapper;
 
-        if ( multiTagWrapper )
-        {
-            multiTagWrapper.style.textIndent = this.defaultTextIndent + 'px';
-        }
-
         if ( !this.multiple )
         {
             refs.select.removeAttribute( 'multiple' );
@@ -165,7 +160,7 @@ class FlounderReact extends Component
         let data            = this.data = this.prepOptions( props.data || this.data );
 
         let handleChange    = this.handleChange.bind( this );
-        let multiple        = props.multiple;
+        let multiple        = this.multiple;
         let searchBool      = this.search;
 
         let defaultValue    = this._default = this.setDefaultOption( props, data );

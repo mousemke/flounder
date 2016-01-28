@@ -417,9 +417,11 @@ Change Log
 0.4.7
 -----
 
-+ fixed minor issues on the demo
-+ search works in react
-+ search is now mandataory enabled in a multiTag box (#7)
++ [build] multiple is now automatically  enabled with `multipleTags : true`
++ [build] search works in react
++ [build] search is now mandataory enabled in a multiTag box (#7)
++ [demo] fixed minor issues on the demo
++ [flounder] slowly removing things that are not needed from the main object for the sake of a clearer api later
 + // default is now only applied after rebuild if there is nothing with the value left in the dropdown // pending #39
 
 
@@ -427,7 +429,7 @@ Change Log
 -----
 
 + [default] the default `data` is now `[]` in case of initially empty dropdowns
-+ changed how microbe is required and installed
++ [deps] changed how microbe is required and installed
 
 
 0.4.4
