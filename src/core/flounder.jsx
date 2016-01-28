@@ -12,7 +12,6 @@ import Search           from './search';
 import version          from './version';
 
 const nativeSlice = Array.prototype.slice;
-let search;
 
 class Flounder
 {
@@ -65,7 +64,7 @@ class Flounder
         refs.select.removeEventListener( 'change', this.divertTarget  );
         refs.flounder.removeEventListener( 'keydown', this.checkFlounderKeypress );
 
-        if ( this.props.search )
+        if ( this.search )
         {
             let search = refs.search;
             search.removeEventListener( 'click', this.toggleList );
@@ -98,7 +97,6 @@ class Flounder
             {
                 target = document.querySelectorAll( target );
             }
-
             if ( target.length && target.tagName !== 'SELECT' )
             {
                 return this.arrayOfFlounders( target, props );
@@ -115,9 +113,9 @@ class Flounder
                 this.bindThis();
                 this.initialzeOptions();
 
-                if ( props && props.search )
+                if ( this.search )
                 {
-                    search = new Search( this );
+                    this.search = new Search( this );
                 }
 
                 try
@@ -281,9 +279,9 @@ class Flounder
             {
                 let val = e.target.value.trim();
 
-                if ( val.length >= search.defaults.minimumValueLength )
+                if ( val.length >= this.search.defaults.minimumValueLength )
                 {
-                    let matches = search.isThereAnythingRelatedTo( val );
+                    let matches = this.search.isThereAnythingRelatedTo( val );
                     let data    = refs.data;
 
                     data.forEach( ( el, i ) =>
@@ -371,6 +369,8 @@ class Flounder
 
         if ( this.multipleTags )
         {
+            this.search         = true;
+            console.log( this.search );
             this.selectedClass += '  ' + classes.SELECTED_HIDDEN;
 
             if ( !props.placeholder )

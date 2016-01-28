@@ -28,30 +28,6 @@ const events = {
      */
     addListeners : function( refs, props )
     {
-        let self            = this;
-        let divertTarget    = function( e )
-        {
-            let index   = this.selectedIndex;
-
-            let _e      = {
-                target          : data[ index ]
-            };
-
-            if ( self.multipleTags )
-            {
-                e.preventDefault();
-                e.stopPropagation();
-            }
-
-            self.setSelectValue( _e );
-
-            if ( !self.multiple )
-            {
-                self.toggleList( e, 'close' );
-            }
-        };
-
-
         refs.select.addEventListener( 'change', this.divertTarget );
         refs.flounder.addEventListener( 'keydown', this.checkFlounderKeypress );
         refs.selected.addEventListener( 'click', this.toggleList );
@@ -59,7 +35,7 @@ const events = {
         this.addFirstTouchListeners();
         this.addOptionsListeners();
 
-        if ( props.search )
+        if ( this.search )
         {
             this.addSearchListeners();
         }
@@ -263,6 +239,7 @@ const events = {
      */
     divertTarget : function( e )
     {
+        console.log( this.refs.select.selected );
         let index   = e.target.selectedIndex;
 
         let _e      = {
@@ -598,7 +575,7 @@ const events = {
         qsHTML.removeEventListener( 'click', this.catchBodyClick );
         qsHTML.removeEventListener( 'touchend', this.catchBodyClick );
 
-        if ( this.props.search )
+        if ( this.search )
         {
             this.fuzzySearchReset();
             this.setSelectValue( e );
@@ -659,7 +636,7 @@ const events = {
             }
         }
 
-        if ( this.props.search )
+        if ( this.search )
         {
             refs.search.focus();
         }

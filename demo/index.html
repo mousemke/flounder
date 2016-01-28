@@ -104,7 +104,7 @@
                     var self = this;
 
                     this.data = this.buildFromUrl( './dummyData.json',
-                                            _d => this.data =_d.dummyData );
+                                            function( _d ){ self.data =_d.dummyData } );
                 },
 
                 placeholder         : 'placeholders!',

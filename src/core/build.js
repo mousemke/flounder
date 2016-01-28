@@ -34,7 +34,7 @@ const build = {
      */
     addSearch : function( flounder )
     {
-        if ( this.props.search )
+        if ( this.search )
         {
             let search = this.constructElement( {
                                     tagname     : 'input',

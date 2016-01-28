@@ -417,7 +417,9 @@ Change Log
 0.4.7
 -----
 
-+ fixed a minor issue on the demo
++ fixed minor issues on the demo
++ search works in react
++ search is now mandataory enabled in a multiTag box (#7)
 + // default is now only applied after rebuild if there is nothing with the value left in the dropdown // pending #39
 
 

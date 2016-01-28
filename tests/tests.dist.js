@@ -1722,7 +1722,7 @@ var build = {
      * @return _Mixed_ search node or false
      */
     addSearch: function addSearch(flounder) {
-        if (this.props.search) {
+        if (this.search) {
             var search = this.constructElement({
                 tagname: 'input',
                 type: 'text',
@@ -2179,26 +2179,6 @@ var events = {
      * @return _Void_
      */
     addListeners: function addListeners(refs, props) {
-        var self = this;
-        var divertTarget = function divertTarget(e) {
-            var index = this.selectedIndex;
-
-            var _e = {
-                target: data[index]
-            };
-
-            if (self.multipleTags) {
-                e.preventDefault();
-                e.stopPropagation();
-            }
-
-            self.setSelectValue(_e);
-
-            if (!self.multiple) {
-                self.toggleList(e, 'close');
-            }
-        };
-
         refs.select.addEventListener('change', this.divertTarget);
         refs.flounder.addEventListener('keydown', this.checkFlounderKeypress);
         refs.selected.addEventListener('click', this.toggleList);
@@ -2206,7 +2186,7 @@ var events = {
         this.addFirstTouchListeners();
         this.addOptionsListeners();
 
-        if (props.search) {
+        if (this.search) {
             this.addSearchListeners();
         }
     },
@@ -2372,6 +2352,7 @@ var events = {
      * @return _Void_
      */
     divertTarget: function divertTarget(e) {
+        console.log(this.refs.select.selected);
         var index = e.target.selectedIndex;
 
         var _e = {
@@ -2657,7 +2638,7 @@ var events = {
         qsHTML.removeEventListener('click', this.catchBodyClick);
         qsHTML.removeEventListener('touchend', this.catchBodyClick);
 
-        if (this.props.search) {
+        if (this.search) {
             this.fuzzySearchReset();
             this.setSelectValue(e);
         }
@@ -2707,7 +2688,7 @@ var events = {
             }
         }
 
-        if (this.props.search) {
+        if (this.search) {
             refs.search.focus();
         }
 
@@ -2763,16 +2744,15 @@ var _classes2 = require('./classes');
 
 var _classes3 = _interopRequireDefault(_classes2);
 
-var _search2 = require('./search');
+var _search = require('./search');
 
-var _search3 = _interopRequireDefault(_search2);
+var _search2 = _interopRequireDefault(_search);
 
 var _version = require('./version');
 
 var _version2 = _interopRequireDefault(_version);
 
 var nativeSlice = Array.prototype.slice;
-var search = undefined;
 
 var Flounder = (function () {
     _createClass(Flounder, [{
@@ -2827,12 +2807,12 @@ var Flounder = (function () {
             refs.select.removeEventListener('change', this.divertTarget);
             refs.flounder.removeEventListener('keydown', this.checkFlounderKeypress);
 
-            if (this.props.search) {
-                var _search = refs.search;
-                _search.removeEventListener('click', this.toggleList);
-                _search.removeEventListener('keyup', this.fuzzySearch);
-                _search.removeEventListener('focus', this.checkPlaceholder);
-                _search.removeEventListener('blur', this.checkPlaceholder);
+            if (this.search) {
+                var search = refs.search;
+                search.removeEventListener('click', this.toggleList);
+                search.removeEventListener('keyup', this.fuzzySearch);
+                search.removeEventListener('focus', this.checkPlaceholder);
+                search.removeEventListener('blur', this.checkPlaceholder);
             }
         }
 
@@ -2857,7 +2837,6 @@ var Flounder = (function () {
             if (typeof target === 'string') {
                 target = document.querySelectorAll(target);
             }
-
             if (target.length && target.tagName !== 'SELECT') {
                 return this.arrayOfFlounders(target, props);
             } else if (!target.length && target.length !== 0 || target.tagName === 'SELECT') {
@@ -2870,8 +2849,8 @@ var Flounder = (function () {
                 this.bindThis();
                 this.initialzeOptions();
 
-                if (props && props.search) {
-                    search = new _search3['default'](this);
+                if (this.search) {
+                    this.search = new _search2['default'](this);
                 }
 
                 try {
@@ -3020,9 +2999,9 @@ var Flounder = (function () {
                 if (keyCode !== 38 && keyCode !== 40 && keyCode !== 13 && keyCode !== 27) {
                     var val = e.target.value.trim();
 
-                    if (val.length >= search.defaults.minimumValueLength) {
+                    if (val.length >= this.search.defaults.minimumValueLength) {
                         (function () {
-                            var matches = search.isThereAnythingRelatedTo(val);
+                            var matches = _this2.search.isThereAnythingRelatedTo(val);
                             var data = refs.data;
 
                             data.forEach(function (el, i) {
@@ -3097,6 +3076,8 @@ var Flounder = (function () {
             }
 
             if (this.multipleTags) {
+                this.search = true;
+                console.log(this.search);
                 this.selectedClass += '  ' + _classes3['default'].SELECTED_HIDDEN;
 
                 if (!props.placeholder) {

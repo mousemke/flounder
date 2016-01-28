@@ -7,6 +7,8 @@ import ReactDOM             from 'react-dom';
 import Flounder             from '../core/flounder.jsx';
 import classes              from '../core/classes';
 import utils                from '../core/utils';
+import Search               from '../core/search';
+import version              from '../core/version';
 
 const slice = Array.prototype.slice;
 
@@ -141,6 +143,11 @@ class FlounderReact extends Component
 
         this.initialzeOptions();
 
+        if ( this.search )
+        {
+            this.search = new Search( this );
+        }
+
         try
         {
             this.onInit();
@@ -159,6 +166,7 @@ class FlounderReact extends Component
 
         let handleChange    = this.handleChange.bind( this );
         let multiple        = props.multiple;
+        let searchBool      = this.search;
 
         let defaultValue    = this._default = this.setDefaultOption( props, data );
         let defaultReact    = multiple ? [ defaultValue.value ] : defaultValue.value;
@@ -204,7 +212,7 @@ class FlounderReact extends Component
                         }
                         </div>
                     </div>
-                    { props.search ? <input ref="search" type="text" className={classes.SEARCH} /> : null }
+                    { searchBool ? <input ref="search" type="text" className={classes.SEARCH} /> : null }
                 </div>
                 <select ref="select" className={classes.SELECT_TAG + '  ' + classes.HIDDEN} defaultValue={defaultReact} tabIndex="-1" multiple={multiple}>
                 {
@@ -240,6 +248,20 @@ methods.forEach( function( method )
         FlounderReactPrototype[ method ] = FlounderPrototype[ method ]
     }
 });
+
+Object.defineProperty( FlounderReact, 'version', {
+    get : function()
+    {
+        return version;
+    }
+} );
+
+Object.defineProperty( FlounderReact.prototype, 'version', {
+    get : function()
+    {
+        return version;
+    }
+} );
 
 export default { React, Component, ReactDOM, FlounderReact, Flounder };
 
