@@ -348,7 +348,7 @@ const events = {
             this.toggleList( e );
             return false;
         }
-        else if ( !window.sidebar && keyCode === 38 || keyCode === 40 ) // up and down
+        else if ( !window.sidebar && ( keyCode === 38 || keyCode === 40 ) ) // up and down
         {
             e.preventDefault();
             let search = refs.search;
@@ -469,7 +469,7 @@ const events = {
         let selectedClass   = this.selectedClass;
 
         let selectedOption;
-console.trace();
+
         this.removeSelectedClass( data );
 
         let dataArray       = this.getSelected();
