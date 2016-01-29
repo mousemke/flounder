@@ -266,7 +266,7 @@ requirejs( [ 'flounder' ], function( Flounder )
 
 µ( '.debug--mode' ).on( 'click', function()
 {
-    µ( '.flounder--select--tag' ).removeClass( 'flounder--hidden' );
+    µ( '.flounder--select--tag' ).removeClass( 'flounder--hidden' ).removeClass( 'flounder--hidden--ios' );
     µ( '.flounder' ).css( 'display', 'inline-block' )
 } );
 

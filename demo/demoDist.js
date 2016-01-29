@@ -243,7 +243,7 @@ requirejs(['flounder'], function (Flounder) {
 });
 
 µ('.debug--mode').on('click', function () {
-    µ('.flounder--select--tag').removeClass('flounder--hidden');
+    µ('.flounder--select--tag').removeClass('flounder--hidden').removeClass('flounder--hidden--ios');
     µ('.flounder').css('display', 'inline-block');
 });
 
@@ -20810,7 +20810,6 @@ var api = {
         this.data = data;
 
         this.displaySelected(refs.selected, refs);
-
         return this;
     },
 
@@ -21231,6 +21230,10 @@ var build = {
         return [data, selectOptions];
     },
 
+    popInSelectElements: function popInSelectElements() {},
+
+    popOutSelectElements: function popOutSelectElements(select) {},
+
     /**
      * ## initSelectBox
      *
@@ -21278,7 +21281,7 @@ var build = {
             this.target = target.parentNode;
             this.addClass(select || target, _classes2['default'].HIDDEN);
         } else {
-            select = this.constructElement({ tagname: 'select', className: _classes2['default'].SELECT_TAG + '  ' + _classes2['default'].HIDDEN });
+            select = this.constructElement({ tagname: 'SELECT', className: _classes2['default'].SELECT_TAG + '  ' + _classes2['default'].HIDDEN });
             wrapper.appendChild(select);
         }
 
@@ -21935,7 +21938,7 @@ var events = {
     toggleOpen: function toggleOpen(e, optionsList, refs, wrapper) {
         this.addSelectKeyListener();
 
-        if (!this.isIos || this.multipleTags === true && this.multiple === true) {
+        if (!this.isIos || this.search || this.multipleTags === true && this.multiple === true) {
             this.showElement(optionsList);
             this.addClass(wrapper, 'open');
 
