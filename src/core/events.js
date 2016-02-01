@@ -28,7 +28,9 @@ const events = {
      */
     addListeners : function( refs, props )
     {
-        refs.select.addEventListener( 'change', this.divertTarget );
+        let changeEvent = this.isIos ? 'blur' : 'change';
+
+        refs.select.addEventListener( changeEvent, this.divertTarget );
         refs.flounder.addEventListener( 'keydown', this.checkFlounderKeypress );
         refs.selected.addEventListener( 'click', this.toggleList );
 
@@ -242,6 +244,7 @@ const events = {
         let index   = e.target.selectedIndex;
 
         let _e      = {
+            type            : e.type,
             target          : this.data[ index ]
         };
 
@@ -430,7 +433,7 @@ const events = {
             // tab, shift, ctrl, alt, caps, cmd
             let nonKeys = [ 9, 16, 17, 18, 20, 91 ];
 
-            if ( e || ( keyCode && nonKeys.indexOf( keyCode ) === -1 ) )
+            if ( e || obj.type === 'blur' || ( keyCode && nonKeys.indexOf( keyCode ) === -1 ) )
             {
                 if ( this.toggleList.justOpened && !e )
                 {
@@ -544,7 +547,6 @@ const events = {
         if ( this.search )
         {
             this.fuzzySearchReset();
-            // this.setSelectValue( e );
         }
 
         refs.flounder.focus();
@@ -610,9 +612,10 @@ const events = {
      */
     toggleOpen : function( e, optionsList, refs, wrapper )
     {
+        console.log( 'opening', this.getSelected() );
         this.addSelectKeyListener();
 
-        if ( !this.isIos || ( this.multipleTags === true && this.multiple === true ) )
+        if ( !this.isIos || this.search || ( this.multipleTags === true && this.multiple === true ) )
         {
             this.showElement( optionsList );
             this.addClass( wrapper, 'open' );

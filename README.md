@@ -426,8 +426,8 @@ Change Log
 + [demo] fixed minor issues on the demo
 + [flounder] slowly removing things that are not needed from the main object for the sake of a clearer api later
 + [search] multiple `setValue` calls taken out
-
-+ // default is now only applied after rebuild if there is nothing with the value left in the dropdown // pending #39
++ [demo] changed debug button
++ [events] added a blur event to catch mobile selection
 
 
 0.4.5
