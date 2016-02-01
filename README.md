@@ -418,16 +418,21 @@ Change Log
 -----
 
 + [events] fixed a bug with incrementing and firefox
++ [events] added a blur event to catch mobile selection
 + [search] adjusted search weights
 + [search] descriptions are now properly searchable
++ [search] multiple `setValue` calls taken out
 + [build] multiple is now automatically  enabled with `multipleTags : true`
 + [build] search works in react
 + [build] search is now mandataory enabled in a multiTag box (#7)
 + [demo] fixed minor issues on the demo
-+ [flounder] slowly removing things that are not needed from the main object for the sake of a clearer api later
-+ [search] multiple `setValue` calls taken out
 + [demo] changed debug button
-+ [events] added a blur event to catch mobile selection
++ [flounder] slowly removing things that are not needed from the main object for the sake of a clearer api later
++ [api] removed querySelector from the api calls
+
+
+// + mobile safari selects things all by itself
+// + default is now only applied after rebuild if there is nothing with the value left in the dropdown // pending #39
 
 
 0.4.5

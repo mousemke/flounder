@@ -110,29 +110,7 @@ new Flounder( document.getElementById( 'vanilla--input' ), {
 
     onInit              : function(){ this.data = buildData(); },
 
-    onSelect            : function( e )
-    {
-        let selected    = _slice.call( this.refs.select.selectedOptions );
-        selected        = selected.map( el => el.index );
-
-        let rand = function( dataObj, i )
-        {
-            if ( selected.indexOf( i ) !== -1 )
-            {
-                return dataObj;
-            }
-            else
-            {
-                let value = Math.ceil( Math.random() * 10 );
-                return { text : value, value : value, index : i };
-            }
-        };
-
-        let _o       = this.data.map( rand );
-
-        this.data    = _o;
-        this.rebuild( _o );
-    }
+    onSelect            : function(){ console.log( 'moon' ); },
 } );
 
 

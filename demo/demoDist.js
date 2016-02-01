@@ -104,25 +104,8 @@ new _srcWrappersFlounderReactJsx.Flounder(document.getElementById('vanilla--inpu
         this.data = buildData();
     },
 
-    onSelect: function onSelect(e) {
-        var selected = _slice.call(this.refs.select.selectedOptions);
-        selected = selected.map(function (el) {
-            return el.index;
-        });
-
-        var rand = function rand(dataObj, i) {
-            if (selected.indexOf(i) !== -1) {
-                return dataObj;
-            } else {
-                var value = Math.ceil(Math.random() * 10);
-                return { text: value, value: value, index: i };
-            }
-        };
-
-        var _o = this.data.map(rand);
-
-        this.data = _o;
-        this.rebuild(_o);
+    onSelect: function onSelect() {
+        console.log('moon');
     }
 });
 
@@ -20623,8 +20606,13 @@ var api = {
 
             if (typeof _ret4 === 'object') return _ret4.v;
         } else {
-            value = this.refs.select.querySelector('[value="' + value + '"]');
-            return value ? this.disableByIndex(value.index, reenable) : null;
+            var values = this.refs.selectOptions.map(function (el) {
+                return el.value === value ? el.index : null;
+            }).filter(function (a) {
+                return !!a;
+            });
+
+            return value ? this.disableByIndex(values, reenable) : null;
         }
     },
 
@@ -20810,6 +20798,7 @@ var api = {
         this.data = data;
 
         this.displaySelected(refs.selected, refs);
+
         return this;
     },
 
@@ -20933,8 +20922,13 @@ var api = {
 
             if (typeof _ret8 === 'object') return _ret8.v;
         } else {
-            value = this.refs.select.querySelector('[value="' + value + '"]');
-            return value ? this.setByIndex(value.index, multiple, programmatic) : null;
+            var values = this.refs.selectOptions.map(function (el) {
+                return el.value === value + '' ? el.index : null;
+            }).filter(function (a) {
+                return !!a;
+            });
+
+            return value ? this.setByIndex(values, multiple, programmatic) : null;
         }
     }
 };
@@ -21449,7 +21443,9 @@ var events = {
      * @return _Void_
      */
     addListeners: function addListeners(refs, props) {
-        refs.select.addEventListener('change', this.divertTarget);
+        var changeEvent = this.isIos ? 'blur' : 'change';
+
+        refs.select.addEventListener(changeEvent, this.divertTarget);
         refs.flounder.addEventListener('keydown', this.checkFlounderKeypress);
         refs.selected.addEventListener('click', this.toggleList);
 
@@ -21505,7 +21501,14 @@ var events = {
         var select = this.refs.select;
         select.addEventListener('keyup', this.setSelectValue);
         select.addEventListener('keydown', this.setKeypress);
+
+        var selected = this.getSelected();
         select.focus();
+
+        this.deselectAll();
+        selected.forEach(function (el) {
+            el.selected = true;
+        });
     },
 
     /**
@@ -21625,6 +21628,7 @@ var events = {
         var index = e.target.selectedIndex;
 
         var _e = {
+            type: e.type,
             target: this.data[index]
         };
 
@@ -21783,7 +21787,7 @@ var events = {
             // tab, shift, ctrl, alt, caps, cmd
             var nonKeys = [9, 16, 17, 18, 20, 91];
 
-            if (e || keyCode && nonKeys.indexOf(keyCode) === -1) {
+            if (e || obj.type === 'blur' || keyCode && nonKeys.indexOf(keyCode) === -1) {
                 if (this.toggleList.justOpened && !e) {
                     this.toggleList.justOpened = false;
                 } else {
@@ -21882,7 +21886,6 @@ var events = {
 
         if (this.search) {
             this.fuzzySearchReset();
-            // this.setSelectValue( e );
         }
 
         refs.flounder.focus();
@@ -22214,7 +22217,7 @@ var Flounder = (function () {
             var selectedOption = this.getSelected();
 
             var selectedLength = selectedOption.length;
-
+            console.log(selectedLength);
             if (!this.multiple || !this.multipleTags && selectedLength === 1) {
                 index = selectedOption[0].index;
                 selected.innerHTML = selectedOption[0].innerHTML;

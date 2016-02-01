@@ -284,8 +284,12 @@ const api = {
         }
         else
         {
-            value = this.refs.select.querySelector( '[value="' + value + '"]' );
-            return value ? this.disableByIndex( value.index, reenable ) : null;
+            let values = this.refs.selectOptions.map( function( el )
+            {
+                return el.value === value ? el.index : null;
+            } ).filter( a => !!a );
+
+            return value ? this.disableByIndex( values, reenable ) : null;
         }
     },
 
@@ -591,8 +595,12 @@ const api = {
         }
         else
         {
-            value = this.refs.select.querySelector( '[value="' + value + '"]' );
-            return value ? this.setByIndex( value.index, multiple, programmatic ) : null;
+            let values = this.refs.selectOptions.map( function( el )
+            {
+                return el.value === value + '' ? el.index : null;
+            } ).filter( a => !!a );
+
+            return value ? this.setByIndex( values, multiple, programmatic ) : null;
         }
     }
 };
