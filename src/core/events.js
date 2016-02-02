@@ -98,6 +98,8 @@ const events = {
         select.addEventListener( 'keyup', this.setSelectValue );
         select.addEventListener( 'keydown', this.setKeypress );
 
+        // weird shit
+        // http://stackoverflow.com/questions/34660500/mobile-safari-multi-select-bug
         if ( this.isIos )
         {
             let firstOption = select[0];
