@@ -28,9 +28,11 @@ const events = {
      */
     addListeners : function( refs, props )
     {
-        let changeEvent = this.isIos ? 'blur' : 'change';
+        let ios = this.isIos;
+        let changeEvent = ios ? 'blur' : 'change';
 
         refs.select.addEventListener( changeEvent, this.divertTarget );
+
         refs.flounder.addEventListener( 'keydown', this.checkFlounderKeypress );
         refs.selected.addEventListener( 'click', this.toggleList );
 
@@ -90,9 +92,21 @@ const events = {
      */
     addSelectKeyListener : function()
     {
-        let select = this.refs.select;
+        let refs    = this.refs;
+        let select  = refs.select;
+
         select.addEventListener( 'keyup', this.setSelectValue );
         select.addEventListener( 'keydown', this.setKeypress );
+
+        if ( this.isIos )
+        {
+            let firstOption = select[0];
+            let plug        = document.createElement( 'OPTION' );
+            plug.disabled   = true;
+            plug.className  = classes.PLUG;
+            select.insertBefore( plug, firstOption );
+        }
+
         select.focus();
     },
 
@@ -241,6 +255,15 @@ const events = {
      */
     divertTarget : function( e )
     {
+        // weird shit
+        // http://stackoverflow.com/questions/34660500/mobile-safari-multi-select-bug
+        if ( this.isIos )
+        {
+            let select  = this.refs.select;
+            let plug    = select.querySelector( '.' + classes.PLUG );
+            select.removeChild( plug );
+        }
+
         let index   = e.target.selectedIndex;
 
         let _e      = {
@@ -612,7 +635,6 @@ const events = {
      */
     toggleOpen : function( e, optionsList, refs, wrapper )
     {
-        console.log( 'opening', this.getSelected() );
         this.addSelectKeyListener();
 
         if ( !this.isIos || this.search || ( this.multipleTags === true && this.multiple === true ) )
