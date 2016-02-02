@@ -263,7 +263,7 @@ this.setByValue( value, multiple )
 
 + `deselectAll()` deselects all data
 
-+ `destroy()` removes event listeners, then flounder
++ `destroy()` removes event listeners, then flounder.  this will return the element to it's original state
 
 + `disable( bool )` disables or reenables flounder
 

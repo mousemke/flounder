@@ -1175,6 +1175,7 @@ var api = {
             }
 
             var target = originalTarget.nextElementSibling;
+
             try {
                 target.parentNode.removeChild(target);
                 originalTarget.tabIndex = 0;
@@ -1350,8 +1351,13 @@ var api = {
 
             if (typeof _ret4 === 'object') return _ret4.v;
         } else {
-            value = this.refs.select.querySelector('[value="' + value + '"]');
-            return value ? this.disableByIndex(value.index, reenable) : null;
+            var values = this.refs.selectOptions.map(function (el) {
+                return el.value === value ? el.index : null;
+            }).filter(function (a) {
+                return !!a;
+            });
+
+            return value ? this.disableByIndex(values, reenable) : null;
         }
     },
 
@@ -1661,8 +1667,13 @@ var api = {
 
             if (typeof _ret8 === 'object') return _ret8.v;
         } else {
-            value = this.refs.select.querySelector('[value="' + value + '"]');
-            return value ? this.setByIndex(value.index, multiple, programmatic) : null;
+            var values = this.refs.selectOptions.map(function (el) {
+                return el.value === value + '' ? el.index : null;
+            }).filter(function (a) {
+                return !!a;
+            });
+
+            return value ? this.setByIndex(values, multiple, programmatic) : null;
         }
     }
 };
@@ -1978,7 +1989,9 @@ var build = {
         if (target.tagName === 'SELECT') {
             this.addClass(target, _classes2['default'].SELECT_TAG);
             this.addClass(target, _classes2['default'].HIDDEN);
+
             select = target;
+            this.popOutSelectElements(select);
 
             if (target.length > 0 && !this.selectDataOverride) {
                 (function () {
@@ -2005,11 +2018,53 @@ var build = {
             this.target = target.parentNode;
             this.addClass(select || target, _classes2['default'].HIDDEN);
         } else {
-            select = this.constructElement({ tagname: 'select', className: _classes2['default'].SELECT_TAG + '  ' + _classes2['default'].HIDDEN });
+            select = this.constructElement({ tagname: 'SELECT', className: _classes2['default'].SELECT_TAG + '  ' + _classes2['default'].HIDDEN });
             wrapper.appendChild(select);
         }
 
         return select;
+    },
+
+    /**
+     * popInSelectElements
+     *
+     * pops the previously saves elements back into a select tag, restoring the
+     * original state
+     *
+     * @param {DOMElement} select select element
+     *
+     * @return _Void_
+     */
+    popInSelectElements: function popInSelectElements(select) {
+        this.removeAllChildren(select);
+
+        this.originalChildren.forEach(function (_el, i) {
+            select.appendChild(_el);
+        });
+    },
+
+    /**
+     * popOutSelectElements
+     *
+     * pops out all the options of a select box, clones them, then appends the
+     * clones.  This gives us the ability to restore the original tag
+     *
+     * @param {DOMElement} select select element
+     *
+     * @return _Void_
+     */
+    popOutSelectElements: function popOutSelectElements(select) {
+        var res = [];
+        var children = this.originalChildren = nativeSlice.call(select.children);
+
+        children.forEach(function (_el, i) {
+            res[i] = _el.cloneNode(true);
+            select.removeChild(_el);
+        });
+
+        res.forEach(function (_el) {
+            select.appendChild(_el);
+        });
     },
 
     /**
@@ -2089,6 +2144,7 @@ var classes = {
     OPTION: 'flounder__option',
     OPTION_TAG: 'flounder--option--tag',
     OPTIONS_WRAPPER: 'flounder__list--wrapper',
+    PLUG: 'flounder__ios--plug',
     SECTION: 'flounder__section',
     SELECTED: 'flounder__option--selected',
     SELECTED_HIDDEN: 'flounder__option--selected--hidden',
@@ -2173,7 +2229,11 @@ var events = {
      * @return _Void_
      */
     addListeners: function addListeners(refs, props) {
-        refs.select.addEventListener('change', this.divertTarget);
+        var ios = this.isIos;
+        var changeEvent = ios ? 'blur' : 'change';
+
+        refs.select.addEventListener(changeEvent, this.divertTarget);
+
         refs.flounder.addEventListener('keydown', this.checkFlounderKeypress);
         refs.selected.addEventListener('click', this.toggleList);
 
@@ -2226,9 +2286,22 @@ var events = {
      * @return _Void_
      */
     addSelectKeyListener: function addSelectKeyListener() {
-        var select = this.refs.select;
+        var refs = this.refs;
+        var select = refs.select;
+
         select.addEventListener('keyup', this.setSelectValue);
         select.addEventListener('keydown', this.setKeypress);
+
+        // weird shit
+        // http://stackoverflow.com/questions/34660500/mobile-safari-multi-select-bug
+        if (this.isIos) {
+            var firstOption = select[0];
+            var plug = document.createElement('OPTION');
+            plug.disabled = true;
+            plug.className = _classes2['default'].PLUG;
+            select.insertBefore(plug, firstOption);
+        }
+
         select.focus();
     },
 
@@ -2346,9 +2419,21 @@ var events = {
      * @return _Void_
      */
     divertTarget: function divertTarget(e) {
+        // weird shit
+        // http://stackoverflow.com/questions/34660500/mobile-safari-multi-select-bug
+        if (this.isIos) {
+            var select = this.refs.select;
+            var plug = select.querySelector('.' + _classes2['default'].PLUG);
+
+            if (plug) {
+                select.removeChild(plug);
+            }
+        }
+
         var index = e.target.selectedIndex;
 
         var _e = {
+            type: e.type,
             target: this.data[index]
         };
 
@@ -2507,7 +2592,7 @@ var events = {
             // tab, shift, ctrl, alt, caps, cmd
             var nonKeys = [9, 16, 17, 18, 20, 91];
 
-            if (e || keyCode && nonKeys.indexOf(keyCode) === -1) {
+            if (e || obj.type === 'blur' || keyCode && nonKeys.indexOf(keyCode) === -1) {
                 if (this.toggleList.justOpened && !e) {
                     this.toggleList.justOpened = false;
                 } else {
@@ -2606,7 +2691,6 @@ var events = {
 
         if (this.search) {
             this.fuzzySearchReset();
-            // this.setSelectValue( e );
         }
 
         refs.flounder.focus();
@@ -2662,7 +2746,7 @@ var events = {
     toggleOpen: function toggleOpen(e, optionsList, refs, wrapper) {
         this.addSelectKeyListener();
 
-        if (!this.isIos || this.multipleTags === true && this.multiple === true) {
+        if (!this.isIos || this.search || this.multipleTags === true && this.multiple === true) {
             this.showElement(optionsList);
             this.addClass(wrapper, 'open');
 
@@ -2796,9 +2880,15 @@ var Flounder = (function () {
             qsHTML.removeEventListener('click', catchBodyClick);
             qsHTML.removeEventListener('touchend', catchBodyClick);
 
+            var select = refs.select;
+            select.removeEventListener('change', this.divertTarget);
+            select.removeEventListener('blur', this.divertTarget);
             refs.selected.removeEventListener('click', this.toggleList);
-            refs.select.removeEventListener('change', this.divertTarget);
             refs.flounder.removeEventListener('keydown', this.checkFlounderKeypress);
+
+            if (this.originalChildren) {
+                this.popInSelectElements(select);
+            }
 
             if (this.search) {
                 var search = refs.search;

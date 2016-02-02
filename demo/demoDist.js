@@ -20431,6 +20431,7 @@ var api = {
             }
 
             var target = originalTarget.nextElementSibling;
+
             try {
                 target.parentNode.removeChild(target);
                 originalTarget.tabIndex = 0;
@@ -21224,10 +21225,6 @@ var build = {
         return [data, selectOptions];
     },
 
-    popInSelectElements: function popInSelectElements() {},
-
-    popOutSelectElements: function popOutSelectElements(select) {},
-
     /**
      * ## initSelectBox
      *
@@ -21248,7 +21245,9 @@ var build = {
         if (target.tagName === 'SELECT') {
             this.addClass(target, _classes2['default'].SELECT_TAG);
             this.addClass(target, _classes2['default'].HIDDEN);
+
             select = target;
+            this.popOutSelectElements(select);
 
             if (target.length > 0 && !this.selectDataOverride) {
                 (function () {
@@ -21280,6 +21279,48 @@ var build = {
         }
 
         return select;
+    },
+
+    /**
+     * popInSelectElements
+     *
+     * pops the previously saves elements back into a select tag, restoring the
+     * original state
+     *
+     * @param {DOMElement} select select element
+     *
+     * @return _Void_
+     */
+    popInSelectElements: function popInSelectElements(select) {
+        this.removeAllChildren(select);
+
+        this.originalChildren.forEach(function (_el, i) {
+            select.appendChild(_el);
+        });
+    },
+
+    /**
+     * popOutSelectElements
+     *
+     * pops out all the options of a select box, clones them, then appends the
+     * clones.  This gives us the ability to restore the original tag
+     *
+     * @param {DOMElement} select select element
+     *
+     * @return _Void_
+     */
+    popOutSelectElements: function popOutSelectElements(select) {
+        var res = [];
+        var children = this.originalChildren = nativeSlice.call(select.children);
+
+        children.forEach(function (_el, i) {
+            res[i] = _el.cloneNode(true);
+            select.removeChild(_el);
+        });
+
+        res.forEach(function (_el) {
+            select.appendChild(_el);
+        });
     },
 
     /**
@@ -21359,6 +21400,7 @@ var classes = {
     OPTION: 'flounder__option',
     OPTION_TAG: 'flounder--option--tag',
     OPTIONS_WRAPPER: 'flounder__list--wrapper',
+    PLUG: 'flounder__ios--plug',
     SECTION: 'flounder__section',
     SELECTED: 'flounder__option--selected',
     SELECTED_HIDDEN: 'flounder__option--selected--hidden',
@@ -21443,9 +21485,11 @@ var events = {
      * @return _Void_
      */
     addListeners: function addListeners(refs, props) {
-        var changeEvent = this.isIos ? 'blur' : 'change';
+        var ios = this.isIos;
+        var changeEvent = ios ? 'blur' : 'change';
 
         refs.select.addEventListener(changeEvent, this.divertTarget);
+
         refs.flounder.addEventListener('keydown', this.checkFlounderKeypress);
         refs.selected.addEventListener('click', this.toggleList);
 
@@ -21498,17 +21542,23 @@ var events = {
      * @return _Void_
      */
     addSelectKeyListener: function addSelectKeyListener() {
-        var select = this.refs.select;
+        var refs = this.refs;
+        var select = refs.select;
+
         select.addEventListener('keyup', this.setSelectValue);
         select.addEventListener('keydown', this.setKeypress);
 
-        var selected = this.getSelected();
-        select.focus();
+        // weird shit
+        // http://stackoverflow.com/questions/34660500/mobile-safari-multi-select-bug
+        if (this.isIos) {
+            var firstOption = select[0];
+            var plug = document.createElement('OPTION');
+            plug.disabled = true;
+            plug.className = _classes2['default'].PLUG;
+            select.insertBefore(plug, firstOption);
+        }
 
-        this.deselectAll();
-        selected.forEach(function (el) {
-            el.selected = true;
-        });
+        select.focus();
     },
 
     /**
@@ -21625,6 +21675,17 @@ var events = {
      * @return _Void_
      */
     divertTarget: function divertTarget(e) {
+        // weird shit
+        // http://stackoverflow.com/questions/34660500/mobile-safari-multi-select-bug
+        if (this.isIos) {
+            var select = this.refs.select;
+            var plug = select.querySelector('.' + _classes2['default'].PLUG);
+
+            if (plug) {
+                select.removeChild(plug);
+            }
+        }
+
         var index = e.target.selectedIndex;
 
         var _e = {
@@ -22075,9 +22136,15 @@ var Flounder = (function () {
             qsHTML.removeEventListener('click', catchBodyClick);
             qsHTML.removeEventListener('touchend', catchBodyClick);
 
+            var select = refs.select;
+            select.removeEventListener('change', this.divertTarget);
+            select.removeEventListener('blur', this.divertTarget);
             refs.selected.removeEventListener('click', this.toggleList);
-            refs.select.removeEventListener('change', this.divertTarget);
             refs.flounder.removeEventListener('keydown', this.checkFlounderKeypress);
+
+            if (this.originalChildren) {
+                this.popInSelectElements(select);
+            }
 
             if (this.search) {
                 var search = refs.search;
@@ -22217,7 +22284,7 @@ var Flounder = (function () {
             var selectedOption = this.getSelected();
 
             var selectedLength = selectedOption.length;
-            console.log(selectedLength);
+
             if (!this.multiple || !this.multipleTags && selectedLength === 1) {
                 index = selectedOption[0].index;
                 selected.innerHTML = selectedOption[0].innerHTML;
@@ -23432,6 +23499,7 @@ var FlounderReact = (function (_Component) {
                 refs.select.removeAttribute('multiple');
             }
 
+            this.setPlatform();
             this.onRender();
 
             try {
