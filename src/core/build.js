@@ -337,12 +337,15 @@ const build = {
         {
             this.addClass( target, classes.SELECT_TAG );
             this.addClass( target, classes.HIDDEN );
+
             select = target;
+            this.popOutSelectElements( select );
 
             if ( target.length > 0 && !this.selectDataOverride )
             {
-                this.refs.select = select;
-                let data = [], selectOptions = [];
+                this.refs.select    = select;
+                let data            = [],
+                    selectOptions   = [];
 
                 nativeSlice.apply( target.children ).forEach( function( optionEl )
                 {
@@ -367,13 +370,61 @@ const build = {
         }
         else
         {
-            select = this.constructElement( { tagname : 'select', className : classes.SELECT_TAG + '  ' + classes.HIDDEN } );
+            select = this.constructElement( { tagname : 'SELECT', className : classes.SELECT_TAG + '  ' + classes.HIDDEN } );
             wrapper.appendChild( select );
         }
 
         return select;
     },
 
+
+    /**
+     * popInSelectElements
+     *
+     * pops the previously saves elements back into a select tag, restoring the
+     * original state
+     *
+     * @param {DOMElement} select select element
+     *
+     * @return _Void_
+     */
+    popInSelectElements : function( select )
+    {
+        this.removeAllChildren( select );
+
+        this.originalChildren.forEach( function( _el, i )
+        {
+            select.appendChild( _el );
+        } );
+    },
+
+
+    /**
+     * popOutSelectElements
+     *
+     * pops out all the options of a select box, clones them, then appends the
+     * clones.  This gives us the ability to restore the original tag
+     *
+     * @param {DOMElement} select select element
+     *
+     * @return _Void_
+     */
+    popOutSelectElements : function( select )
+    {
+        let res = [];
+        let children = this.originalChildren = nativeSlice.call( select.children );
+
+        children.forEach( function( _el, i )
+        {
+            res[ i ] = _el.cloneNode( true );
+            select.removeChild( _el );
+        } );
+
+        res.forEach( function( _el )
+        {
+            select.appendChild( _el );
+        } );
+    },
 
 
     /**

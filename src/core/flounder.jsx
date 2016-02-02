@@ -66,6 +66,11 @@ class Flounder
         refs.selected.removeEventListener( 'click', this.toggleList );
         refs.flounder.removeEventListener( 'keydown', this.checkFlounderKeypress );
 
+        if ( this.originalChildren )
+        {
+            this.popInSelectElements( select );
+        }
+
         if ( this.search )
         {
             let search = refs.search;
@@ -328,7 +333,7 @@ class Flounder
             this.removeClass( dataObj, classes.SEARCH_HIDDEN );
         } );
 
-        refs.search.value       = '';
+        refs.search.value = '';
     }
 
 

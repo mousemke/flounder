@@ -3,6 +3,36 @@ Older changes
 
 This is truncated from the readme file to keep down the size
 
+0.4.2
+-----
+
++ [api] added `buildFromUrl`
++ [api] added `loadDataFromUrl`
++ [api] added `onFirstTouch`
++ [build] select boxes that have no options as targets now use data
++ [default] the default option when not specified if the data set is empty is the default placeholder
++ [default] changed the default value priority
++ [flounder] changed sortData to not break with strings
++ [flounder] microbe and promise now required to build 
++ [config] added `selectDataOverride` for empty select boxes
+
+
+0.4.1
+-----
+
++ [build] `setSelectValue` is now bound to flounder again
+
+
+0.4.0
+-----
+
++ [api] changed language of all contextual statements `setIndex` becomes `setByIndex`, etc
++ [config] added `onComponentWillUnmount`
++ [config] added try/catch to all config functions
++ [build] placeholder will only be added to selectboxes that do not have a first option with '' as a value.  otherwise the text will be changed to the new placeholder value.
++ [build] fixed bugs in construction when using a selectbox as a target
++ [utils] tweaked `addClass`
+
 
 0.3.2
 -----
