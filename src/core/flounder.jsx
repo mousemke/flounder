@@ -60,8 +60,10 @@ class Flounder
         qsHTML.removeEventListener( 'click', catchBodyClick );
         qsHTML.removeEventListener( 'touchend', catchBodyClick );
 
+        let select = refs.select;
+        select.removeEventListener( 'change', this.divertTarget  );
+        select.removeEventListener( 'blur', this.divertTarget );
         refs.selected.removeEventListener( 'click', this.toggleList );
-        refs.select.removeEventListener( 'change', this.divertTarget  );
         refs.flounder.removeEventListener( 'keydown', this.checkFlounderKeypress );
 
         if ( this.search )

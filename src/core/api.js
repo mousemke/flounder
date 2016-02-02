@@ -109,6 +109,7 @@ const api = {
             }
 
             let target = originalTarget.nextElementSibling;
+
             try
             {
                 target.parentNode.removeChild( target );
