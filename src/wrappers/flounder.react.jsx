@@ -52,6 +52,7 @@ class FlounderReact extends Component
             refs.select.removeAttribute( 'multiple' );
         }
 
+        this.setPlatform();
         this.onRender();
 
         try

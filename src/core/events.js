@@ -263,7 +263,11 @@ const events = {
         {
             let select  = this.refs.select;
             let plug    = select.querySelector( '.' + classes.PLUG );
-            select.removeChild( plug );
+
+            if ( plug )
+            {
+                select.removeChild( plug );
+            }
         }
 
         let index   = e.target.selectedIndex;

@@ -417,6 +417,7 @@ Change Log
 0.5.0
 -----
 
++ [events] mobile safari no longer selects things all by itself
 + [events] fixed a bug with incrementing and firefox
 + [events] added a blur event to catch mobile selection
 + [search] adjusted search weights
@@ -425,13 +426,13 @@ Change Log
 + [build] multiple is now automatically  enabled with `multipleTags : true`
 + [build] search works in react
 + [build] search is now mandataory enabled in a multiTag box (#7)
++ [build] React now sets platform and isIos
 + [demo] fixed minor issues on the demo
 + [demo] changed debug button
-+ [flounder] slowly removing things that are not needed from the main object for the sake of a clearer api later
 + [api] removed querySelector from the api calls
++ [flounder] slowly removing things that are not needed from the main object for the sake of a clearer api later
 
 
-// + mobile safari selects things all by itself
 // + default is now only applied after rebuild if there is nothing with the value left in the dropdown // pending #39
 
 
