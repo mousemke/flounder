@@ -434,6 +434,7 @@ Change Log
 + [build] added `keepChanges` as an available prop
 + [demo] fixed minor issues on the demo
 + [demo] changed debug button
++ [default] refactored defaults functions into ./defaults.js`
 + [api] removed querySelector from the api calls
 + [flounder] slowly removing things that are not needed from the main object for the sake of a clearer api later
 

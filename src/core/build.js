@@ -1,5 +1,7 @@
 
-import classes          from './classes';
+import classes                  from './classes';
+import { setDefaultOption }     from './defaults';
+
 const nativeSlice = Array.prototype.slice;
 
 const build = {
@@ -116,7 +118,7 @@ const build = {
         }
 
         let data                = this.data;
-        let defaultValue        = this._default = this.setDefaultOption( this.props, data );
+        let defaultValue        = this._default = setDefaultOption( this, this.props, data );
         let selected            = constructElement( { className : classes.SELECTED_DISPLAYED,
                                         'data-value' : defaultValue.value, 'data-index' : defaultValue.index || -1 } );
             selected.innerHTML  = defaultValue.text;
@@ -164,6 +166,7 @@ const build = {
      */
     buildData : function( defaultValue, originalData, optionsList, select )
     {
+        console.log( defaultValue );
         originalData                = originalData || [];
         let index                   = 0;
         let data                    = [];

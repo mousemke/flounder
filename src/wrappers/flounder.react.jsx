@@ -9,6 +9,7 @@ import classes              from '../core/classes';
 import utils                from '../core/utils';
 import Search               from '../core/search';
 import version              from '../core/version';
+import { setDefaultOption } from '../core/defaults';
 
 const slice = Array.prototype.slice;
 
@@ -164,7 +165,7 @@ class FlounderReact extends Component
         let multiple        = this.multiple;
         let searchBool      = this.search;
 
-        let defaultValue    = this._default = this.setDefaultOption( props, data );
+        let defaultValue    = this._default = setDefaultOption( this, props, data );
         let defaultReact    = multiple ? [ defaultValue.value ] : defaultValue.value;
 
         let wrapperClass    = this.wrapperClass ? '  ' + this.wrapperClass : '';

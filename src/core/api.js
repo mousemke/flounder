@@ -485,7 +485,7 @@ const api = {
         this.removeOptionsListeners();
         refs.select.innerHTML       = '';
         refs.select                 = false;
-        this._default               = this.setDefaultOption( props, data );
+        this._default               = this.setDefaultOption( this, props, data, true );
         refs.optionsList.innerHTML  = '';
 
 
