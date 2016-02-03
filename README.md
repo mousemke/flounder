@@ -423,6 +423,7 @@ Change Log
 + [events] mobile safari no longer selects things all by itself
 + [events] fixed a bug with incrementing and firefox
 + [events] added a blur event to catch mobile selection
++ [events] search inputs now correctly display the selected values on blur
 + [search] adjusted search weights
 + [search] descriptions are now properly searchable
 + [search] multiple `setValue` calls taken out
@@ -434,7 +435,7 @@ Change Log
 + [build] added `keepChanges` as an available prop
 + [demo] fixed minor issues on the demo
 + [demo] changed debug button
-+ [default] refactored defaults functions into ./defaults.js`
++ [default] refactored defaults functions into `./defaults.js`
 + [api] removed querySelector from the api calls
 + [flounder] slowly removing things that are not needed from the main object for the sake of a clearer api later
 

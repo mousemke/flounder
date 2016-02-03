@@ -209,19 +209,27 @@ const events = {
      */
     checkPlaceholder : function( e )
     {
-        let type = e.type;
-        let refs = this.refs;
+        let type        = e.type;
+        let refs        = this.refs;
+        let selected    = refs.selected;
 
         if ( type === 'focus' )
         {
-            refs.selected.innerHTML = '';
+            selected.innerHTML = '';
         }
         else
         {
             if ( refs.multiTagWrapper &&
                     refs.multiTagWrapper.children.length === 0 )
             {
-                this.refs.selected.innerHTML = this._default.text;
+                selected.innerHTML = this._default.text;
+            }
+            else
+            {
+                let active  = this.getSelected();
+                active      = active.length === 1 ? active[0].innerHTML : this.multipleMessage;
+
+                selected.innerHTML = active;
             }
         }
     },

@@ -1,5 +1,6 @@
 
-import classes          from './classes';
+import classes                  from './classes';
+import { setDefaultOption }     from './defaults';
 
 const nativeSlice =  Array.prototype.slice;
 
@@ -485,9 +486,8 @@ const api = {
         this.removeOptionsListeners();
         refs.select.innerHTML       = '';
         refs.select                 = false;
-        this._default               = this.setDefaultOption( this, props, data, true );
+        this._default               = setDefaultOption( this, props, data, true );
         refs.optionsList.innerHTML  = '';
-
 
         [ refs.data, refs.selectOptions ] = this.buildData( this._default, this.data, refs.optionsList, _select );
         refs.select                 = _select;

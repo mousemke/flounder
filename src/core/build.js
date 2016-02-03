@@ -166,7 +166,6 @@ const build = {
      */
     buildData : function( defaultValue, originalData, optionsList, select )
     {
-        console.log( defaultValue );
         originalData                = originalData || [];
         let index                   = 0;
         let data                    = [];
