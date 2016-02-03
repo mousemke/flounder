@@ -307,6 +307,7 @@ class Flounder
             }
             else
             {
+                console.log( 'm' );
                 this.setKeypress( e );
             }
         }

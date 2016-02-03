@@ -21267,7 +21267,7 @@ var build = {
 
             select = target;
 
-            if (!this.props.keepChanges) {
+            if (!this.props.keepChangesOnDestroy) {
                 this.popOutSelectElements(select);
             }
 
@@ -21456,7 +21456,7 @@ var defaultOptions = {
         wrapper: ''
     },
     data: [],
-    keepChanges: false,
+    keepChangesOnDestroy: false,
     multiple: false,
     multipleTags: false,
     multipleMessage: '(Multiple Items Selected)',
@@ -22018,6 +22018,7 @@ var events = {
         }
 
         selectTag.selectedIndex = index;
+
         var hasClass = this.hasClass;
         var dataAtIndex = data[index];
 
@@ -22358,8 +22359,8 @@ var Flounder = (function () {
                 var search = refs.search;
                 search.removeEventListener('click', this.toggleList);
                 search.removeEventListener('keyup', this.fuzzySearch);
-                // search.removeEventListener( 'focus', this.checkPlaceholder );
-                // search.removeEventListener( 'blur', this.checkPlaceholder );
+                search.removeEventListener('focus', this.checkPlaceholder);
+                search.removeEventListener('blur', this.checkPlaceholder);
             }
         }
 
@@ -22562,6 +22563,7 @@ var Flounder = (function () {
                         this.fuzzySearchReset();
                     }
                 } else {
+                    console.log('m');
                     this.setKeypress(e);
                 }
             } else {

@@ -1079,6 +1079,8 @@ var _classes = require('./classes');
 
 var _classes2 = _interopRequireDefault(_classes);
 
+var _defaults = require('./defaults');
+
 var nativeSlice = Array.prototype.slice;
 
 var api = {
@@ -1527,7 +1529,7 @@ var api = {
         this.removeOptionsListeners();
         refs.select.innerHTML = '';
         refs.select = false;
-        this._default = this.setDefaultOption(props, data);
+        this._default = (0, _defaults.setDefaultOption)(this, props, data, true);
         refs.optionsList.innerHTML = '';
 
         var _buildData = this.buildData(this._default, this.data, refs.optionsList, _select);
@@ -1681,7 +1683,7 @@ var api = {
 exports['default'] = api;
 module.exports = exports['default'];
 
-},{"./classes":14}],13:[function(require,module,exports){
+},{"./classes":14,"./defaults":15}],13:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -1695,6 +1697,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'd
 var _classes = require('./classes');
 
 var _classes2 = _interopRequireDefault(_classes);
+
+var _defaults = require('./defaults');
 
 var nativeSlice = Array.prototype.slice;
 
@@ -1787,7 +1791,7 @@ var build = {
         }
 
         var data = this.data;
-        var defaultValue = this._default = this.setDefaultOption(this.props, data);
+        var defaultValue = this._default = (0, _defaults.setDefaultOption)(this, this.props, data);
         var selected = constructElement({ className: _classes2['default'].SELECTED_DISPLAYED,
             'data-value': defaultValue.value, 'data-index': defaultValue.index || -1 });
         selected.innerHTML = defaultValue.text;
@@ -1991,7 +1995,10 @@ var build = {
             this.addClass(target, _classes2['default'].HIDDEN);
 
             select = target;
-            this.popOutSelectElements(select);
+
+            if (!this.props.keepChangesOnDestroy) {
+                this.popOutSelectElements(select);
+            }
 
             if (target.length > 0 && !this.selectDataOverride) {
                 (function () {
@@ -2119,7 +2126,7 @@ var build = {
 exports['default'] = build;
 module.exports = exports['default'];
 
-},{"./classes":14}],14:[function(require,module,exports){
+},{"./classes":14,"./defaults":15}],14:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -2163,7 +2170,14 @@ module.exports = exports['default'];
 Object.defineProperty(exports, '__esModule', {
     value: true
 });
-var defaults = {
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _classes = require('./classes');
+
+var _classes2 = _interopRequireDefault(_classes);
+
+var defaultOptions = {
     classes: {
         flounder: '',
         hidden: 'flounder--hidden',
@@ -2171,6 +2185,7 @@ var defaults = {
         wrapper: ''
     },
     data: [],
+    keepChangesOnDestroy: false,
     multiple: false,
     multipleTags: false,
     multipleMessage: '(Multiple Items Selected)',
@@ -2186,10 +2201,184 @@ var defaults = {
     selectDataOverride: false
 };
 
+var defaults = {
+
+    defaultOptions: defaultOptions,
+
+    /**
+     * ## setDefaultOption
+     *
+     * sets the initial default value
+     *
+     * @param {String or Number}    defaultProp         default passed from this.props
+     * @param {Object}              data                this.props.data
+     *
+     * @return _Void_
+     */
+    setDefaultOption: function setDefaultOption(self, configObj) {
+        var data = arguments.length <= 2 || arguments[2] === undefined ? [] : arguments[2];
+        var rebuild = arguments.length <= 3 || arguments[3] === undefined ? false : arguments[3];
+
+        /**
+         * ## setIndexDefault
+         *
+         * sets a specified indexas the default option. This only works correctly
+         * if it is a valid index, otherwise it returns null
+         *
+         * @return {Object} default settings
+         */
+        var setIndexDefault = function setIndexDefault(_data, index) {
+            var defaultIndex = index || index === 0 ? index : configObj.defaultIndex;
+            var defaultOption = _data[defaultIndex];
+
+            if (defaultOption) {
+                defaultOption.index = defaultIndex;
+                return defaultOption;
+            }
+
+            return null;
+        };
+
+        /**
+         * ## setPlaceholderDefault
+         *
+         * sets a placeholder as the default option.  This inserts an empty
+         * option first and sets that as default
+         *
+         * @return {Object} default settings
+         */
+        var setPlaceholderDefault = function setPlaceholderDefault(_data) {
+            var refs = self.refs;
+            var select = refs.select;
+
+            var _default = {
+                text: configObj.placeholder || defaultOptions.placeholder,
+                value: '',
+                index: 0,
+                extraClass: _classes2['default'].HIDDEN
+            };
+
+            if (select) {
+                var escapedText = self.escapeHTML(_default.text);
+
+                if (!select[0] || select[0].value !== '') {
+                    var defaultOption = self.constructElement({ tagname: 'option',
+                        className: _classes2['default'].OPTION_TAG,
+                        value: _default.value });
+                    defaultOption.innerHTML = escapedText;
+
+                    select.insertBefore(defaultOption, select[0]);
+                    self.refs.selectOptions.unshift(defaultOption);
+                    data.unshift(_default);
+                } else {
+                    data[0] = _default;
+                }
+            } else {
+                data.unshift(_default);
+            }
+
+            return _default;
+        };
+
+        /**
+         * ## setValueDefault
+         *
+         * sets a specified index as the default. This only works correctly if
+         * it is a valid value, otherwise it returns null
+         *
+         * @return {Object} default settings
+         */
+        var setValueDefault = function setValueDefault(_data) {
+            var defaultProp = configObj.defaultValue + '';
+            var index = undefined;
+
+            _data.forEach(function (dataObj, i) {
+                var dataObjValue = dataObj.value;
+
+                if (typeof dataObjValue === 'number') {
+                    dataObjValue += '';
+                }
+
+                if (dataObjValue === defaultProp) {
+                    index = i;
+                }
+            });
+
+            var defaultValue = index >= 0 ? _data[index] : null;
+
+            if (defaultValue) {
+                defaultValue.index = index;
+                return defaultValue;
+            }
+
+            return null;
+        };
+
+        /**
+         * ## sortData
+         *
+         * checks the data object for header options, and sorts it accordingly
+         *
+         * @return _Boolean_ hasHeaders
+         */
+        var sortData = function sortData(data) {
+            var res = arguments.length <= 1 || arguments[1] === undefined ? [] : arguments[1];
+            var i = arguments.length <= 2 || arguments[2] === undefined ? 0 : arguments[2];
+
+            data.forEach(function (d) {
+                if (d.header) {
+                    res = sortData(d.data, res, i);
+                } else {
+                    if (typeof d !== 'object') {
+                        d = {
+                            text: d,
+                            value: d,
+                            index: i
+                        };
+                    } else {
+                        d.index = i;
+                    }
+
+                    res.push(d);
+                    i++;
+                }
+            });
+
+            return res;
+        };
+
+        var defaultObj = undefined;
+        var _data = sortData(data);
+
+        // if ( rebuild )
+        // {
+
+        // }
+        // else
+        // {
+        if (configObj.placeholder || _data.length === 0) {
+            defaultObj = setPlaceholderDefault(self, _data);
+        } else if (configObj.defaultIndex) {
+            defaultObj = setIndexDefault(_data);
+        } else if (configObj.defaultValue) {
+            defaultObj = setValueDefault(_data);
+        } else {
+            if (configObj.multiple) {
+                defaultObj = setPlaceholderDefault(self, _data);
+            } else {
+                defaultObj = setIndexDefault(_data, 0);
+            }
+        }
+        // }
+
+        return defaultObj;
+    }
+};
+
 exports['default'] = defaults;
 module.exports = exports['default'];
 
-},{}],16:[function(require,module,exports){
+},{"./classes":14}],16:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -2383,12 +2572,18 @@ var events = {
     checkPlaceholder: function checkPlaceholder(e) {
         var type = e.type;
         var refs = this.refs;
+        var selected = refs.selected;
 
         if (type === 'focus') {
-            refs.selected.innerHTML = '';
+            selected.innerHTML = '';
         } else {
             if (refs.multiTagWrapper && refs.multiTagWrapper.children.length === 0) {
-                this.refs.selected.innerHTML = this._default.text;
+                selected.innerHTML = this._default.text;
+            } else {
+                var active = this.getSelected();
+                active = active.length === 1 ? active[0].innerHTML : this.multipleMessage;
+
+                selected.innerHTML = active;
             }
         }
     },
@@ -2552,6 +2747,7 @@ var events = {
         }
 
         selectTag.selectedIndex = index;
+
         var hasClass = this.hasClass;
         var dataAtIndex = data[index];
 
@@ -2798,8 +2994,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'd
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
 var _defaults = require('./defaults');
-
-var _defaults2 = _interopRequireDefault(_defaults);
 
 var _utils = require('./utils');
 
@@ -3098,6 +3292,7 @@ var Flounder = (function () {
                         this.fuzzySearchReset();
                     }
                 } else {
+                    console.log('m');
                     this.setKeypress(e);
                 }
             } else {
@@ -3139,11 +3334,11 @@ var Flounder = (function () {
             this.props = this.props || {};
             var props = this.props;
 
-            for (var opt in _defaults2['default']) {
-                if (_defaults2['default'].hasOwnProperty(opt) && opt !== 'classes') {
-                    this[opt] = props[opt] !== undefined ? props[opt] : _defaults2['default'][opt];
+            for (var opt in _defaults.defaultOptions) {
+                if (_defaults.defaultOptions.hasOwnProperty(opt) && opt !== 'classes') {
+                    this[opt] = props[opt] !== undefined ? props[opt] : _defaults.defaultOptions[opt];
                 } else if (opt === 'classes') {
-                    var _classes = _defaults2['default'][opt];
+                    var _classes = _defaults.defaultOptions[opt];
                     var propsClasses = props.classes;
 
                     for (var clss in _classes) {
@@ -3158,7 +3353,7 @@ var Flounder = (function () {
                 this.selectedClass += '  ' + _classes3['default'].SELECTED_HIDDEN;
 
                 if (!props.placeholder) {
-                    props.placeholder = _defaults2['default'].placeholder;
+                    props.placeholder = _defaults.defaultOptions.placeholder;
                 }
             }
         }
@@ -3284,172 +3479,6 @@ var Flounder = (function () {
             data.forEach(function (d, i) {
                 _this5.refs.select[i].selected = false;
             });
-        }
-
-        /**
-         * ## setDefaultOption
-         *
-         * sets the initial default value
-         *
-         * @param {String or Number}    defaultProp         default passed from this.props
-         * @param {Object}              data                this.props.data
-         *
-         * @return _Void_
-         */
-    }, {
-        key: 'setDefaultOption',
-        value: function setDefaultOption(configObj) {
-            var data = arguments.length <= 1 || arguments[1] === undefined ? [] : arguments[1];
-
-            var defaultObj = undefined;
-            var self = this;
-            var _data = undefined; // internally reorganized data options
-
-            /**
-             * ## setIndexDefault
-             *
-             * sets a specified indexas the default option. This only works correctly
-             * if it is a valid index, otherwise it returns null
-             *
-             * @return {Object} default settings
-             */
-            var setIndexDefault = function setIndexDefault(_data, index) {
-                var defaultIndex = index || index === 0 ? index : configObj.defaultIndex;
-                var defaultOption = _data[defaultIndex];
-
-                if (defaultOption) {
-                    defaultOption.index = defaultIndex;
-                    return defaultOption;
-                }
-
-                return null;
-            };
-
-            /**
-             * ## setPlaceholderDefault
-             *
-             * sets a placeholder as the default option.  This inserts an empty
-             * option first and sets that as default
-             *
-             * @return {Object} default settings
-             */
-            var setPlaceholderDefault = function setPlaceholderDefault(_data) {
-                var refs = self.refs;
-                var select = refs.select;
-
-                var _default = {
-                    text: configObj.placeholder || _defaults2['default'].placeholder,
-                    value: '',
-                    index: 0,
-                    extraClass: _classes3['default'].HIDDEN
-                };
-
-                if (select) {
-                    var escapedText = self.escapeHTML(_default.text);
-
-                    if (!select[0] || select[0].value !== '') {
-                        var defaultOption = self.constructElement({ tagname: 'option',
-                            className: _classes3['default'].OPTION_TAG,
-                            value: _default.value });
-                        defaultOption.innerHTML = escapedText;
-
-                        select.insertBefore(defaultOption, select[0]);
-                        self.refs.selectOptions.unshift(defaultOption);
-                        data.unshift(_default);
-                    } else {
-                        data[0] = _default;
-                    }
-                } else {
-                    data.unshift(_default);
-                }
-
-                return _default;
-            };
-
-            /**
-             * ## setValueDefault
-             *
-             * sets a specified index as the default. This only works correctly if
-             * it is a valid value, otherwise it returns null
-             *
-             * @return {Object} default settings
-             */
-            var setValueDefault = function setValueDefault(_data) {
-                var defaultProp = configObj.defaultValue + '';
-                var index = undefined;
-
-                _data.forEach(function (dataObj, i) {
-                    var dataObjValue = dataObj.value;
-
-                    if (typeof dataObjValue === 'number') {
-                        dataObjValue += '';
-                    }
-
-                    if (dataObjValue === defaultProp) {
-                        index = i;
-                    }
-                });
-
-                var defaultValue = index >= 0 ? _data[index] : null;
-
-                if (defaultValue) {
-                    defaultValue.index = index;
-                    return defaultValue;
-                }
-
-                return null;
-            };
-
-            /**
-             * ## sortData
-             *
-             * checks the data object for header options, and sorts it accordingly
-             *
-             * @return _Boolean_ hasHeaders
-             */
-            var sortData = function sortData(data) {
-                var res = arguments.length <= 1 || arguments[1] === undefined ? [] : arguments[1];
-                var i = arguments.length <= 2 || arguments[2] === undefined ? 0 : arguments[2];
-
-                data.forEach(function (d) {
-                    if (d.header) {
-                        res = sortData(d.data, res, i);
-                    } else {
-                        if (typeof d !== 'object') {
-                            d = {
-                                text: d,
-                                value: d,
-                                index: i
-                            };
-                        } else {
-                            d.index = i;
-                        }
-
-                        res.push(d);
-                        i++;
-                    }
-                });
-
-                return res;
-            };
-
-            _data = this.sortData(data);
-
-            if (configObj.placeholder || _data.length === 0) {
-                defaultObj = setPlaceholderDefault(_data);
-            } else if (configObj.defaultIndex) {
-                defaultObj = setIndexDefault(_data);
-            } else if (configObj.defaultValue) {
-                defaultObj = setValueDefault(_data);
-            } else {
-                if (configObj.multiple) {
-                    defaultObj = setPlaceholderDefault(_data);
-                } else {
-                    defaultObj = setIndexDefault(_data, 0);
-                }
-            }
-
-            return defaultObj;
         }
 
         /**

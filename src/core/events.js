@@ -422,6 +422,7 @@ const events = {
         }
 
         selectTag.selectedIndex = index;
+
         let hasClass            = this.hasClass;
         let dataAtIndex         = data[ index ];
 
