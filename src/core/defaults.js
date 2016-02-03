@@ -8,7 +8,7 @@ const defaultOptions = {
         wrapper     : ''
     },
     data                    : [],
-    keepChanges             : false,
+    keepChangesOnDestroy    : false,
     multiple                : false,
     multipleTags            : false,
     multipleMessage         : '(Multiple Items Selected)',

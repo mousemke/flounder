@@ -342,7 +342,7 @@ const build = {
 
             select = target;
 
-            if ( !this.props.keepChanges )
+            if ( !this.props.keepChangesOnDestroy )
             {
                 this.popOutSelectElements( select );
             }

@@ -104,8 +104,23 @@ new _srcWrappersFlounderReactJsx.Flounder(document.getElementById('vanilla--inpu
         this.data = buildData();
     },
 
-    onSelect: function onSelect() {
-        console.log('moon');
+    // onSelect            : function(){ console.log( 'moon' ); },
+    onSelect: function onSelect(e) {
+        var selected = _slice.call(this.refs.select.selectedOptions);
+        selected = selected.map(function (el) {
+            return el.index;
+        });
+
+        var rand = function rand(dataObj, i) {
+            if (selected.indexOf(i) !== -1) {
+                return dataObj;
+            } else {
+                var value = Math.ceil(Math.random() * 10);
+                return { text: value, value: value, index: i };
+            }
+        };
+
+        this.rebuild(this.data.map(rand));
     }
 });
 
@@ -22343,8 +22358,8 @@ var Flounder = (function () {
                 var search = refs.search;
                 search.removeEventListener('click', this.toggleList);
                 search.removeEventListener('keyup', this.fuzzySearch);
-                search.removeEventListener('focus', this.checkPlaceholder);
-                search.removeEventListener('blur', this.checkPlaceholder);
+                // search.removeEventListener( 'focus', this.checkPlaceholder );
+                // search.removeEventListener( 'blur', this.checkPlaceholder );
             }
         }
 

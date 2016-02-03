@@ -110,7 +110,7 @@ If flounder is fed an element that already has a flounder, it will destroy it an
     data                    : dataObject,
     defaultValue            : defaultValue,
     defaultIndex            : defaultIndex,
-    keepChanges             : false,
+    keepChangesOnDestroy    : false,
     multiple                : false,
     multipleTags            : false,
     multipleMessage         : '(Multiple Items Selected)',
@@ -135,7 +135,7 @@ If flounder is fed an element that already has a flounder, it will destroy it an
 
 + `defaultIndex` - (number) Sets the default option to the passed index but only if it exists.  This overrides defaultValue. Multi-tag select boxes only support placeholders.
 
-+ `keepChanges` - (boolean) Determines whether on destroy the old element is restored, or the flounder changes to the select box are kept.  This only applies when the initial element for flounder is a select box
++ `keepChangesOnDestroy` - (boolean) Determines whether on destroy the old element is restored, or the flounder changes to the select box are kept.  This only applies when the initial element for flounder is a select box
 
 + `multiple` - (boolean) Determines whether it is a multi-select box or single
 
@@ -432,7 +432,7 @@ Change Log
 + [build] search is now mandataory enabled in a multiTag box (#7)
 + [build] React now sets platform and isIos
 + [build] original elements are now restored on destroy in the case of a select as a target
-+ [build] added `keepChanges` as an available prop
++ [build] added `keepChangesOnDestroy` as an available prop
 + [demo] fixed minor issues on the demo
 + [demo] changed debug button
 + [default] refactored defaults functions into `./defaults.js`
