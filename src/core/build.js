@@ -339,7 +339,11 @@ const build = {
             this.addClass( target, classes.HIDDEN );
 
             select = target;
-            this.popOutSelectElements( select );
+
+            if ( !this.props.keepChanges )
+            {
+                this.popOutSelectElements( select );
+            }
 
             if ( target.length > 0 && !this.selectDataOverride )
             {

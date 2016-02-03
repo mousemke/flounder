@@ -21247,7 +21247,10 @@ var build = {
             this.addClass(target, _classes2['default'].HIDDEN);
 
             select = target;
-            this.popOutSelectElements(select);
+
+            if (!this.props.keepChanges) {
+                this.popOutSelectElements(select);
+            }
 
             if (target.length > 0 && !this.selectDataOverride) {
                 (function () {
@@ -21427,6 +21430,7 @@ var defaults = {
         wrapper: ''
     },
     data: [],
+    keepChanges: false,
     multiple: false,
     multipleTags: false,
     multipleMessage: '(Multiple Items Selected)',
