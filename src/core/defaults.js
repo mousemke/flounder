@@ -122,19 +122,14 @@ const defaults = {
          *
          * @return {Object} default settings
          */
-        let setValueDefault = function( _data )
+        let setValueDefault = function( _data, _val )
         {
-            let defaultProp = configObj.defaultValue + '';
+            let defaultProp = _val || configObj.defaultValue + '';
             let index;
 
             _data.forEach( function( dataObj, i )
             {
-                let dataObjValue = dataObj.value;
-
-                if ( typeof dataObjValue === 'number' )
-                {
-                    dataObjValue += '';
-                }
+                let dataObjValue = dataObj.value + '';
 
                 if ( dataObjValue === defaultProp )
                 {
@@ -192,41 +187,64 @@ const defaults = {
             return res;
         };
 
+
+
+
         let defaultObj;
         let _data       = sortData( data );
 
-        // if ( rebuild )
-        // {
+        if ( rebuild )
+        {
+            let val = self.refs.selected.getAttribute( 'data-value' );
+            let def = setValueDefault( _data, val );
 
-        // }
-        // else
-        // {
+            if ( !def )
+            {
+                if ( configObj.placeholder || _data.length === 0 )
+                {
+                    return setPlaceholderDefault( self, _data );
+                }
+                else
+                {
+                    if ( configObj.multiple )
+                    {
+                        return setPlaceholderDefault( self, _data );
+                    }
+                    else
+                    {
+                        return setIndexDefault( _data, 0 )
+                    }
+                }
+            }
+
+            return def;
+        }
+        else
+        {
             if ( configObj.placeholder || _data.length === 0 )
             {
-                defaultObj = setPlaceholderDefault( self, _data );
+                return setPlaceholderDefault( self, _data );
             }
             else if ( configObj.defaultIndex )
             {
-                defaultObj = setIndexDefault( _data );
+                return setIndexDefault( _data );
             }
             else if ( configObj.defaultValue )
             {
-                defaultObj = setValueDefault( _data );
+                return setValueDefault( _data );
             }
             else
             {
                 if ( configObj.multiple )
                 {
-                    defaultObj = setPlaceholderDefault( self, _data );
+                    return setPlaceholderDefault( self, _data );
                 }
                 else
                 {
-                    defaultObj = setIndexDefault( _data, 0 )
+                    return setIndexDefault( _data, 0 )
                 }
             }
-        // }
-
-        return defaultObj;
+        }
     }
 };
 
