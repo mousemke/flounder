@@ -205,7 +205,16 @@ const api = {
         }
         else
         {
-            let el  = refs.data[ index ];
+            let data    = refs.data;
+            let length  = data.length;
+
+            if ( index < 0 )
+            {
+                let length  = data.length;
+                index = length + index;
+            }
+
+            let el = data[ index ];
 
             if ( el )
             {
@@ -522,6 +531,15 @@ const api = {
         }
         else
         {
+            let data    = refs.data;
+            let length  = data.length;
+
+            if ( index < 0 )
+            {
+                let length  = data.length;
+                index = length + index;
+            }
+
             let el = refs.data[ index ];
 
             if ( el )

@@ -258,7 +258,7 @@ this.setByValue( value, multiple )
 
 + `buildFromUrl( url, callback )` loads data from a remote address, passes it to a callback, then builds the flounder object
 
-+ `clickByIndex( index, multiple )` sets the item with the passed index as selected.  If multiple is true and it is a multi-select box, it is selected additionally.  Otherwise it's selected instead.  This accepts arrays as well.  Without multiple equaling true it will only select the last option. This fires the onClick event
++ `clickByIndex( index, multiple )` sets the item with the passed index as selected.  If multiple is true and it is a multi-select box, it is selected additionally.  Otherwise it's selected instead.  This accepts arrays as well.  Without multiple equaling true it will only select the last option. This fires the onClick event.  A negative index will start counting from the end.
  
 + `clickByText( text, multiple )` sets the item with the passed text as selected.  If multiple is true and it is a multi-select box, it is selected additionally.  Otherwise it's selected instead. This accepts arrays as well.  Without multiple equaling true it will only select the last option. This fires the onClick event
 
@@ -270,13 +270,13 @@ this.setByValue( value, multiple )
 
 + `disable( bool )` disables or reenables flounder
 
-+ `disableByIndex( index )` disables a flounder option by index
++ `disableByIndex( index )` disables a flounder option by index.  A negative index will start counting from the end.
 
 + `disableByText( text )` disables a flounder option by text
 
 + `disableByValue( value )` disables a flounder option by value
 
-+ `enableByIndex( index )` enables a flounder option by index
++ `enableByIndex( index )` enables a flounder option by index. A negative index will start counting from the end.
 
 + `enableByText( text )` enables a flounder option by text 
 
@@ -296,11 +296,11 @@ this.setByValue( value, multiple )
 
 + `refs` contains references to all flounder elements
 
-+ `setByIndex( index, multiple )` sets the item with the passed index as selected.  If multiple is true and it is a multi-select box, it is selected additionally.  Otherwise it's selected instead.  This accepts arrays as well.  Without multiple equaling true it will only select the last option. This does not fire the onClick event
++ `setByIndex( index, multiple )` sets the item with the passed index as selected.  If multiple is true and it is a multi-select box, it is selected additionally.  Otherwise it's selected instead.  This accepts arrays as well.  Without multiple equaling true it will only select the last option. This does not fire the onClick event.  A negative index will start counting from the end.
  
-+ `setByText( text, multiple )` sets the item with the passed text as selected.  If multiple is true and it is a multi-select box, it is selected additionally.  Otherwise it's selected instead. This accepts arrays as well.  Without multiple equaling true it will only select the last option. This does not fire the onClick event
++ `setByText( text, multiple )` sets the item with the passed text as selected.  If multiple is true and it is a multi-select box, it is selected additionally.  Otherwise it's selected instead. This accepts arrays as well.  Without multiple equaling true it will only select the last option. This does not fire the onClick event.
 
-+ `setByValue( value, multiple )` sets the item with the passed value as selected.  If multiple is true and it is a multi-select box, it is selected additionally.  Otherwise it's selected instead. This accepts arrays as well.  Without multiple equaling true it will only select the last option. This does not fire the onClick event
++ `setByValue( value, multiple )` sets the item with the passed value as selected.  If multiple is true and it is a multi-select box, it is selected additionally.  Otherwise it's selected instead. This accepts arrays as well.  Without multiple equaling true it will only select the last option. This does not fire the onClick event.
 
 
 Contributing
@@ -438,6 +438,7 @@ Change Log
 + [demo] fixed minor issues on the demo
 + [demo] changed debug button
 + [default] refactored defaults functions into `./defaults.js`
++ [api] added the ability to use negative indexes in api calls
 + [api] removed querySelector from the api calls
 + [api] default is now only applied after rebuild if there is nothing with the value left in the dropdown
 + [flounder] slowly removing things that are not needed from the main object for the sake of a clearer api later
