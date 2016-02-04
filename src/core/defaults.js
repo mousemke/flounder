@@ -189,7 +189,6 @@ const defaults = {
 
 
 
-
         let defaultObj;
         let _data       = sortData( data );
 

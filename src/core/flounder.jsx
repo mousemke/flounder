@@ -285,6 +285,7 @@ class Flounder
             }
             else
             {
+                this.setSelectValue( e );
                 this.setKeypress( e );
             }
         }

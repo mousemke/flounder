@@ -425,6 +425,7 @@ Change Log
 + [events] fixed a bug with incrementing and firefox
 + [events] added a blur event to catch mobile selection
 + [events] search inputs now correctly display the selected values on blur
++ [events] fixed placeholder logic
 + [search] adjusted search weights
 + [search] descriptions are now properly searchable
 + [search] multiple `setValue` calls taken out
@@ -438,10 +439,8 @@ Change Log
 + [demo] changed debug button
 + [default] refactored defaults functions into `./defaults.js`
 + [api] removed querySelector from the api calls
++ [api] default is now only applied after rebuild if there is nothing with the value left in the dropdown
 + [flounder] slowly removing things that are not needed from the main object for the sake of a clearer api later
-
-
-// + default is now only applied after rebuild if there is nothing with the value left in the dropdown // pending #39
 
 
 0.4.5

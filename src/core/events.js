@@ -77,7 +77,6 @@ const events = {
         let search = this.refs.search;
         search.addEventListener( 'click', this.toggleList );
         search.addEventListener( 'keyup', this.fuzzySearch );
-        search.addEventListener( 'keyup', this.setSelectValue );
         search.addEventListener( 'focus', this.checkPlaceholder );
         search.addEventListener( 'blur', this.checkPlaceholder );
     },
@@ -208,32 +207,27 @@ const events = {
      *
      * @return _Void_
      */
-    checkPlaceholder : function( e )
-    {
-        let type        = e.type;
-        let refs        = this.refs;
-        let selected    = refs.selected;
+     checkPlaceholder : function( e )
+     {
+         let type        = e.type;
+         let refs        = this.refs;
+         let selected    = refs.selected;
 
-        if ( type === 'focus' )
-        {
-            selected.innerHTML = '';
-        }
-        else
-        {
-            if ( refs.multiTagWrapper &&
-                    refs.multiTagWrapper.children.length === 0 )
-            {
-                selected.innerHTML = this._default.text;
-            }
-            else
-            {
-                let active  = this.getSelected();
-                active      = active.length === 1 ? active[0].innerHTML : this.multipleMessage;
+         if ( type === 'focus' )
+         {
+             selected.innerHTML = '';
+         }
+         else
+         {
+             if ( !refs.multiTagWrapper )
+             {
+                 let active  = this.getSelected();
+                 active      = active.length === 1 ? active[0].innerHTML : this.multipleMessage;
 
-                selected.innerHTML = active;
-            }
-        }
-    },
+                 selected.innerHTML = active;
+             }
+         }
+     },
 
 
     /**
@@ -391,7 +385,6 @@ const events = {
         let search = this.refs.search;
         search.removeEventListener( 'click', this.toggleList );
         search.removeEventListener( 'keyup', this.fuzzySearch );
-        search.removeEventListener( 'keyup', this.setSelectValue );
         search.removeEventListener( 'focus', this.checkPlaceholder );
         search.removeEventListener( 'blur', this.checkPlaceholder );
     },
