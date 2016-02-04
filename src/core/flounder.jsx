@@ -51,33 +51,11 @@ class Flounder
             console.log( 'something may be wrong in "onComponentWillUnmount"', e );
         }
 
-        let refs        = this.refs;
-
-        this.removeOptionsListeners();
-
-        let qsHTML          = document.querySelector( 'html' );
-        let catchBodyClick  = this.catchBodyClick;
-        qsHTML.removeEventListener( 'click', catchBodyClick );
-        qsHTML.removeEventListener( 'touchend', catchBodyClick );
-
-        let select = refs.select;
-        select.removeEventListener( 'change', this.divertTarget  );
-        select.removeEventListener( 'blur', this.divertTarget );
-        refs.selected.removeEventListener( 'click', this.toggleList );
-        refs.flounder.removeEventListener( 'keydown', this.checkFlounderKeypress );
+        this.removeListeners();
 
         if ( this.originalChildren )
         {
             this.popInSelectElements( select );
-        }
-
-        if ( this.search )
-        {
-            let search = refs.search;
-            search.removeEventListener( 'click', this.toggleList );
-            search.removeEventListener( 'keyup', this.fuzzySearch );
-            search.removeEventListener( 'focus', this.checkPlaceholder );
-            search.removeEventListener( 'blur', this.checkPlaceholder );
         }
     }
 
@@ -307,7 +285,6 @@ class Flounder
             }
             else
             {
-                console.log( 'm' );
                 this.setKeypress( e );
             }
         }
@@ -347,10 +324,9 @@ class Flounder
      */
     initialzeOptions()
     {
-        this.props                  = this.props || {};
-        let props                   = this.props;
+        let props = this.props = this.props || {};
 
-        for ( var opt in defaultOptions )
+        for ( let opt in defaultOptions )
         {
             if ( defaultOptions.hasOwnProperty( opt ) && opt !== 'classes' )
             {
@@ -361,7 +337,7 @@ class Flounder
                 let classes         = defaultOptions[ opt ];
                 let propsClasses    = props.classes;
 
-                for ( var clss in classes )
+                for ( let clss in classes )
                 {
                     this[ clss + 'Class' ] = propsClasses && propsClasses[ clss ] !== undefined ? propsClasses[ clss ] : classes[ clss ];
                 }

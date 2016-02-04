@@ -420,6 +420,7 @@ Change Log
 0.5.0
 -----
 
++ [events] added `setSelectValue` to search keyup
 + [events] mobile safari no longer selects things all by itself
 + [events] fixed a bug with incrementing and firefox
 + [events] added a blur event to catch mobile selection

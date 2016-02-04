@@ -77,6 +77,7 @@ const events = {
         let search = this.refs.search;
         search.addEventListener( 'click', this.toggleList );
         search.addEventListener( 'keyup', this.fuzzySearch );
+        search.addEventListener( 'keyup', this.setSelectValue );
         search.addEventListener( 'focus', this.checkPlaceholder );
         search.addEventListener( 'blur', this.checkPlaceholder );
     },
@@ -329,6 +330,37 @@ const events = {
 
 
     /**
+     * ## removeListeners
+     *
+     * removes event listeners from flounder.  normally pre unload
+     *
+     * @return _Void_
+     */
+    removeListeners : function()
+    {
+        let refs        = this.refs;
+
+        this.removeOptionsListeners();
+
+        let qsHTML          = document.querySelector( 'html' );
+        let catchBodyClick  = this.catchBodyClick;
+        qsHTML.removeEventListener( 'click', catchBodyClick );
+        qsHTML.removeEventListener( 'touchend', catchBodyClick );
+
+        let select = refs.select;
+        select.removeEventListener( 'change', this.divertTarget  );
+        select.removeEventListener( 'blur', this.divertTarget );
+        refs.selected.removeEventListener( 'click', this.toggleList );
+        refs.flounder.removeEventListener( 'keydown', this.checkFlounderKeypress );
+
+        if ( this.search )
+        {
+            this.removeSearchListeners();
+        }
+    },
+
+
+    /**
      * ## removeOptionsListeners
      *
      * removes event listeners on the data divs
@@ -344,6 +376,24 @@ const events = {
                 dataObj.removeEventListener( 'click', this.clickSet );
             }
         } );
+    },
+
+
+    /**
+     * ## removeSearchListeners
+     *
+     * removes the listeners from the search input
+     *
+     * @return _Void_
+     */
+    removeSearchListeners : function()
+    {
+        let search = this.refs.search;
+        search.removeEventListener( 'click', this.toggleList );
+        search.removeEventListener( 'keyup', this.fuzzySearch );
+        search.removeEventListener( 'keyup', this.setSelectValue );
+        search.removeEventListener( 'focus', this.checkPlaceholder );
+        search.removeEventListener( 'blur', this.checkPlaceholder );
     },
 
 
@@ -405,7 +455,6 @@ const events = {
         {
             return true;
         }
-
 
         let selectTag           = refs.select;
         let data                = refs.data;
