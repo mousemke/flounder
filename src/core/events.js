@@ -77,8 +77,7 @@ const events = {
         let search = this.refs.search;
         search.addEventListener( 'click', this.toggleList );
         search.addEventListener( 'keyup', this.fuzzySearch );
-        search.addEventListener( 'focus', this.checkPlaceholder );
-        search.addEventListener( 'blur', this.checkPlaceholder );
+        search.addEventListener( 'focus', this.clearPlaceholder );
     },
 
 
@@ -126,6 +125,7 @@ const events = {
     {
         if ( ! this.checkClickTarget( e ) )
         {
+            console.log( 'here' );
             this.toggleList( e );
         }
     },
@@ -207,26 +207,10 @@ const events = {
      *
      * @return _Void_
      */
-     checkPlaceholder : function( e )
+     clearPlaceholder : function( e )
      {
-         let type        = e.type;
-         let refs        = this.refs;
-         let selected    = refs.selected;
-
-         if ( type === 'focus' )
-         {
-             selected.innerHTML = '';
-         }
-         else
-         {
-             if ( !refs.multiTagWrapper )
-             {
-                 let active  = this.getSelected();
-                 active      = active.length === 1 ? active[0].innerHTML : this.multipleMessage;
-
-                 selected.innerHTML = active;
-             }
-         }
+        let selected    = this.refs.selected;
+        selected.innerHTML = '';
      },
 
 
@@ -385,8 +369,7 @@ const events = {
         let search = this.refs.search;
         search.removeEventListener( 'click', this.toggleList );
         search.removeEventListener( 'keyup', this.fuzzySearch );
-        search.removeEventListener( 'focus', this.checkPlaceholder );
-        search.removeEventListener( 'blur', this.checkPlaceholder );
+        search.removeEventListener( 'focus', this.clearPlaceholder );
     },
 
 

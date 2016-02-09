@@ -8,6 +8,8 @@ const defaultOptions = {
         wrapper     : ''
     },
     data                    : [],
+    defaultIndex            : false,
+    defaultValue            : false,
     keepChangesOnDestroy    : false,
     multiple                : false,
     multipleTags            : false,

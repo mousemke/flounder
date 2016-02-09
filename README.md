@@ -48,7 +48,7 @@ $( '.example--class' ).flounder( configOptions );
 µ( '.example--class' ).flounder( configOptions )
 ```
 
-Flounder also saves a copy of itself to its target element.  So if you lose the reference, you can just grab it from the element again
+Flounder also adds a reference of itself to its target element.  So if you lose the reference, you can just grab it from the element again
 ```js
 document.querySelector( '#vanilla--select' ).flounder.destroy()
 ```
