@@ -229,6 +229,7 @@ class Flounder
             }
             else
             {
+                console.log( 'ljbnkhvbkiv' );
                 selected.innerHTML  = this.multipleMessage;
             }
 
@@ -319,7 +320,8 @@ class Flounder
     /**
      * ## initialzeOptions
      *
-     * inserts the initial options into the flounder object, setting defaults when necessary
+     * inserts the initial options into the flounder object, setting defaults
+     * when necessary
      *
      * @return _Void_
      */
@@ -340,7 +342,9 @@ class Flounder
 
                 for ( let clss in classes )
                 {
-                    this[ clss + 'Class' ] = propsClasses && propsClasses[ clss ] !== undefined ? propsClasses[ clss ] : classes[ clss ];
+                    this[ clss + 'Class' ] = propsClasses && propsClasses[ clss ] !== undefined ?
+                                                propsClasses[ clss ] :
+                                                classes[ clss ];
                 }
             }
         }

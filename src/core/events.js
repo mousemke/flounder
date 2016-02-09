@@ -125,7 +125,7 @@ const events = {
     {
         if ( ! this.checkClickTarget( e ) )
         {
-            console.log( 'here' );
+            console.log( 'add bodyclick placeholder here' );
             this.toggleList( e );
         }
     },
@@ -398,65 +398,69 @@ const events = {
      */
     setKeypress : function( e )
     {
-        let refs                = this.refs;
-
+        let refs        = this.refs;
         let increment   = 0;
         let keyCode     = e.keyCode;
 
-        if ( this.multipleTags )
-        {
-            e.preventDefault();
-            return false;
-        }
+        let nonCharacterKeys = [ 16, 17, 18, 20, 91, 93 ]
 
-        if ( keyCode === 13 || keyCode === 27 || keyCode === 32 ) // space enter escape
+        if ( nonCharacterKeys.indexOf( keyCode ) === -1 )
         {
-            this.toggleList( e );
-            return false;
-        }
-        else if ( !window.sidebar && ( keyCode === 38 || keyCode === 40 ) ) // up and down
-        {
-            e.preventDefault();
-            let search = refs.search;
-
-            if ( search )
+            if ( this.multipleTags )
             {
-                search.value = '';
+                e.preventDefault();
+                return false;
             }
 
-            increment = keyCode - 39;
-        }
-        else if ( ( keyCode >= 48 && keyCode <= 57 ) ||
-                ( keyCode >= 65 && keyCode <= 90 ) ) // letters - allows native behavior
-        {
-            return true;
-        }
+            if ( keyCode === 13 || keyCode === 27 || keyCode === 32 ) // space enter escape
+            {
+                this.toggleList( e );
+                return false;
+            }
+            else if ( !window.sidebar && ( keyCode === 38 || keyCode === 40 ) ) // up and down
+            {
+                e.preventDefault();
+                let search = refs.search;
 
-        let selectTag           = refs.select;
-        let data                = refs.data;
-        let dataMaxIndex        = data.length - 1;
-        let index               = selectTag.selectedIndex + increment;
+                if ( search )
+                {
+                    search.value = '';
+                }
 
-        if ( index > dataMaxIndex )
-        {
-            index = 0;
-        }
-        else if ( index < 0 )
-        {
-            index = dataMaxIndex;
-        }
+                increment = keyCode - 39;
+            }
+            else if ( ( keyCode >= 48 && keyCode <= 57 ) ||
+                    ( keyCode >= 65 && keyCode <= 90 ) ) // letters - allows native behavior
+            {
+                return true;
+            }
 
-        selectTag.selectedIndex = index;
+            let selectTag           = refs.select;
+            let data                = refs.data;
+            let dataMaxIndex        = data.length - 1;
+            let index               = selectTag.selectedIndex + increment;
 
-        let hasClass            = this.hasClass;
-        let dataAtIndex         = data[ index ];
+            if ( index > dataMaxIndex )
+            {
+                index = 0;
+            }
+            else if ( index < 0 )
+            {
+                index = dataMaxIndex;
+            }
 
-        if ( hasClass( dataAtIndex, classes.HIDDEN ) ||
-             hasClass( dataAtIndex, classes.SELECTED_HIDDEN ) ||
-             hasClass( dataAtIndex, classes.SEARCH_HIDDEN ) ||
-             hasClass( dataAtIndex, classes.DISABLED ) )
-        {
-            this.setKeypress( e );
+            selectTag.selectedIndex = index;
+
+            let hasClass            = this.hasClass;
+            let dataAtIndex         = data[ index ];
+
+            if ( hasClass( dataAtIndex, classes.HIDDEN ) ||
+                 hasClass( dataAtIndex, classes.SELECTED_HIDDEN ) ||
+                 hasClass( dataAtIndex, classes.SEARCH_HIDDEN ) ||
+                 hasClass( dataAtIndex, classes.DISABLED ) )
+            {
+                this.setKeypress( e );
+            }
         }
     },
 
@@ -582,6 +586,14 @@ const events = {
         selectedOption          = refs.selectOptions[ index ];
 
         selectedOption.selected = selectedOption.selected === true ? false : true;
+
+        let firstOption = refs.selectOptions[ 0 ];
+
+        if ( firstOption.value === '' && this.getSelected().length > 1 )
+        {
+            this.removeClass( refs.data[0], selectedClass );
+            refs.selectOptions[0].selected = false;
+        }
     },
 
 
