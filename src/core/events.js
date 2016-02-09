@@ -66,6 +66,54 @@ const events = {
 
 
     /**
+     * ## addPlaceholder
+     *
+     * called on body click, this determines what (if anything) should be
+     * refilled into the the placeholder position
+     *
+     * @return _Void_
+     */
+    addPlaceholder : function()
+    {
+        let multiTags       = this.multipleTags;
+        let selectedValues  = this.getSelectedValues();
+        let val             = selectedValues[0];
+        let selectedCount   = selectedValues.length;
+        let selected        = this.refs.selected;
+
+        switch ( selectedCount )
+        {
+            case 0:
+                this.setByIndex( 0 );
+                break;
+            case 1:
+                selected.innerHTML = val === '' ? this.placeholder : selectedValues[0];
+                break;
+            default:
+                selected.innerHTML = this.multipleMessage;
+                break;
+        }
+
+        if ( multiTags )
+        {
+            if ( selectedCount === 0 )
+            {
+                this.setByIndex( 0 );
+            }
+
+            if ( !val || val === '' )
+            {
+                selected.innerHTML = this.placeholder;
+            }
+            else
+            {
+                selected.innerHTML = '';
+            }
+        }
+    },
+
+
+    /**
      * ## addSearchListeners
      *
      * adds listeners to the search box
@@ -125,8 +173,9 @@ const events = {
     {
         if ( ! this.checkClickTarget( e ) )
         {
-            console.log( 'add bodyclick placeholder here' );
             this.toggleList( e );
+
+            this.addPlaceholder();
         }
     },
 

@@ -421,7 +421,6 @@ Change Log
 -----
 
 + events
-    
     + added `setSelectValue` to search keyup
     + mobile safari no longer selects things all by itself
     + fixed a bug with incrementing and firefox

@@ -245,9 +245,9 @@ const utils = {
      */
     removeClass : function( el, _class )
     {
-        var baseClass       = el.className;
-        var baseClassLength = baseClass.length;
-        var classLength     = _class.length;
+        let baseClass       = el.className;
+        let baseClassLength = baseClass.length;
+        let classLength     = _class.length;
 
         if ( baseClass.slice( 0, classLength + 1 ) === _class + ' ' )
         {
