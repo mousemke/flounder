@@ -152,6 +152,7 @@ let tests = function( Flounder )
      * ## fuzzySearchReset tests
      *
      * @test exists
+     * @test correctly blanks the search input
      * @test correctly resets search filtered elements
      */
     QUnit.test( 'fuzzySearchReset', function( assert )
@@ -178,6 +179,25 @@ let tests = function( Flounder )
         assert.equal( flounderRefs.search.value, '', 'correctly blanks the search input' );
         assert.equal( hiddenOptions.length, 0, 'correctly resets search filtered elements' );
         flounder.destroy();
+    } );
+
+
+    /*
+     * ## initialzeOptions tests
+     *
+     * @test exists
+     * @test correctly resets search filtered elements
+     */
+    QUnit.test( 'initialzeOptions', function( assert )
+    {
+        let data = [
+            'doge',
+            'moon'
+        ];
+
+        let flounder    = new Flounder( document.body, { data : data, defaultIndex : 0, search : true } );
+
+        assert.ok( flounder.initialzeOptions, 'exists' );
     } );
 };
 
