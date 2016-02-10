@@ -2476,6 +2476,46 @@ var events = {
     },
 
     /**
+     * ## addPlaceholder
+     *
+     * called on body click, this determines what (if anything) should be
+     * refilled into the the placeholder position
+     *
+     * @return _Void_
+     */
+    addPlaceholder: function addPlaceholder() {
+        var multiTags = this.multipleTags;
+        var selectedValues = this.getSelectedValues();
+        var val = selectedValues[0];
+        var selectedCount = selectedValues.length;
+        var selected = this.refs.selected;
+
+        switch (selectedCount) {
+            case 0:
+                this.setByIndex(0);
+                break;
+            case 1:
+                selected.innerHTML = val === '' ? this.placeholder : selectedValues[0];
+                break;
+            default:
+                selected.innerHTML = this.multipleMessage;
+                break;
+        }
+
+        if (multiTags) {
+            if (selectedCount === 0) {
+                this.setByIndex(0);
+            }
+
+            if (!val || val === '') {
+                selected.innerHTML = this.placeholder;
+            } else {
+                selected.innerHTML = '';
+            }
+        }
+    },
+
+    /**
      * ## addSearchListeners
      *
      * adds listeners to the search box
@@ -2531,38 +2571,6 @@ var events = {
             this.toggleList(e);
 
             this.addPlaceholder();
-        }
-    },
-
-    addPlaceholder: function addPlaceholder() {
-        var multiTags = this.multipleTags;
-        var selectedValues = this.getSelectedValues();
-        var val = selectedValues[0];
-        var selectedCount = selectedValues.length;
-        var selected = this.refs.selected;
-
-        switch (selectedCount) {
-            case 0:
-                this.setByIndex(0);
-                break;
-            case 1:
-                selected.innerHTML = val === '' ? this.placeholder : selectedValues[0];
-                break;
-            default:
-                selected.innerHTML = this.multipleMessage;
-                break;
-        }
-
-        if (multiTags) {
-            if (selectedCount === 0) {
-                this.setByIndex(0);
-            }
-
-            if (!val || val === '') {
-                selected.innerHTML = this.placeholder;
-            } else {
-                selected.innerHTML = '';
-            }
         }
     },
 
@@ -4532,14 +4540,165 @@ var tests = function tests(Flounder) {
      * ## initialzeOptions tests
      *
      * @test exists
-     * @test correctly resets search filtered elements
      */
     QUnit.test('initialzeOptions', function (assert) {
         var data = ['doge', 'moon'];
 
         var flounder = new Flounder(document.body, { data: data, defaultIndex: 0, search: true });
-
         assert.ok(flounder.initialzeOptions, 'exists');
+
+        assert.ok(flounder.data[0].text === 'doge', 'correctly sets data');
+        assert.ok(flounder.search, 'correctly sets a prop');
+        assert.ok(flounder.defaultIndex === 0, 'correctly sets a different prop');
+
+        flounder.destroy();
+    });
+
+    /*
+     * ## onRender tests
+     *
+     * @test exists
+     */
+    QUnit.test('onRender', function (assert) {
+        var data = ['doge', 'moon'];
+
+        var flounder = new Flounder(document.body, { data: data, defaultIndex: 0, search: true });
+        assert.ok(flounder.onRender, 'exists');
+
+        flounder.destroy();
+    });
+
+    /*
+     * ## removeMultiTag tests
+     *
+     * @test exists
+     */
+    QUnit.test('removeMultiTag', function (assert) {
+        var data = ['doge', 'moon'];
+
+        var flounder = new Flounder(document.body, { data: data, defaultIndex: 0, multipleTags: true });
+        assert.ok(flounder.removeMultiTag, 'exists');
+
+        var refs = document.body.flounder.refs;
+        var doge = refs.data[1];
+        doge.click();
+
+        var multiTagWrapper = refs.multiTagWrapper;
+        multiTagWrapper.children[0].children[0].click();
+
+        assert.equal(multiTagWrapper.children.length, 0, 'tag is removed');
+
+        flounder.destroy();
+    });
+
+    /*
+     * ## removeSelectedClass tests
+     *
+     * @test exists
+     */
+    QUnit.test('removeSelectedClass', function (assert) {
+        var data = ['doge', 'moon'];
+
+        var flounder = new Flounder(document.body, { data: data, defaultIndex: 0, multipleTags: true });
+        assert.ok(flounder.removeSelectedClass, 'exists');
+
+        var refs = document.body.flounder.refs;
+        refs.data[1].click();
+        refs.data[2].click();
+
+        flounder.removeSelectedClass();
+        var selected = refs.optionsList.querySelectorAll('.flounder__option--selected');
+
+        assert.equal(selected.length, 0, 'selected class is removed from divs');
+
+        flounder.destroy();
+    });
+
+    /*
+     * ## removeSelectedValue tests
+     *
+     * @test exists
+     */
+    QUnit.test('removeSelectedValue', function (assert) {
+        var data = ['doge', 'moon'];
+
+        var flounder = new Flounder(document.body, { data: data, defaultIndex: 0, multipleTags: true });
+        assert.ok(flounder.removeSelectedValue, 'exists');
+
+        var refs = flounder.refs;
+        refs.data[1].click();
+        refs.data[2].click();
+
+        flounder.removeSelectedValue();
+
+        assert.equal(refs.select.selectedOptions.length, 0, 'selected is set to false for options');
+
+        flounder.destroy();
+    });
+
+    /*
+     * ## setTextMultiTagIndent tests
+     *
+     * @test exists
+     */
+    QUnit.test('setTextMultiTagIndent', function (assert) {
+        var data = ['doge', 'moon'];
+
+        var flounder = new Flounder(document.body, { data: data, defaultIndex: 0, multipleTags: true });
+        assert.ok(flounder.setTextMultiTagIndent, 'exists');
+
+        var refs = flounder.refs;
+
+        var span = document.createElement('SPAN');
+        span.className = 'flounder__multiple--select--tag';
+        span.innerHTML = '<a class="flounder__multiple__tag__close" data-index="1"></a>doge';
+
+        refs.multiTagWrapper.appendChild(span);
+
+        flounder.setTextMultiTagIndent();
+
+        assert.equal(refs.search.style.textIndent, '62px', 'search box text indent is correctly set');
+
+        flounder.destroy();
+    });
+
+    /*
+     * ## sortData tests
+     *
+     * @test exists
+     */
+    QUnit.test('sortData', function (assert) {
+        var data = ['doge', 'moon'];
+
+        var flounder = new Flounder(document.body, { data: data });
+        assert.ok(flounder.sortData, 'exists');
+
+        var sortedData = flounder.sortData(['doge', 'moon']);
+
+        assert.equal(sortedData[0].index, 0, 'sets the index');
+
+        sortedData = flounder.sortData([{ text: 'doge', value: 'moon' }, 'moon']);
+        assert.equal(sortedData[0].value, 'moon', 'sets the value');
+
+        flounder.destroy();
+    });
+
+    /*
+     * ## version tests
+     *
+     * @test exists
+     */
+    QUnit.test('version', function (assert) {
+        var flounder = new Flounder(document.body);
+        assert.ok(flounder.version, 'exists');
+
+        assert.equal(Flounder.version, flounder.version, 'shows the version');
+        // strict mode doesnt like this
+        // flounder.version = 'moin!';
+        // assert.equal( Flounder.version, flounder.version, 'instance version is read only' );
+        // Flounder.version = 'moin!';
+        // assert.equal( Flounder.version, flounder.version, 'constructor version is read only' );
+        flounder.destroy();
     });
 };
 

@@ -138,7 +138,7 @@ class FlounderReact extends Component
     {
         this.bindThis();
 
-        this.initialzeOptions();
+        this.initializeOptions();
 
         if ( this.search )
         {

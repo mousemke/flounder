@@ -186,7 +186,6 @@ let tests = function( Flounder )
      * ## initialzeOptions tests
      *
      * @test exists
-     * @test correctly resets search filtered elements
      */
     QUnit.test( 'initialzeOptions', function( assert )
     {
@@ -196,8 +195,192 @@ let tests = function( Flounder )
         ];
 
         let flounder    = new Flounder( document.body, { data : data, defaultIndex : 0, search : true } );
-
         assert.ok( flounder.initialzeOptions, 'exists' );
+
+        assert.ok( flounder.data[0].text === 'doge', 'correctly sets data' );
+        assert.ok( flounder.search, 'correctly sets a prop' );
+        assert.ok( flounder.defaultIndex === 0, 'correctly sets a different prop' );
+
+        flounder.destroy();
+    } );
+
+
+    /*
+     * ## onRender tests
+     *
+     * @test exists
+     */
+    QUnit.test( 'onRender', function( assert )
+    {
+        let data = [
+            'doge',
+            'moon'
+        ];
+
+        let flounder    = new Flounder( document.body, { data : data, defaultIndex : 0, search : true } );
+        assert.ok( flounder.onRender, 'exists' );
+
+        flounder.destroy();
+    } );
+
+
+    /*
+     * ## removeMultiTag tests
+     *
+     * @test exists
+     */
+    QUnit.test( 'removeMultiTag', function( assert )
+    {
+        let data = [
+            'doge',
+            'moon'
+        ];
+
+        let flounder    = new Flounder( document.body, { data : data, defaultIndex : 0, multipleTags : true } );
+        assert.ok( flounder.removeMultiTag, 'exists' );
+
+        let refs = document.body.flounder.refs;
+        let doge = refs.data[1];
+        doge.click();
+
+        let multiTagWrapper = refs.multiTagWrapper;
+        multiTagWrapper.children[0].children[0].click();
+
+        assert.equal( multiTagWrapper.children.length, 0, 'tag is removed' );
+
+        flounder.destroy();
+    } );
+
+
+    /*
+     * ## removeSelectedClass tests
+     *
+     * @test exists
+     */
+    QUnit.test( 'removeSelectedClass', function( assert )
+    {
+        let data = [
+            'doge',
+            'moon'
+        ];
+
+        let flounder    = new Flounder( document.body, { data : data, defaultIndex : 0, multipleTags : true } );
+        assert.ok( flounder.removeSelectedClass, 'exists' );
+
+        let refs = document.body.flounder.refs;
+        refs.data[1].click();
+        refs.data[2].click();
+
+        flounder.removeSelectedClass();
+        let selected = refs.optionsList.querySelectorAll( '.flounder__option--selected' );
+
+        assert.equal( selected.length, 0, 'selected class is removed from divs' );
+
+        flounder.destroy();
+    } );
+
+
+    /*
+     * ## removeSelectedValue tests
+     *
+     * @test exists
+     */
+    QUnit.test( 'removeSelectedValue', function( assert )
+    {
+        let data = [
+            'doge',
+            'moon'
+        ];
+
+        let flounder    = new Flounder( document.body, { data : data, defaultIndex : 0, multipleTags : true } );
+        assert.ok( flounder.removeSelectedValue, 'exists' );
+
+        let refs = flounder.refs;
+        refs.data[1].click();
+        refs.data[2].click();
+
+        flounder.removeSelectedValue();
+
+        assert.equal( refs.select.selectedOptions.length, 0, 'selected is set to false for options' );
+
+        flounder.destroy();
+    } );
+
+
+    /*
+     * ## setTextMultiTagIndent tests
+     *
+     * @test exists
+     */
+    QUnit.test( 'setTextMultiTagIndent', function( assert )
+    {
+        let data = [
+            'doge',
+            'moon'
+        ];
+
+        let flounder    = new Flounder( document.body, { data : data, defaultIndex : 0, multipleTags : true } );
+        assert.ok( flounder.setTextMultiTagIndent, 'exists' );
+
+        let refs = flounder.refs;
+
+        let span = document.createElement( 'SPAN' );
+        span.className = 'flounder__multiple--select--tag';
+        span.innerHTML = '<a class="flounder__multiple__tag__close" data-index="1"></a>doge';
+
+        refs.multiTagWrapper.appendChild( span );
+
+        flounder.setTextMultiTagIndent();
+
+        assert.equal( refs.search.style.textIndent, '62px', 'search box text indent is correctly set' );
+
+        flounder.destroy();
+    } );
+
+
+    /*
+     * ## sortData tests
+     *
+     * @test exists
+     */
+    QUnit.test( 'sortData', function( assert )
+    {
+        let data = [
+            'doge',
+            'moon'
+        ];
+
+        let flounder    = new Flounder( document.body, { data : data } );
+        assert.ok( flounder.sortData, 'exists' );
+
+        let sortedData  = flounder.sortData( ['doge','moon'] );
+
+        assert.equal( sortedData[0].index, 0, 'sets the index' );
+
+        sortedData      = flounder.sortData( [{text:'doge',value:'moon'},'moon'] );
+        assert.equal( sortedData[0].value, 'moon', 'sets the value' );
+
+        flounder.destroy();
+    } );
+
+
+    /*
+     * ## version tests
+     *
+     * @test exists
+     */
+    QUnit.test( 'version', function( assert )
+    {
+        let flounder    = new Flounder( document.body );
+        assert.ok( flounder.version, 'exists' );
+
+        assert.equal( Flounder.version, flounder.version, 'shows the version' );
+        // strict mode doesnt like this
+        // flounder.version = 'moin!';
+        // assert.equal( Flounder.version, flounder.version, 'instance version is read only' );
+        // Flounder.version = 'moin!';
+        // assert.equal( Flounder.version, flounder.version, 'constructor version is read only' );
+        flounder.destroy();
     } );
 };
 

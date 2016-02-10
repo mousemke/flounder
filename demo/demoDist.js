@@ -20533,7 +20533,15 @@ var api = {
 
             if (typeof _ret === 'object') return _ret.v;
         } else {
-            var el = refs.data[index];
+            var data = refs.data;
+            var _length = data.length;
+
+            if (index < 0) {
+                var _length2 = data.length;
+                index = _length2 + index;
+            }
+
+            var el = data[index];
 
             if (el) {
                 var opt = refs.selectOptions[index];
@@ -20849,6 +20857,14 @@ var api = {
 
             if (typeof _ret5 === 'object') return _ret5.v;
         } else {
+            var data = refs.data;
+            var _length3 = data.length;
+
+            if (index < 0) {
+                var _length4 = data.length;
+                index = _length4 + index;
+            }
+
             var el = refs.data[index];
 
             if (el) {
@@ -21027,7 +21043,7 @@ var build = {
     bindThis: function bindThis() {
         var _this = this;
 
-        ['addClass', 'attachAttributes', 'catchBodyClick', 'checkClickTarget', 'checkFlounderKeypress', 'checkPlaceholder', 'clickSet', 'divertTarget', 'displayMultipleTags', 'fuzzySearch', 'removeMultiTag', 'firstTouchController', 'setKeypress', 'setSelectValue', 'toggleClass', 'toggleList'].forEach(function (func) {
+        ['addClass', 'attachAttributes', 'catchBodyClick', 'checkClickTarget', 'checkFlounderKeypress', 'clearPlaceholder', 'clickSet', 'divertTarget', 'displayMultipleTags', 'fuzzySearch', 'removeMultiTag', 'firstTouchController', 'setKeypress', 'setSelectValue', 'toggleClass', 'toggleList'].forEach(function (func) {
             _this[func] = _this[func].bind(_this);
             _this[func].___isBound = true;
         });
@@ -21456,6 +21472,8 @@ var defaultOptions = {
         wrapper: ''
     },
     data: [],
+    defaultIndex: false,
+    defaultValue: false,
     keepChangesOnDestroy: false,
     multiple: false,
     multipleTags: false,
@@ -21559,16 +21577,12 @@ var defaults = {
          *
          * @return {Object} default settings
          */
-        var setValueDefault = function setValueDefault(_data) {
-            var defaultProp = configObj.defaultValue + '';
+        var setValueDefault = function setValueDefault(_data, _val) {
+            var defaultProp = _val || configObj.defaultValue + '';
             var index = undefined;
 
             _data.forEach(function (dataObj, i) {
-                var dataObjValue = dataObj.value;
-
-                if (typeof dataObjValue === 'number') {
-                    dataObjValue += '';
-                }
+                var dataObjValue = dataObj.value + '';
 
                 if (dataObjValue === defaultProp) {
                     index = i;
@@ -21621,28 +21635,38 @@ var defaults = {
         var defaultObj = undefined;
         var _data = sortData(data);
 
-        // if ( rebuild )
-        // {
+        if (rebuild) {
+            var val = self.refs.selected.getAttribute('data-value');
+            var def = setValueDefault(_data, val);
 
-        // }
-        // else
-        // {
-        if (configObj.placeholder || _data.length === 0) {
-            defaultObj = setPlaceholderDefault(self, _data);
-        } else if (configObj.defaultIndex) {
-            defaultObj = setIndexDefault(_data);
-        } else if (configObj.defaultValue) {
-            defaultObj = setValueDefault(_data);
+            if (!def) {
+                if (configObj.placeholder || _data.length === 0) {
+                    return setPlaceholderDefault(self, _data);
+                } else {
+                    if (configObj.multiple) {
+                        return setPlaceholderDefault(self, _data);
+                    } else {
+                        return setIndexDefault(_data, 0);
+                    }
+                }
+            }
+
+            return def;
         } else {
-            if (configObj.multiple) {
-                defaultObj = setPlaceholderDefault(self, _data);
+            if (configObj.placeholder || _data.length === 0) {
+                return setPlaceholderDefault(self, _data);
+            } else if (configObj.defaultIndex) {
+                return setIndexDefault(_data);
+            } else if (configObj.defaultValue) {
+                return setValueDefault(_data);
             } else {
-                defaultObj = setIndexDefault(_data, 0);
+                if (configObj.multiple) {
+                    return setPlaceholderDefault(self, _data);
+                } else {
+                    return setIndexDefault(_data, 0);
+                }
             }
         }
-        // }
-
-        return defaultObj;
     }
 };
 
@@ -21723,6 +21747,46 @@ var events = {
     },
 
     /**
+     * ## addPlaceholder
+     *
+     * called on body click, this determines what (if anything) should be
+     * refilled into the the placeholder position
+     *
+     * @return _Void_
+     */
+    addPlaceholder: function addPlaceholder() {
+        var multiTags = this.multipleTags;
+        var selectedValues = this.getSelectedValues();
+        var val = selectedValues[0];
+        var selectedCount = selectedValues.length;
+        var selected = this.refs.selected;
+
+        switch (selectedCount) {
+            case 0:
+                this.setByIndex(0);
+                break;
+            case 1:
+                selected.innerHTML = val === '' ? this.placeholder : selectedValues[0];
+                break;
+            default:
+                selected.innerHTML = this.multipleMessage;
+                break;
+        }
+
+        if (multiTags) {
+            if (selectedCount === 0) {
+                this.setByIndex(0);
+            }
+
+            if (!val || val === '') {
+                selected.innerHTML = this.placeholder;
+            } else {
+                selected.innerHTML = '';
+            }
+        }
+    },
+
+    /**
      * ## addSearchListeners
      *
      * adds listeners to the search box
@@ -21733,8 +21797,7 @@ var events = {
         var search = this.refs.search;
         search.addEventListener('click', this.toggleList);
         search.addEventListener('keyup', this.fuzzySearch);
-        search.addEventListener('focus', this.checkPlaceholder);
-        search.addEventListener('blur', this.checkPlaceholder);
+        search.addEventListener('focus', this.clearPlaceholder);
     },
 
     /**
@@ -21777,6 +21840,8 @@ var events = {
     catchBodyClick: function catchBodyClick(e) {
         if (!this.checkClickTarget(e)) {
             this.toggleList(e);
+
+            this.addPlaceholder();
         }
     },
 
@@ -21840,23 +21905,9 @@ var events = {
      *
      * @return _Void_
      */
-    checkPlaceholder: function checkPlaceholder(e) {
-        var type = e.type;
-        var refs = this.refs;
-        var selected = refs.selected;
-
-        if (type === 'focus') {
-            selected.innerHTML = '';
-        } else {
-            if (refs.multiTagWrapper && refs.multiTagWrapper.children.length === 0) {
-                selected.innerHTML = this._default.text;
-            } else {
-                var active = this.getSelected();
-                active = active.length === 1 ? active[0].innerHTML : this.multipleMessage;
-
-                selected.innerHTML = active;
-            }
-        }
+    clearPlaceholder: function clearPlaceholder(e) {
+        var selected = this.refs.selected;
+        selected.innerHTML = '';
     },
 
     /**
@@ -21939,6 +21990,34 @@ var events = {
     },
 
     /**
+     * ## removeListeners
+     *
+     * removes event listeners from flounder.  normally pre unload
+     *
+     * @return _Void_
+     */
+    removeListeners: function removeListeners() {
+        var refs = this.refs;
+
+        this.removeOptionsListeners();
+
+        var qsHTML = document.querySelector('html');
+        var catchBodyClick = this.catchBodyClick;
+        qsHTML.removeEventListener('click', catchBodyClick);
+        qsHTML.removeEventListener('touchend', catchBodyClick);
+
+        var select = refs.select;
+        select.removeEventListener('change', this.divertTarget);
+        select.removeEventListener('blur', this.divertTarget);
+        refs.selected.removeEventListener('click', this.toggleList);
+        refs.flounder.removeEventListener('keydown', this.checkFlounderKeypress);
+
+        if (this.search) {
+            this.removeSearchListeners();
+        }
+    },
+
+    /**
      * ## removeOptionsListeners
      *
      * removes event listeners on the data divs
@@ -21953,6 +22032,20 @@ var events = {
                 dataObj.removeEventListener('click', _this2.clickSet);
             }
         });
+    },
+
+    /**
+     * ## removeSearchListeners
+     *
+     * removes the listeners from the search input
+     *
+     * @return _Void_
+     */
+    removeSearchListeners: function removeSearchListeners() {
+        var search = this.refs.search;
+        search.removeEventListener('click', this.toggleList);
+        search.removeEventListener('keyup', this.fuzzySearch);
+        search.removeEventListener('focus', this.clearPlaceholder);
     },
 
     /**
@@ -21978,52 +22071,55 @@ var events = {
      */
     setKeypress: function setKeypress(e) {
         var refs = this.refs;
-
         var increment = 0;
         var keyCode = e.keyCode;
 
-        if (this.multipleTags) {
-            e.preventDefault();
-            return false;
-        }
+        var nonCharacterKeys = [16, 17, 18, 20, 91, 93];
 
-        if (keyCode === 13 || keyCode === 27 || keyCode === 32) // space enter escape
-            {
-                this.toggleList(e);
-                return false;
-            } else if (!window.sidebar && (keyCode === 38 || keyCode === 40)) // up and down
-            {
+        if (nonCharacterKeys.indexOf(keyCode) === -1) {
+            if (this.multipleTags) {
                 e.preventDefault();
-                var _search = refs.search;
-
-                if (_search) {
-                    _search.value = '';
-                }
-
-                increment = keyCode - 39;
-            } else if (keyCode >= 48 && keyCode <= 57 || keyCode >= 65 && keyCode <= 90) // letters - allows native behavior
-            {
-                return true;
+                return false;
             }
 
-        var selectTag = refs.select;
-        var data = refs.data;
-        var dataMaxIndex = data.length - 1;
-        var index = selectTag.selectedIndex + increment;
+            if (keyCode === 13 || keyCode === 27 || keyCode === 32) // space enter escape
+                {
+                    this.toggleList(e);
+                    return false;
+                } else if (!window.sidebar && (keyCode === 38 || keyCode === 40)) // up and down
+                {
+                    e.preventDefault();
+                    var _search = refs.search;
 
-        if (index > dataMaxIndex) {
-            index = 0;
-        } else if (index < 0) {
-            index = dataMaxIndex;
-        }
+                    if (_search) {
+                        _search.value = '';
+                    }
 
-        selectTag.selectedIndex = index;
+                    increment = keyCode - 39;
+                } else if (keyCode >= 48 && keyCode <= 57 || keyCode >= 65 && keyCode <= 90) // letters - allows native behavior
+                {
+                    return true;
+                }
 
-        var hasClass = this.hasClass;
-        var dataAtIndex = data[index];
+            var selectTag = refs.select;
+            var data = refs.data;
+            var dataMaxIndex = data.length - 1;
+            var index = selectTag.selectedIndex + increment;
 
-        if (hasClass(dataAtIndex, _classes2['default'].HIDDEN) || hasClass(dataAtIndex, _classes2['default'].SELECTED_HIDDEN) || hasClass(dataAtIndex, _classes2['default'].SEARCH_HIDDEN) || hasClass(dataAtIndex, _classes2['default'].DISABLED)) {
-            this.setKeypress(e);
+            if (index > dataMaxIndex) {
+                index = 0;
+            } else if (index < 0) {
+                index = dataMaxIndex;
+            }
+
+            selectTag.selectedIndex = index;
+
+            var hasClass = this.hasClass;
+            var dataAtIndex = data[index];
+
+            if (hasClass(dataAtIndex, _classes2['default'].HIDDEN) || hasClass(dataAtIndex, _classes2['default'].SELECTED_HIDDEN) || hasClass(dataAtIndex, _classes2['default'].SEARCH_HIDDEN) || hasClass(dataAtIndex, _classes2['default'].DISABLED)) {
+                this.setKeypress(e);
+            }
         }
     },
 
@@ -22133,6 +22229,13 @@ var events = {
         selectedOption = refs.selectOptions[index];
 
         selectedOption.selected = selectedOption.selected === true ? false : true;
+
+        var firstOption = refs.selectOptions[0];
+
+        if (firstOption.value === '' && this.getSelected().length > 1) {
+            this.removeClass(refs.data[0], selectedClass);
+            refs.selectOptions[0].selected = false;
+        }
     },
 
     /**
@@ -22336,31 +22439,10 @@ var Flounder = (function () {
                 console.log('something may be wrong in "onComponentWillUnmount"', e);
             }
 
-            var refs = this.refs;
-
-            this.removeOptionsListeners();
-
-            var qsHTML = document.querySelector('html');
-            var catchBodyClick = this.catchBodyClick;
-            qsHTML.removeEventListener('click', catchBodyClick);
-            qsHTML.removeEventListener('touchend', catchBodyClick);
-
-            var select = refs.select;
-            select.removeEventListener('change', this.divertTarget);
-            select.removeEventListener('blur', this.divertTarget);
-            refs.selected.removeEventListener('click', this.toggleList);
-            refs.flounder.removeEventListener('keydown', this.checkFlounderKeypress);
+            this.removeListeners();
 
             if (this.originalChildren) {
                 this.popInSelectElements(select);
-            }
-
-            if (this.search) {
-                var search = refs.search;
-                search.removeEventListener('click', this.toggleList);
-                search.removeEventListener('keyup', this.fuzzySearch);
-                search.removeEventListener('focus', this.checkPlaceholder);
-                search.removeEventListener('blur', this.checkPlaceholder);
             }
         }
 
@@ -22509,6 +22591,7 @@ var Flounder = (function () {
                     selected.innerHTML = '';
                     this.displayMultipleTags(selectedOption, this.refs.multiTagWrapper);
                 } else {
+                    console.log('ljbnkhvbkiv');
                     selected.innerHTML = this.multipleMessage;
                 }
 
@@ -22563,7 +22646,7 @@ var Flounder = (function () {
                         this.fuzzySearchReset();
                     }
                 } else {
-                    console.log('m');
+                    this.setSelectValue(e);
                     this.setKeypress(e);
                 }
             } else {
@@ -22595,15 +22678,15 @@ var Flounder = (function () {
         /**
          * ## initialzeOptions
          *
-         * inserts the initial options into the flounder object, setting defaults when necessary
+         * inserts the initial options into the flounder object, setting defaults
+         * when necessary
          *
          * @return _Void_
          */
     }, {
         key: 'initialzeOptions',
         value: function initialzeOptions() {
-            this.props = this.props || {};
-            var props = this.props;
+            var props = this.props = this.props || {};
 
             for (var opt in _defaults.defaultOptions) {
                 if (_defaults.defaultOptions.hasOwnProperty(opt) && opt !== 'classes') {
@@ -23629,7 +23712,7 @@ var FlounderReact = (function (_Component) {
 
             this.bindThis();
 
-            this.initialzeOptions();
+            this.initializeOptions();
 
             if (this.search) {
                 this.search = new _coreSearch2['default'](this);
