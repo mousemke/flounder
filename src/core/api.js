@@ -432,7 +432,7 @@ const api = {
     {
         try
         {
-            this.http.get( url ).then( data =>
+            utils.http.get( url ).then( data =>
             {
                 if ( data )
                 {
