@@ -55,7 +55,7 @@ class Flounder
 
         if ( this.originalChildren )
         {
-            this.popInSelectElements( select );
+            this.popInSelectElements( this.refs.select );
         }
     }
 

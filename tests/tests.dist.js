@@ -1488,7 +1488,7 @@ var api = {
         var _this6 = this;
 
         try {
-            this.http.get(url).then(function (data) {
+            _utils2['default'].http.get(url).then(function (data) {
                 if (data) {
                     _this6.data = JSON.parse(data);
                     if (callback) {
@@ -2067,7 +2067,7 @@ var build = {
      * @return _Void_
      */
     popInSelectElements: function popInSelectElements(select) {
-        this.removeAllChildren(select);
+        _utils2['default'].removeAllChildren(select);
 
         this.originalChildren.forEach(function (_el, i) {
             select.appendChild(_el);
@@ -3183,7 +3183,7 @@ var Flounder = (function () {
             this.removeListeners();
 
             if (this.originalChildren) {
-                this.popInSelectElements(select);
+                this.popInSelectElements(this.refs.select);
             }
         }
 
@@ -4678,7 +4678,10 @@ var tests = function tests(Flounder) {
 
         flounder.setTextMultiTagIndent();
 
-        assert.equal(refs.search.style.textIndent, '62px', 'search box text indent is correctly set');
+        var style = getComputedStyle(span);
+
+        var spanOffset = span.offsetWidth + parseInt(style['margin-left']) + parseInt(style['margin-right']);
+        assert.equal(refs.search.style.textIndent, spanOffset + 'px', 'search box text indent is correctly set');
 
         flounder.destroy();
     });
@@ -4757,11 +4760,14 @@ var tests = function tests(Flounder) {
         var body = document.body;
         assert.ok(_srcCoreUtilsJs2['default'].addClass, 'exists');
 
-        _srcCoreUtilsJs2['default'].addClass(body, 'moon');
-        assert.equal(document.body.className, 'moon', 'adds a class');
-
         _srcCoreUtilsJs2['default'].addClass(body, ['moon', 'doge']);
         assert.equal(document.body.className, 'moon  doge', 'adds an array of classes');
+
+        _srcCoreUtilsJs2['default'].addClass(body, 'brains');
+        assert.equal(document.body.className, 'moon  doge  brains', 'adds a single class');
+
+        _srcCoreUtilsJs2['default'].addClass(body, 'brains');
+        assert.equal(document.body.className, 'moon  doge  brains', 'only adds a class once');
     });
 
     // /*

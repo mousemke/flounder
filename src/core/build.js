@@ -394,7 +394,7 @@ const build = {
      */
     popInSelectElements : function( select )
     {
-        this.removeAllChildren( select );
+        utils.removeAllChildren( select );
 
         this.originalChildren.forEach( function( _el, i )
         {

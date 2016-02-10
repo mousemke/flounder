@@ -19,11 +19,14 @@ let tests = function( Flounder )
         let body = document.body;
         assert.ok( utils.addClass, 'exists' );
 
-        utils.addClass( body, 'moon' );
-        assert.equal( document.body.className, 'moon', 'adds a class' );
-
         utils.addClass( body, [ 'moon', 'doge' ] );
         assert.equal( document.body.className, 'moon  doge', 'adds an array of classes' );
+
+        utils.addClass( body, 'brains' );
+        assert.equal( document.body.className, 'moon  doge  brains', 'adds a single class' );
+
+        utils.addClass( body, 'brains' );
+        assert.equal( document.body.className, 'moon  doge  brains', 'only adds a class once' );
     } );
 
 

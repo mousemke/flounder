@@ -332,7 +332,10 @@ let tests = function( Flounder )
 
         flounder.setTextMultiTagIndent();
 
-        assert.equal( refs.search.style.textIndent, '62px', 'search box text indent is correctly set' );
+        let style = getComputedStyle( span );
+
+        let spanOffset = span.offsetWidth + parseInt( style[ 'margin-left' ] ) + parseInt( style[ 'margin-right' ] );
+        assert.equal( refs.search.style.textIndent, spanOffset + 'px', 'search box text indent is correctly set' );
 
         flounder.destroy();
     } );
