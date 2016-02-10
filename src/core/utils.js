@@ -17,6 +17,15 @@ const utils = {
      */
     addClass : function( _el, _class )
     {
+        if ( typeof _class !== 'string' && _class.length )
+        {
+            _class.forEach( function( _c )
+            {
+                utils.addClass( _el, _c );
+            } );
+
+            return true;
+        }
 
         let _elClass        = _el.className;
         let _elClassLength  = _elClass.length;
@@ -135,7 +144,7 @@ const utils = {
      *
      * @return _Integer_ adjusted width
      */
-    getElWidth : function( el )
+    getElWidth : function( el, _cb, context )
     {
         let style = getComputedStyle( el );
 
@@ -143,7 +152,7 @@ const utils = {
         {
             if ( this.__checkWidthAgain !== true )
             {
-                setTimeout( this.setTextMultiTagIndent.bind( this ), 1500 );
+                setTimeout( _cb.bind( context ), 1500 );
                 this.__checkWidthAgain === true;
             }
         }
@@ -175,21 +184,7 @@ const utils = {
     },
 
 
-    /**
-     * hideElement
-     *
-     * hides an element offscreen
-     *
-     * @param {Object} el element to hide
-     *
-     * @return _Void_
-     */
-    hideElement : function( el )
-    {
-        this.addClass( el, classes.HIDDEN );
-    },
-
-
+    /* placeholder for microbe http module */
     http : {},
 
 
@@ -245,6 +240,16 @@ const utils = {
      */
     removeClass : function( el, _class )
     {
+        if ( typeof _class !== 'string' && _class.length )
+        {
+            _class.forEach( function( _c )
+            {
+                this.removeClass( _el, _c );
+            } );
+
+            return true;
+        }
+
         let baseClass       = el.className;
         let baseClassLength = baseClass.length;
         let classLength     = _class.length;
@@ -303,25 +308,11 @@ const utils = {
      */
     setPlatform : function()
     {
-        let _osx = this.isOsx = window.navigator.platform.indexOf( 'Mac' ) === -1 ? false : true;
+        let isOsx       = window.navigator.platform.indexOf( 'Mac' ) === -1 ? false : true;
+        let isIos       = utils.iosVersion();
+        let multiSelect = isOsx ? 'metaKey' : 'ctrlKey';
 
-        this.isIos          = this.iosVersion();
-        this.multiSelect    = _osx ? 'metaKey' : 'ctrlKey';
-    },
-
-
-    /**
-     * ## showElement
-     *
-     * remove classes.HIDDEN from a given element
-     *
-     * @param {Object} _el element to show
-     *
-     * @return _Void_
-     */
-    showElement : function( _el )
-    {
-        this.removeClass( _el, classes.HIDDEN );
+        return { isOsx, isIos, multiSelect };
     },
 
 

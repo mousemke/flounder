@@ -1,6 +1,7 @@
 
-import classes                  from './classes';
-import { setDefaultOption }     from './defaults';
+import classes              from './classes';
+import utils                from './utils';
+import { setDefaultOption } from './defaults';
 
 const nativeSlice =  Array.prototype.slice;
 
@@ -115,7 +116,7 @@ const api = {
             {
                 target.parentNode.removeChild( target );
                 originalTarget.tabIndex = 0;
-                this.removeClass( originalTarget, classes.HIDDEN );
+                utils.removeClass( originalTarget, classes.HIDDEN );
             }
             catch( e )
             {
@@ -171,15 +172,15 @@ const api = {
         {
             refs.flounder.removeEventListener( 'keydown', this.checkFlounderKeypress );
             refs.selected.removeEventListener( 'click', this.toggleList );
-            this.addClass( selected, classes.DISABLED );
-            this.addClass( flounder, classes.DISABLED );
+            utils.addClass( selected, classes.DISABLED );
+            utils.addClass( flounder, classes.DISABLED );
         }
         else
         {
             refs.flounder.addEventListener( 'keydown', this.checkFlounderKeypress );
             refs.selected.addEventListener( 'click', this.toggleList );
-            this.removeClass( selected, classes.DISABLED );
-            this.removeClass( flounder, classes.DISABLED );
+            utils.removeClass( selected, classes.DISABLED );
+            utils.removeClass( flounder, classes.DISABLED );
         }
     },
 
@@ -223,12 +224,12 @@ const api = {
                 if ( reenable )
                 {
                     opt.disabled = false;
-                    this.removeClass( el, 'flounder__disabled' );
+                    utils.removeClass( el, 'flounder__disabled' );
                 }
                 else
                 {
                     opt.disabled = true;
-                    this.addClass( el, 'flounder__disabled' );
+                    utils.addClass( el, 'flounder__disabled' );
                 }
 
                 return [ el, opt ];
@@ -544,7 +545,7 @@ const api = {
 
             if ( el )
             {
-                let isOpen = this.hasClass( refs.wrapper, 'open' );
+                let isOpen = utils.hasClass( refs.wrapper, 'open' );
                 this.toggleList( isOpen ? 'close' : 'open' );
                 this.___forceMultiple       = multiple;
                 this.___programmaticClick   = programmatic;

@@ -1,4 +1,4 @@
-/* global document, window, µ, $, QUnit, Benchmark, buildTest  */
+/* global document, QUnit  */
 let tests = function( Flounder )
 {
     QUnit.module( 'Flounder constructor' );

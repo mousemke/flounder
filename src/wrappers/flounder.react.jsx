@@ -53,7 +53,11 @@ class FlounderReact extends Component
             refs.select.removeAttribute( 'multiple' );
         }
 
-        this.setPlatform();
+        let { isOsx, isIos, multiSelect } = utils.setPlatform();
+        this.isOsx          = isOsx;
+        this.isIos          = isIos;
+        this.multiSelect    = multiSelect;
+
         this.onRender();
 
         try
@@ -64,8 +68,6 @@ class FlounderReact extends Component
         {
             console.log( 'something may be wrong in "onComponentDidMount"', e );
         }
-
-        this.setPlatform();
     }
 
 
@@ -136,6 +138,7 @@ class FlounderReact extends Component
      */
     render( e )
     {
+        console.log( 'a' );
         this.bindThis();
 
         this.initializeOptions();
@@ -144,7 +147,7 @@ class FlounderReact extends Component
         {
             this.search = new Search( this );
         }
-
+        console.log( 'b' );
         try
         {
             this.onInit();
@@ -160,7 +163,7 @@ class FlounderReact extends Component
         let escapeHTML      = utils.escapeHTML;
         let props           = this.props;
         let data            = this.data = this.prepOptions( props.data || this.data );
-
+        console.log( 'c' );
         let handleChange    = this.handleChange.bind( this );
         let multiple        = this.multiple;
         let searchBool      = this.search;
@@ -170,10 +173,10 @@ class FlounderReact extends Component
 
         let wrapperClass    = this.wrapperClass ? '  ' + this.wrapperClass : '';
         let flounderClass   = this.flounderClass ? '  ' + this.flounderClass : '';
-
+        console.log( 'd' );
         let _stateModifier  = this.state.modifier;
         _stateModifier = _stateModifier.length > 0 ? '--' + _stateModifier : '';
-
+        console.log( 'e' );
         return (
             <div ref="wrapper" className={classes.MAIN_WRAPPER + wrapperClass}>
                 <div ref="flounder" tabIndex="0" className={classes.MAIN + flounderClass}>

@@ -1,4 +1,4 @@
-/* global document, window, QUnit, Benchmark, buildTest  */
+/* global document, QUnit  */
 
 import classes from '../../src/core/classes.js';
 
@@ -183,11 +183,11 @@ let tests = function( Flounder )
 
 
     /*
-     * ## initialzeOptions tests
+     * ## initializeOptions tests
      *
      * @test exists
      */
-    QUnit.test( 'initialzeOptions', function( assert )
+    QUnit.test( 'initializeOptions', function( assert )
     {
         let data = [
             'doge',
@@ -195,7 +195,7 @@ let tests = function( Flounder )
         ];
 
         let flounder    = new Flounder( document.body, { data : data, defaultIndex : 0, search : true } );
-        assert.ok( flounder.initialzeOptions, 'exists' );
+        assert.ok( flounder.initializeOptions, 'exists' );
 
         assert.ok( flounder.data[0].text === 'doge', 'correctly sets data' );
         assert.ok( flounder.search, 'correctly sets a prop' );
@@ -375,11 +375,13 @@ let tests = function( Flounder )
         assert.ok( flounder.version, 'exists' );
 
         assert.equal( Flounder.version, flounder.version, 'shows the version' );
+
         // strict mode doesnt like this
         // flounder.version = 'moin!';
         // assert.equal( Flounder.version, flounder.version, 'instance version is read only' );
         // Flounder.version = 'moin!';
         // assert.equal( Flounder.version, flounder.version, 'constructor version is read only' );
+
         flounder.destroy();
     } );
 };

@@ -96,7 +96,7 @@ class Flounder
                 this.props = props;
                 this.setTarget( target );
                 this.bindThis();
-                this.initialzeOptions();
+                this.initializeOptions();
 
                 if ( this.search )
                 {
@@ -112,7 +112,10 @@ class Flounder
                     console.log( 'something may be wrong in "onInit"', e );
                 }
                 this.buildDom();
-                this.setPlatform();
+                let { isOsx, isIos, multiSelect } = utils.setPlatform();
+                this.isOsx          = isOsx;
+                this.isIos          = isIos;
+                this.multiSelect    = multiSelect;
                 this.onRender();
 
                 try
@@ -271,12 +274,12 @@ class Flounder
 
                     data.forEach( ( el, i ) =>
                     {
-                        this.addClass( el, classes.SEARCH_HIDDEN );
+                        utils.addClass( el, classes.SEARCH_HIDDEN );
                     } );
 
                     matches.forEach( e =>
                     {
-                        this.removeClass( data[ e.i ], classes.SEARCH_HIDDEN );
+                        utils.removeClass( data[ e.i ], classes.SEARCH_HIDDEN );
                     } );
                 }
                 else
@@ -310,7 +313,7 @@ class Flounder
 
         refs.data.forEach( dataObj =>
         {
-            this.removeClass( dataObj, classes.SEARCH_HIDDEN );
+            utils.removeClass( dataObj, classes.SEARCH_HIDDEN );
         } );
 
         refs.search.value = '';
@@ -318,14 +321,14 @@ class Flounder
 
 
     /**
-     * ## initialzeOptions
+     * ## initializeOptions
      *
      * inserts the initial options into the flounder object, setting defaults
      * when necessary
      *
      * @return _Void_
      */
-    initialzeOptions()
+    initializeOptions()
     {
         let props = this.props = this.props || {};
 
@@ -379,8 +382,8 @@ class Flounder
         if ( !!this.isIos && ( !this.multipleTags || !this.multiple )  )
         {
             let sel     = refs.select;
-            this.removeClass( sel, classes.HIDDEN );
-            this.addClass( sel, classes.HIDDEN_IOS );
+            utils.removeClass( sel, classes.HIDDEN );
+            utils.addClass( sel, classes.HIDDEN_IOS );
         }
 
         this.addListeners( refs, props );
@@ -414,8 +417,8 @@ class Flounder
 
         let selectedOptions = this.getSelected();
 
-        this.removeClass( data[ targetIndex ], classes.SELECTED_HIDDEN );
-        this.removeClass( data[ targetIndex ], classes.SELECTED );
+        utils.removeClass( data[ targetIndex ], classes.SELECTED_HIDDEN );
+        utils.removeClass( data[ targetIndex ], classes.SELECTED );
 
         target.removeEventListener( 'click', this.removeMultiTag );
 
@@ -470,7 +473,7 @@ class Flounder
 
         data.forEach( ( dataObj, i ) =>
         {
-            this.removeClass( dataObj, this.selectedClass );
+            utils.removeClass( dataObj, this.selectedClass );
         } );
     }
 
@@ -511,7 +514,7 @@ class Flounder
 
             nativeSlice.call( els ).forEach( ( e, i ) =>
             {
-                offset += this.getElWidth( e );
+                offset += utils.getElWidth( e, this.setTextMultiTagIndent, this );
             } );
 
             search.style.textIndent = offset + 'px';
@@ -559,6 +562,11 @@ class Flounder
 }
 
 
+/**
+ * ## version
+ *
+ * sets version with getters and no setters for the sake of being read-only
+ */
 Object.defineProperty( Flounder, 'version', {
     get : function()
     {
@@ -573,7 +581,7 @@ Object.defineProperty( Flounder.prototype, 'version', {
     }
 } );
 
-utils.extendClass( Flounder, utils, api, build, events );
+utils.extendClass( Flounder, api, build, events );
 
 export default Flounder;
 

@@ -1,6 +1,7 @@
 
 import classes                  from './classes';
 import { setDefaultOption }     from './defaults';
+import utils                    from './utils';
 
 const nativeSlice = Array.prototype.slice;
 
@@ -38,7 +39,7 @@ const build = {
     {
         if ( this.search )
         {
-            let search = this.constructElement( {
+            let search = utils.constructElement( {
                                     tagname     : 'input',
                                     type        : 'text',
                                     className   : classes.SEARCH
@@ -62,21 +63,18 @@ const build = {
      */
     bindThis : function()
     {
-        [   'addClass',
-            'attachAttributes',
-            'catchBodyClick',
+            [ 'catchBodyClick',
             'checkClickTarget',
             'checkFlounderKeypress',
             'clearPlaceholder',
             'clickSet',
             'divertTarget',
             'displayMultipleTags',
+            'firstTouchController',
             'fuzzySearch',
             'removeMultiTag',
-            'firstTouchController',
             'setKeypress',
             'setSelectValue',
-            'toggleClass',
             'toggleList' ].forEach( func =>
             {
                 this[ func ] = this[ func ].bind( this );
@@ -96,10 +94,10 @@ const build = {
     {
         this.refs               = {};
 
-        let constructElement    = this.constructElement;
+        let constructElement    = utils.constructElement;
 
         let wrapperClass        = classes.MAIN_WRAPPER;
-        let wrapper             = this.constructElement( { className : this.wrapperClass ?
+        let wrapper             = utils.constructElement( { className : this.wrapperClass ?
                                     wrapperClass + ' ' + this.wrapperClass : wrapperClass } );
         let flounderClass       = classes.MAIN;
         let flounder            = constructElement( { className : this.flounderClass ?
@@ -170,11 +168,11 @@ const build = {
         let index                   = 0;
         let data                    = [];
         let selectOptions           = [];
-        let constructElement        = this.constructElement;
+        let constructElement        = utils.constructElement;
         let addOptionDescription    = this.addOptionDescription;
         let selectedClass           = this.selectedClass;
-        let escapeHTML              = this.escapeHTML;
-        let addClass                = this.addClass;
+        let escapeHTML              = utils.escapeHTML;
+        let addClass                = utils.addClass;
         let selectRef               = this.refs.select;
 
 
@@ -337,8 +335,8 @@ const build = {
 
         if ( target.tagName === 'SELECT' )
         {
-            this.addClass( target, classes.SELECT_TAG );
-            this.addClass( target, classes.HIDDEN );
+            utils.addClass( target, classes.SELECT_TAG );
+            utils.addClass( target, classes.HIDDEN );
 
             select = target;
 
@@ -372,11 +370,11 @@ const build = {
             }
 
             this.target             = target.parentNode;
-            this.addClass( select || target, classes.HIDDEN );
+            utils.addClass( select || target, classes.HIDDEN );
         }
         else
         {
-            select = this.constructElement( { tagname : 'SELECT', className : classes.SELECT_TAG + '  ' + classes.HIDDEN } );
+            select = utils.constructElement( { tagname : 'SELECT', className : classes.SELECT_TAG + '  ' + classes.HIDDEN } );
             wrapper.appendChild( select );
         }
 
@@ -481,7 +479,7 @@ const build = {
 
         if ( target.tagName === 'INPUT' )
         {
-            this.addClass( target, classes.HIDDEN );
+            utils.addClass( target, classes.HIDDEN );
             target.setAttribute( 'aria-hidden', true );
             target.tabIndex = -1;
             target          = target.parentNode;

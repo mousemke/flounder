@@ -1,6 +1,7 @@
 
 import classes          from './classes';
 import search           from './search';
+import utils            from './utils';
 
 const events = {
 
@@ -500,7 +501,7 @@ const events = {
 
             selectTag.selectedIndex = index;
 
-            let hasClass            = this.hasClass;
+            let hasClass            = utils.hasClass;
             let dataAtIndex         = data[ index ];
 
             if ( hasClass( dataAtIndex, classes.HIDDEN ) ||
@@ -598,9 +599,9 @@ const events = {
         {
             selectedOption  = data[ baseOption.index ];
 
-            this.addClass( selectedOption, selectedClass );
+            utils.addClass( selectedOption, selectedClass );
 
-            this.scrollTo( selectedOption );
+            utils.scrollTo( selectedOption );
         }
     },
 
@@ -629,7 +630,7 @@ const events = {
         this.___forceMultiple   = false;
         let target              = e.target;
 
-        this.toggleClass( target, selectedClass );
+        utils.toggleClass( target, selectedClass );
         index                   = target.getAttribute( 'data-index' );
 
         selectedOption          = refs.selectOptions[ index ];
@@ -640,7 +641,7 @@ const events = {
 
         if ( firstOption.value === '' && this.getSelected().length > 1 )
         {
-            this.removeClass( refs.data[0], selectedClass );
+            utils.removeClass( refs.data[0], selectedClass );
             refs.selectOptions[0].selected = false;
         }
     },
@@ -660,9 +661,9 @@ const events = {
      */
     toggleClosed : function( e, optionsList, refs, wrapper )
     {
-        this.hideElement( optionsList );
+        utils.addClass( optionsList, classes.HIDDEN );
         this.removeSelectKeyListener();
-        this.removeClass( wrapper, 'open' );
+        utils.removeClass( wrapper, 'open' );
 
         let qsHTML = document.querySelector( 'html' );
         qsHTML.removeEventListener( 'click', this.catchBodyClick );
@@ -703,9 +704,9 @@ const events = {
         let refs        = this.refs;
         let optionsList = refs.optionsListWrapper;
         let wrapper     = refs.wrapper;
-        let hasClass    = this.hasClass;
+        let hasClass    = utils.hasClass;
 
-        if ( force === 'open' || force !== 'close' && hasClass( optionsList, classes.HIDDEN ) )
+        if ( force === 'open' || force !== 'close' && utils.hasClass( optionsList, classes.HIDDEN ) )
         {
             if ( e.type === 'keydown' )
             {
@@ -740,8 +741,8 @@ const events = {
 
         if ( !this.isIos || this.search || ( this.multipleTags === true && this.multiple === true ) )
         {
-            this.showElement( optionsList );
-            this.addClass( wrapper, 'open' );
+            utils.removeClass( optionsList, classes.HIDDEN );
+            utils.addClass( wrapper, 'open' );
 
             let qsHTML = document.querySelector( 'html' );
 
@@ -757,7 +758,7 @@ const events = {
 
             if ( selectedDiv )
             {
-                this.scrollTo( selectedDiv  );
+                utils.scrollTo( selectedDiv  );
             }
         }
 

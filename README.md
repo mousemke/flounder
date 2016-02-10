@@ -457,6 +457,8 @@ Change Log
 + flounder
     + slowly removing things that are not needed from the main object for the sake of a clearer api later
 
++utils
+    + no longer merged onto the main flounder object
 
 0.4.5
 -----

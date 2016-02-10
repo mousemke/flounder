@@ -1079,6 +1079,10 @@ var _classes = require('./classes');
 
 var _classes2 = _interopRequireDefault(_classes);
 
+var _utils = require('./utils');
+
+var _utils2 = _interopRequireDefault(_utils);
+
 var _defaults = require('./defaults');
 
 var nativeSlice = Array.prototype.slice;
@@ -1181,7 +1185,7 @@ var api = {
             try {
                 target.parentNode.removeChild(target);
                 originalTarget.tabIndex = 0;
-                this.removeClass(originalTarget, _classes2['default'].HIDDEN);
+                _utils2['default'].removeClass(originalTarget, _classes2['default'].HIDDEN);
             } catch (e) {
                 throw ' : this flounder may have already been removed';
             }
@@ -1225,13 +1229,13 @@ var api = {
         if (bool) {
             refs.flounder.removeEventListener('keydown', this.checkFlounderKeypress);
             refs.selected.removeEventListener('click', this.toggleList);
-            this.addClass(selected, _classes2['default'].DISABLED);
-            this.addClass(flounder, _classes2['default'].DISABLED);
+            _utils2['default'].addClass(selected, _classes2['default'].DISABLED);
+            _utils2['default'].addClass(flounder, _classes2['default'].DISABLED);
         } else {
             refs.flounder.addEventListener('keydown', this.checkFlounderKeypress);
             refs.selected.addEventListener('click', this.toggleList);
-            this.removeClass(selected, _classes2['default'].DISABLED);
-            this.removeClass(flounder, _classes2['default'].DISABLED);
+            _utils2['default'].removeClass(selected, _classes2['default'].DISABLED);
+            _utils2['default'].removeClass(flounder, _classes2['default'].DISABLED);
         }
     },
 
@@ -1277,10 +1281,10 @@ var api = {
 
                 if (reenable) {
                     opt.disabled = false;
-                    this.removeClass(el, 'flounder__disabled');
+                    _utils2['default'].removeClass(el, 'flounder__disabled');
                 } else {
                     opt.disabled = true;
-                    this.addClass(el, 'flounder__disabled');
+                    _utils2['default'].addClass(el, 'flounder__disabled');
                 }
 
                 return [el, opt];
@@ -1597,7 +1601,7 @@ var api = {
             var el = refs.data[index];
 
             if (el) {
-                var isOpen = this.hasClass(refs.wrapper, 'open');
+                var isOpen = _utils2['default'].hasClass(refs.wrapper, 'open');
                 this.toggleList(isOpen ? 'close' : 'open');
                 this.___forceMultiple = multiple;
                 this.___programmaticClick = programmatic;
@@ -1699,7 +1703,7 @@ var api = {
 exports['default'] = api;
 module.exports = exports['default'];
 
-},{"./classes":14,"./defaults":15}],13:[function(require,module,exports){
+},{"./classes":14,"./defaults":15,"./utils":19}],13:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -1715,6 +1719,10 @@ var _classes = require('./classes');
 var _classes2 = _interopRequireDefault(_classes);
 
 var _defaults = require('./defaults');
+
+var _utils = require('./utils');
+
+var _utils2 = _interopRequireDefault(_utils);
 
 var nativeSlice = Array.prototype.slice;
 
@@ -1748,7 +1756,7 @@ var build = {
      */
     addSearch: function addSearch(flounder) {
         if (this.search) {
-            var search = this.constructElement({
+            var search = _utils2['default'].constructElement({
                 tagname: 'input',
                 type: 'text',
                 className: _classes2['default'].SEARCH
@@ -1772,7 +1780,7 @@ var build = {
     bindThis: function bindThis() {
         var _this = this;
 
-        ['addClass', 'attachAttributes', 'catchBodyClick', 'checkClickTarget', 'checkFlounderKeypress', 'clearPlaceholder', 'clickSet', 'divertTarget', 'displayMultipleTags', 'fuzzySearch', 'removeMultiTag', 'firstTouchController', 'setKeypress', 'setSelectValue', 'toggleClass', 'toggleList'].forEach(function (func) {
+        ['catchBodyClick', 'checkClickTarget', 'checkFlounderKeypress', 'clearPlaceholder', 'clickSet', 'divertTarget', 'displayMultipleTags', 'firstTouchController', 'fuzzySearch', 'removeMultiTag', 'setKeypress', 'setSelectValue', 'toggleList'].forEach(function (func) {
             _this[func] = _this[func].bind(_this);
             _this[func].___isBound = true;
         });
@@ -1788,10 +1796,10 @@ var build = {
     buildDom: function buildDom() {
         this.refs = {};
 
-        var constructElement = this.constructElement;
+        var constructElement = _utils2['default'].constructElement;
 
         var wrapperClass = _classes2['default'].MAIN_WRAPPER;
-        var wrapper = this.constructElement({ className: this.wrapperClass ? wrapperClass + ' ' + this.wrapperClass : wrapperClass });
+        var wrapper = _utils2['default'].constructElement({ className: this.wrapperClass ? wrapperClass + ' ' + this.wrapperClass : wrapperClass });
         var flounderClass = _classes2['default'].MAIN;
         var flounder = constructElement({ className: this.flounderClass ? flounderClass + '  ' + this.flounderClass : flounderClass });
 
@@ -1860,11 +1868,11 @@ var build = {
         var index = 0;
         var data = [];
         var selectOptions = [];
-        var constructElement = this.constructElement;
+        var constructElement = _utils2['default'].constructElement;
         var addOptionDescription = this.addOptionDescription;
         var selectedClass = this.selectedClass;
-        var escapeHTML = this.escapeHTML;
-        var addClass = this.addClass;
+        var escapeHTML = _utils2['default'].escapeHTML;
+        var addClass = _utils2['default'].addClass;
         var selectRef = this.refs.select;
 
         /**
@@ -2007,8 +2015,8 @@ var build = {
         var select = refs.select;
 
         if (target.tagName === 'SELECT') {
-            this.addClass(target, _classes2['default'].SELECT_TAG);
-            this.addClass(target, _classes2['default'].HIDDEN);
+            _utils2['default'].addClass(target, _classes2['default'].SELECT_TAG);
+            _utils2['default'].addClass(target, _classes2['default'].HIDDEN);
 
             select = target;
 
@@ -2039,9 +2047,9 @@ var build = {
             }
 
             this.target = target.parentNode;
-            this.addClass(select || target, _classes2['default'].HIDDEN);
+            _utils2['default'].addClass(select || target, _classes2['default'].HIDDEN);
         } else {
-            select = this.constructElement({ tagname: 'SELECT', className: _classes2['default'].SELECT_TAG + '  ' + _classes2['default'].HIDDEN });
+            select = _utils2['default'].constructElement({ tagname: 'SELECT', className: _classes2['default'].SELECT_TAG + '  ' + _classes2['default'].HIDDEN });
             wrapper.appendChild(select);
         }
 
@@ -2129,7 +2137,7 @@ var build = {
         target.flounder = this;
 
         if (target.tagName === 'INPUT') {
-            this.addClass(target, _classes2['default'].HIDDEN);
+            _utils2['default'].addClass(target, _classes2['default'].HIDDEN);
             target.setAttribute('aria-hidden', true);
             target.tabIndex = -1;
             target = target.parentNode;
@@ -2142,7 +2150,7 @@ var build = {
 exports['default'] = build;
 module.exports = exports['default'];
 
-},{"./classes":14,"./defaults":15}],14:[function(require,module,exports){
+},{"./classes":14,"./defaults":15,"./utils":19}],14:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -2418,6 +2426,10 @@ var _classes2 = _interopRequireDefault(_classes);
 var _search2 = require('./search');
 
 var _search3 = _interopRequireDefault(_search2);
+
+var _utils = require('./utils');
+
+var _utils2 = _interopRequireDefault(_utils);
 
 var events = {
 
@@ -2843,7 +2855,7 @@ var events = {
 
             selectTag.selectedIndex = index;
 
-            var hasClass = this.hasClass;
+            var hasClass = _utils2['default'].hasClass;
             var dataAtIndex = data[index];
 
             if (hasClass(dataAtIndex, _classes2['default'].HIDDEN) || hasClass(dataAtIndex, _classes2['default'].SELECTED_HIDDEN) || hasClass(dataAtIndex, _classes2['default'].SEARCH_HIDDEN) || hasClass(dataAtIndex, _classes2['default'].DISABLED)) {
@@ -2923,9 +2935,9 @@ var events = {
         if (baseOption) {
             selectedOption = data[baseOption.index];
 
-            this.addClass(selectedOption, selectedClass);
+            _utils2['default'].addClass(selectedOption, selectedClass);
 
-            this.scrollTo(selectedOption);
+            _utils2['default'].scrollTo(selectedOption);
         }
     },
 
@@ -2952,7 +2964,7 @@ var events = {
         this.___forceMultiple = false;
         var target = e.target;
 
-        this.toggleClass(target, selectedClass);
+        _utils2['default'].toggleClass(target, selectedClass);
         index = target.getAttribute('data-index');
 
         selectedOption = refs.selectOptions[index];
@@ -2962,7 +2974,7 @@ var events = {
         var firstOption = refs.selectOptions[0];
 
         if (firstOption.value === '' && this.getSelected().length > 1) {
-            this.removeClass(refs.data[0], selectedClass);
+            _utils2['default'].removeClass(refs.data[0], selectedClass);
             refs.selectOptions[0].selected = false;
         }
     },
@@ -2980,9 +2992,9 @@ var events = {
      * @return _Void_
      */
     toggleClosed: function toggleClosed(e, optionsList, refs, wrapper) {
-        this.hideElement(optionsList);
+        _utils2['default'].addClass(optionsList, _classes2['default'].HIDDEN);
         this.removeSelectKeyListener();
-        this.removeClass(wrapper, 'open');
+        _utils2['default'].removeClass(wrapper, 'open');
 
         var qsHTML = document.querySelector('html');
         qsHTML.removeEventListener('click', this.catchBodyClick);
@@ -3016,9 +3028,9 @@ var events = {
         var refs = this.refs;
         var optionsList = refs.optionsListWrapper;
         var wrapper = refs.wrapper;
-        var hasClass = this.hasClass;
+        var hasClass = _utils2['default'].hasClass;
 
-        if (force === 'open' || force !== 'close' && hasClass(optionsList, _classes2['default'].HIDDEN)) {
+        if (force === 'open' || force !== 'close' && _utils2['default'].hasClass(optionsList, _classes2['default'].HIDDEN)) {
             if (e.type === 'keydown') {
                 this.toggleList.justOpened = true;
             }
@@ -3046,8 +3058,8 @@ var events = {
         this.addSelectKeyListener();
 
         if (!this.isIos || this.search || this.multipleTags === true && this.multiple === true) {
-            this.showElement(optionsList);
-            this.addClass(wrapper, 'open');
+            _utils2['default'].removeClass(optionsList, _classes2['default'].HIDDEN);
+            _utils2['default'].addClass(wrapper, 'open');
 
             var qsHTML = document.querySelector('html');
 
@@ -3060,7 +3072,7 @@ var events = {
             var selectedDiv = refs.data[index];
 
             if (selectedDiv) {
-                this.scrollTo(selectedDiv);
+                _utils2['default'].scrollTo(selectedDiv);
             }
         }
 
@@ -3081,7 +3093,7 @@ var events = {
 exports['default'] = events;
 module.exports = exports['default'];
 
-},{"./classes":14,"./search":18}],17:[function(require,module,exports){
+},{"./classes":14,"./search":18,"./utils":19}],17:[function(require,module,exports){
 
 /* jshint globalstrict: true */
 'use strict';
@@ -3206,7 +3218,7 @@ var Flounder = (function () {
                 this.props = props;
                 this.setTarget(target);
                 this.bindThis();
-                this.initialzeOptions();
+                this.initializeOptions();
 
                 if (this.search) {
                     this.search = new _search2['default'](this);
@@ -3218,7 +3230,16 @@ var Flounder = (function () {
                     console.log('something may be wrong in "onInit"', e);
                 }
                 this.buildDom();
-                this.setPlatform();
+
+                var _utils$setPlatform = _utils2['default'].setPlatform();
+
+                var isOsx = _utils$setPlatform.isOsx;
+                var isIos = _utils$setPlatform.isIos;
+                var multiSelect = _utils$setPlatform.multiSelect;
+
+                this.isOsx = isOsx;
+                this.isIos = isIos;
+                this.multiSelect = multiSelect;
                 this.onRender();
 
                 try {
@@ -3233,6 +3254,12 @@ var Flounder = (function () {
             }
         }
     }
+
+    /**
+     * ## version
+     *
+     * sets version with getters and no setters for the sake of being read-only
+     */
 
     /**
      * ## displayMultipleTags
@@ -3364,11 +3391,11 @@ var Flounder = (function () {
                             var data = _this2.refs.data;
 
                             data.forEach(function (el, i) {
-                                _this2.addClass(el, _classes3['default'].SEARCH_HIDDEN);
+                                _utils2['default'].addClass(el, _classes3['default'].SEARCH_HIDDEN);
                             });
 
                             matches.forEach(function (e) {
-                                _this2.removeClass(data[e.i], _classes3['default'].SEARCH_HIDDEN);
+                                _utils2['default'].removeClass(data[e.i], _classes3['default'].SEARCH_HIDDEN);
                             });
                         })();
                     } else {
@@ -3393,19 +3420,17 @@ var Flounder = (function () {
     }, {
         key: 'fuzzySearchReset',
         value: function fuzzySearchReset() {
-            var _this3 = this;
-
             var refs = this.refs;
 
             refs.data.forEach(function (dataObj) {
-                _this3.removeClass(dataObj, _classes3['default'].SEARCH_HIDDEN);
+                _utils2['default'].removeClass(dataObj, _classes3['default'].SEARCH_HIDDEN);
             });
 
             refs.search.value = '';
         }
 
         /**
-         * ## initialzeOptions
+         * ## initializeOptions
          *
          * inserts the initial options into the flounder object, setting defaults
          * when necessary
@@ -3413,8 +3438,8 @@ var Flounder = (function () {
          * @return _Void_
          */
     }, {
-        key: 'initialzeOptions',
-        value: function initialzeOptions() {
+        key: 'initializeOptions',
+        value: function initializeOptions() {
             var props = this.props = this.props || {};
 
             for (var opt in _defaults.defaultOptions) {
@@ -3457,8 +3482,8 @@ var Flounder = (function () {
 
             if (!!this.isIos && (!this.multipleTags || !this.multiple)) {
                 var sel = refs.select;
-                this.removeClass(sel, _classes3['default'].HIDDEN);
-                this.addClass(sel, _classes3['default'].HIDDEN_IOS);
+                _utils2['default'].removeClass(sel, _classes3['default'].HIDDEN);
+                _utils2['default'].addClass(sel, _classes3['default'].HIDDEN_IOS);
             }
 
             this.addListeners(refs, props);
@@ -3492,8 +3517,8 @@ var Flounder = (function () {
 
             var selectedOptions = this.getSelected();
 
-            this.removeClass(data[targetIndex], _classes3['default'].SELECTED_HIDDEN);
-            this.removeClass(data[targetIndex], _classes3['default'].SELECTED);
+            _utils2['default'].removeClass(data[targetIndex], _classes3['default'].SELECTED_HIDDEN);
+            _utils2['default'].removeClass(data[targetIndex], _classes3['default'].SELECTED);
 
             target.removeEventListener('click', this.removeMultiTag);
 
@@ -3536,12 +3561,12 @@ var Flounder = (function () {
     }, {
         key: 'removeSelectedClass',
         value: function removeSelectedClass(data) {
-            var _this4 = this;
+            var _this3 = this;
 
             data = data || this.refs.data;
 
             data.forEach(function (dataObj, i) {
-                _this4.removeClass(dataObj, _this4.selectedClass);
+                _utils2['default'].removeClass(dataObj, _this3.selectedClass);
             });
         }
 
@@ -3555,12 +3580,12 @@ var Flounder = (function () {
     }, {
         key: 'removeSelectedValue',
         value: function removeSelectedValue(data) {
-            var _this5 = this;
+            var _this4 = this;
 
             data = data || this.refs.data;
 
             data.forEach(function (d, i) {
-                _this5.refs.select[i].selected = false;
+                _this4.refs.select[i].selected = false;
             });
         }
 
@@ -3574,7 +3599,7 @@ var Flounder = (function () {
     }, {
         key: 'setTextMultiTagIndent',
         value: function setTextMultiTagIndent() {
-            var _this6 = this;
+            var _this5 = this;
 
             var search = this.refs.search;
             var offset = 0;
@@ -3583,7 +3608,7 @@ var Flounder = (function () {
                 var els = document.getElementsByClassName(_classes3['default'].MULTIPLE_SELECT_TAG);
 
                 nativeSlice.call(els).forEach(function (e, i) {
-                    offset += _this6.getElWidth(e);
+                    offset += _utils2['default'].getElWidth(e, _this5.setTextMultiTagIndent, _this5);
                 });
 
                 search.style.textIndent = offset + 'px';
@@ -3600,14 +3625,14 @@ var Flounder = (function () {
     }, {
         key: 'sortData',
         value: function sortData(data) {
-            var _this7 = this;
+            var _this6 = this;
 
             var res = arguments.length <= 1 || arguments[1] === undefined ? [] : arguments[1];
             var i = arguments.length <= 2 || arguments[2] === undefined ? 0 : arguments[2];
 
             data.forEach(function (d) {
                 if (d.header) {
-                    res = _this7.sortData(d.data, res, i);
+                    res = _this6.sortData(d.data, res, i);
                 } else {
                     if (typeof d !== 'object') {
                         d = {
@@ -3643,7 +3668,7 @@ Object.defineProperty(Flounder.prototype, 'version', {
     }
 });
 
-_utils2['default'].extendClass(Flounder, _utils2['default'], _api2['default'], _build2['default'], _events2['default']);
+_utils2['default'].extendClass(Flounder, _api2['default'], _build2['default'], _events2['default']);
 
 exports['default'] = Flounder;
 module.exports = exports['default'];
@@ -3972,6 +3997,13 @@ var utils = {
      * @return _Void_
      */
     addClass: function addClass(_el, _class) {
+        if (typeof _class !== 'string' && _class.length) {
+            _class.forEach(function (_c) {
+                utils.addClass(_el, _c);
+            });
+
+            return true;
+        }
 
         var _elClass = _el.className;
         var _elClassLength = _elClass.length;
@@ -4072,12 +4104,12 @@ var utils = {
      *
      * @return _Integer_ adjusted width
      */
-    getElWidth: function getElWidth(el) {
+    getElWidth: function getElWidth(el, _cb, context) {
         var style = getComputedStyle(el);
 
         if (el.offsetWidth === 0) {
             if (this.__checkWidthAgain !== true) {
-                setTimeout(this.setTextMultiTagIndent.bind(this), 1500);
+                setTimeout(_cb.bind(context), 1500);
                 this.__checkWidthAgain === true;
             }
         } else {
@@ -4103,19 +4135,7 @@ var utils = {
         return !!_elClass.match(regex);
     },
 
-    /**
-     * hideElement
-     *
-     * hides an element offscreen
-     *
-     * @param {Object} el element to hide
-     *
-     * @return _Void_
-     */
-    hideElement: function hideElement(el) {
-        this.addClass(el, _classes2['default'].HIDDEN);
-    },
-
+    /* placeholder for microbe http module */
     http: {},
 
     /**
@@ -4169,6 +4189,14 @@ var utils = {
      * @return _Void_
      */
     removeClass: function removeClass(el, _class) {
+        if (typeof _class !== 'string' && _class.length) {
+            _class.forEach(function (_c) {
+                this.removeClass(_el, _c);
+            });
+
+            return true;
+        }
+
         var baseClass = el.className;
         var baseClassLength = baseClass.length;
         var classLength = _class.length;
@@ -4215,23 +4243,11 @@ var utils = {
      * @return _Void_
      */
     setPlatform: function setPlatform() {
-        var _osx = this.isOsx = window.navigator.platform.indexOf('Mac') === -1 ? false : true;
+        var isOsx = window.navigator.platform.indexOf('Mac') === -1 ? false : true;
+        var isIos = utils.iosVersion();
+        var multiSelect = isOsx ? 'metaKey' : 'ctrlKey';
 
-        this.isIos = this.iosVersion();
-        this.multiSelect = _osx ? 'metaKey' : 'ctrlKey';
-    },
-
-    /**
-     * ## showElement
-     *
-     * remove classes.HIDDEN from a given element
-     *
-     * @param {Object} _el element to show
-     *
-     * @return _Void_
-     */
-    showElement: function showElement(_el) {
-        this.removeClass(_el, _classes2['default'].HIDDEN);
+        return { isOsx: isOsx, isIos: isIos, multiSelect: multiSelect };
     },
 
     /**
@@ -4295,6 +4311,10 @@ var _unitFlounderTest = require('./unit/flounderTest');
 
 var _unitFlounderTest2 = _interopRequireDefault(_unitFlounderTest);
 
+var _unitUtilsTest = require('./unit/utilsTest');
+
+var _unitUtilsTest2 = _interopRequireDefault(_unitUtilsTest);
+
 var nativeSlice = Array.prototype.slice;
 
 var Tests = function Tests() {
@@ -4312,12 +4332,13 @@ var tests = new Tests();
 
 (0, _unitConstructorTest2['default'])(_srcCoreFlounderJsx2['default']);
 (0, _unitFlounderTest2['default'])(_srcCoreFlounderJsx2['default']);
+(0, _unitUtilsTest2['default'])(_srcCoreFlounderJsx2['default']);
 
 exports['default'] = tests;
 module.exports = exports['default'];
 
-},{"../src/core/flounder.jsx":17,"../src/core/utils":19,"./unit/constructorTest":22,"./unit/flounderTest":23}],22:[function(require,module,exports){
-/* global document, window, µ, $, QUnit, Benchmark, buildTest  */
+},{"../src/core/flounder.jsx":17,"../src/core/utils":19,"./unit/constructorTest":22,"./unit/flounderTest":23,"./unit/utilsTest":24}],22:[function(require,module,exports){
+/* global document, QUnit  */
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -4367,7 +4388,7 @@ exports['default'] = tests;
 module.exports = exports['default'];
 
 },{}],23:[function(require,module,exports){
-/* global document, window, QUnit, Benchmark, buildTest  */
+/* global document, QUnit  */
 
 'use strict';
 
@@ -4537,15 +4558,15 @@ var tests = function tests(Flounder) {
     });
 
     /*
-     * ## initialzeOptions tests
+     * ## initializeOptions tests
      *
      * @test exists
      */
-    QUnit.test('initialzeOptions', function (assert) {
+    QUnit.test('initializeOptions', function (assert) {
         var data = ['doge', 'moon'];
 
         var flounder = new Flounder(document.body, { data: data, defaultIndex: 0, search: true });
-        assert.ok(flounder.initialzeOptions, 'exists');
+        assert.ok(flounder.initializeOptions, 'exists');
 
         assert.ok(flounder.data[0].text === 'doge', 'correctly sets data');
         assert.ok(flounder.search, 'correctly sets a prop');
@@ -4693,11 +4714,13 @@ var tests = function tests(Flounder) {
         assert.ok(flounder.version, 'exists');
 
         assert.equal(Flounder.version, flounder.version, 'shows the version');
+
         // strict mode doesnt like this
         // flounder.version = 'moin!';
         // assert.equal( Flounder.version, flounder.version, 'instance version is read only' );
         // Flounder.version = 'moin!';
         // assert.equal( Flounder.version, flounder.version, 'constructor version is read only' );
+
         flounder.destroy();
     });
 };
@@ -4705,4 +4728,63 @@ var tests = function tests(Flounder) {
 exports['default'] = tests;
 module.exports = exports['default'];
 
-},{"../../src/core/classes.js":14}]},{},[21]);
+},{"../../src/core/classes.js":14}],24:[function(require,module,exports){
+/* global document, QUnit  */
+
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+    value: true
+});
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _srcCoreUtilsJs = require('../../src/core/utils.js');
+
+var _srcCoreUtilsJs2 = _interopRequireDefault(_srcCoreUtilsJs);
+
+var tests = function tests(Flounder) {
+    QUnit.module('utils.jsx');
+
+    /*
+     * ## addClass tests
+     *
+     * @test exists
+     * @test multiple targets returns an array
+     * @test of flounders
+     */
+    QUnit.test('addClass', function (assert) {
+        var body = document.body;
+        assert.ok(_srcCoreUtilsJs2['default'].addClass, 'exists');
+
+        _srcCoreUtilsJs2['default'].addClass(body, 'moon');
+        assert.equal(document.body.className, 'moon', 'adds a class');
+
+        _srcCoreUtilsJs2['default'].addClass(body, ['moon', 'doge']);
+        assert.equal(document.body.className, 'moon  doge', 'adds an array of classes');
+    });
+
+    // /*
+    //  * ## addClass tests
+    //  *
+    //  * @test exists
+    //  * @test multiple targets returns an array
+    //  * @test of flounders
+    //  */
+    // QUnit.test( 'addClass', function( assert )
+    // {
+    //     let body = document.body;
+    //     assert.ok( utils.addClass, 'exists' );
+
+    //     utils.addClass( body, 'moon' );
+    //     assert.equal( document.body.className, 'moon', 'adds a class' );
+
+    //     utils.addClass( body, [ 'moon', 'doge' ] );
+    //     assert.equal( document.body.className, 'moon  doge', 'adds an array of classes' );
+    // } );
+};
+
+exports['default'] = tests;
+module.exports = exports['default'];
+
+},{"../../src/core/utils.js":19}]},{},[21]);

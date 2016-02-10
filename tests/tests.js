@@ -7,6 +7,7 @@ import utils    from '../src/core/utils';
 
 import constructorTest  from './unit/constructorTest';
 import flounderTest     from './unit/flounderTest';
+import utilsTest        from './unit/utilsTest';
 
 
 const nativeSlice = Array.prototype.slice;
@@ -27,5 +28,6 @@ let tests = new Tests;
 
 constructorTest( Flounder );
 flounderTest( Flounder );
+utilsTest( Flounder );
 
 export default tests;
