@@ -6,7 +6,7 @@
  * Released under the MIT license
  * https://github.com/sociomantic/flounder/license
  *
- * Date: Wed Feb 03 2016
+ * Date: Mon Feb 15 2016
  * "This, so far, is the best Flounder ever"
  */
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
@@ -20105,6 +20105,10 @@ var _classes = require('./classes');
 
 var _classes2 = _interopRequireDefault(_classes);
 
+var _utils = require('./utils');
+
+var _utils2 = _interopRequireDefault(_utils);
+
 var _defaults = require('./defaults');
 
 var nativeSlice = Array.prototype.slice;
@@ -20207,7 +20211,7 @@ var api = {
             try {
                 target.parentNode.removeChild(target);
                 originalTarget.tabIndex = 0;
-                this.removeClass(originalTarget, _classes2['default'].HIDDEN);
+                _utils2['default'].removeClass(originalTarget, _classes2['default'].HIDDEN);
             } catch (e) {
                 throw ' : this flounder may have already been removed';
             }
@@ -20251,13 +20255,13 @@ var api = {
         if (bool) {
             refs.flounder.removeEventListener('keydown', this.checkFlounderKeypress);
             refs.selected.removeEventListener('click', this.toggleList);
-            this.addClass(selected, _classes2['default'].DISABLED);
-            this.addClass(flounder, _classes2['default'].DISABLED);
+            _utils2['default'].addClass(selected, _classes2['default'].DISABLED);
+            _utils2['default'].addClass(flounder, _classes2['default'].DISABLED);
         } else {
             refs.flounder.addEventListener('keydown', this.checkFlounderKeypress);
             refs.selected.addEventListener('click', this.toggleList);
-            this.removeClass(selected, _classes2['default'].DISABLED);
-            this.removeClass(flounder, _classes2['default'].DISABLED);
+            _utils2['default'].removeClass(selected, _classes2['default'].DISABLED);
+            _utils2['default'].removeClass(flounder, _classes2['default'].DISABLED);
         }
     },
 
@@ -20288,17 +20292,25 @@ var api = {
 
             if (typeof _ret === 'object') return _ret.v;
         } else {
-            var el = refs.data[index];
+            var data = refs.data;
+            var _length = data.length;
+
+            if (index < 0) {
+                var _length2 = data.length;
+                index = _length2 + index;
+            }
+
+            var el = data[index];
 
             if (el) {
                 var opt = refs.selectOptions[index];
 
                 if (reenable) {
                     opt.disabled = false;
-                    this.removeClass(el, 'flounder__disabled');
+                    _utils2['default'].removeClass(el, 'flounder__disabled');
                 } else {
                     opt.disabled = true;
-                    this.addClass(el, 'flounder__disabled');
+                    _utils2['default'].addClass(el, 'flounder__disabled');
                 }
 
                 return [el, opt];
@@ -20502,7 +20514,7 @@ var api = {
         var _this6 = this;
 
         try {
-            this.http.get(url).then(function (data) {
+            _utils2['default'].http.get(url).then(function (data) {
                 if (data) {
                     _this6.data = JSON.parse(data);
                     if (callback) {
@@ -20604,10 +20616,18 @@ var api = {
 
             if (typeof _ret5 === 'object') return _ret5.v;
         } else {
+            var data = refs.data;
+            var _length3 = data.length;
+
+            if (index < 0) {
+                var _length4 = data.length;
+                index = _length4 + index;
+            }
+
             var el = refs.data[index];
 
             if (el) {
-                var isOpen = this.hasClass(refs.wrapper, 'open');
+                var isOpen = _utils2['default'].hasClass(refs.wrapper, 'open');
                 this.toggleList(isOpen ? 'close' : 'open');
                 this.___forceMultiple = multiple;
                 this.___programmaticClick = programmatic;
@@ -20709,7 +20729,7 @@ var api = {
 exports['default'] = api;
 module.exports = exports['default'];
 
-},{"./classes":172,"./defaults":173}],171:[function(require,module,exports){
+},{"./classes":172,"./defaults":173,"./utils":177}],171:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -20725,6 +20745,10 @@ var _classes = require('./classes');
 var _classes2 = _interopRequireDefault(_classes);
 
 var _defaults = require('./defaults');
+
+var _utils = require('./utils');
+
+var _utils2 = _interopRequireDefault(_utils);
 
 var nativeSlice = Array.prototype.slice;
 
@@ -20758,7 +20782,7 @@ var build = {
      */
     addSearch: function addSearch(flounder) {
         if (this.search) {
-            var search = this.constructElement({
+            var search = _utils2['default'].constructElement({
                 tagname: 'input',
                 type: 'text',
                 className: _classes2['default'].SEARCH
@@ -20782,7 +20806,7 @@ var build = {
     bindThis: function bindThis() {
         var _this = this;
 
-        ['addClass', 'attachAttributes', 'catchBodyClick', 'checkClickTarget', 'checkFlounderKeypress', 'checkPlaceholder', 'clickSet', 'divertTarget', 'displayMultipleTags', 'fuzzySearch', 'removeMultiTag', 'firstTouchController', 'setKeypress', 'setSelectValue', 'toggleClass', 'toggleList'].forEach(function (func) {
+        ['catchBodyClick', 'checkClickTarget', 'checkFlounderKeypress', 'clearPlaceholder', 'clickSet', 'divertTarget', 'displayMultipleTags', 'firstTouchController', 'fuzzySearch', 'removeMultiTag', 'setKeypress', 'setSelectValue', 'toggleList'].forEach(function (func) {
             _this[func] = _this[func].bind(_this);
             _this[func].___isBound = true;
         });
@@ -20798,10 +20822,10 @@ var build = {
     buildDom: function buildDom() {
         this.refs = {};
 
-        var constructElement = this.constructElement;
+        var constructElement = _utils2['default'].constructElement;
 
         var wrapperClass = _classes2['default'].MAIN_WRAPPER;
-        var wrapper = this.constructElement({ className: this.wrapperClass ? wrapperClass + ' ' + this.wrapperClass : wrapperClass });
+        var wrapper = _utils2['default'].constructElement({ className: this.wrapperClass ? wrapperClass + ' ' + this.wrapperClass : wrapperClass });
         var flounderClass = _classes2['default'].MAIN;
         var flounder = constructElement({ className: this.flounderClass ? flounderClass + '  ' + this.flounderClass : flounderClass });
 
@@ -20870,11 +20894,11 @@ var build = {
         var index = 0;
         var data = [];
         var selectOptions = [];
-        var constructElement = this.constructElement;
+        var constructElement = _utils2['default'].constructElement;
         var addOptionDescription = this.addOptionDescription;
         var selectedClass = this.selectedClass;
-        var escapeHTML = this.escapeHTML;
-        var addClass = this.addClass;
+        var escapeHTML = _utils2['default'].escapeHTML;
+        var addClass = _utils2['default'].addClass;
         var selectRef = this.refs.select;
 
         /**
@@ -21017,8 +21041,8 @@ var build = {
         var select = refs.select;
 
         if (target.tagName === 'SELECT') {
-            this.addClass(target, _classes2['default'].SELECT_TAG);
-            this.addClass(target, _classes2['default'].HIDDEN);
+            _utils2['default'].addClass(target, _classes2['default'].SELECT_TAG);
+            _utils2['default'].addClass(target, _classes2['default'].HIDDEN);
 
             select = target;
 
@@ -21049,9 +21073,9 @@ var build = {
             }
 
             this.target = target.parentNode;
-            this.addClass(select || target, _classes2['default'].HIDDEN);
+            _utils2['default'].addClass(select || target, _classes2['default'].HIDDEN);
         } else {
-            select = this.constructElement({ tagname: 'SELECT', className: _classes2['default'].SELECT_TAG + '  ' + _classes2['default'].HIDDEN });
+            select = _utils2['default'].constructElement({ tagname: 'SELECT', className: _classes2['default'].SELECT_TAG + '  ' + _classes2['default'].HIDDEN });
             wrapper.appendChild(select);
         }
 
@@ -21069,7 +21093,7 @@ var build = {
      * @return _Void_
      */
     popInSelectElements: function popInSelectElements(select) {
-        this.removeAllChildren(select);
+        _utils2['default'].removeAllChildren(select);
 
         this.originalChildren.forEach(function (_el, i) {
             select.appendChild(_el);
@@ -21139,7 +21163,7 @@ var build = {
         target.flounder = this;
 
         if (target.tagName === 'INPUT') {
-            this.addClass(target, _classes2['default'].HIDDEN);
+            _utils2['default'].addClass(target, _classes2['default'].HIDDEN);
             target.setAttribute('aria-hidden', true);
             target.tabIndex = -1;
             target = target.parentNode;
@@ -21152,7 +21176,7 @@ var build = {
 exports['default'] = build;
 module.exports = exports['default'];
 
-},{"./classes":172,"./defaults":173}],172:[function(require,module,exports){
+},{"./classes":172,"./defaults":173,"./utils":177}],172:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -21211,6 +21235,8 @@ var defaultOptions = {
         wrapper: ''
     },
     data: [],
+    defaultIndex: false,
+    defaultValue: false,
     keepChangesOnDestroy: false,
     multiple: false,
     multipleTags: false,
@@ -21314,16 +21340,12 @@ var defaults = {
          *
          * @return {Object} default settings
          */
-        var setValueDefault = function setValueDefault(_data) {
-            var defaultProp = configObj.defaultValue + '';
+        var setValueDefault = function setValueDefault(_data, _val) {
+            var defaultProp = _val || configObj.defaultValue + '';
             var index = undefined;
 
             _data.forEach(function (dataObj, i) {
-                var dataObjValue = dataObj.value;
-
-                if (typeof dataObjValue === 'number') {
-                    dataObjValue += '';
-                }
+                var dataObjValue = dataObj.value + '';
 
                 if (dataObjValue === defaultProp) {
                     index = i;
@@ -21376,28 +21398,38 @@ var defaults = {
         var defaultObj = undefined;
         var _data = sortData(data);
 
-        // if ( rebuild )
-        // {
+        if (rebuild) {
+            var val = self.refs.selected.getAttribute('data-value');
+            var def = setValueDefault(_data, val);
 
-        // }
-        // else
-        // {
-        if (configObj.placeholder || _data.length === 0) {
-            defaultObj = setPlaceholderDefault(self, _data);
-        } else if (configObj.defaultIndex) {
-            defaultObj = setIndexDefault(_data);
-        } else if (configObj.defaultValue) {
-            defaultObj = setValueDefault(_data);
+            if (!def) {
+                if (configObj.placeholder || _data.length === 0) {
+                    return setPlaceholderDefault(self, _data);
+                } else {
+                    if (configObj.multiple) {
+                        return setPlaceholderDefault(self, _data);
+                    } else {
+                        return setIndexDefault(_data, 0);
+                    }
+                }
+            }
+
+            return def;
         } else {
-            if (configObj.multiple) {
-                defaultObj = setPlaceholderDefault(self, _data);
+            if (configObj.placeholder || _data.length === 0) {
+                return setPlaceholderDefault(self, _data);
+            } else if (configObj.defaultIndex) {
+                return setIndexDefault(_data);
+            } else if (configObj.defaultValue) {
+                return setValueDefault(_data);
             } else {
-                defaultObj = setIndexDefault(_data, 0);
+                if (configObj.multiple) {
+                    return setPlaceholderDefault(self, _data);
+                } else {
+                    return setIndexDefault(_data, 0);
+                }
             }
         }
-        // }
-
-        return defaultObj;
     }
 };
 
@@ -21420,6 +21452,10 @@ var _classes2 = _interopRequireDefault(_classes);
 var _search2 = require('./search');
 
 var _search3 = _interopRequireDefault(_search2);
+
+var _utils = require('./utils');
+
+var _utils2 = _interopRequireDefault(_utils);
 
 var events = {
 
@@ -21478,6 +21514,46 @@ var events = {
     },
 
     /**
+     * ## addPlaceholder
+     *
+     * called on body click, this determines what (if anything) should be
+     * refilled into the the placeholder position
+     *
+     * @return _Void_
+     */
+    addPlaceholder: function addPlaceholder() {
+        var multiTags = this.multipleTags;
+        var selectedValues = this.getSelectedValues();
+        var val = selectedValues[0];
+        var selectedCount = selectedValues.length;
+        var selected = this.refs.selected;
+
+        switch (selectedCount) {
+            case 0:
+                this.setByIndex(0);
+                break;
+            case 1:
+                selected.innerHTML = val === '' ? this.placeholder : selectedValues[0];
+                break;
+            default:
+                selected.innerHTML = this.multipleMessage;
+                break;
+        }
+
+        if (multiTags) {
+            if (selectedCount === 0) {
+                this.setByIndex(0);
+            }
+
+            if (!val || val === '') {
+                selected.innerHTML = this.placeholder;
+            } else {
+                selected.innerHTML = '';
+            }
+        }
+    },
+
+    /**
      * ## addSearchListeners
      *
      * adds listeners to the search box
@@ -21488,8 +21564,7 @@ var events = {
         var search = this.refs.search;
         search.addEventListener('click', this.toggleList);
         search.addEventListener('keyup', this.fuzzySearch);
-        search.addEventListener('focus', this.checkPlaceholder);
-        search.addEventListener('blur', this.checkPlaceholder);
+        search.addEventListener('focus', this.clearPlaceholder);
     },
 
     /**
@@ -21532,6 +21607,8 @@ var events = {
     catchBodyClick: function catchBodyClick(e) {
         if (!this.checkClickTarget(e)) {
             this.toggleList(e);
+
+            this.addPlaceholder();
         }
     },
 
@@ -21595,23 +21672,9 @@ var events = {
      *
      * @return _Void_
      */
-    checkPlaceholder: function checkPlaceholder(e) {
-        var type = e.type;
-        var refs = this.refs;
-        var selected = refs.selected;
-
-        if (type === 'focus') {
-            selected.innerHTML = '';
-        } else {
-            if (refs.multiTagWrapper && refs.multiTagWrapper.children.length === 0) {
-                selected.innerHTML = this._default.text;
-            } else {
-                var active = this.getSelected();
-                active = active.length === 1 ? active[0].innerHTML : this.multipleMessage;
-
-                selected.innerHTML = active;
-            }
-        }
+    clearPlaceholder: function clearPlaceholder(e) {
+        var selected = this.refs.selected;
+        selected.innerHTML = '';
     },
 
     /**
@@ -21694,6 +21757,34 @@ var events = {
     },
 
     /**
+     * ## removeListeners
+     *
+     * removes event listeners from flounder.  normally pre unload
+     *
+     * @return _Void_
+     */
+    removeListeners: function removeListeners() {
+        var refs = this.refs;
+
+        this.removeOptionsListeners();
+
+        var qsHTML = document.querySelector('html');
+        var catchBodyClick = this.catchBodyClick;
+        qsHTML.removeEventListener('click', catchBodyClick);
+        qsHTML.removeEventListener('touchend', catchBodyClick);
+
+        var select = refs.select;
+        select.removeEventListener('change', this.divertTarget);
+        select.removeEventListener('blur', this.divertTarget);
+        refs.selected.removeEventListener('click', this.toggleList);
+        refs.flounder.removeEventListener('keydown', this.checkFlounderKeypress);
+
+        if (this.search) {
+            this.removeSearchListeners();
+        }
+    },
+
+    /**
      * ## removeOptionsListeners
      *
      * removes event listeners on the data divs
@@ -21708,6 +21799,20 @@ var events = {
                 dataObj.removeEventListener('click', _this2.clickSet);
             }
         });
+    },
+
+    /**
+     * ## removeSearchListeners
+     *
+     * removes the listeners from the search input
+     *
+     * @return _Void_
+     */
+    removeSearchListeners: function removeSearchListeners() {
+        var search = this.refs.search;
+        search.removeEventListener('click', this.toggleList);
+        search.removeEventListener('keyup', this.fuzzySearch);
+        search.removeEventListener('focus', this.clearPlaceholder);
     },
 
     /**
@@ -21733,52 +21838,55 @@ var events = {
      */
     setKeypress: function setKeypress(e) {
         var refs = this.refs;
-
         var increment = 0;
         var keyCode = e.keyCode;
 
-        if (this.multipleTags) {
-            e.preventDefault();
-            return false;
-        }
+        var nonCharacterKeys = [16, 17, 18, 20, 91, 93];
 
-        if (keyCode === 13 || keyCode === 27 || keyCode === 32) // space enter escape
-            {
-                this.toggleList(e);
-                return false;
-            } else if (!window.sidebar && (keyCode === 38 || keyCode === 40)) // up and down
-            {
+        if (nonCharacterKeys.indexOf(keyCode) === -1) {
+            if (this.multipleTags) {
                 e.preventDefault();
-                var _search = refs.search;
-
-                if (_search) {
-                    _search.value = '';
-                }
-
-                increment = keyCode - 39;
-            } else if (keyCode >= 48 && keyCode <= 57 || keyCode >= 65 && keyCode <= 90) // letters - allows native behavior
-            {
-                return true;
+                return false;
             }
 
-        var selectTag = refs.select;
-        var data = refs.data;
-        var dataMaxIndex = data.length - 1;
-        var index = selectTag.selectedIndex + increment;
+            if (keyCode === 13 || keyCode === 27 || keyCode === 32) // space enter escape
+                {
+                    this.toggleList(e);
+                    return false;
+                } else if (!window.sidebar && (keyCode === 38 || keyCode === 40)) // up and down
+                {
+                    e.preventDefault();
+                    var _search = refs.search;
 
-        if (index > dataMaxIndex) {
-            index = 0;
-        } else if (index < 0) {
-            index = dataMaxIndex;
-        }
+                    if (_search) {
+                        _search.value = '';
+                    }
 
-        selectTag.selectedIndex = index;
+                    increment = keyCode - 39;
+                } else if (keyCode >= 48 && keyCode <= 57 || keyCode >= 65 && keyCode <= 90) // letters - allows native behavior
+                {
+                    return true;
+                }
 
-        var hasClass = this.hasClass;
-        var dataAtIndex = data[index];
+            var selectTag = refs.select;
+            var data = refs.data;
+            var dataMaxIndex = data.length - 1;
+            var index = selectTag.selectedIndex + increment;
 
-        if (hasClass(dataAtIndex, _classes2['default'].HIDDEN) || hasClass(dataAtIndex, _classes2['default'].SELECTED_HIDDEN) || hasClass(dataAtIndex, _classes2['default'].SEARCH_HIDDEN) || hasClass(dataAtIndex, _classes2['default'].DISABLED)) {
-            this.setKeypress(e);
+            if (index > dataMaxIndex) {
+                index = 0;
+            } else if (index < 0) {
+                index = dataMaxIndex;
+            }
+
+            selectTag.selectedIndex = index;
+
+            var hasClass = _utils2['default'].hasClass;
+            var dataAtIndex = data[index];
+
+            if (hasClass(dataAtIndex, _classes2['default'].HIDDEN) || hasClass(dataAtIndex, _classes2['default'].SELECTED_HIDDEN) || hasClass(dataAtIndex, _classes2['default'].SEARCH_HIDDEN) || hasClass(dataAtIndex, _classes2['default'].DISABLED)) {
+                this.setKeypress(e);
+            }
         }
     },
 
@@ -21853,9 +21961,9 @@ var events = {
         if (baseOption) {
             selectedOption = data[baseOption.index];
 
-            this.addClass(selectedOption, selectedClass);
+            _utils2['default'].addClass(selectedOption, selectedClass);
 
-            this.scrollTo(selectedOption);
+            _utils2['default'].scrollTo(selectedOption);
         }
     },
 
@@ -21882,12 +21990,19 @@ var events = {
         this.___forceMultiple = false;
         var target = e.target;
 
-        this.toggleClass(target, selectedClass);
+        _utils2['default'].toggleClass(target, selectedClass);
         index = target.getAttribute('data-index');
 
         selectedOption = refs.selectOptions[index];
 
         selectedOption.selected = selectedOption.selected === true ? false : true;
+
+        var firstOption = refs.selectOptions[0];
+
+        if (firstOption.value === '' && this.getSelected().length > 1) {
+            _utils2['default'].removeClass(refs.data[0], selectedClass);
+            refs.selectOptions[0].selected = false;
+        }
     },
 
     /**
@@ -21903,9 +22018,9 @@ var events = {
      * @return _Void_
      */
     toggleClosed: function toggleClosed(e, optionsList, refs, wrapper) {
-        this.hideElement(optionsList);
+        _utils2['default'].addClass(optionsList, _classes2['default'].HIDDEN);
         this.removeSelectKeyListener();
-        this.removeClass(wrapper, 'open');
+        _utils2['default'].removeClass(wrapper, 'open');
 
         var qsHTML = document.querySelector('html');
         qsHTML.removeEventListener('click', this.catchBodyClick);
@@ -21939,9 +22054,9 @@ var events = {
         var refs = this.refs;
         var optionsList = refs.optionsListWrapper;
         var wrapper = refs.wrapper;
-        var hasClass = this.hasClass;
+        var hasClass = _utils2['default'].hasClass;
 
-        if (force === 'open' || force !== 'close' && hasClass(optionsList, _classes2['default'].HIDDEN)) {
+        if (force === 'open' || force !== 'close' && _utils2['default'].hasClass(optionsList, _classes2['default'].HIDDEN)) {
             if (e.type === 'keydown') {
                 this.toggleList.justOpened = true;
             }
@@ -21969,8 +22084,8 @@ var events = {
         this.addSelectKeyListener();
 
         if (!this.isIos || this.search || this.multipleTags === true && this.multiple === true) {
-            this.showElement(optionsList);
-            this.addClass(wrapper, 'open');
+            _utils2['default'].removeClass(optionsList, _classes2['default'].HIDDEN);
+            _utils2['default'].addClass(wrapper, 'open');
 
             var qsHTML = document.querySelector('html');
 
@@ -21983,7 +22098,7 @@ var events = {
             var selectedDiv = refs.data[index];
 
             if (selectedDiv) {
-                this.scrollTo(selectedDiv);
+                _utils2['default'].scrollTo(selectedDiv);
             }
         }
 
@@ -22004,7 +22119,7 @@ var events = {
 exports['default'] = events;
 module.exports = exports['default'];
 
-},{"./classes":172,"./search":176}],175:[function(require,module,exports){
+},{"./classes":172,"./search":176,"./utils":177}],175:[function(require,module,exports){
 
 /* jshint globalstrict: true */
 'use strict';
@@ -22091,31 +22206,10 @@ var Flounder = (function () {
                 console.log('something may be wrong in "onComponentWillUnmount"', e);
             }
 
-            var refs = this.refs;
-
-            this.removeOptionsListeners();
-
-            var qsHTML = document.querySelector('html');
-            var catchBodyClick = this.catchBodyClick;
-            qsHTML.removeEventListener('click', catchBodyClick);
-            qsHTML.removeEventListener('touchend', catchBodyClick);
-
-            var select = refs.select;
-            select.removeEventListener('change', this.divertTarget);
-            select.removeEventListener('blur', this.divertTarget);
-            refs.selected.removeEventListener('click', this.toggleList);
-            refs.flounder.removeEventListener('keydown', this.checkFlounderKeypress);
+            this.removeListeners();
 
             if (this.originalChildren) {
-                this.popInSelectElements(select);
-            }
-
-            if (this.search) {
-                var search = refs.search;
-                search.removeEventListener('click', this.toggleList);
-                search.removeEventListener('keyup', this.fuzzySearch);
-                search.removeEventListener('focus', this.checkPlaceholder);
-                search.removeEventListener('blur', this.checkPlaceholder);
+                this.popInSelectElements(this.refs.select);
             }
         }
 
@@ -22150,7 +22244,7 @@ var Flounder = (function () {
                 this.props = props;
                 this.setTarget(target);
                 this.bindThis();
-                this.initialzeOptions();
+                this.initializeOptions();
 
                 if (this.search) {
                     this.search = new _search2['default'](this);
@@ -22162,7 +22256,16 @@ var Flounder = (function () {
                     console.log('something may be wrong in "onInit"', e);
                 }
                 this.buildDom();
-                this.setPlatform();
+
+                var _utils$setPlatform = _utils2['default'].setPlatform();
+
+                var isOsx = _utils$setPlatform.isOsx;
+                var isIos = _utils$setPlatform.isIos;
+                var multiSelect = _utils$setPlatform.multiSelect;
+
+                this.isOsx = isOsx;
+                this.isIos = isIos;
+                this.multiSelect = multiSelect;
                 this.onRender();
 
                 try {
@@ -22177,6 +22280,12 @@ var Flounder = (function () {
             }
         }
     }
+
+    /**
+     * ## version
+     *
+     * sets version with getters and no setters for the sake of being read-only
+     */
 
     /**
      * ## displayMultipleTags
@@ -22264,6 +22373,7 @@ var Flounder = (function () {
                     selected.innerHTML = '';
                     this.displayMultipleTags(selectedOption, this.refs.multiTagWrapper);
                 } else {
+                    console.log('ljbnkhvbkiv');
                     selected.innerHTML = this.multipleMessage;
                 }
 
@@ -22307,18 +22417,18 @@ var Flounder = (function () {
                             var data = _this2.refs.data;
 
                             data.forEach(function (el, i) {
-                                _this2.addClass(el, _classes3['default'].SEARCH_HIDDEN);
+                                _utils2['default'].addClass(el, _classes3['default'].SEARCH_HIDDEN);
                             });
 
                             matches.forEach(function (e) {
-                                _this2.removeClass(data[e.i], _classes3['default'].SEARCH_HIDDEN);
+                                _utils2['default'].removeClass(data[e.i], _classes3['default'].SEARCH_HIDDEN);
                             });
                         })();
                     } else {
                         this.fuzzySearchReset();
                     }
                 } else {
-                    console.log('m');
+                    this.setSelectValue(e);
                     this.setKeypress(e);
                 }
             } else {
@@ -22336,29 +22446,27 @@ var Flounder = (function () {
     }, {
         key: 'fuzzySearchReset',
         value: function fuzzySearchReset() {
-            var _this3 = this;
-
             var refs = this.refs;
 
             refs.data.forEach(function (dataObj) {
-                _this3.removeClass(dataObj, _classes3['default'].SEARCH_HIDDEN);
+                _utils2['default'].removeClass(dataObj, _classes3['default'].SEARCH_HIDDEN);
             });
 
             refs.search.value = '';
         }
 
         /**
-         * ## initialzeOptions
+         * ## initializeOptions
          *
-         * inserts the initial options into the flounder object, setting defaults when necessary
+         * inserts the initial options into the flounder object, setting defaults
+         * when necessary
          *
          * @return _Void_
          */
     }, {
-        key: 'initialzeOptions',
-        value: function initialzeOptions() {
-            this.props = this.props || {};
-            var props = this.props;
+        key: 'initializeOptions',
+        value: function initializeOptions() {
+            var props = this.props = this.props || {};
 
             for (var opt in _defaults.defaultOptions) {
                 if (_defaults.defaultOptions.hasOwnProperty(opt) && opt !== 'classes') {
@@ -22400,8 +22508,8 @@ var Flounder = (function () {
 
             if (!!this.isIos && (!this.multipleTags || !this.multiple)) {
                 var sel = refs.select;
-                this.removeClass(sel, _classes3['default'].HIDDEN);
-                this.addClass(sel, _classes3['default'].HIDDEN_IOS);
+                _utils2['default'].removeClass(sel, _classes3['default'].HIDDEN);
+                _utils2['default'].addClass(sel, _classes3['default'].HIDDEN_IOS);
             }
 
             this.addListeners(refs, props);
@@ -22435,8 +22543,8 @@ var Flounder = (function () {
 
             var selectedOptions = this.getSelected();
 
-            this.removeClass(data[targetIndex], _classes3['default'].SELECTED_HIDDEN);
-            this.removeClass(data[targetIndex], _classes3['default'].SELECTED);
+            _utils2['default'].removeClass(data[targetIndex], _classes3['default'].SELECTED_HIDDEN);
+            _utils2['default'].removeClass(data[targetIndex], _classes3['default'].SELECTED);
 
             target.removeEventListener('click', this.removeMultiTag);
 
@@ -22479,12 +22587,12 @@ var Flounder = (function () {
     }, {
         key: 'removeSelectedClass',
         value: function removeSelectedClass(data) {
-            var _this4 = this;
+            var _this3 = this;
 
             data = data || this.refs.data;
 
             data.forEach(function (dataObj, i) {
-                _this4.removeClass(dataObj, _this4.selectedClass);
+                _utils2['default'].removeClass(dataObj, _this3.selectedClass);
             });
         }
 
@@ -22498,12 +22606,12 @@ var Flounder = (function () {
     }, {
         key: 'removeSelectedValue',
         value: function removeSelectedValue(data) {
-            var _this5 = this;
+            var _this4 = this;
 
             data = data || this.refs.data;
 
             data.forEach(function (d, i) {
-                _this5.refs.select[i].selected = false;
+                _this4.refs.select[i].selected = false;
             });
         }
 
@@ -22517,7 +22625,7 @@ var Flounder = (function () {
     }, {
         key: 'setTextMultiTagIndent',
         value: function setTextMultiTagIndent() {
-            var _this6 = this;
+            var _this5 = this;
 
             var search = this.refs.search;
             var offset = 0;
@@ -22526,7 +22634,7 @@ var Flounder = (function () {
                 var els = document.getElementsByClassName(_classes3['default'].MULTIPLE_SELECT_TAG);
 
                 nativeSlice.call(els).forEach(function (e, i) {
-                    offset += _this6.getElWidth(e);
+                    offset += _utils2['default'].getElWidth(e, _this5.setTextMultiTagIndent, _this5);
                 });
 
                 search.style.textIndent = offset + 'px';
@@ -22543,14 +22651,14 @@ var Flounder = (function () {
     }, {
         key: 'sortData',
         value: function sortData(data) {
-            var _this7 = this;
+            var _this6 = this;
 
             var res = arguments.length <= 1 || arguments[1] === undefined ? [] : arguments[1];
             var i = arguments.length <= 2 || arguments[2] === undefined ? 0 : arguments[2];
 
             data.forEach(function (d) {
                 if (d.header) {
-                    res = _this7.sortData(d.data, res, i);
+                    res = _this6.sortData(d.data, res, i);
                 } else {
                     if (typeof d !== 'object') {
                         d = {
@@ -22586,7 +22694,7 @@ Object.defineProperty(Flounder.prototype, 'version', {
     }
 });
 
-_utils2['default'].extendClass(Flounder, _utils2['default'], _api2['default'], _build2['default'], _events2['default']);
+_utils2['default'].extendClass(Flounder, _api2['default'], _build2['default'], _events2['default']);
 
 exports['default'] = Flounder;
 module.exports = exports['default'];
@@ -22915,6 +23023,13 @@ var utils = {
      * @return _Void_
      */
     addClass: function addClass(_el, _class) {
+        if (typeof _class !== 'string' && _class.length) {
+            _class.forEach(function (_c) {
+                utils.addClass(_el, _c);
+            });
+
+            return true;
+        }
 
         var _elClass = _el.className;
         var _elClassLength = _elClass.length;
@@ -23015,12 +23130,12 @@ var utils = {
      *
      * @return _Integer_ adjusted width
      */
-    getElWidth: function getElWidth(el) {
+    getElWidth: function getElWidth(el, _cb, context) {
         var style = getComputedStyle(el);
 
         if (el.offsetWidth === 0) {
             if (this.__checkWidthAgain !== true) {
-                setTimeout(this.setTextMultiTagIndent.bind(this), 1500);
+                setTimeout(_cb.bind(context), 1500);
                 this.__checkWidthAgain === true;
             }
         } else {
@@ -23046,19 +23161,7 @@ var utils = {
         return !!_elClass.match(regex);
     },
 
-    /**
-     * hideElement
-     *
-     * hides an element offscreen
-     *
-     * @param {Object} el element to hide
-     *
-     * @return _Void_
-     */
-    hideElement: function hideElement(el) {
-        this.addClass(el, _classes2['default'].HIDDEN);
-    },
-
+    /* placeholder for microbe http module */
     http: {},
 
     /**
@@ -23112,6 +23215,14 @@ var utils = {
      * @return _Void_
      */
     removeClass: function removeClass(el, _class) {
+        if (typeof _class !== 'string' && _class.length) {
+            _class.forEach(function (_c) {
+                this.removeClass(_el, _c);
+            });
+
+            return true;
+        }
+
         var baseClass = el.className;
         var baseClassLength = baseClass.length;
         var classLength = _class.length;
@@ -23158,23 +23269,11 @@ var utils = {
      * @return _Void_
      */
     setPlatform: function setPlatform() {
-        var _osx = this.isOsx = window.navigator.platform.indexOf('Mac') === -1 ? false : true;
+        var isOsx = window.navigator.platform.indexOf('Mac') === -1 ? false : true;
+        var isIos = utils.iosVersion();
+        var multiSelect = isOsx ? 'metaKey' : 'ctrlKey';
 
-        this.isIos = this.iosVersion();
-        this.multiSelect = _osx ? 'metaKey' : 'ctrlKey';
-    },
-
-    /**
-     * ## showElement
-     *
-     * remove classes.HIDDEN from a given element
-     *
-     * @param {Object} _el element to show
-     *
-     * @return _Void_
-     */
-    showElement: function showElement(_el) {
-        this.removeClass(_el, _classes2['default'].HIDDEN);
+        return { isOsx: isOsx, isIos: isIos, multiSelect: multiSelect };
     },
 
     /**
@@ -23300,7 +23399,16 @@ var FlounderReact = (function (_Component) {
                 refs.select.removeAttribute('multiple');
             }
 
-            this.setPlatform();
+            var _utils$setPlatform = _coreUtils2['default'].setPlatform();
+
+            var isOsx = _utils$setPlatform.isOsx;
+            var isIos = _utils$setPlatform.isIos;
+            var multiSelect = _utils$setPlatform.multiSelect;
+
+            this.isOsx = isOsx;
+            this.isIos = isIos;
+            this.multiSelect = multiSelect;
+
             this.onRender();
 
             try {
@@ -23308,8 +23416,6 @@ var FlounderReact = (function (_Component) {
             } catch (e) {
                 console.log('something may be wrong in "onComponentDidMount"', e);
             }
-
-            this.setPlatform();
         }
 
         /**
@@ -23384,7 +23490,7 @@ var FlounderReact = (function (_Component) {
 
             this.bindThis();
 
-            this.initialzeOptions();
+            this.initializeOptions();
 
             if (this.search) {
                 this.search = new _coreSearch2['default'](this);
