@@ -5,7 +5,7 @@
   "description": "a native friendly dropdown menu",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/sociomantic/flounder.git"
+    "url": "git+https://github.com/sociomantic-tsunami/flounder.git"
   },
   "scripts": {
     "build": "./node_modules/.bin/gulp && ./node_modules/.bin/gulp buildTests && npm test && echo \"All builds complete and tests passed.\"",
@@ -39,7 +39,7 @@
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/sociomantic/flounder/issues"
+    "url": "https://github.com/sociomantic-tsunami/flounder/issues"
   },
   "files": [
     "CODE_OF_CONDUCT.md",
@@ -48,7 +48,7 @@
     "src/",
     "dist/"
   ],
-  "homepage": "https://github.com/sociomantic/flounder",
+  "homepage": "https://github.com/sociomantic-tsunami/flounder",
   "main": "./dist/flounder.js",
   "keywords": [
     "select2",
