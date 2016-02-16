@@ -30,3 +30,4 @@ $RECYCLE.BIN/
 node_modules/
 .tmp
 config.js
+npm-debug.log

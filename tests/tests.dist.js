@@ -139,10 +139,10 @@ module.exports = function( Microbe )
                     {
                         if ( _val.status !== 200 )
                         {
-                            _cb({
+                            _cb( {
                                 status      : _val.status,
                                 statusText  : _val.statusText
-                            });
+                            } );
                         }
                         return _responses;
                     }
