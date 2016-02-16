@@ -431,6 +431,13 @@ See more examples on the [demo page](./demo/index.html)
 Change Log
 ==========
 
+0.6.0
+-----
+
++ api
+    + added allowHTML
+
+
 0.5.0
 -----
 
@@ -471,7 +478,7 @@ Change Log
 + flounder
     + slowly removing things that are not needed from the main object for the sake of a clearer api later
 
-+utils
++ utils
     + no longer merged onto the main flounder object
 
 
