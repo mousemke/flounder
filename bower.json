@@ -4,7 +4,7 @@
     "authors": [
         "Mouse Braun <mouse@knoblau.ch>",
     ],
-    "description": "flounder.js - Style-able dropdown replacement for native dropdowns",
+    "description": "a native friendly dropdown menu",
     "main": "./dist/flounder.min.js",
     "keywords": [
         "select2",
