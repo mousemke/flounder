@@ -1,4 +1,4 @@
-Flounder.js 0.5.0
+Flounder.js 0.6.0
 =================
 
 [![Flounder build status](https://travis-ci.org/sociomantic-tsunami/flounder.svg)](https://travis-ci.org)
@@ -103,6 +103,7 @@ If flounder is fed an element that already has a flounder, it will destroy it an
 
 ```js
 {
+    allowHTML               : false,
     classes                 : {
         flounder    : 'class--to--give--the--main--flounder--element',
         hidden      : 'class--to--denote--hidden',
@@ -128,6 +129,8 @@ If flounder is fed an element that already has a flounder, it will destroy it an
     selectDataOverride      : false
 }
 ```
+
++ `allowHTML`- (boolean) Renders the data text as HTML.  With this option enabled, any api call that must compare text will need the exact html in order to be a match
 
 + `classes`- (object) Contains configurable classes for various elements.  The are additional classes, not replacement classes.
 
@@ -309,6 +312,15 @@ Contributing
 ============
 
 We gladly accept and review any pull-requests. Feel free! :heart:
+
+Otherwise, if you just want to talk, we are very easy to get a hold of!
+
++ Slack:          [flounder.slack.com](https://flounder.slack.com)
++ Twitter:        <a href="https://www.twitter.com/microbejs" target="_blank">@microbejs</a>
++ Email:          [hello@flounderjs.com](hello@flounderjs.com)
++ Web:            <a href="http://flounderjs.com/" target="_blank">http://flounderjs.com/</a>
++ Git:            <a href="https://github.com/sociomantic-tsunami/flounder/" target="_blank">https://github.com/sociomantic-tsunami/flounder/</a>
+
 
 
 This project adheres to the [Contributor Covenant](http://contributor-covenant.org/). By participating, you are expected to honor this code.

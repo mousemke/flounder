@@ -20609,10 +20609,9 @@ var api = {
         } else {
             var _ret3 = (function () {
                 var res = [];
-                var getText = document.all ? 'innerText' : 'textContent';
 
-                _this3.refs.selectOptions.forEach(function (el) {
-                    var _elText = el[getText];
+                _this3.refs.data.forEach(function (el) {
+                    var _elText = el.innerHTML;
 
                     if (_elText === text) {
                         res.push(el.index);
@@ -20931,10 +20930,9 @@ var api = {
         } else {
             var _ret7 = (function () {
                 var res = [];
-                var getText = document.all ? 'innerText' : 'textContent';
 
-                _this8.refs.selectOptions.forEach(function (el) {
-                    var _elText = el[getText];
+                _this8.refs.data.forEach(function (el) {
+                    var _elText = el.innerHTML;
 
                     if (_elText === text) {
                         res.push(el.index);
@@ -21162,6 +21160,7 @@ var build = {
         var escapeHTML = _utils2['default'].escapeHTML;
         var addClass = _utils2['default'].addClass;
         var selectRef = this.refs.select;
+        var allowHTML = this.allowHTML;
 
         /**
          * ## buildDiv
@@ -21196,8 +21195,7 @@ var build = {
             }
 
             var data = constructElement(res);
-            var escapedText = escapeHTML(dataObj.text);
-            data.innerHTML = escapedText;
+            data.innerHTML = allowHTML ? dataObj.text : escapeHTML(dataObj.text);
 
             if (dataObj.description) {
                 addOptionDescription(data, dataObj.description);
@@ -21490,6 +21488,7 @@ var _classes = require('./classes');
 var _classes2 = _interopRequireDefault(_classes);
 
 var defaultOptions = {
+    allowHTML: false,
     classes: {
         flounder: '',
         hidden: 'flounder--hidden',
@@ -21573,7 +21572,7 @@ var defaults = {
             };
 
             if (select) {
-                var escapedText = self.escapeHTML(_default.text);
+                var escapedText = self.allowHTML ? _default.text : self.escapeHTML(_default.text);
 
                 if (!select[0] || select[0].value !== '') {
                     var defaultOption = self.constructElement({ tagname: 'option',
@@ -22622,7 +22621,7 @@ var Flounder = (function () {
 
             if (!this.multiple || !this.multipleTags && selectedLength === 1) {
                 index = selectedOption[0].index;
-                selected.innerHTML = selectedOption[0].innerHTML;
+                selected.innerHTML = this.refs.data[index].innerHTML;
                 value = selectedOption[0].value;
             } else if (selectedLength === 0) {
                 var defaultValue = this._default;
@@ -22635,7 +22634,6 @@ var Flounder = (function () {
                     selected.innerHTML = '';
                     this.displayMultipleTags(selectedOption, this.refs.multiTagWrapper);
                 } else {
-                    console.log('ljbnkhvbkiv');
                     selected.innerHTML = this.multipleMessage;
                 }
 
@@ -23568,7 +23566,7 @@ module.exports = exports['default'];
 },{"./classes":173,"microbejs/src/modules/http":3}],179:[function(require,module,exports){
 'use strict';
 
-module.exports = '0.5.0';
+module.exports = '0.6.0';
 
 },{}],180:[function(require,module,exports){
 
@@ -23725,6 +23723,8 @@ var FlounderReact = (function (_Component) {
     }, {
         key: 'prepOptions',
         value: function prepOptions(data) {
+            var _this = this;
+
             data.forEach(function (dataObj, i) {
                 if (typeof dataObj === 'string') {
                     dataObj = {
@@ -23733,7 +23733,7 @@ var FlounderReact = (function (_Component) {
                     };
                 }
 
-                dataObj.text = _coreUtils2['default'].escapeHTML(dataObj.text);
+                dataObj.text = _this.allowHTML ? dataObj.text : _coreUtils2['default'].escapeHTML(dataObj.text);
             });
 
             return data;
@@ -23748,7 +23748,7 @@ var FlounderReact = (function (_Component) {
     }, {
         key: 'render',
         value: function render(e) {
-            var _this = this;
+            var _this2 = this;
 
             this.bindThis();
 
@@ -23831,7 +23831,7 @@ var FlounderReact = (function (_Component) {
                     'select',
                     { ref: 'select', className: _coreClasses2['default'].SELECT_TAG + '  ' + _coreClasses2['default'].HIDDEN, defaultValue: defaultReact, tabIndex: '-1', multiple: multiple },
                     data.map(function (dataObj, i) {
-                        var extraClass = i === defaultValue ? '  ' + _this.selectedClass : '';
+                        var extraClass = i === defaultValue ? '  ' + _this2.selectedClass : '';
 
                         var res = {
                             className: _coreClasses2['default'].OPTION + extraClass,

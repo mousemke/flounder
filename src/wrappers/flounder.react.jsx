@@ -123,7 +123,7 @@ class FlounderReact extends Component
                 };
             }
 
-            dataObj.text = utils.escapeHTML( dataObj.text );
+            dataObj.text = this.allowHTML ? dataObj.text : utils.escapeHTML( dataObj.text );
         } );
 
         return data;

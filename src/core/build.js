@@ -174,6 +174,7 @@ const build = {
         let escapeHTML              = utils.escapeHTML;
         let addClass                = utils.addClass;
         let selectRef               = this.refs.select;
+        let allowHTML               = this.allowHTML;
 
 
         /**
@@ -213,8 +214,7 @@ const build = {
             }
 
             let data        = constructElement( res );
-            let escapedText = escapeHTML( dataObj.text );
-            data.innerHTML  = escapedText;
+            data.innerHTML  = allowHTML ? dataObj.text : escapeHTML( dataObj.text );
 
             if ( dataObj.description )
             {

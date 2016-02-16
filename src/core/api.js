@@ -260,11 +260,10 @@ const api = {
         else
         {
             let res     = [];
-            let getText = document.all ? 'innerText' : 'textContent'
 
-            this.refs.selectOptions.forEach( function( el )
+            this.refs.data.forEach( function( el )
             {
-                let _elText = el[ getText ];
+                let _elText = el.innerHTML;
 
                 if ( _elText === text )
                 {
@@ -579,11 +578,10 @@ const api = {
         else
         {
             let res     = [];
-            let getText = document.all ? 'innerText' : 'textContent'
 
-            this.refs.selectOptions.forEach( function( el )
+            this.refs.data.forEach( function( el )
             {
-                let _elText = el[ getText ];
+                let _elText = el.innerHTML;
 
                 if ( _elText === text )
                 {

@@ -1,6 +1,7 @@
 import classes              from './classes';
 
 const defaultOptions = {
+    allowHTML               : false,
     classes                 : {
         flounder    : '',
         hidden      : 'flounder--hidden',
@@ -88,7 +89,7 @@ const defaults = {
 
             if ( select )
             {
-                let escapedText     = self.escapeHTML( _default.text );
+                let escapedText     = self.allowHTML ? _default.text : self.escapeHTML( _default.text );
 
                 if ( !select[ 0 ] || select[ 0 ].value !== '' )
                 {

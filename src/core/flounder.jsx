@@ -212,7 +212,7 @@ class Flounder
         if ( !this.multiple || ( !this.multipleTags && selectedLength ===  1 ) )
         {
             index               = selectedOption[0].index;
-            selected.innerHTML  = selectedOption[0].innerHTML;
+            selected.innerHTML  = this.refs.data[ index ].innerHTML;
             value               = selectedOption[0].value;
         }
         else if ( selectedLength === 0 )
@@ -232,7 +232,6 @@ class Flounder
             }
             else
             {
-                console.log( 'ljbnkhvbkiv' );
                 selected.innerHTML  = this.multipleMessage;
             }
 
