@@ -1,10 +1,10 @@
 /*!
  * Flounder JavaScript Styleable Selectbox v0.5.0
- * https://github.com/sociomantic/flounder
+ * https://github.com/sociomantic-tsunami/flounder
  *
  * Copyright 2015-2016 Sociomantic Labs and other contributors
  * Released under the MIT license
- * https://github.com/sociomantic/flounder/license
+ * https://github.com/sociomantic-tsunami/flounder/license
  *
  * Date: Mon Feb 15 2016
  * "This, so far, is the best Flounder ever"
@@ -668,7 +668,7 @@ function denodeifyWithoutCount(fn) {
     'args[argLength] = cb;',
     'res = fn.apply(self, args);',
     '}',
-    
+
     'if (res &&',
     '(typeof res === "object" || typeof res === "function") &&',
     'typeof res.then === "function"',

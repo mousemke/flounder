@@ -17,7 +17,7 @@ import Flounder from 'flounder';
 Usage
 =====
 
-Flounder can be used in vanilla js or with [react](http://facebook.github.io/react/), [requirejs](http://requirejs.org/), [jquery](http://jquery.com/), and [microbe](https://github.com/sociomantic/microbe).
+Flounder can be used in vanilla js or with [react](http://facebook.github.io/react/), [requirejs](http://requirejs.org/), [jquery](http://jquery.com/), and [microbe](https://github.com/sociomantic-tsunami/microbe).
 
 ```js
 // vanilla
@@ -30,9 +30,9 @@ ReactDOM.render( React.createElement( FlounderReact, configOptions ), target );
 React.render( <FlounderReact option1="" option2="">, target );
 
 // react has some caveats.  If you want to use react flounder, you should
-// build it from the source file.  ./dist/flounder.react.js is so 
-// large because it already has a copy of react included.  Additionally, 
-// react flounder can only be attached to a container, and not an 
+// build it from the source file.  ./dist/flounder.react.js is so
+// large because it already has a copy of react included.  Additionally,
+// react flounder can only be attached to a container, and not an
 // INPUT or SELECT
 
 // requirejs
@@ -56,7 +56,7 @@ document.querySelector( '#vanilla--select' ).flounder.destroy()
 
 ###Target options
 
-Flounder's target is quite flexible.  
+Flounder's target is quite flexible.
 
 you can give it an element:
 
@@ -98,7 +98,7 @@ If flounder is fed an element that already has a flounder, it will destroy it an
 
 
 ###Available config options
- 
+
 ```js
 {
     classes                 : {
@@ -188,7 +188,7 @@ selectbox data must be passed as an array of objects
     ...
 ]
 ```
- 
+
 or a simple array of strings. The passed text will be both the text and the value.  There would be no description in this case
 
 ```js
@@ -259,7 +259,7 @@ this.setByValue( value, multiple )
 + `buildFromUrl( url, callback )` loads data from a remote address, passes it to a callback, then builds the flounder object
 
 + `clickByIndex( index, multiple )` sets the item with the passed index as selected.  If multiple is true and it is a multi-select box, it is selected additionally.  Otherwise it's selected instead.  This accepts arrays as well.  Without multiple equaling true it will only select the last option. This fires the onClick event.  A negative index will start counting from the end.
- 
+
 + `clickByText( text, multiple )` sets the item with the passed text as selected.  If multiple is true and it is a multi-select box, it is selected additionally.  Otherwise it's selected instead. This accepts arrays as well.  Without multiple equaling true it will only select the last option. This fires the onClick event
 
 + `clickByValue( value, multiple )` sets the item with the passed value as selected.  If multiple is true and it is a multi-select box, it is selected additionally.  Otherwise it's selected instead. This accepts arrays as well.  Without multiple equaling true it will only select the last option. This fires the onClick event
@@ -278,7 +278,7 @@ this.setByValue( value, multiple )
 
 + `enableByIndex( index )` enables a flounder option by index. A negative index will start counting from the end.
 
-+ `enableByText( text )` enables a flounder option by text 
++ `enableByText( text )` enables a flounder option by text
 
 + `enableByValue( value )` enables a flounder option by value
 
@@ -287,8 +287,8 @@ this.setByValue( value, multiple )
 + `getSelected()` returns the currently selected option tags in an array
 
 + `getSelectedValues()` returns the currently selected values in an array
- 
-+ `loadDataFromUrl( url, callback )` loads data from a remote address and returns it to a passed callback. 
+
++ `loadDataFromUrl( url, callback )` loads data from a remote address and returns it to a passed callback.
 
 + `props` the props set in the initial constructor
 
@@ -297,7 +297,7 @@ this.setByValue( value, multiple )
 + `refs` contains references to all flounder elements
 
 + `setByIndex( index, multiple )` sets the item with the passed index as selected.  If multiple is true and it is a multi-select box, it is selected additionally.  Otherwise it's selected instead.  This accepts arrays as well.  Without multiple equaling true it will only select the last option. This does not fire the onClick event.  A negative index will start counting from the end.
- 
+
 + `setByText( text, multiple )` sets the item with the passed text as selected.  If multiple is true and it is a multi-select box, it is selected additionally.  Otherwise it's selected instead. This accepts arrays as well.  Without multiple equaling true it will only select the last option. This does not fire the onClick event.
 
 + `setByValue( value, multiple )` sets the item with the passed value as selected.  If multiple is true and it is a multi-select box, it is selected additionally.  Otherwise it's selected instead. This accepts arrays as well.  Without multiple equaling true it will only select the last option. This does not fire the onClick event.
@@ -311,7 +311,7 @@ We gladly accept and review any pull-requests. Feel free! :heart:
 
 This project adheres to the [Contributor Covenant](http://contributor-covenant.org/). By participating, you are expected to honor this code.
 
-[Flounder - Code of Conduct](https://github.com/sociomantic/flounder/blob/master/CODE_OF_CONDUCT.md)
+[Flounder - Code of Conduct](https://github.com/sociomantic-tsunami/flounder/blob/master/CODE_OF_CONDUCT.md)
 
 Need to report something? [hr@sociomantic.com](hr@sociomantic.com)
 
@@ -363,10 +363,10 @@ flounder can be attached to basically anything
                     text        : dataObj.text,
                     value       : dataObj.id
                 } );
-            } ); 
+            } );
 
             this.data = res;
-        } 
+        }
     } );
 ```
 

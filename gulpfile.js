@@ -16,13 +16,13 @@ var licenceLong     = '/*!\n' +
                       ' *\n' +
                       ' * Copyright ' + ( 2015 === year ? year : '2015-' + year ) + ' Sociomantic Labs and other contributors\n' +
                       ' * Released under the MIT license\n' +
-                      ' * https://github.com/sociomantic/flounder/license\n' +
+                      ' * https://github.com/sociomantic-tsunami/flounder/license\n' +
                       ' *\n' +
                       ' * Date: ' + now.toDateString() + '\n' +
                       ' * "This, so far, is the best Flounder ever"\n' +
                       ' */\n';
 
-var licenceShort    = '/*! Flounder v' + _package.version + ' | (c) ' + ( 2015 === year ? year : '2015-' + year ) + ' Sociomantic Labs | https://github.com/sociomantic/flounder/license */\n';
+var licenceShort    = '/*! Flounder v' + _package.version + ' | (c) ' + ( 2015 === year ? year : '2015-' + year ) + ' Sociomantic Labs | https://github.com/sociomantic-tsunami/flounder/license */\n';
 
 
 function build( folder, filename )
