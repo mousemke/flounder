@@ -315,7 +315,7 @@ This project adheres to the [Contributor Covenant](http://contributor-covenant.o
 
 [Flounder - Code of Conduct](https://github.com/sociomantic-tsunami/flounder/blob/master/CODE_OF_CONDUCT.md)
 
-Need to report something? [hr@sociomantic.com](hr@sociomantic.com)
+Need to report something? [report@flounderjs.com](report@flounderjs.com)
 
 
 Example
