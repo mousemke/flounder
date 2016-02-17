@@ -433,6 +433,9 @@ Change Log
 0.6.1
 -----
 
++ tests
+    + utils tests completed
+    
 + demo
     + updates and cleanup
 
