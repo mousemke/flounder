@@ -252,22 +252,6 @@ requirejs( [ 'flounder' ], function( Flounder )
 } );
 
 
-µ( '.debug--mode' ).on( 'click', function()
-{
-    µ( '.flounder--select--tag' ).removeClass( 'flounder--hidden' ).removeClass( 'flounder--hidden--ios' );
-    µ( '.flounder' ).css( 'display', 'inline-block' )
-} );
-
-
-µ( '.destroy--all' ).on( 'click', function()
-{
-    µ( '.flounder' ).each( function( el )
-    {
-        el.flounder.destroy();
-    } );
-} );
-
-
 µ( function()
     {
         /**
@@ -308,7 +292,24 @@ requirejs( [ 'flounder' ], function( Flounder )
 
             search              : true
         } );
+    }
+);
+
+
+µ( '.debug--mode' ).on( 'click', function()
+{
+    µ( '.flounder--select--tag' ).removeClass( 'flounder--hidden' ).removeClass( 'flounder--hidden--ios' );
+    µ( '.flounder' ).css( 'display', 'inline-block' )
+} );
+
+
+µ( '.destroy--all' ).on( 'click', function()
+{
+    µ( '.flounder' ).each( function( el )
+    {
+        el.flounder.destroy();
     } );
+} );
 
 
 export default { React, Component, ReactDOM, FlounderReact, Flounder };

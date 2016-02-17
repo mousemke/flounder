@@ -231,20 +231,9 @@ requirejs(['flounder'], function (Flounder) {
     });
 });
 
-µ('.debug--mode').on('click', function () {
-    µ('.flounder--select--tag').removeClass('flounder--hidden').removeClass('flounder--hidden--ios');
-    µ('.flounder').css('display', 'inline-block');
-});
-
-µ('.destroy--all').on('click', function () {
-    µ('.flounder').each(function (el) {
-        el.flounder.destroy();
-    });
-});
-
 µ(function () {
     /**
-     * microbe multi-Flounder with descriptions attached to an input
+     * Microbe plugin from Div (multiple, microbe wrapper, loads JSON onFirstTouch)
      */
     µ('#microbe--multiple--desc').flounder({
 
@@ -260,13 +249,11 @@ requirejs(['flounder'], function (Flounder) {
             this.rebuild(this.data);
         },
 
-        multiple: true,
-
-        multipleTags: false
+        multiple: true
     });
 
     /**
-     * jquery Flounder attached to a div
+     * jQuery plugin from Div (search, placeholder, jquery wrapper, loadData onInit)
      */
     $('#jquery--div').flounder({
 
@@ -281,6 +268,17 @@ requirejs(['flounder'], function (Flounder) {
         placeholder: 'placeholders!',
 
         search: true
+    });
+});
+
+µ('.debug--mode').on('click', function () {
+    µ('.flounder--select--tag').removeClass('flounder--hidden').removeClass('flounder--hidden--ios');
+    µ('.flounder').css('display', 'inline-block');
+});
+
+µ('.destroy--all').on('click', function () {
+    µ('.flounder').each(function (el) {
+        el.flounder.destroy();
     });
 });
 
@@ -23318,7 +23316,7 @@ var utils = {
     },
 
     /**
-     * ## attachAttribute
+     * ## attachAttributes
      *
      * attached data attributes and others (seperately)
      *
@@ -23328,6 +23326,8 @@ var utils = {
      * @return _Void_
      */
     attachAttributes: function attachAttributes(_el, _elObj) {
+        _elObj = _elObj || {};
+
         for (var att in _elObj) {
             if (att.indexOf('data-') !== -1) {
                 _el.setAttribute(att, _elObj[att]);
@@ -23438,7 +23438,7 @@ var utils = {
     },
 
     /* placeholder for microbe http module */
-    http: {},
+    http: false,
 
     /**
      * ## iosVersion
@@ -23493,7 +23493,7 @@ var utils = {
     removeClass: function removeClass(el, _class) {
         if (typeof _class !== 'string' && _class.length) {
             _class.forEach(function (_c) {
-                this.removeClass(_el, _c);
+                utils.removeClass(el, _c);
             });
 
             return true;
@@ -23503,7 +23503,9 @@ var utils = {
         var baseClassLength = baseClass.length;
         var classLength = _class.length;
 
-        if (baseClass.slice(0, classLength + 1) === _class + ' ') {
+        if (baseClass === _class) {
+            baseClass = '';
+        } else if (baseClass.slice(0, classLength + 1) === _class + ' ') {
             baseClass = baseClass.slice(classLength + 1, baseClassLength);
         } else if (baseClass.slice(baseClassLength - classLength - 1, baseClassLength) === ' ' + _class) {
             baseClass = baseClass.slice(0, baseClassLength - classLength - 1);
@@ -23582,7 +23584,7 @@ module.exports = exports['default'];
 },{"./classes":173,"microbejs/src/modules/http":3}],179:[function(require,module,exports){
 'use strict';
 
-module.exports = '0.6.0';
+module.exports = '0.6.1';
 
 },{}],180:[function(require,module,exports){
 
@@ -23611,9 +23613,9 @@ var _reactDom = require('react-dom');
 
 var _reactDom2 = _interopRequireDefault(_reactDom);
 
-var _coreFlounderJsx = require('../core/flounder.jsx');
+var _coreFlounder = require('../core/flounder');
 
-var _coreFlounderJsx2 = _interopRequireDefault(_coreFlounderJsx);
+var _coreFlounder2 = _interopRequireDefault(_coreFlounder);
 
 var _coreClasses = require('../core/classes');
 
@@ -23868,7 +23870,7 @@ var FlounderReact = (function (_Component) {
     return FlounderReact;
 })(_react.Component);
 
-var FlounderPrototype = _coreFlounderJsx2['default'].prototype;
+var FlounderPrototype = _coreFlounder2['default'].prototype;
 var FlounderReactPrototype = FlounderReact.prototype;
 var methods = Object.getOwnPropertyNames(FlounderPrototype);
 
@@ -23890,7 +23892,7 @@ Object.defineProperty(FlounderReact.prototype, 'version', {
     }
 });
 
-exports['default'] = { React: _react2['default'], Component: _react.Component, ReactDOM: _reactDom2['default'], FlounderReact: FlounderReact, Flounder: _coreFlounderJsx2['default'] };
+exports['default'] = { React: _react2['default'], Component: _react.Component, ReactDOM: _reactDom2['default'], FlounderReact: FlounderReact, Flounder: _coreFlounder2['default'] };
 module.exports = exports['default'];
 
-},{"../core/classes":173,"../core/defaults":174,"../core/flounder.jsx":176,"../core/search":177,"../core/utils":178,"../core/version":179,"react":170,"react-dom":14}]},{},[1]);
+},{"../core/classes":173,"../core/defaults":174,"../core/flounder":176,"../core/search":177,"../core/utils":178,"../core/version":179,"react":170,"react-dom":14}]},{},[1]);

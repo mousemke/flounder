@@ -1,12 +1,12 @@
 /*!
- * Flounder JavaScript Styleable Selectbox v0.6.0
+ * Flounder JavaScript Stylable Selectbox v0.6.1
  * https://github.com/sociomantic-tsunami/flounder
  *
  * Copyright 2015-2016 Sociomantic Labs and other contributors
  * Released under the MIT license
  * https://github.com/sociomantic-tsunami/flounder/license
  *
- * Date: Tue Feb 16 2016
+ * Date: Wed Feb 17 2016
  * "This, so far, is the best Flounder ever"
  */
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
@@ -150,10 +150,10 @@ module.exports = function( Microbe )
                     {
                         if ( _val.status !== 200 )
                         {
-                            _cb( {
+                            _cb({
                                 status      : _val.status,
                                 statusText  : _val.statusText
-                            } );
+                            });
                         }
                         return _responses;
                     }
@@ -4025,7 +4025,7 @@ var utils = {
     },
 
     /**
-     * ## attachAttribute
+     * ## attachAttributes
      *
      * attached data attributes and others (seperately)
      *
@@ -4035,6 +4035,8 @@ var utils = {
      * @return _Void_
      */
     attachAttributes: function attachAttributes(_el, _elObj) {
+        _elObj = _elObj || {};
+
         for (var att in _elObj) {
             if (att.indexOf('data-') !== -1) {
                 _el.setAttribute(att, _elObj[att]);
@@ -4145,7 +4147,7 @@ var utils = {
     },
 
     /* placeholder for microbe http module */
-    http: {},
+    http: false,
 
     /**
      * ## iosVersion
@@ -4200,7 +4202,7 @@ var utils = {
     removeClass: function removeClass(el, _class) {
         if (typeof _class !== 'string' && _class.length) {
             _class.forEach(function (_c) {
-                this.removeClass(_el, _c);
+                utils.removeClass(el, _c);
             });
 
             return true;
@@ -4210,7 +4212,9 @@ var utils = {
         var baseClassLength = baseClass.length;
         var classLength = _class.length;
 
-        if (baseClass.slice(0, classLength + 1) === _class + ' ') {
+        if (baseClass === _class) {
+            baseClass = '';
+        } else if (baseClass.slice(0, classLength + 1) === _class + ' ') {
             baseClass = baseClass.slice(classLength + 1, baseClassLength);
         } else if (baseClass.slice(baseClassLength - classLength - 1, baseClassLength) === ' ' + _class) {
             baseClass = baseClass.slice(0, baseClassLength - classLength - 1);
@@ -4289,7 +4293,7 @@ module.exports = exports['default'];
 },{"./classes":14,"microbejs/src/modules/http":1}],20:[function(require,module,exports){
 'use strict';
 
-module.exports = '0.6.0';
+module.exports = '0.6.1';
 
 },{}],21:[function(require,module,exports){
 
@@ -4298,12 +4302,12 @@ module.exports = '0.6.0';
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _coreFlounderJsx = require('../core/flounder.jsx');
+var _coreFlounder = require('../core/flounder');
 
-var _coreFlounderJsx2 = _interopRequireDefault(_coreFlounderJsx);
+var _coreFlounder2 = _interopRequireDefault(_coreFlounder);
 
 define('flounder', [], function () {
-  return _coreFlounderJsx2['default'];
+  return _coreFlounder2['default'];
 });
 
-},{"../core/flounder.jsx":17}]},{},[21]);
+},{"../core/flounder":17}]},{},[21]);
