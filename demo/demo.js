@@ -53,7 +53,7 @@ let buildData = function()
 
 
 /**
- * vanilla multi-Flounder with tags attached to an input
+ * Vanilla from Input (sections, multiple tags, built from selector string)
  */
 new Flounder( '.vanilla--input--tags', {
 
@@ -97,7 +97,7 @@ new Flounder( '.vanilla--input--tags', {
 
 
 /**
- * vanilla Flounder attached to an input
+ * Vanilla from Input (multiple, no tags, dynamic options, default index, built from element)
  */
 new Flounder( document.getElementById( 'vanilla--input' ), {
     defaultIndex         : 2,
@@ -106,11 +106,8 @@ new Flounder( document.getElementById( 'vanilla--input' ), {
 
     multiple            : true,
 
-    multipleTags        : false,
-
     onInit              : function(){ this.data = buildData(); },
 
-    // onSelect            : function(){ console.log( 'moon' ); },
     onSelect            : function( e )
     {
         let selected    = _slice.call( this.refs.select.selectedOptions );
@@ -135,7 +132,7 @@ new Flounder( document.getElementById( 'vanilla--input' ), {
 
 
 /**
- * vanilla Flounder attached pre built select box
+ * Vanilla from Select (default value, custom classes, built from element)
  */
 new Flounder( document.getElementById( 'vanilla--select' ), {
     defaultValue    : '1',
@@ -150,7 +147,7 @@ new Flounder( document.getElementById( 'vanilla--select' ), {
 
 
 /**
- * react multi-Flounder with tags attached to an div
+ * React from Div (multiple, tags, placeholder, built from element)
  */
 ReactDOM.render( React.createElement( FlounderReact, {
     placeholder         : 'placeholders!',
@@ -166,7 +163,7 @@ ReactDOM.render( React.createElement( FlounderReact, {
 
 
 /**
- * react Flounder attached to an div
+ * React from Span (default value, built from element)
  */
 ReactDOM.render( React.createElement( FlounderReact, {
     defaultValue        : 'tag',
@@ -178,19 +175,12 @@ ReactDOM.render( React.createElement( FlounderReact, {
 
 
 /**
- * react multi-Flounder with description attached to div
+ * React from Div (multiple, description, default index, elements disabled, built from element)
  */
 ReactDOM.render( React.createElement( FlounderReact, {
     defaultIndex        : 3,
 
     multiple            : true,
-
-    multipleTags        : false,
-
-    onSelect            : function()
-    {
-        console.log( this.setByIndex( 0 ) );
-    },
 
     onInit              : function()
     {
@@ -217,7 +207,7 @@ requirejs.config( {
 } );
 
 /**
- * AMD Flounder with descriptions attached to a div
+ * AMD required vanilla from Div (description, placeholder, built from string)
  */
 requirejs( [ 'flounder' ], function( Flounder )
 {
@@ -243,7 +233,7 @@ requirejs( [ 'flounder' ], function( Flounder )
 
 
 /**
- * AMD Flounder with descriptions attached to a select
+ * AMD required vanilla from select (loadFromUrl, placeholder, built from element)
  */
 requirejs( [ 'flounder' ], function( Flounder )
 {
@@ -276,5 +266,49 @@ requirejs( [ 'flounder' ], function( Flounder )
         el.flounder.destroy();
     } );
 } );
+
+
+µ( function()
+    {
+        /**
+         * Microbe plugin from Div (multiple, microbe wrapper, loads JSON onFirstTouch)
+         */
+        µ( '#microbe--multiple--desc' ).flounder( {
+
+            onFirstTouch : function()
+            {
+                var self = this;
+
+                this.data = this.loadDataFromUrl( './dummyData.json', function( data )
+                {
+                    setTimeout( function(){ self.rebuild( data.dummyData ) }, 10000 );
+                } );
+
+                this.rebuild( this.data );
+            },
+
+            multiple            : true
+         } );
+
+
+        /**
+         * jQuery plugin from Div (search, placeholder, jquery wrapper, loadData onInit)
+         */
+         $( '#jquery--div' ).flounder( {
+
+            onInit               : function()
+            {
+                var self = this;
+
+                this.data = this.buildFromUrl( './dummyData.json',
+                                        function( _d ){ self.data =_d.dummyData } );
+            },
+
+            placeholder         : 'placeholders!',
+
+            search              : true
+        } );
+    } );
+
 
 export default { React, Component, ReactDOM, FlounderReact, Flounder };

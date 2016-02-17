@@ -15,11 +15,11 @@
     </head>
     <body>
         <div>
-            <span class="demo--label">Vanilla from Input (sections, unique classes, default value, built from string)</span>
+            <span class="demo--label">Vanilla from Input (sections, multiple tags, built from selector string)</span>
             <input class="vanilla--input--tags" id="vanilla--input--tags" type="text">
         </div>
         <div>
-            <span class="demo--label">Vanilla from Input (multiple, no tags, dynamic options, default index, built from element)</span>
+            <span class="demo--label">Vanilla from Input (multiple, dynamic options, default index, built from element)</span>
             <input id="vanilla--input" type="text">
         </div>
         <div>
@@ -53,24 +53,24 @@
             <span style="display:inline-block;" id="react--span"></span>
         </div>
         <div>
-            <span class="demo--label">React from Div (multiple, no-tags, desciption, default index, built from element)</span>
+            <span class="demo--label">React from Div (multiple, desciption, default index, elements disabled, built from element)</span>
             <div style="display:inline-block;" id="react--multiple--desc"></div>
         </div>
         <div>
-            <span class="demo--label">AMD required vanilla from Div (desciption, placeholder, built from string)</span>
+            <span class="demo--label">AMD required vanilla from Div (description, placeholder, built from string)</span>
             <div style="display:inline-block;" id="AMD--desc"></div>
         </div>
         <div>
-            <span class="demo--label">AMD required vanilla from select (onSelect, placeholder, built from element)</span>
+            <span class="demo--label">AMD required vanilla from select (loadFromUrl, placeholder, built from element)</span>
             <select id="AMD--select" class="test--class--one  test--class--two">
             </select>
         </div>
         <div>
-            <span class="demo--label">Microbe plugin from Div (multiple, no-tags, microbe, loads JSON onFirstTouch)</span>
+            <span class="demo--label">Microbe plugin from Div (multiple, microbe wrapper, loads JSON onFirstTouch)</span>
             <div style="display:inline-block;" id="microbe--multiple--desc"></div>
         </div>
         <div>
-            <span class="demo--label">jQuery plugin from Div (search, placeholder, jquery loadData onInit)</span>
+            <span class="demo--label">jQuery plugin from Div (search, placeholder, jquery wrapper, loadData onInit)</span>
             <div style="display:inline-block;" id="jquery--div"></div>
         </div>
 
@@ -82,46 +82,5 @@
         <script type="text/javascript" src="../dist/flounder.microbe.js"></script>
         <script type="text/javascript" data-main="../demo/demoDist.js" src="./vendor/require.js"></script>
 
-        <script type="text/javascript">
-            /**
-             * microbe multi-Flounder with descriptions attached to an input
-             */
-            µ( '#microbe--multiple--desc' ).flounder( {
-
-                onFirstTouch : function()
-                {
-                    var self = this;
-
-                    this.data = this.loadDataFromUrl( './dummyData.json', function( data )
-                    {
-                        setTimeout( function(){ self.rebuild( data.dummyData ) }, 10000 );
-                    } );
-
-                    this.rebuild( this.data );
-                },
-
-                multiple            : true,
-
-                multipleTags        : false
-             } );
-
-
-            /**
-             * jquery Flounder attached to a div
-             */
-             $( '#jquery--div' ).flounder( {
-
-                onInit               : function()
-                {
-                    var self = this;
-
-                    this.data = this.buildFromUrl( './dummyData.json',
-                                            function( _d ){ self.data =_d.dummyData } );
-                },
-
-                placeholder         : 'placeholders!',
-
-                search              : true
-            } );</script>
     </body>
 </html>
