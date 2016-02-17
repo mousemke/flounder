@@ -139,10 +139,10 @@ module.exports = function( Microbe )
                     {
                         if ( _val.status !== 200 )
                         {
-                            _cb( {
+                            _cb({
                                 status      : _val.status,
                                 statusText  : _val.statusText
-                            } );
+                            });
                         }
                         return _responses;
                     }
@@ -4014,7 +4014,7 @@ var utils = {
     },
 
     /**
-     * ## attachAttribute
+     * ## attachAttributes
      *
      * attached data attributes and others (seperately)
      *
@@ -4024,6 +4024,8 @@ var utils = {
      * @return _Void_
      */
     attachAttributes: function attachAttributes(_el, _elObj) {
+        _elObj = _elObj || {};
+
         for (var att in _elObj) {
             if (att.indexOf('data-') !== -1) {
                 _el.setAttribute(att, _elObj[att]);
@@ -4134,7 +4136,7 @@ var utils = {
     },
 
     /* placeholder for microbe http module */
-    http: {},
+    http: false,
 
     /**
      * ## iosVersion
@@ -4189,7 +4191,7 @@ var utils = {
     removeClass: function removeClass(el, _class) {
         if (typeof _class !== 'string' && _class.length) {
             _class.forEach(function (_c) {
-                this.removeClass(_el, _c);
+                utils.removeClass(el, _c);
             });
 
             return true;
@@ -4199,7 +4201,9 @@ var utils = {
         var baseClassLength = baseClass.length;
         var classLength = _class.length;
 
-        if (baseClass.slice(0, classLength + 1) === _class + ' ') {
+        if (baseClass === _class) {
+            baseClass = '';
+        } else if (baseClass.slice(0, classLength + 1) === _class + ' ') {
             baseClass = baseClass.slice(classLength + 1, baseClassLength);
         } else if (baseClass.slice(baseClassLength - classLength - 1, baseClassLength) === ' ' + _class) {
             baseClass = baseClass.slice(0, baseClassLength - classLength - 1);
@@ -4278,7 +4282,7 @@ module.exports = exports['default'];
 },{"./classes":14,"microbejs/src/modules/http":1}],20:[function(require,module,exports){
 'use strict';
 
-module.exports = '0.6.0';
+module.exports = '0.6.1';
 
 },{}],21:[function(require,module,exports){
 
@@ -4293,9 +4297,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'd
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-var _srcCoreFlounderJsx = require('../src/core/flounder.jsx');
+var _srcCoreFlounder = require('../src/core/flounder');
 
-var _srcCoreFlounderJsx2 = _interopRequireDefault(_srcCoreFlounderJsx);
+var _srcCoreFlounder2 = _interopRequireDefault(_srcCoreFlounder);
 
 var _srcCoreUtils = require('../src/core/utils');
 
@@ -4318,7 +4322,7 @@ var nativeSlice = Array.prototype.slice;
 var Tests = function Tests() {
     _classCallCheck(this, Tests);
 
-    window.Flounder = _srcCoreFlounderJsx2['default'];
+    window.Flounder = _srcCoreFlounder2['default'];
 
     return this;
 };
@@ -4328,14 +4332,14 @@ var Tests = function Tests() {
 _srcCoreUtils2['default'].extendClass(Tests, _srcCoreUtils2['default']);
 var tests = new Tests();
 
-(0, _unitConstructorTest2['default'])(_srcCoreFlounderJsx2['default']);
-(0, _unitFlounderTest2['default'])(_srcCoreFlounderJsx2['default']);
-(0, _unitUtilsTest2['default'])(_srcCoreFlounderJsx2['default']);
+(0, _unitConstructorTest2['default'])(_srcCoreFlounder2['default']);
+(0, _unitFlounderTest2['default'])(_srcCoreFlounder2['default']);
+(0, _unitUtilsTest2['default'])(_srcCoreFlounder2['default']);
 
 exports['default'] = tests;
 module.exports = exports['default'];
 
-},{"../src/core/flounder.jsx":17,"../src/core/utils":19,"./unit/constructorTest":22,"./unit/flounderTest":23,"./unit/utilsTest":24}],22:[function(require,module,exports){
+},{"../src/core/flounder":17,"../src/core/utils":19,"./unit/constructorTest":22,"./unit/flounderTest":23,"./unit/utilsTest":24}],22:[function(require,module,exports){
 /* global document, QUnit  */
 'use strict';
 
@@ -4401,7 +4405,7 @@ var _srcCoreClassesJs = require('../../src/core/classes.js');
 var _srcCoreClassesJs2 = _interopRequireDefault(_srcCoreClassesJs);
 
 var tests = function tests(Flounder) {
-    QUnit.module('flounder.jsx');
+    QUnit.module('flounder.js');
 
     /*
      * ## arrayOfFlounders tests
@@ -4740,52 +4744,265 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
 var _srcCoreUtilsJs = require('../../src/core/utils.js');
 
 var _srcCoreUtilsJs2 = _interopRequireDefault(_srcCoreUtilsJs);
 
 var tests = function tests(Flounder) {
-    QUnit.module('utils.jsx');
+    QUnit.module('utils.js');
 
     /*
      * ## addClass tests
      *
      * @test exists
-     * @test multiple targets returns an array
-     * @test of flounders
+     * @test adds an array of classes
+     * @test adds a single class
+     * @test only adds a class once
      */
     QUnit.test('addClass', function (assert) {
         var body = document.body;
+        _srcCoreUtilsJs2['default'].removeClass(body, ['brains', 'moon', 'doge']);
         assert.ok(_srcCoreUtilsJs2['default'].addClass, 'exists');
 
         _srcCoreUtilsJs2['default'].addClass(body, ['moon', 'doge']);
-        assert.equal(document.body.className, 'moon  doge', 'adds an array of classes');
+        assert.equal(body.className, 'moon  doge', 'adds an array of classes');
 
         _srcCoreUtilsJs2['default'].addClass(body, 'brains');
-        assert.equal(document.body.className, 'moon  doge  brains', 'adds a single class');
+        assert.equal(body.className, 'moon  doge  brains', 'adds a single class');
 
         _srcCoreUtilsJs2['default'].addClass(body, 'brains');
-        assert.equal(document.body.className, 'moon  doge  brains', 'only adds a class once');
+        assert.equal(body.className, 'moon  doge  brains', 'only adds a class once');
     });
 
-    // /*
-    //  * ## addClass tests
-    //  *
-    //  * @test exists
-    //  * @test multiple targets returns an array
-    //  * @test of flounders
-    //  */
-    // QUnit.test( 'addClass', function( assert )
-    // {
-    //     let body = document.body;
-    //     assert.ok( utils.addClass, 'exists' );
+    /*
+     * ## attachAttributes tests
+     *
+     * @test exists
+     * @test adds a data-attribute
+     * @test adds a property
+     * @test adds multiple attributes
+     */
+    QUnit.test('attachAttributes', function (assert) {
+        var body = document.body;
+        assert.ok(_srcCoreUtilsJs2['default'].attachAttributes, 'exists');
 
-    //     utils.addClass( body, 'moon' );
-    //     assert.equal( document.body.className, 'moon', 'adds a class' );
+        _srcCoreUtilsJs2['default'].attachAttributes(body, { 'data-moon': 'doge' });
+        assert.equal(body.getAttribute('data-moon'), 'doge', 'adds a data-attribute');
 
-    //     utils.addClass( body, [ 'moon', 'doge' ] );
-    //     assert.equal( document.body.className, 'moon  doge', 'adds an array of classes' );
-    // } );
+        _srcCoreUtilsJs2['default'].attachAttributes(body, { 'moon': 'doge' });
+        assert.equal(body.moon, 'doge', 'adds a property');
+
+        _srcCoreUtilsJs2['default'].attachAttributes(body, { 'data-moon': 'moon', moon: 'maymay' });
+        assert.ok(body.getAttribute('data-moon') === 'moon' && body.moon === 'maymay', 'adds multiple attributes');
+    });
+
+    /*
+     * ## constructElement tests
+     *
+     * @test exists
+     * @test creates an element
+     * @test adds a data-attribute
+     * @test adds a property
+     */
+    QUnit.test('constructElement', function (assert) {
+        var newEl = undefined;
+
+        assert.ok(_srcCoreUtilsJs2['default'].constructElement, 'exists');
+
+        newEl = _srcCoreUtilsJs2['default'].constructElement({});
+        assert.equal(newEl.nodeType, 1, 'creates an element');
+
+        newEl = _srcCoreUtilsJs2['default'].constructElement({ 'data-moon': 'moon', moon: 'maymay' });
+
+        assert.equal(newEl.getAttribute('data-moon'), 'moon', 'adds a data-attribute');
+        assert.equal(newEl.moon, 'maymay', 'adds a property');
+    });
+
+    /*
+     * ## extendClass tests
+     *
+     * @test exists
+     * @test extends a class with a property
+     * @test extends a class with a function
+     * @test adds a multiple objects
+     */
+    QUnit.test('extendClass', function (assert) {
+        var Test = function Test(props) {
+            _classCallCheck(this, Test);
+        };
+
+        assert.ok(_srcCoreUtilsJs2['default'].extendClass, 'exists');
+
+        _srcCoreUtilsJs2['default'].extendClass(Test, { moon: 'doge' });
+
+        var test = new Test();
+        assert.equal(test.moon, 'doge', 'extends a class with a property');
+        var func = function func() {
+            return 'doge';
+        };
+
+        _srcCoreUtilsJs2['default'].extendClass(Test, { m: func });
+        assert.equal(test.m, func, 'extends a class with a function');
+
+        _srcCoreUtilsJs2['default'].extendClass(Test, { a: 1 }, { b: 2 }, { c: 3 });
+        assert.ok(test.a === 1 && test.b === 2 && test.c === 3, 'adds a multiple objects');
+    });
+
+    /*
+     * ## escapeHTML tests
+     *
+     * @test exists
+     * @test escapes an html string
+     */
+    QUnit.test('escapeHTML', function (assert) {
+        assert.ok(_srcCoreUtilsJs2['default'].escapeHTML, 'exists');
+
+        var html = '<div id="qunit-fixture"></div>';
+
+        var escaped = _srcCoreUtilsJs2['default'].escapeHTML(html);
+        assert.equal(escaped, '&lt;div id=&quot;qunit-fixture&quot;&gt;&lt;/div&gt;', 'escapes an html string');
+    });
+
+    /*
+     * ## getElWidth tests
+     *
+     * @test exists
+     * @test correctly grabs an element's width
+     */
+    QUnit.test('getElWidth', function (assert) {
+        assert.ok(_srcCoreUtilsJs2['default'].getElWidth, 'exists');
+
+        var body = document.body;
+        var bodyWidth = _srcCoreUtilsJs2['default'].getElWidth(body);
+        var style = getComputedStyle(body);
+
+        var vanillaBodyWidth = body.offsetWidth + parseInt(style['margin-left']) + parseInt(style['margin-right']);
+
+        assert.equal(bodyWidth, vanillaBodyWidth, 'correctly grabs an element\'s width');
+    });
+
+    /*
+     * ## hasClass tests
+     *
+     * @test exists
+     * @test correctly grabs an element's width
+     */
+    QUnit.test('hasClass', function (assert) {
+        assert.ok(_srcCoreUtilsJs2['default'].hasClass, 'exists');
+
+        var body = document.body;
+
+        _srcCoreUtilsJs2['default'].addClass(body, 'mooney-moon');
+        var hasClassBool = _srcCoreUtilsJs2['default'].hasClass(body, 'mooney-moon');
+        assert.equal(hasClassBool, true, 'correctly detects present class');
+
+        _srcCoreUtilsJs2['default'].removeClass(body, 'mooney-moon');
+        hasClassBool = _srcCoreUtilsJs2['default'].hasClass(body, 'mooney-moon');
+        assert.equal(hasClassBool, false, 'correctly detects missing class');
+    });
+
+    /*
+     * ## http tests
+     *
+     * @test exists
+     */
+    QUnit.test('http', function (assert) {
+        assert.ok(_srcCoreUtilsJs2['default'].http, 'exists');
+    });
+
+    /*
+     * ## iosVersion tests
+     *
+     * @test exists
+     */
+    QUnit.test('iosVersion', function (assert) {
+        assert.ok(_srcCoreUtilsJs2['default'].iosVersion, 'exists');
+    });
+
+    /*
+     * ## removeAllChildren tests
+     *
+     * @test exists
+     * @test all children removed
+     */
+    QUnit.test('removeAllChildren', function (assert) {
+        assert.ok(_srcCoreUtilsJs2['default'].removeAllChildren, 'exists');
+
+        var body = document.body;
+        var testDiv = document.createElement('DIV');
+        body.appendChild(testDiv);
+
+        var div = undefined;
+        for (var i = 0, lenI = 10; i < lenI; i++) {
+            div = document.createElement('DIV');
+            testDiv.appendChild(div);
+        }
+
+        _srcCoreUtilsJs2['default'].removeAllChildren(testDiv);
+        assert.equal(testDiv.children.length, 0, 'all children removed');
+        body.removeChild(testDiv);
+    });
+
+    /*
+     * ## removeClass tests
+     *
+     * @test exists
+     * @test removes an array of classes
+     * @test removes a single class
+     */
+    QUnit.test('removeClass', function (assert) {
+        window.utils = _srcCoreUtilsJs2['default'];
+        var qunit = document.querySelector('#qunit');
+
+        assert.ok(_srcCoreUtilsJs2['default'].removeClass, 'exists');
+
+        _srcCoreUtilsJs2['default'].addClass(qunit, ['brains', 'moon', 'doge']);
+        _srcCoreUtilsJs2['default'].removeClass(qunit, ['moon', 'doge']);
+        assert.ok(qunit.className.indexOf('moon') === -1 && qunit.className.indexOf('doge') === -1, 'removes an array of classes');
+
+        _srcCoreUtilsJs2['default'].removeClass(qunit, 'brains');
+        assert.equal(qunit.className.indexOf('brains'), -1, 'removes a single class');
+    });
+
+    /*
+     * ## scrollTo tests
+     *
+     * @test exists
+     */
+    QUnit.test('scrollTo', function (assert) {
+        assert.ok(_srcCoreUtilsJs2['default'].scrollTo, 'exists');
+    });
+
+    /*
+     * ## setPlatform tests
+     *
+     * @test exists
+     */
+    QUnit.test('setPlatform', function (assert) {
+        assert.ok(_srcCoreUtilsJs2['default'].setPlatform, 'exists');
+    });
+
+    /*
+     * ## toggleClass tests
+     *
+     * @test exists
+     * @test adds a class
+     * @test removes a class
+     */
+    QUnit.test('toggleClass', function (assert) {
+        var body = document.body;
+        _srcCoreUtilsJs2['default'].removeClass(body, 'doge');
+
+        assert.ok(_srcCoreUtilsJs2['default'].toggleClass, 'exists');
+
+        _srcCoreUtilsJs2['default'].toggleClass(body, 'doge');
+        assert.equal(_srcCoreUtilsJs2['default'].hasClass(body, 'doge'), true, 'adds a class');
+
+        _srcCoreUtilsJs2['default'].toggleClass(body, 'doge');
+        assert.equal(_srcCoreUtilsJs2['default'].hasClass(body, 'doge'), false, 'removes a class');
+    });
 };
 
 exports['default'] = tests;

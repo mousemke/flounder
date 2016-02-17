@@ -25,37 +25,41 @@ var licenceLong     = '/*!\n' +
 var licenceShort    = '/*! Flounder v' + _package.version + ' | (c) ' + ( 2015 === year ? year : '2015-' + year ) + ' Sociomantic Labs | https://github.com/sociomantic-tsunami/flounder/license */\n';
 
 
-function build( folder, filename )
+function build( folder, filename, ext )
 {
-    browserifyFiles( folder, filename );
-    min( folder, filename );
+    browserifyFiles( folder, filename, ext );
+    min( folder, filename, ext );
 }
 
 
-function browserifyFiles( folder, filename )
+function browserifyFiles( folder, filename, ext )
 {
-    browserify( './src/' + folder + '/' + filename + '.jsx' )
+    ext = ext || '.js';
+
+    browserify( './src/' + folder + '/' + filename + ext )
         .transform( babelify, { stage : 0 } )
         .bundle()
-        .pipe( fs.createWriteStream( __dirname + '/dist/' + filename + '.js' ) )
+        .pipe( fs.createWriteStream( __dirname + '/dist/' + filename + ext ) )
         .on( 'finish', function()
         {
-            gulp.src( './dist/' + filename + '.js' )
+            gulp.src( './dist/' + filename + ext )
                 .pipe( header( licenceLong ) )
                 .pipe( gulp.dest( './dist/' ) )
         } );
 };
 
 
-function min( folder, filename )
+function min( folder, filename, ext )
 {
-    browserify( './src/' + folder + '/' + filename + '.jsx' )
+    ext = ext || '.js';
+
+    browserify( './src/' + folder + '/' + filename + ext )
         .transform( babelify, { stage : 0 } )
         .bundle()
-        .pipe( fs.createWriteStream( __dirname + '/dist/' + filename + '.min.js' ) )
+        .pipe( fs.createWriteStream( __dirname + '/dist/' + filename + '.min' + ext ) )
         .on( 'finish', function()
         {
-            gulp.src( './dist/' + filename + '.min.js' )
+            gulp.src( './dist/' + filename + '.min' + ext )
                 .pipe( uglify() )
                 .pipe( header( licenceShort ) )
                 .pipe( gulp.dest( './dist/' ) )
@@ -89,7 +93,7 @@ gulp.task( 'vanilla', function()
 
 gulp.task( 'react', function()
 {
-    build( 'wrappers', 'flounder.react' );
+    build( 'wrappers', 'flounder.react', '.jsx' );
 } );
 
 

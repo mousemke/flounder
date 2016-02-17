@@ -4,7 +4,7 @@ import classes from '../../src/core/classes.js';
 
 let tests = function( Flounder )
 {
-    QUnit.module( 'flounder.jsx' );
+    QUnit.module( 'flounder.js' );
 
 
     /*

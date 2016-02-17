@@ -4,7 +4,7 @@
 
 import React, { Component } from 'react';
 import ReactDOM             from 'react-dom';
-import Flounder             from '../core/flounder.jsx';
+import Flounder             from '../core/flounder';
 import classes              from '../core/classes';
 import utils                from '../core/utils';
 import Search               from '../core/search';

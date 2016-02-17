@@ -41,7 +41,7 @@ const utils = {
 
 
     /**
-     * ## attachAttribute
+     * ## attachAttributes
      *
      * attached data attributes and others (seperately)
      *
@@ -52,6 +52,8 @@ const utils = {
      */
     attachAttributes : function( _el, _elObj )
     {
+        _elObj = _elObj || {};
+
         for ( let att in _elObj )
         {
             if ( att.indexOf( 'data-' ) !== -1 )
@@ -185,7 +187,7 @@ const utils = {
 
 
     /* placeholder for microbe http module */
-    http : {},
+    http : false,
 
 
     /**
@@ -244,7 +246,7 @@ const utils = {
         {
             _class.forEach( function( _c )
             {
-                this.removeClass( _el, _c );
+                utils.removeClass( el, _c );
             } );
 
             return true;
@@ -254,7 +256,11 @@ const utils = {
         let baseClassLength = baseClass.length;
         let classLength     = _class.length;
 
-        if ( baseClass.slice( 0, classLength + 1 ) === _class + ' ' )
+        if ( baseClass === _class )
+        {
+            baseClass = '';
+        }
+        else if ( baseClass.slice( 0, classLength + 1 ) === _class + ' ' )
         {
             baseClass = baseClass.slice( classLength + 1, baseClassLength );
         }
