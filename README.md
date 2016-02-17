@@ -1,4 +1,4 @@
-Flounder.js 0.6.0
+Flounder.js 0.6.1
 =================
 
 [![Flounder build status](https://travis-ci.org/sociomantic-tsunami/flounder.svg)](https://travis-ci.org)
@@ -316,8 +316,7 @@ We gladly accept and review any pull-requests. Feel free! :heart:
 Otherwise, if you just want to talk, we are very easy to get a hold of!
 
 + Slack:          [flounder.slack.com](https://flounder.slack.com)
-+ Twitter:        <a href="https://www.twitter.com/microbejs" target="_blank">@microbejs</a>
-+ Email:          [hello@flounderjs.com](hello@flounderjs.com)
++ Email:          [flounder@knoblau.ch](mailto:flounder@knoblau.ch)
 + Web:            <a href="http://flounderjs.com/" target="_blank">http://flounderjs.com/</a>
 + Git:            <a href="https://github.com/sociomantic-tsunami/flounder/" target="_blank">https://github.com/sociomantic-tsunami/flounder/</a>
 
@@ -327,7 +326,7 @@ This project adheres to the [Contributor Covenant](http://contributor-covenant.o
 
 [Flounder - Code of Conduct](https://github.com/sociomantic-tsunami/flounder/blob/master/CODE_OF_CONDUCT.md)
 
-Need to report something? [report@flounderjs.com](report@flounderjs.com)
+Need to report something? [flounder@knoblau.ch](mailto:flounder@knoblau.ch)
 
 
 Example
@@ -430,6 +429,17 @@ See more examples on the [demo page](./demo/index.html)
 
 Change Log
 ==========
+
+0.6.1
+-----
+
++ demo
+    + updates and cleanup
+
++ documentation
+    + repo url update
+    + general updates and clean up
+
 
 0.6.0
 -----

@@ -11,7 +11,7 @@ var now             = new Date();
 var year            = now.getUTCFullYear();
 
 var licenceLong     = '/*!\n' +
-                      ' * Flounder JavaScript Styleable Selectbox v' + _package.version + '\n' +
+                      ' * Flounder JavaScript Stylable Selectbox v' + _package.version + '\n' +
                       ' * ' + _package.homepage + '\n' +
                       ' *\n' +
                       ' * Copyright ' + ( 2015 === year ? year : '2015-' + year ) + ' Sociomantic Labs and other contributors\n' +
