@@ -430,12 +430,19 @@ See more examples on the [demo page](./demo/index.html)
 Change Log
 ==========
 
+0.6.2
+-----
+
++ tests
+    + version test completed
+
+
 0.6.1
 -----
 
 + tests
     + utils tests completed
-    
+
 + demo
     + updates and cleanup
 
