@@ -212,9 +212,6 @@ let tests = function( Flounder )
             assert.equal( e, true, 'errors are handled correctly' );
             errorTest();
         } );
-
-        buildTest( 'Speed depends on network traffic.' );
-    });
     } );
 
 

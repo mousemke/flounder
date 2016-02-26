@@ -139,10 +139,10 @@ module.exports = function( Microbe )
                     {
                         if ( _val.status !== 200 )
                         {
-                            _cb({
+                            _cb( {
                                 status      : _val.status,
                                 statusText  : _val.statusText
-                            });
+                            } );
                         }
                         return _responses;
                     }
@@ -4910,6 +4910,32 @@ var tests = function tests(Flounder) {
      */
     QUnit.test('http', function (assert) {
         assert.ok(_srcCoreUtilsJs2['default'].http, 'exists');
+
+        var getTest = assert.async();
+        _srcCoreUtilsJs2['default'].http({ url: './httpTest.html', method: 'GET' }).then(function (data) {
+            assert.equal(data, 'moon', 'page correctly retrieved');
+            getTest();
+        });
+
+        var parameterTest = assert.async();
+        _srcCoreUtilsJs2['default'].http({
+            url: './httpTest.html',
+            method: 'GET',
+            headers: {
+                Accept: 'text/plain'
+            },
+            async: true
+        }).then(function (data) {
+            assert.equal(data, 'moon', 'parameters are recieved correctly');
+            parameterTest();
+        });
+
+        var errorTest = assert.async();
+        _srcCoreUtilsJs2['default'].http({ url: './httpTest.hml' })['catch'](function (e) {
+            e = e instanceof Error;
+            assert.equal(e, true, 'errors are handled correctly');
+            errorTest();
+        });
     });
 
     /*
