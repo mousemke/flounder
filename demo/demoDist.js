@@ -23601,7 +23601,7 @@ module.exports = exports['default'];
 },{"./classes":173,"microbejs/src/modules/http":3}],179:[function(require,module,exports){
 'use strict';
 
-module.exports = '0.6.1';
+module.exports = '0.6.2';
 
 },{}],180:[function(require,module,exports){
 

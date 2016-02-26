@@ -1065,6 +1065,74 @@ rawAsap.makeRequestCallFromTimer = makeRequestCallFromTimer;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],12:[function(require,module,exports){
+module.exports={
+  "name": "flounder",
+  "version": "0.6.2",
+  "author": "Mouse Braun <mouse@knoblau.ch>",
+  "description": "a native friendly dropdown menu",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sociomantic-tsunami/flounder.git"
+  },
+  "scripts": {
+    "build": "./node_modules/.bin/gulp && npm test && echo \"All builds complete and tests passed.\"",
+    "amd": "./node_modules/.bin/gulp amd",
+    "buildTests": "./node_modules/.bin/gulp buildTests",
+    "demo": "./node_modules/.bin/gulp demo",
+    "gulp": "./node_modules/.bin/gulp",
+    "jquery": "./node_modules/.bin/gulp jquery",
+    "microbe": "./node_modules/.bin/gulp microbe",
+    "react": "./node_modules/.bin/gulp react",
+    "test": "node --harmony ./scripts/nightmare.js",
+    "vanilla": "./node_modules/.bin/gulp vanilla",
+    "versionBump": "node ./scripts/version_bump.js"
+  },
+  "devDependencies": {
+    "babelify": "^6.3.0",
+    "browserify": "^11.2.0",
+    "connect": "^3.4.0",
+    "gulp": "^3.9.0",
+    "gulp-header": "^1.7.1",
+    "gulp-uglify": "^1.5.1",
+    "microbejs": "^0.4.20",
+    "nightmare": "^2.1.1",
+    "promise": "^7.1.1",
+    "qunitjs": "^1.20.0",
+    "react": "^0.14.2",
+    "react-dom": "^0.14.2",
+    "requirejs": "^2.1.22",
+    "serve-static": "^1.10.0",
+    "vo": "^1.0.3"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sociomantic-tsunami/flounder/issues"
+  },
+  "files": [
+    "CODE_OF_CONDUCT.md",
+    "older_changes.md",
+    "README.md",
+    "src/",
+    "dist/"
+  ],
+  "homepage": "https://github.com/sociomantic-tsunami/flounder",
+  "main": "./dist/flounder.js",
+  "keywords": [
+    "select2",
+    "dropdown",
+    "plugin",
+    "react",
+    "component",
+    "ui",
+    "frontend",
+    "select",
+    "box",
+    "flounder",
+    "sociomantic"
+  ]
+}
+
+},{}],13:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -1701,7 +1769,7 @@ var api = {
 exports['default'] = api;
 module.exports = exports['default'];
 
-},{"./classes":14,"./defaults":15,"./utils":19}],13:[function(require,module,exports){
+},{"./classes":15,"./defaults":16,"./utils":20}],14:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -2148,7 +2216,7 @@ var build = {
 exports['default'] = build;
 module.exports = exports['default'];
 
-},{"./classes":14,"./defaults":15,"./utils":19}],14:[function(require,module,exports){
+},{"./classes":15,"./defaults":16,"./utils":20}],15:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -2186,7 +2254,7 @@ var classes = {
 exports['default'] = classes;
 module.exports = exports['default'];
 
-},{}],15:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -2409,7 +2477,7 @@ var defaults = {
 exports['default'] = defaults;
 module.exports = exports['default'];
 
-},{"./classes":14}],16:[function(require,module,exports){
+},{"./classes":15}],17:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -3092,7 +3160,7 @@ var events = {
 exports['default'] = events;
 module.exports = exports['default'];
 
-},{"./classes":14,"./search":18,"./utils":19}],17:[function(require,module,exports){
+},{"./classes":15,"./search":19,"./utils":20}],18:[function(require,module,exports){
 
 /* jshint globalstrict: true */
 'use strict';
@@ -3671,7 +3739,7 @@ _utils2['default'].extendClass(Flounder, _api2['default'], _build2['default'], _
 exports['default'] = Flounder;
 module.exports = exports['default'];
 
-},{"./api":12,"./build":13,"./classes":14,"./defaults":15,"./events":16,"./search":18,"./utils":19,"./version":20}],18:[function(require,module,exports){
+},{"./api":13,"./build":14,"./classes":15,"./defaults":16,"./events":17,"./search":19,"./utils":20,"./version":21}],19:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -3964,7 +4032,7 @@ var Sole = (function () {
 exports.Sole = Sole;
 exports['default'] = Sole;
 
-},{}],19:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -4279,12 +4347,12 @@ var utils = {
 exports['default'] = utils;
 module.exports = exports['default'];
 
-},{"./classes":14,"microbejs/src/modules/http":1}],20:[function(require,module,exports){
+},{"./classes":15,"microbejs/src/modules/http":1}],21:[function(require,module,exports){
 'use strict';
 
-module.exports = '0.6.1';
+module.exports = '0.6.2';
 
-},{}],21:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 
 /* jshint globalstrict: true */
 'use strict';
@@ -4317,7 +4385,9 @@ var _unitUtilsTest = require('./unit/utilsTest');
 
 var _unitUtilsTest2 = _interopRequireDefault(_unitUtilsTest);
 
-var nativeSlice = Array.prototype.slice;
+var _unitVersionTest = require('./unit/versionTest');
+
+var _unitVersionTest2 = _interopRequireDefault(_unitVersionTest);
 
 var Tests = function Tests() {
     _classCallCheck(this, Tests);
@@ -4334,12 +4404,13 @@ var tests = new Tests();
 
 (0, _unitConstructorTest2['default'])(_srcCoreFlounder2['default']);
 (0, _unitFlounderTest2['default'])(_srcCoreFlounder2['default']);
-(0, _unitUtilsTest2['default'])(_srcCoreFlounder2['default']);
+(0, _unitUtilsTest2['default'])(_srcCoreFlounder2['default'], _srcCoreUtils2['default']);
+(0, _unitVersionTest2['default'])(_srcCoreFlounder2['default']);
 
 exports['default'] = tests;
 module.exports = exports['default'];
 
-},{"../src/core/flounder":17,"../src/core/utils":19,"./unit/constructorTest":22,"./unit/flounderTest":23,"./unit/utilsTest":24}],22:[function(require,module,exports){
+},{"../src/core/flounder":18,"../src/core/utils":20,"./unit/constructorTest":23,"./unit/flounderTest":24,"./unit/utilsTest":25,"./unit/versionTest":26}],23:[function(require,module,exports){
 /* global document, QUnit  */
 'use strict';
 
@@ -4389,7 +4460,7 @@ var tests = function tests(Flounder) {
 exports['default'] = tests;
 module.exports = exports['default'];
 
-},{}],23:[function(require,module,exports){
+},{}],24:[function(require,module,exports){
 /* global document, QUnit  */
 
 'use strict';
@@ -4733,7 +4804,7 @@ var tests = function tests(Flounder) {
 exports['default'] = tests;
 module.exports = exports['default'];
 
-},{"../../src/core/classes.js":14}],24:[function(require,module,exports){
+},{"../../src/core/classes.js":15}],25:[function(require,module,exports){
 /* global document, QUnit  */
 
 'use strict';
@@ -4742,15 +4813,9 @@ Object.defineProperty(exports, '__esModule', {
     value: true
 });
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-var _srcCoreUtilsJs = require('../../src/core/utils.js');
-
-var _srcCoreUtilsJs2 = _interopRequireDefault(_srcCoreUtilsJs);
-
-var tests = function tests(Flounder) {
+var tests = function tests(Flounder, utils) {
     QUnit.module('utils.js');
 
     /*
@@ -4763,16 +4828,16 @@ var tests = function tests(Flounder) {
      */
     QUnit.test('addClass', function (assert) {
         var body = document.body;
-        _srcCoreUtilsJs2['default'].removeClass(body, ['brains', 'moon', 'doge']);
-        assert.ok(_srcCoreUtilsJs2['default'].addClass, 'exists');
+        utils.removeClass(body, ['brains', 'moon', 'doge']);
+        assert.ok(utils.addClass, 'exists');
 
-        _srcCoreUtilsJs2['default'].addClass(body, ['moon', 'doge']);
+        utils.addClass(body, ['moon', 'doge']);
         assert.equal(body.className, 'moon  doge', 'adds an array of classes');
 
-        _srcCoreUtilsJs2['default'].addClass(body, 'brains');
+        utils.addClass(body, 'brains');
         assert.equal(body.className, 'moon  doge  brains', 'adds a single class');
 
-        _srcCoreUtilsJs2['default'].addClass(body, 'brains');
+        utils.addClass(body, 'brains');
         assert.equal(body.className, 'moon  doge  brains', 'only adds a class once');
     });
 
@@ -4786,15 +4851,15 @@ var tests = function tests(Flounder) {
      */
     QUnit.test('attachAttributes', function (assert) {
         var body = document.body;
-        assert.ok(_srcCoreUtilsJs2['default'].attachAttributes, 'exists');
+        assert.ok(utils.attachAttributes, 'exists');
 
-        _srcCoreUtilsJs2['default'].attachAttributes(body, { 'data-moon': 'doge' });
+        utils.attachAttributes(body, { 'data-moon': 'doge' });
         assert.equal(body.getAttribute('data-moon'), 'doge', 'adds a data-attribute');
 
-        _srcCoreUtilsJs2['default'].attachAttributes(body, { 'moon': 'doge' });
+        utils.attachAttributes(body, { 'moon': 'doge' });
         assert.equal(body.moon, 'doge', 'adds a property');
 
-        _srcCoreUtilsJs2['default'].attachAttributes(body, { 'data-moon': 'moon', moon: 'maymay' });
+        utils.attachAttributes(body, { 'data-moon': 'moon', moon: 'maymay' });
         assert.ok(body.getAttribute('data-moon') === 'moon' && body.moon === 'maymay', 'adds multiple attributes');
     });
 
@@ -4809,12 +4874,12 @@ var tests = function tests(Flounder) {
     QUnit.test('constructElement', function (assert) {
         var newEl = undefined;
 
-        assert.ok(_srcCoreUtilsJs2['default'].constructElement, 'exists');
+        assert.ok(utils.constructElement, 'exists');
 
-        newEl = _srcCoreUtilsJs2['default'].constructElement({});
+        newEl = utils.constructElement({});
         assert.equal(newEl.nodeType, 1, 'creates an element');
 
-        newEl = _srcCoreUtilsJs2['default'].constructElement({ 'data-moon': 'moon', moon: 'maymay' });
+        newEl = utils.constructElement({ 'data-moon': 'moon', moon: 'maymay' });
 
         assert.equal(newEl.getAttribute('data-moon'), 'moon', 'adds a data-attribute');
         assert.equal(newEl.moon, 'maymay', 'adds a property');
@@ -4833,9 +4898,9 @@ var tests = function tests(Flounder) {
             _classCallCheck(this, Test);
         };
 
-        assert.ok(_srcCoreUtilsJs2['default'].extendClass, 'exists');
+        assert.ok(utils.extendClass, 'exists');
 
-        _srcCoreUtilsJs2['default'].extendClass(Test, { moon: 'doge' });
+        utils.extendClass(Test, { moon: 'doge' });
 
         var test = new Test();
         assert.equal(test.moon, 'doge', 'extends a class with a property');
@@ -4843,10 +4908,10 @@ var tests = function tests(Flounder) {
             return 'doge';
         };
 
-        _srcCoreUtilsJs2['default'].extendClass(Test, { m: func });
+        utils.extendClass(Test, { m: func });
         assert.equal(test.m, func, 'extends a class with a function');
 
-        _srcCoreUtilsJs2['default'].extendClass(Test, { a: 1 }, { b: 2 }, { c: 3 });
+        utils.extendClass(Test, { a: 1 }, { b: 2 }, { c: 3 });
         assert.ok(test.a === 1 && test.b === 2 && test.c === 3, 'adds a multiple objects');
     });
 
@@ -4857,11 +4922,11 @@ var tests = function tests(Flounder) {
      * @test escapes an html string
      */
     QUnit.test('escapeHTML', function (assert) {
-        assert.ok(_srcCoreUtilsJs2['default'].escapeHTML, 'exists');
+        assert.ok(utils.escapeHTML, 'exists');
 
         var html = '<div id="qunit-fixture"></div>';
 
-        var escaped = _srcCoreUtilsJs2['default'].escapeHTML(html);
+        var escaped = utils.escapeHTML(html);
         assert.equal(escaped, '&lt;div id=&quot;qunit-fixture&quot;&gt;&lt;/div&gt;', 'escapes an html string');
     });
 
@@ -4872,10 +4937,10 @@ var tests = function tests(Flounder) {
      * @test correctly grabs an element's width
      */
     QUnit.test('getElWidth', function (assert) {
-        assert.ok(_srcCoreUtilsJs2['default'].getElWidth, 'exists');
+        assert.ok(utils.getElWidth, 'exists');
 
         var body = document.body;
-        var bodyWidth = _srcCoreUtilsJs2['default'].getElWidth(body);
+        var bodyWidth = utils.getElWidth(body);
         var style = getComputedStyle(body);
 
         var vanillaBodyWidth = body.offsetWidth + parseInt(style['margin-left']) + parseInt(style['margin-right']);
@@ -4890,16 +4955,16 @@ var tests = function tests(Flounder) {
      * @test correctly grabs an element's width
      */
     QUnit.test('hasClass', function (assert) {
-        assert.ok(_srcCoreUtilsJs2['default'].hasClass, 'exists');
+        assert.ok(utils.hasClass, 'exists');
 
         var body = document.body;
 
-        _srcCoreUtilsJs2['default'].addClass(body, 'mooney-moon');
-        var hasClassBool = _srcCoreUtilsJs2['default'].hasClass(body, 'mooney-moon');
+        utils.addClass(body, 'mooney-moon');
+        var hasClassBool = utils.hasClass(body, 'mooney-moon');
         assert.equal(hasClassBool, true, 'correctly detects present class');
 
-        _srcCoreUtilsJs2['default'].removeClass(body, 'mooney-moon');
-        hasClassBool = _srcCoreUtilsJs2['default'].hasClass(body, 'mooney-moon');
+        utils.removeClass(body, 'mooney-moon');
+        hasClassBool = utils.hasClass(body, 'mooney-moon');
         assert.equal(hasClassBool, false, 'correctly detects missing class');
     });
 
@@ -4909,16 +4974,16 @@ var tests = function tests(Flounder) {
      * @test exists
      */
     QUnit.test('http', function (assert) {
-        assert.ok(_srcCoreUtilsJs2['default'].http, 'exists');
+        assert.ok(utils.http, 'exists');
 
         var getTest = assert.async();
-        _srcCoreUtilsJs2['default'].http({ url: './httpTest.html', method: 'GET' }).then(function (data) {
+        utils.http({ url: './httpTest.html', method: 'GET' }).then(function (data) {
             assert.equal(data, 'moon', 'page correctly retrieved');
             getTest();
         });
 
         var parameterTest = assert.async();
-        _srcCoreUtilsJs2['default'].http({
+        utils.http({
             url: './httpTest.html',
             method: 'GET',
             headers: {
@@ -4931,7 +4996,7 @@ var tests = function tests(Flounder) {
         });
 
         var errorTest = assert.async();
-        _srcCoreUtilsJs2['default'].http({ url: './httpTest.hml' })['catch'](function (e) {
+        utils.http({ url: './httpTest.hml' })['catch'](function (e) {
             e = e instanceof Error;
             assert.equal(e, true, 'errors are handled correctly');
             errorTest();
@@ -4944,7 +5009,7 @@ var tests = function tests(Flounder) {
      * @test exists
      */
     QUnit.test('iosVersion', function (assert) {
-        assert.ok(_srcCoreUtilsJs2['default'].iosVersion, 'exists');
+        assert.ok(utils.iosVersion, 'exists');
     });
 
     /*
@@ -4954,7 +5019,7 @@ var tests = function tests(Flounder) {
      * @test all children removed
      */
     QUnit.test('removeAllChildren', function (assert) {
-        assert.ok(_srcCoreUtilsJs2['default'].removeAllChildren, 'exists');
+        assert.ok(utils.removeAllChildren, 'exists');
 
         var body = document.body;
         var testDiv = document.createElement('DIV');
@@ -4966,7 +5031,7 @@ var tests = function tests(Flounder) {
             testDiv.appendChild(div);
         }
 
-        _srcCoreUtilsJs2['default'].removeAllChildren(testDiv);
+        utils.removeAllChildren(testDiv);
         assert.equal(testDiv.children.length, 0, 'all children removed');
         body.removeChild(testDiv);
     });
@@ -4979,16 +5044,16 @@ var tests = function tests(Flounder) {
      * @test removes a single class
      */
     QUnit.test('removeClass', function (assert) {
-        window.utils = _srcCoreUtilsJs2['default'];
+        window.utils = utils;
         var qunit = document.querySelector('#qunit');
 
-        assert.ok(_srcCoreUtilsJs2['default'].removeClass, 'exists');
+        assert.ok(utils.removeClass, 'exists');
 
-        _srcCoreUtilsJs2['default'].addClass(qunit, ['brains', 'moon', 'doge']);
-        _srcCoreUtilsJs2['default'].removeClass(qunit, ['moon', 'doge']);
+        utils.addClass(qunit, ['brains', 'moon', 'doge']);
+        utils.removeClass(qunit, ['moon', 'doge']);
         assert.ok(qunit.className.indexOf('moon') === -1 && qunit.className.indexOf('doge') === -1, 'removes an array of classes');
 
-        _srcCoreUtilsJs2['default'].removeClass(qunit, 'brains');
+        utils.removeClass(qunit, 'brains');
         assert.equal(qunit.className.indexOf('brains'), -1, 'removes a single class');
     });
 
@@ -4998,7 +5063,7 @@ var tests = function tests(Flounder) {
      * @test exists
      */
     QUnit.test('scrollTo', function (assert) {
-        assert.ok(_srcCoreUtilsJs2['default'].scrollTo, 'exists');
+        assert.ok(utils.scrollTo, 'exists');
     });
 
     /*
@@ -5007,7 +5072,7 @@ var tests = function tests(Flounder) {
      * @test exists
      */
     QUnit.test('setPlatform', function (assert) {
-        assert.ok(_srcCoreUtilsJs2['default'].setPlatform, 'exists');
+        assert.ok(utils.setPlatform, 'exists');
     });
 
     /*
@@ -5019,19 +5084,57 @@ var tests = function tests(Flounder) {
      */
     QUnit.test('toggleClass', function (assert) {
         var body = document.body;
-        _srcCoreUtilsJs2['default'].removeClass(body, 'doge');
+        utils.removeClass(body, 'doge');
 
-        assert.ok(_srcCoreUtilsJs2['default'].toggleClass, 'exists');
+        assert.ok(utils.toggleClass, 'exists');
 
-        _srcCoreUtilsJs2['default'].toggleClass(body, 'doge');
-        assert.equal(_srcCoreUtilsJs2['default'].hasClass(body, 'doge'), true, 'adds a class');
+        utils.toggleClass(body, 'doge');
+        assert.equal(utils.hasClass(body, 'doge'), true, 'adds a class');
 
-        _srcCoreUtilsJs2['default'].toggleClass(body, 'doge');
-        assert.equal(_srcCoreUtilsJs2['default'].hasClass(body, 'doge'), false, 'removes a class');
+        utils.toggleClass(body, 'doge');
+        assert.equal(utils.hasClass(body, 'doge'), false, 'removes a class');
     });
 };
 
 exports['default'] = tests;
 module.exports = exports['default'];
 
-},{"../../src/core/utils.js":19}]},{},[21]);
+},{}],26:[function(require,module,exports){
+
+/* global document, QUnit  */
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+    value: true
+});
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _srcCoreVersionJs = require('../../src/core/version.js');
+
+var _srcCoreVersionJs2 = _interopRequireDefault(_srcCoreVersionJs);
+
+var _packageJson = require('../../package.json');
+
+var _packageJson2 = _interopRequireDefault(_packageJson);
+
+var tests = function tests(Flounder) {
+    QUnit.module('version.js');
+
+    /*
+     * ## version tests
+     *
+     * @test exists
+     * @test matches the package file
+     */
+    QUnit.test('version', function (assert) {
+        assert.ok(_srcCoreVersionJs2['default'], 'exists');
+
+        assert.equal(_srcCoreVersionJs2['default'], _packageJson2['default'].version, 'versions match');
+    });
+};
+
+exports['default'] = tests;
+module.exports = exports['default'];
+
+},{"../../package.json":12,"../../src/core/version.js":21}]},{},[22]);

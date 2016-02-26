@@ -8,9 +8,7 @@ import utils    from '../src/core/utils';
 import constructorTest  from './unit/constructorTest';
 import flounderTest     from './unit/flounderTest';
 import utilsTest        from './unit/utilsTest';
-
-
-const nativeSlice = Array.prototype.slice;
+import versionTest      from './unit/versionTest';
 
 class Tests
 {
@@ -28,6 +26,7 @@ let tests = new Tests;
 
 constructorTest( Flounder );
 flounderTest( Flounder );
-utilsTest( Flounder );
+utilsTest( Flounder, utils );
+versionTest( Flounder );
 
 export default tests;

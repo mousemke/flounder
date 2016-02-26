@@ -1,8 +1,6 @@
 /* global document, QUnit  */
 
-import utils from '../../src/core/utils.js';
-
-let tests = function( Flounder )
+let tests = function( Flounder, utils )
 {
     QUnit.module( 'utils.js' );
 
