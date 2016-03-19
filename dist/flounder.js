@@ -6,7 +6,7 @@
  * Released under the MIT license
  * https://github.com/sociomantic-tsunami/flounder/license
  *
- * Date: Fri Feb 26 2016
+ * Date: Sat Mar 19 2016
  * "This, so far, is the best Flounder ever"
  */
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
@@ -2379,41 +2379,39 @@ var defaults = {
             return res;
         };
 
-        var defaultObj = undefined;
-        var _data = sortData(data);
+        /**
+         * ## checkDefaultPriority
+         *
+         * sorts out which default should be gotten by priority
+         *
+         * @return {Object} default data object
+         */
+        var checkDefaultPriority = function checkDefaultPriority() {
+            var _data = sortData(data);
 
-        if (rebuild) {
-            var val = self.refs.selected.getAttribute('data-value');
-            var def = setValueDefault(_data, val);
-
-            if (!def) {
-                if (configObj.placeholder || _data.length === 0) {
-                    return setPlaceholderDefault(self, _data);
-                } else {
-                    if (configObj.multiple) {
-                        return setPlaceholderDefault(self, _data);
-                    } else {
-                        return setIndexDefault(_data, 0);
-                    }
-                }
-            }
-
-            return def;
-        } else {
             if (configObj.placeholder || _data.length === 0) {
                 return setPlaceholderDefault(self, _data);
-            } else if (configObj.defaultIndex) {
-                return setIndexDefault(_data);
-            } else if (configObj.defaultValue) {
-                return setValueDefault(_data);
-            } else {
-                if (configObj.multiple) {
-                    return setPlaceholderDefault(self, _data);
-                } else {
-                    return setIndexDefault(_data, 0);
+            }
+
+            var def = undefined;
+
+            if (rebuild) {
+                var val = self.refs.selected.getAttribute('data-value');
+                def = setValueDefault(_data, val);
+
+                if (def) {
+                    return def;
                 }
             }
-        }
+
+            def = [setIndexDefault(_data), setValueDefault(_data), configObj.multiple ? setPlaceholderDefault(self, _data) : setIndexDefault(_data, 0)];
+
+            return def.filter(function (_v) {
+                return _v;
+            })[0];
+        };
+
+        return checkDefaultPriority();
     }
 };
 

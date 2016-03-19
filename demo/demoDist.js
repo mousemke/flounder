@@ -21687,41 +21687,39 @@ var defaults = {
             return res;
         };
 
-        var defaultObj = undefined;
-        var _data = sortData(data);
+        /**
+         * ## checkDefaultPriority
+         *
+         * sorts out which default should be gotten by priority
+         *
+         * @return {Object} default data object
+         */
+        var checkDefaultPriority = function checkDefaultPriority() {
+            var _data = sortData(data);
 
-        if (rebuild) {
-            var val = self.refs.selected.getAttribute('data-value');
-            var def = setValueDefault(_data, val);
-
-            if (!def) {
-                if (configObj.placeholder || _data.length === 0) {
-                    return setPlaceholderDefault(self, _data);
-                } else {
-                    if (configObj.multiple) {
-                        return setPlaceholderDefault(self, _data);
-                    } else {
-                        return setIndexDefault(_data, 0);
-                    }
-                }
-            }
-
-            return def;
-        } else {
             if (configObj.placeholder || _data.length === 0) {
                 return setPlaceholderDefault(self, _data);
-            } else if (configObj.defaultIndex) {
-                return setIndexDefault(_data);
-            } else if (configObj.defaultValue) {
-                return setValueDefault(_data);
-            } else {
-                if (configObj.multiple) {
-                    return setPlaceholderDefault(self, _data);
-                } else {
-                    return setIndexDefault(_data, 0);
+            }
+
+            var def = undefined;
+
+            if (rebuild) {
+                var val = self.refs.selected.getAttribute('data-value');
+                def = setValueDefault(_data, val);
+
+                if (def) {
+                    return def;
                 }
             }
-        }
+
+            def = [setIndexDefault(_data), setValueDefault(_data), configObj.multiple ? setPlaceholderDefault(self, _data) : setIndexDefault(_data, 0)];
+
+            return def.filter(function (_v) {
+                return _v;
+            })[0];
+        };
+
+        return checkDefaultPriority();
     }
 };
 
