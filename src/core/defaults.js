@@ -207,6 +207,7 @@ const defaults = {
                 return setPlaceholderDefault( self, _data );
             }
 
+
             let def;
 
             if ( rebuild )

@@ -435,6 +435,7 @@ Change Log
 
 + tests
     + version test completed
+    + default priority fixed
 
 + default
     + priority fixed
