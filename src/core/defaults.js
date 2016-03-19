@@ -191,62 +191,49 @@ const defaults = {
         };
 
 
-
-        let defaultObj;
-        let _data       = sortData( data );
-
-        if ( rebuild )
+        /**
+         * ## getDefault
+         *
+         * sorts out which default should be gotten by priority
+         *
+         * @return {Object} default data object
+         */
+        let getDefault = function()
         {
-            let val = self.refs.selected.getAttribute( 'data-value' );
-            let def = setValueDefault( _data, val );
+            let defaultObj;
+            let def;
+            let _data       = sortData( data );
 
-            if ( !def )
-            {
-                if ( configObj.placeholder || _data.length === 0 )
-                {
-                    return setPlaceholderDefault( self, _data );
-                }
-                else
-                {
-                    if ( configObj.multiple )
-                    {
-                        return setPlaceholderDefault( self, _data );
-                    }
-                    else
-                    {
-                        return setIndexDefault( _data, 0 )
-                    }
-                }
-            }
-
-            return def;
-        }
-        else
-        {
-            if ( configObj.placeholder || _data.length === 0 )
+            if ( configObj.placeholder || _data.length === 0 )
             {
                 return setPlaceholderDefault( self, _data );
             }
-            else if ( configObj.defaultIndex )
+
+            if ( rebuild )
             {
-                return setIndexDefault( _data );
-            }
-            else if ( configObj.defaultValue )
-            {
-                return setValueDefault( _data );
+                let val = self.refs.selected.getAttribute( 'data-value' );
+                def = setValueDefault( _data, val );
             }
             else
             {
-                if ( configObj.multiple )
-                {
-                    return setPlaceholderDefault( self, _data );
-                }
-                else
-                {
-                    return setIndexDefault( _data, 0 )
-                }
+                def = [ setIndexDefault( _data ),
+                            setValueDefault( _data ),
+                            setIndexDefault( _data, 0 )
+                        ];
+
+                def = def.filter( _v => _v )[ 0 ];
             }
-        }
+
+            if ( !def )
+            {
+                def = configObj.multiple ?  setPlaceholderDefault( self, _data ) :
+                                                setIndexDefault( _data, 0 );
+            }
+
+            return def;
+        };
+
+        return getDefault();
     }
 };
 

@@ -435,6 +435,7 @@ Change Log
 
 + tests
     + version test completed
+    + default priority fixed
 
 
 0.6.1
