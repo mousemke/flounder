@@ -436,6 +436,10 @@ Change Log
 + tests
     + version test completed
 
++ default
+    + priority fixed
+    + null default bug fixed
+
 
 0.6.1
 -----
@@ -501,43 +505,6 @@ Change Log
 + utils
     + no longer merged onto the main flounder object
 
-
-0.4.5
------
-
-+ [default] the default `data` is now `[]` in case of initially empty dropdowns
-+ [deps] changed how microbe is required and installed
-
-
-0.4.4
------
-
-+ [default] adjusted handling of numbers as values
-+ [default] unless specified, the default on multiple enabled flounders is nothing selected
-+ [build] moved reconfigure `reconfigure is depreciated from the api and will be removed in 0.5.0`
-+ [build] modified data type detection
-+ [build] selectDataOverride now clears the unused option tags
-+ [api] reconfigure is depreciated to an internal function.  rebuild now handles both use cases
-+ [api] modified native select rebuilt values
-+ [api] rebuild `rebuilt`
-+ [api] `destroy` now removes placeholder
-+ [api] added css for loading and failed loading
-+ [utils] added `removeAllChildren`
-
-
-0.4.3
------
-
-+ [tests] added flounder tests
-+ [test] added constructor tests
-+ [flounder] added read-only version number
-+ [flounder] fixed a bug affecting defaultValues with an index 0
-+ [default] multiTag flounders now get a default placeholder if not supplied
-+ [version] added `src/core/version.js`
-+ [version] added `scripts/version_bump.js`
-+ [search] search is now initialized only when it will be used
-+ [build] added `___isBound` to `this` bound functions for clarity and testing
-+ [build] improves multiTag support for data that's initially supplied as a string
 
 
 Older Changes

@@ -191,62 +191,45 @@ const defaults = {
         };
 
 
-
-        let defaultObj;
-        let _data       = sortData( data );
-
-        if ( rebuild )
+        /**
+         * ## checkDefaultPriority
+         *
+         * sorts out which default should be gotten by priority
+         *
+         * @return {Object} default data object
+         */
+        let checkDefaultPriority = function()
         {
-            let val = self.refs.selected.getAttribute( 'data-value' );
-            let def = setValueDefault( _data, val );
+            let _data = sortData( data );
 
-            if ( !def )
-            {
-                if ( configObj.placeholder || _data.length === 0 )
-                {
-                    return setPlaceholderDefault( self, _data );
-                }
-                else
-                {
-                    if ( configObj.multiple )
-                    {
-                        return setPlaceholderDefault( self, _data );
-                    }
-                    else
-                    {
-                        return setIndexDefault( _data, 0 )
-                    }
-                }
-            }
-
-            return def;
-        }
-        else
-        {
-            if ( configObj.placeholder || _data.length === 0 )
+            if ( configObj.placeholder || _data.length === 0 )
             {
                 return setPlaceholderDefault( self, _data );
             }
-            else if ( configObj.defaultIndex )
+
+            let def;
+
+            if ( rebuild )
             {
-                return setIndexDefault( _data );
-            }
-            else if ( configObj.defaultValue )
-            {
-                return setValueDefault( _data );
-            }
-            else
-            {
-                if ( configObj.multiple )
+                let val = self.refs.selected.getAttribute( 'data-value' );
+                def     = setValueDefault( _data, val );
+
+                if ( def )
                 {
-                    return setPlaceholderDefault( self, _data );
-                }
-                else
-                {
-                    return setIndexDefault( _data, 0 )
+                    return def;
                 }
             }
-        }
+
+            def = [ setIndexDefault( _data ),
+                    setValueDefault( _data ),
+                    configObj.multiple ?  setPlaceholderDefault( self, _data ) :
+                                        setIndexDefault( _data, 0 )
+                ];
+
+            return def.filter( _v => _v )[ 0 ];
+        };
+
+        return checkDefaultPriority();
     }
 };
 
