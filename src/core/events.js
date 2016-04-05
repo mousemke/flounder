@@ -79,6 +79,8 @@ const events = {
         let multiTags       = this.multipleTags;
         let selectedValues  = this.getSelectedValues();
         let val             = selectedValues[0];
+        let selectedItems   = this.getSelected();
+        let selectedText    = selectedItems.length ? selectedItems[0].innerHTML : '';
         let selectedCount   = selectedValues.length;
         let selected        = this.refs.selected;
 
@@ -88,7 +90,7 @@ const events = {
                 this.setByIndex( 0 );
                 break;
             case 1:
-                selected.innerHTML = val === '' ? this.placeholder : selectedValues[0];
+                selected.innerHTML = val === '' ? this.placeholder : selectedText;
                 break;
             default:
                 selected.innerHTML = this.multipleMessage;
