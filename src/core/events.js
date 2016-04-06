@@ -550,7 +550,7 @@ const events = {
             // tab, shift, ctrl, alt, caps, cmd
             let nonKeys = [ 9, 16, 17, 18, 20, 91 ];
 
-            if ( e || obj.type === 'blur' || ( keyCode && nonKeys.indexOf( keyCode ) === -1 ) )
+            if ( e || obj.type === 'blur' || obj.type === 'change' ||( keyCode && nonKeys.indexOf( keyCode ) === -1 ) )
             {
                 if ( this.toggleList.justOpened && !e )
                 {
