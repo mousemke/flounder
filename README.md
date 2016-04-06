@@ -430,6 +430,16 @@ See more examples on the [demo page](./demo/index.html)
 Change Log
 ==========
 
+0.6.3
+-----
+
++ tests
+    + add test "blurOpenedDropdown" to cover fix
+
++ events
+    + fixed addPlaceholder method for blur of opened dropdown
+
+
 0.6.2
 -----
 
