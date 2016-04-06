@@ -1,4 +1,4 @@
-Flounder.js 0.6.2
+Flounder.js 0.6.3
 =================
 
 [![Flounder build status](https://travis-ci.org/sociomantic-tsunami/flounder.svg)](https://travis-ci.org)
@@ -429,6 +429,16 @@ See more examples on the [demo page](./demo/index.html)
 
 Change Log
 ==========
+
+0.6.3
+-----
+
++ tests
+    + add test "blurOpenedDropdown" to cover fix
+
++ events
+    + fixed addPlaceholder method for blur of opened dropdown
+
 
 0.6.2
 -----
