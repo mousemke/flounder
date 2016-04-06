@@ -387,6 +387,42 @@ let tests = function( Flounder )
 
         flounder.destroy();
     } );
+
+    /*
+     * ## blur Opened Dropdowns
+     *
+     * @test exists
+     * @test multiple targets returns an array
+     * @test of flounders
+     */
+    QUnit.test( 'blurOpenedDropdown', function( assert )
+    {
+        let data = [
+            {
+                text : "Item 1",
+                value : "item1"
+            },
+            {
+                text : "Item 2",
+                value : "item2"
+            }
+        ];
+
+        let container = document.createElement( 'div' );
+        document.body.appendChild( container );
+
+        let flounder    = ( new Flounder( container, { data : data } ) );
+
+        flounder.setByValue( 'item1' );
+        flounder.refs.selected.click();
+
+        document.body.click();
+
+        assert.equal( flounder.refs.selected.innerHTML, 'Item 1', 'text is' +
+            ' stayed after focusout' );
+
+        flounder.destroy();
+    } );
 };
 
 export default tests;
