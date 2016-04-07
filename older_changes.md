@@ -3,6 +3,50 @@ Older changes
 
 This is truncated from the readme file to keep down the size
 
+0.5.0
+-----
+
++ events
+    + added `setSelectValue` to search keyup
+    + mobile safari no longer selects things all by itself
+    + fixed a bug with incrementing and firefox
+    + added a blur event to catch mobile selection
+    + search inputs now correctly display the selected values on blur
+    + fixed placeholder logic
+
++ search
+    + adjusted search weights
+    + descriptions are now properly searchable
+    + multiple `setValue` calls taken out
+
++ build
+    + multiple is now automatically  enabled with `multipleTags : true`
+    + search works in react
+    + search is now mandataory enabled in a multiTag box (#7)
+    + React now sets platform and isIos
+    + original elements are now restored on destroy in the case of a select as a target
+    + added `keepChangesOnDestroy` as an available prop
+
++ demo
+    + fixed minor issues on the demo
+    + changed debug button
+
++ default
+    + refactored defaults functions into `./defaults.js`
+
++ api
+    + added the ability to use negative indexes in api calls
+    + removed querySelector from the api calls
+    + default is now only applied after rebuild if there is nothing with the value left in the dropdown
+    + the placeholder now deselects when choosing the first option (multiple)
+
++ flounder
+    + slowly removing things that are not needed from the main object for the sake of a clearer api later
+
++ utils
+    + no longer merged onto the main flounder object
+
+
 0.4.5
 -----
 

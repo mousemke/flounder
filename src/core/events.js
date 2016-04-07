@@ -79,16 +79,19 @@ const events = {
         let multiTags       = this.multipleTags;
         let selectedValues  = this.getSelectedValues();
         let val             = selectedValues[0];
+        let selectedItems   = this.getSelected();
+        let selectedText    = selectedItems.length ? selectedItems[0].innerHTML : '';
         let selectedCount   = selectedValues.length;
         let selected        = this.refs.selected;
 
+console.log( 'this.placeholder', this.placeholder );
         switch ( selectedCount )
         {
             case 0:
                 this.setByIndex( 0 );
                 break;
             case 1:
-                selected.innerHTML = val === '' ? this.placeholder : selectedValues[0];
+                selected.innerHTML = val === '' ? this.placeholder : selectedText;
                 break;
             default:
                 selected.innerHTML = this.multipleMessage;
@@ -550,7 +553,8 @@ const events = {
             // tab, shift, ctrl, alt, caps, cmd
             let nonKeys = [ 9, 16, 17, 18, 20, 91 ];
 
-            if ( e || obj.type === 'blur' || ( keyCode && nonKeys.indexOf( keyCode ) === -1 ) )
+            if ( e || obj.type === 'blur' ||
+                ( keyCode && nonKeys.indexOf( keyCode ) === -1 ) )
             {
                 if ( this.toggleList.justOpened && !e )
                 {
