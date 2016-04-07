@@ -1,789 +1,15 @@
 /*!
- * Flounder JavaScript Stylable Selectbox v0.6.2
+ * Flounder JavaScript Stylable Selectbox v0.6.3
  * https://github.com/sociomantic-tsunami/flounder
  *
  * Copyright 2015-2016 Sociomantic Labs and other contributors
  * Released under the MIT license
  * https://github.com/sociomantic-tsunami/flounder/license
  *
- * Date: Sat Mar 19 2016
+ * Date: Thu Apr 07 2016
  * "This, so far, is the best Flounder ever"
  */
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-/**
- * http.js
- *
- * @author  Mouse Braun         <mouse@knoblau.ch>
- * @author  Nicolas Brugneaux   <nicolas.brugneaux@gmail.com>
- *
- * @package Microbe
- */
-
-module.exports = function( Microbe )
-{
-    'use strict';
-
-    var Promise = require( 'promise' );
-
-    /**
-     * ## http
-     *
-     * Method takes as many as necessary parameters, with url being the only required.
-     * The return then has the methods `.then( _cb )` and `.error( _cb )`
-     *
-     * @param {Object} _parameters http parameters. possible properties
-     *                             method, url, data, user, password, headers, async
-     *
-     * @example µ.http( {url: './test.html', method: 'POST', data: { number: 67867} } ).then( function(){} ).catch( function(){} );
-     */
-    Microbe.http = function( _parameters )
-    {
-        var req, method, url, data, user, password, headers, async;
-
-        if ( !_parameters )
-        {
-            return new Error( 'No parameters given' );
-        }
-        else
-        {
-            if ( typeof _parameters === 'string' )
-            {
-                _parameters = { url: _parameters };
-            }
-
-            req         = new XMLHttpRequest();
-            method      = _parameters.method || 'GET';
-            url         = _parameters.url;
-            data        = JSON.stringify( _parameters.data ) || null;
-            user        = _parameters.user || '';
-            password    = _parameters.password || '';
-            headers     = _parameters.headers  || null;
-            async       = typeof _parameters.async === "boolean" ?
-                                _parameters.async : true;
-
-            req.onreadystatechange = function()
-            {
-                if ( req.readyState === 4 )
-                {
-                    return req;
-                }
-            };
-        }
-
-        req.open( method, url, async, user, password );
-
-        // weird Safari voodoo fix
-        if ( method === 'POST' )
-        {
-            req.setRequestHeader( 'Content-Type', 'application/x-www-form-urlencoded' );
-        }
-
-        if ( headers )
-        {
-            for ( var header in headers )
-            {
-                req.setRequestHeader( header, headers[header] );
-            }
-        }
-
-        if ( async )
-        {
-            return new Promise( function( resolve, reject )
-            {
-                req.onerror = function()
-                {
-                    reject( new Error( 'Network error!' ) );
-                };
-
-                req.send( data );
-                req.onload = function()
-                {
-                    if ( req.status === 200 )
-                    {
-                        resolve( req.response );
-                    }
-                    else
-                    {
-                        reject( new Error( req.status ) );
-                    }
-                };
-
-            });
-        }
-        else
-        {
-            var _response = function( _val )
-            {
-                var _responses = {
-
-                    /**
-                     * ## .then
-                     *
-                     * Called after `http`, `http.get`, or `http.post`, this is
-                     * called passing the result as the first parameter to the callback
-                     *
-                     * @param {Function} _cb function to call after http request
-                     *
-                     * @return _Object_ contains the `.catch` method
-                     */
-                    then: function( _cb )
-                    {
-                        if ( _val.status === 200 )
-                        {
-                            _cb( _val.responseText );
-                        }
-                        return _responses;
-                    },
-
-
-                    /**
-                     * ## .catch
-                     *
-                     * Called after `http`, `http.get`, or `http.post`, this is
-                     * called passing the error as the first parameter to the callback
-                     *
-                     * @param {Function} _cb function to call after http request
-                     *
-                     * @return _Object_ contains the `.then` method
-                     */
-                    catch: function( _cb )
-                    {
-                        if ( _val.status !== 200 )
-                        {
-                            _cb( {
-                                status      : _val.status,
-                                statusText  : _val.statusText
-                            } );
-                        }
-                        return _responses;
-                    }
-                };
-                return _responses;
-            };
-
-            req.send( data );
-            req.onloadend = function()
-            {
-                req.onreadystatechange();
-                return _response( req );
-            };
-
-            return req.onloadend();
-        }
-    };
-
-
-    /**
-     * ## http.get
-     *
-     * Syntactic shortcut for simple GET requests
-     *
-     * @param {String} _url file url
-     *
-     * @example µ.http.get( './test.html' ).then( function(){} ).catch( function(){} );
-     *
-     * @return _Object_ contains `.then` and `.catch`
-     */
-    Microbe.http.get = function( _url )
-    {
-        return this( {
-            url     : _url,
-            method  : 'GET'
-        } );
-    };
-
-
-    /**
-     * ## http.post
-     *
-     * Syntactic shortcut for simple POST requests
-     *
-     * @param {String} _url file url
-     * @param {Mixed} _data data to post to location {Object or String}
-     *
-     * @example µ.http.post( './test.html', { number: 67867} ).then( function(){} ).catch( function(){} );
-     *
-     * @return _Object_ contains `.then` and `.catch`
-     */
-    Microbe.http.post = function( _url, _data )
-    {
-        return this( {
-            url     : _url,
-            data    : _data,
-            method  : 'POST'
-        } );
-    };
-};
-
-},{"promise":2}],2:[function(require,module,exports){
-'use strict';
-
-module.exports = require('./lib')
-
-},{"./lib":7}],3:[function(require,module,exports){
-'use strict';
-
-var asap = require('asap/raw');
-
-function noop() {}
-
-// States:
-//
-// 0 - pending
-// 1 - fulfilled with _value
-// 2 - rejected with _value
-// 3 - adopted the state of another promise, _value
-//
-// once the state is no longer pending (0) it is immutable
-
-// All `_` prefixed properties will be reduced to `_{random number}`
-// at build time to obfuscate them and discourage their use.
-// We don't use symbols or Object.defineProperty to fully hide them
-// because the performance isn't good enough.
-
-
-// to avoid using try/catch inside critical functions, we
-// extract them to here.
-var LAST_ERROR = null;
-var IS_ERROR = {};
-function getThen(obj) {
-  try {
-    return obj.then;
-  } catch (ex) {
-    LAST_ERROR = ex;
-    return IS_ERROR;
-  }
-}
-
-function tryCallOne(fn, a) {
-  try {
-    return fn(a);
-  } catch (ex) {
-    LAST_ERROR = ex;
-    return IS_ERROR;
-  }
-}
-function tryCallTwo(fn, a, b) {
-  try {
-    fn(a, b);
-  } catch (ex) {
-    LAST_ERROR = ex;
-    return IS_ERROR;
-  }
-}
-
-module.exports = Promise;
-
-function Promise(fn) {
-  if (typeof this !== 'object') {
-    throw new TypeError('Promises must be constructed via new');
-  }
-  if (typeof fn !== 'function') {
-    throw new TypeError('not a function');
-  }
-  this._45 = 0;
-  this._81 = 0;
-  this._65 = null;
-  this._54 = null;
-  if (fn === noop) return;
-  doResolve(fn, this);
-}
-Promise._10 = null;
-Promise._97 = null;
-Promise._61 = noop;
-
-Promise.prototype.then = function(onFulfilled, onRejected) {
-  if (this.constructor !== Promise) {
-    return safeThen(this, onFulfilled, onRejected);
-  }
-  var res = new Promise(noop);
-  handle(this, new Handler(onFulfilled, onRejected, res));
-  return res;
-};
-
-function safeThen(self, onFulfilled, onRejected) {
-  return new self.constructor(function (resolve, reject) {
-    var res = new Promise(noop);
-    res.then(resolve, reject);
-    handle(self, new Handler(onFulfilled, onRejected, res));
-  });
-};
-function handle(self, deferred) {
-  while (self._81 === 3) {
-    self = self._65;
-  }
-  if (Promise._10) {
-    Promise._10(self);
-  }
-  if (self._81 === 0) {
-    if (self._45 === 0) {
-      self._45 = 1;
-      self._54 = deferred;
-      return;
-    }
-    if (self._45 === 1) {
-      self._45 = 2;
-      self._54 = [self._54, deferred];
-      return;
-    }
-    self._54.push(deferred);
-    return;
-  }
-  handleResolved(self, deferred);
-}
-
-function handleResolved(self, deferred) {
-  asap(function() {
-    var cb = self._81 === 1 ? deferred.onFulfilled : deferred.onRejected;
-    if (cb === null) {
-      if (self._81 === 1) {
-        resolve(deferred.promise, self._65);
-      } else {
-        reject(deferred.promise, self._65);
-      }
-      return;
-    }
-    var ret = tryCallOne(cb, self._65);
-    if (ret === IS_ERROR) {
-      reject(deferred.promise, LAST_ERROR);
-    } else {
-      resolve(deferred.promise, ret);
-    }
-  });
-}
-function resolve(self, newValue) {
-  // Promise Resolution Procedure: https://github.com/promises-aplus/promises-spec#the-promise-resolution-procedure
-  if (newValue === self) {
-    return reject(
-      self,
-      new TypeError('A promise cannot be resolved with itself.')
-    );
-  }
-  if (
-    newValue &&
-    (typeof newValue === 'object' || typeof newValue === 'function')
-  ) {
-    var then = getThen(newValue);
-    if (then === IS_ERROR) {
-      return reject(self, LAST_ERROR);
-    }
-    if (
-      then === self.then &&
-      newValue instanceof Promise
-    ) {
-      self._81 = 3;
-      self._65 = newValue;
-      finale(self);
-      return;
-    } else if (typeof then === 'function') {
-      doResolve(then.bind(newValue), self);
-      return;
-    }
-  }
-  self._81 = 1;
-  self._65 = newValue;
-  finale(self);
-}
-
-function reject(self, newValue) {
-  self._81 = 2;
-  self._65 = newValue;
-  if (Promise._97) {
-    Promise._97(self, newValue);
-  }
-  finale(self);
-}
-function finale(self) {
-  if (self._45 === 1) {
-    handle(self, self._54);
-    self._54 = null;
-  }
-  if (self._45 === 2) {
-    for (var i = 0; i < self._54.length; i++) {
-      handle(self, self._54[i]);
-    }
-    self._54 = null;
-  }
-}
-
-function Handler(onFulfilled, onRejected, promise){
-  this.onFulfilled = typeof onFulfilled === 'function' ? onFulfilled : null;
-  this.onRejected = typeof onRejected === 'function' ? onRejected : null;
-  this.promise = promise;
-}
-
-/**
- * Take a potentially misbehaving resolver function and make sure
- * onFulfilled and onRejected are only called once.
- *
- * Makes no guarantees about asynchrony.
- */
-function doResolve(fn, promise) {
-  var done = false;
-  var res = tryCallTwo(fn, function (value) {
-    if (done) return;
-    done = true;
-    resolve(promise, value);
-  }, function (reason) {
-    if (done) return;
-    done = true;
-    reject(promise, reason);
-  })
-  if (!done && res === IS_ERROR) {
-    done = true;
-    reject(promise, LAST_ERROR);
-  }
-}
-
-},{"asap/raw":11}],4:[function(require,module,exports){
-'use strict';
-
-var Promise = require('./core.js');
-
-module.exports = Promise;
-Promise.prototype.done = function (onFulfilled, onRejected) {
-  var self = arguments.length ? this.then.apply(this, arguments) : this;
-  self.then(null, function (err) {
-    setTimeout(function () {
-      throw err;
-    }, 0);
-  });
-};
-
-},{"./core.js":3}],5:[function(require,module,exports){
-'use strict';
-
-//This file contains the ES6 extensions to the core Promises/A+ API
-
-var Promise = require('./core.js');
-
-module.exports = Promise;
-
-/* Static Functions */
-
-var TRUE = valuePromise(true);
-var FALSE = valuePromise(false);
-var NULL = valuePromise(null);
-var UNDEFINED = valuePromise(undefined);
-var ZERO = valuePromise(0);
-var EMPTYSTRING = valuePromise('');
-
-function valuePromise(value) {
-  var p = new Promise(Promise._61);
-  p._81 = 1;
-  p._65 = value;
-  return p;
-}
-Promise.resolve = function (value) {
-  if (value instanceof Promise) return value;
-
-  if (value === null) return NULL;
-  if (value === undefined) return UNDEFINED;
-  if (value === true) return TRUE;
-  if (value === false) return FALSE;
-  if (value === 0) return ZERO;
-  if (value === '') return EMPTYSTRING;
-
-  if (typeof value === 'object' || typeof value === 'function') {
-    try {
-      var then = value.then;
-      if (typeof then === 'function') {
-        return new Promise(then.bind(value));
-      }
-    } catch (ex) {
-      return new Promise(function (resolve, reject) {
-        reject(ex);
-      });
-    }
-  }
-  return valuePromise(value);
-};
-
-Promise.all = function (arr) {
-  var args = Array.prototype.slice.call(arr);
-
-  return new Promise(function (resolve, reject) {
-    if (args.length === 0) return resolve([]);
-    var remaining = args.length;
-    function res(i, val) {
-      if (val && (typeof val === 'object' || typeof val === 'function')) {
-        if (val instanceof Promise && val.then === Promise.prototype.then) {
-          while (val._81 === 3) {
-            val = val._65;
-          }
-          if (val._81 === 1) return res(i, val._65);
-          if (val._81 === 2) reject(val._65);
-          val.then(function (val) {
-            res(i, val);
-          }, reject);
-          return;
-        } else {
-          var then = val.then;
-          if (typeof then === 'function') {
-            var p = new Promise(then.bind(val));
-            p.then(function (val) {
-              res(i, val);
-            }, reject);
-            return;
-          }
-        }
-      }
-      args[i] = val;
-      if (--remaining === 0) {
-        resolve(args);
-      }
-    }
-    for (var i = 0; i < args.length; i++) {
-      res(i, args[i]);
-    }
-  });
-};
-
-Promise.reject = function (value) {
-  return new Promise(function (resolve, reject) {
-    reject(value);
-  });
-};
-
-Promise.race = function (values) {
-  return new Promise(function (resolve, reject) {
-    values.forEach(function(value){
-      Promise.resolve(value).then(resolve, reject);
-    });
-  });
-};
-
-/* Prototype Methods */
-
-Promise.prototype['catch'] = function (onRejected) {
-  return this.then(null, onRejected);
-};
-
-},{"./core.js":3}],6:[function(require,module,exports){
-'use strict';
-
-var Promise = require('./core.js');
-
-module.exports = Promise;
-Promise.prototype['finally'] = function (f) {
-  return this.then(function (value) {
-    return Promise.resolve(f()).then(function () {
-      return value;
-    });
-  }, function (err) {
-    return Promise.resolve(f()).then(function () {
-      throw err;
-    });
-  });
-};
-
-},{"./core.js":3}],7:[function(require,module,exports){
-'use strict';
-
-module.exports = require('./core.js');
-require('./done.js');
-require('./finally.js');
-require('./es6-extensions.js');
-require('./node-extensions.js');
-require('./synchronous.js');
-
-},{"./core.js":3,"./done.js":4,"./es6-extensions.js":5,"./finally.js":6,"./node-extensions.js":8,"./synchronous.js":9}],8:[function(require,module,exports){
-'use strict';
-
-// This file contains then/promise specific extensions that are only useful
-// for node.js interop
-
-var Promise = require('./core.js');
-var asap = require('asap');
-
-module.exports = Promise;
-
-/* Static Functions */
-
-Promise.denodeify = function (fn, argumentCount) {
-  if (
-    typeof argumentCount === 'number' && argumentCount !== Infinity
-  ) {
-    return denodeifyWithCount(fn, argumentCount);
-  } else {
-    return denodeifyWithoutCount(fn);
-  }
-}
-
-var callbackFn = (
-  'function (err, res) {' +
-  'if (err) { rj(err); } else { rs(res); }' +
-  '}'
-);
-function denodeifyWithCount(fn, argumentCount) {
-  var args = [];
-  for (var i = 0; i < argumentCount; i++) {
-    args.push('a' + i);
-  }
-  var body = [
-    'return function (' + args.join(',') + ') {',
-    'var self = this;',
-    'return new Promise(function (rs, rj) {',
-    'var res = fn.call(',
-    ['self'].concat(args).concat([callbackFn]).join(','),
-    ');',
-    'if (res &&',
-    '(typeof res === "object" || typeof res === "function") &&',
-    'typeof res.then === "function"',
-    ') {rs(res);}',
-    '});',
-    '};'
-  ].join('');
-  return Function(['Promise', 'fn'], body)(Promise, fn);
-}
-function denodeifyWithoutCount(fn) {
-  var fnLength = Math.max(fn.length - 1, 3);
-  var args = [];
-  for (var i = 0; i < fnLength; i++) {
-    args.push('a' + i);
-  }
-  var body = [
-    'return function (' + args.join(',') + ') {',
-    'var self = this;',
-    'var args;',
-    'var argLength = arguments.length;',
-    'if (arguments.length > ' + fnLength + ') {',
-    'args = new Array(arguments.length + 1);',
-    'for (var i = 0; i < arguments.length; i++) {',
-    'args[i] = arguments[i];',
-    '}',
-    '}',
-    'return new Promise(function (rs, rj) {',
-    'var cb = ' + callbackFn + ';',
-    'var res;',
-    'switch (argLength) {',
-    args.concat(['extra']).map(function (_, index) {
-      return (
-        'case ' + (index) + ':' +
-        'res = fn.call(' + ['self'].concat(args.slice(0, index)).concat('cb').join(',') + ');' +
-        'break;'
-      );
-    }).join(''),
-    'default:',
-    'args[argLength] = cb;',
-    'res = fn.apply(self, args);',
-    '}',
-    
-    'if (res &&',
-    '(typeof res === "object" || typeof res === "function") &&',
-    'typeof res.then === "function"',
-    ') {rs(res);}',
-    '});',
-    '};'
-  ].join('');
-
-  return Function(
-    ['Promise', 'fn'],
-    body
-  )(Promise, fn);
-}
-
-Promise.nodeify = function (fn) {
-  return function () {
-    var args = Array.prototype.slice.call(arguments);
-    var callback =
-      typeof args[args.length - 1] === 'function' ? args.pop() : null;
-    var ctx = this;
-    try {
-      return fn.apply(this, arguments).nodeify(callback, ctx);
-    } catch (ex) {
-      if (callback === null || typeof callback == 'undefined') {
-        return new Promise(function (resolve, reject) {
-          reject(ex);
-        });
-      } else {
-        asap(function () {
-          callback.call(ctx, ex);
-        })
-      }
-    }
-  }
-}
-
-Promise.prototype.nodeify = function (callback, ctx) {
-  if (typeof callback != 'function') return this;
-
-  this.then(function (value) {
-    asap(function () {
-      callback.call(ctx, null, value);
-    });
-  }, function (err) {
-    asap(function () {
-      callback.call(ctx, err);
-    });
-  });
-}
-
-},{"./core.js":3,"asap":10}],9:[function(require,module,exports){
-'use strict';
-
-var Promise = require('./core.js');
-
-module.exports = Promise;
-Promise.enableSynchronous = function () {
-  Promise.prototype.isPending = function() {
-    return this.getState() == 0;
-  };
-
-  Promise.prototype.isFulfilled = function() {
-    return this.getState() == 1;
-  };
-
-  Promise.prototype.isRejected = function() {
-    return this.getState() == 2;
-  };
-
-  Promise.prototype.getValue = function () {
-    if (this._81 === 3) {
-      return this._65.getValue();
-    }
-
-    if (!this.isFulfilled()) {
-      throw new Error('Cannot get a value of an unfulfilled promise.');
-    }
-
-    return this._65;
-  };
-
-  Promise.prototype.getReason = function () {
-    if (this._81 === 3) {
-      return this._65.getReason();
-    }
-
-    if (!this.isRejected()) {
-      throw new Error('Cannot get a rejection reason of a non-rejected promise.');
-    }
-
-    return this._65;
-  };
-
-  Promise.prototype.getState = function () {
-    if (this._81 === 3) {
-      return this._65.getState();
-    }
-    if (this._81 === -1 || this._81 === -2) {
-      return 0;
-    }
-
-    return this._81;
-  };
-};
-
-Promise.disableSynchronous = function() {
-  Promise.prototype.isPending = undefined;
-  Promise.prototype.isFulfilled = undefined;
-  Promise.prototype.isRejected = undefined;
-  Promise.prototype.getValue = undefined;
-  Promise.prototype.getReason = undefined;
-  Promise.prototype.getState = undefined;
-};
-
-},{"./core.js":3}],10:[function(require,module,exports){
 "use strict";
 
 // rawAsap provides everything we need except exception management.
@@ -851,7 +77,7 @@ RawTask.prototype.call = function () {
     }
 };
 
-},{"./raw":11}],11:[function(require,module,exports){
+},{"./raw":2}],2:[function(require,module,exports){
 (function (global){
 "use strict";
 
@@ -1075,7 +301,781 @@ rawAsap.makeRequestCallFromTimer = makeRequestCallFromTimer;
 // https://github.com/tildeio/rsvp.js/blob/cddf7232546a9cf858524b75cde6f9edf72620a7/lib/rsvp/asap.js
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],12:[function(require,module,exports){
+},{}],3:[function(require,module,exports){
+/**
+ * http.js
+ *
+ * @author  Mouse Braun         <mouse@knoblau.ch>
+ * @author  Nicolas Brugneaux   <nicolas.brugneaux@gmail.com>
+ *
+ * @package Microbe
+ */
+
+module.exports = function( Microbe )
+{
+    'use strict';
+
+    var Promise = require( 'promise' );
+
+    /**
+     * ## http
+     *
+     * Method takes as many as necessary parameters, with url being the only required.
+     * The return then has the methods `.then( _cb )` and `.error( _cb )`
+     *
+     * @param {Object} _parameters http parameters. possible properties
+     *                             method, url, data, user, password, headers, async
+     *
+     * @example µ.http( {url: './test.html', method: 'POST', data: { number: 67867} } ).then( function(){} ).catch( function(){} );
+     */
+    Microbe.http = function( _parameters )
+    {
+        var req, method, url, data, user, password, headers, async;
+
+        if ( !_parameters )
+        {
+            return new Error( 'No parameters given' );
+        }
+        else
+        {
+            if ( typeof _parameters === 'string' )
+            {
+                _parameters = { url: _parameters };
+            }
+
+            req         = new XMLHttpRequest();
+            method      = _parameters.method || 'GET';
+            url         = _parameters.url;
+            data        = JSON.stringify( _parameters.data ) || null;
+            user        = _parameters.user || '';
+            password    = _parameters.password || '';
+            headers     = _parameters.headers  || null;
+            async       = typeof _parameters.async === "boolean" ?
+                                _parameters.async : true;
+
+            req.onreadystatechange = function()
+            {
+                if ( req.readyState === 4 )
+                {
+                    return req;
+                }
+            };
+        }
+
+        req.open( method, url, async, user, password );
+
+        // weird Safari voodoo fix
+        if ( method === 'POST' )
+        {
+            req.setRequestHeader( 'Content-Type', 'application/x-www-form-urlencoded' );
+        }
+
+        if ( headers )
+        {
+            for ( var header in headers )
+            {
+                req.setRequestHeader( header, headers[header] );
+            }
+        }
+
+        if ( async )
+        {
+            return new Promise( function( resolve, reject )
+            {
+                req.onerror = function()
+                {
+                    reject( new Error( 'Network error!' ) );
+                };
+
+                req.send( data );
+                req.onload = function()
+                {
+                    if ( req.status === 200 )
+                    {
+                        resolve( req.response );
+                    }
+                    else
+                    {
+                        reject( new Error( req.status ) );
+                    }
+                };
+
+            });
+        }
+        else
+        {
+            var _response = function( _val )
+            {
+                var _responses = {
+
+                    /**
+                     * ## .then
+                     *
+                     * Called after `http`, `http.get`, or `http.post`, this is
+                     * called passing the result as the first parameter to the callback
+                     *
+                     * @param {Function} _cb function to call after http request
+                     *
+                     * @return _Object_ contains the `.catch` method
+                     */
+                    then: function( _cb )
+                    {
+                        if ( _val.status === 200 )
+                        {
+                            _cb( _val.responseText );
+                        }
+                        return _responses;
+                    },
+
+
+                    /**
+                     * ## .catch
+                     *
+                     * Called after `http`, `http.get`, or `http.post`, this is
+                     * called passing the error as the first parameter to the callback
+                     *
+                     * @param {Function} _cb function to call after http request
+                     *
+                     * @return _Object_ contains the `.then` method
+                     */
+                    catch: function( _cb )
+                    {
+                        if ( _val.status !== 200 )
+                        {
+                            _cb( {
+                                status      : _val.status,
+                                statusText  : _val.statusText
+                            } );
+                        }
+                        return _responses;
+                    }
+                };
+                return _responses;
+            };
+
+            req.send( data );
+            req.onloadend = function()
+            {
+                req.onreadystatechange();
+                return _response( req );
+            };
+
+            return req.onloadend();
+        }
+    };
+
+
+    /**
+     * ## http.get
+     *
+     * Syntactic shortcut for simple GET requests
+     *
+     * @param {String} _url file url
+     *
+     * @example µ.http.get( './test.html' ).then( function(){} ).catch( function(){} );
+     *
+     * @return _Object_ contains `.then` and `.catch`
+     */
+    Microbe.http.get = function( _url )
+    {
+        return this( {
+            url     : _url,
+            method  : 'GET'
+        } );
+    };
+
+
+    /**
+     * ## http.post
+     *
+     * Syntactic shortcut for simple POST requests
+     *
+     * @param {String} _url file url
+     * @param {Mixed} _data data to post to location {Object or String}
+     *
+     * @example µ.http.post( './test.html', { number: 67867} ).then( function(){} ).catch( function(){} );
+     *
+     * @return _Object_ contains `.then` and `.catch`
+     */
+    Microbe.http.post = function( _url, _data )
+    {
+        return this( {
+            url     : _url,
+            data    : _data,
+            method  : 'POST'
+        } );
+    };
+};
+
+},{"promise":4}],4:[function(require,module,exports){
+'use strict';
+
+module.exports = require('./lib')
+
+},{"./lib":9}],5:[function(require,module,exports){
+'use strict';
+
+var asap = require('asap/raw');
+
+function noop() {}
+
+// States:
+//
+// 0 - pending
+// 1 - fulfilled with _value
+// 2 - rejected with _value
+// 3 - adopted the state of another promise, _value
+//
+// once the state is no longer pending (0) it is immutable
+
+// All `_` prefixed properties will be reduced to `_{random number}`
+// at build time to obfuscate them and discourage their use.
+// We don't use symbols or Object.defineProperty to fully hide them
+// because the performance isn't good enough.
+
+
+// to avoid using try/catch inside critical functions, we
+// extract them to here.
+var LAST_ERROR = null;
+var IS_ERROR = {};
+function getThen(obj) {
+  try {
+    return obj.then;
+  } catch (ex) {
+    LAST_ERROR = ex;
+    return IS_ERROR;
+  }
+}
+
+function tryCallOne(fn, a) {
+  try {
+    return fn(a);
+  } catch (ex) {
+    LAST_ERROR = ex;
+    return IS_ERROR;
+  }
+}
+function tryCallTwo(fn, a, b) {
+  try {
+    fn(a, b);
+  } catch (ex) {
+    LAST_ERROR = ex;
+    return IS_ERROR;
+  }
+}
+
+module.exports = Promise;
+
+function Promise(fn) {
+  if (typeof this !== 'object') {
+    throw new TypeError('Promises must be constructed via new');
+  }
+  if (typeof fn !== 'function') {
+    throw new TypeError('not a function');
+  }
+  this._45 = 0;
+  this._81 = 0;
+  this._65 = null;
+  this._54 = null;
+  if (fn === noop) return;
+  doResolve(fn, this);
+}
+Promise._10 = null;
+Promise._97 = null;
+Promise._61 = noop;
+
+Promise.prototype.then = function(onFulfilled, onRejected) {
+  if (this.constructor !== Promise) {
+    return safeThen(this, onFulfilled, onRejected);
+  }
+  var res = new Promise(noop);
+  handle(this, new Handler(onFulfilled, onRejected, res));
+  return res;
+};
+
+function safeThen(self, onFulfilled, onRejected) {
+  return new self.constructor(function (resolve, reject) {
+    var res = new Promise(noop);
+    res.then(resolve, reject);
+    handle(self, new Handler(onFulfilled, onRejected, res));
+  });
+};
+function handle(self, deferred) {
+  while (self._81 === 3) {
+    self = self._65;
+  }
+  if (Promise._10) {
+    Promise._10(self);
+  }
+  if (self._81 === 0) {
+    if (self._45 === 0) {
+      self._45 = 1;
+      self._54 = deferred;
+      return;
+    }
+    if (self._45 === 1) {
+      self._45 = 2;
+      self._54 = [self._54, deferred];
+      return;
+    }
+    self._54.push(deferred);
+    return;
+  }
+  handleResolved(self, deferred);
+}
+
+function handleResolved(self, deferred) {
+  asap(function() {
+    var cb = self._81 === 1 ? deferred.onFulfilled : deferred.onRejected;
+    if (cb === null) {
+      if (self._81 === 1) {
+        resolve(deferred.promise, self._65);
+      } else {
+        reject(deferred.promise, self._65);
+      }
+      return;
+    }
+    var ret = tryCallOne(cb, self._65);
+    if (ret === IS_ERROR) {
+      reject(deferred.promise, LAST_ERROR);
+    } else {
+      resolve(deferred.promise, ret);
+    }
+  });
+}
+function resolve(self, newValue) {
+  // Promise Resolution Procedure: https://github.com/promises-aplus/promises-spec#the-promise-resolution-procedure
+  if (newValue === self) {
+    return reject(
+      self,
+      new TypeError('A promise cannot be resolved with itself.')
+    );
+  }
+  if (
+    newValue &&
+    (typeof newValue === 'object' || typeof newValue === 'function')
+  ) {
+    var then = getThen(newValue);
+    if (then === IS_ERROR) {
+      return reject(self, LAST_ERROR);
+    }
+    if (
+      then === self.then &&
+      newValue instanceof Promise
+    ) {
+      self._81 = 3;
+      self._65 = newValue;
+      finale(self);
+      return;
+    } else if (typeof then === 'function') {
+      doResolve(then.bind(newValue), self);
+      return;
+    }
+  }
+  self._81 = 1;
+  self._65 = newValue;
+  finale(self);
+}
+
+function reject(self, newValue) {
+  self._81 = 2;
+  self._65 = newValue;
+  if (Promise._97) {
+    Promise._97(self, newValue);
+  }
+  finale(self);
+}
+function finale(self) {
+  if (self._45 === 1) {
+    handle(self, self._54);
+    self._54 = null;
+  }
+  if (self._45 === 2) {
+    for (var i = 0; i < self._54.length; i++) {
+      handle(self, self._54[i]);
+    }
+    self._54 = null;
+  }
+}
+
+function Handler(onFulfilled, onRejected, promise){
+  this.onFulfilled = typeof onFulfilled === 'function' ? onFulfilled : null;
+  this.onRejected = typeof onRejected === 'function' ? onRejected : null;
+  this.promise = promise;
+}
+
+/**
+ * Take a potentially misbehaving resolver function and make sure
+ * onFulfilled and onRejected are only called once.
+ *
+ * Makes no guarantees about asynchrony.
+ */
+function doResolve(fn, promise) {
+  var done = false;
+  var res = tryCallTwo(fn, function (value) {
+    if (done) return;
+    done = true;
+    resolve(promise, value);
+  }, function (reason) {
+    if (done) return;
+    done = true;
+    reject(promise, reason);
+  })
+  if (!done && res === IS_ERROR) {
+    done = true;
+    reject(promise, LAST_ERROR);
+  }
+}
+
+},{"asap/raw":2}],6:[function(require,module,exports){
+'use strict';
+
+var Promise = require('./core.js');
+
+module.exports = Promise;
+Promise.prototype.done = function (onFulfilled, onRejected) {
+  var self = arguments.length ? this.then.apply(this, arguments) : this;
+  self.then(null, function (err) {
+    setTimeout(function () {
+      throw err;
+    }, 0);
+  });
+};
+
+},{"./core.js":5}],7:[function(require,module,exports){
+'use strict';
+
+//This file contains the ES6 extensions to the core Promises/A+ API
+
+var Promise = require('./core.js');
+
+module.exports = Promise;
+
+/* Static Functions */
+
+var TRUE = valuePromise(true);
+var FALSE = valuePromise(false);
+var NULL = valuePromise(null);
+var UNDEFINED = valuePromise(undefined);
+var ZERO = valuePromise(0);
+var EMPTYSTRING = valuePromise('');
+
+function valuePromise(value) {
+  var p = new Promise(Promise._61);
+  p._81 = 1;
+  p._65 = value;
+  return p;
+}
+Promise.resolve = function (value) {
+  if (value instanceof Promise) return value;
+
+  if (value === null) return NULL;
+  if (value === undefined) return UNDEFINED;
+  if (value === true) return TRUE;
+  if (value === false) return FALSE;
+  if (value === 0) return ZERO;
+  if (value === '') return EMPTYSTRING;
+
+  if (typeof value === 'object' || typeof value === 'function') {
+    try {
+      var then = value.then;
+      if (typeof then === 'function') {
+        return new Promise(then.bind(value));
+      }
+    } catch (ex) {
+      return new Promise(function (resolve, reject) {
+        reject(ex);
+      });
+    }
+  }
+  return valuePromise(value);
+};
+
+Promise.all = function (arr) {
+  var args = Array.prototype.slice.call(arr);
+
+  return new Promise(function (resolve, reject) {
+    if (args.length === 0) return resolve([]);
+    var remaining = args.length;
+    function res(i, val) {
+      if (val && (typeof val === 'object' || typeof val === 'function')) {
+        if (val instanceof Promise && val.then === Promise.prototype.then) {
+          while (val._81 === 3) {
+            val = val._65;
+          }
+          if (val._81 === 1) return res(i, val._65);
+          if (val._81 === 2) reject(val._65);
+          val.then(function (val) {
+            res(i, val);
+          }, reject);
+          return;
+        } else {
+          var then = val.then;
+          if (typeof then === 'function') {
+            var p = new Promise(then.bind(val));
+            p.then(function (val) {
+              res(i, val);
+            }, reject);
+            return;
+          }
+        }
+      }
+      args[i] = val;
+      if (--remaining === 0) {
+        resolve(args);
+      }
+    }
+    for (var i = 0; i < args.length; i++) {
+      res(i, args[i]);
+    }
+  });
+};
+
+Promise.reject = function (value) {
+  return new Promise(function (resolve, reject) {
+    reject(value);
+  });
+};
+
+Promise.race = function (values) {
+  return new Promise(function (resolve, reject) {
+    values.forEach(function(value){
+      Promise.resolve(value).then(resolve, reject);
+    });
+  });
+};
+
+/* Prototype Methods */
+
+Promise.prototype['catch'] = function (onRejected) {
+  return this.then(null, onRejected);
+};
+
+},{"./core.js":5}],8:[function(require,module,exports){
+'use strict';
+
+var Promise = require('./core.js');
+
+module.exports = Promise;
+Promise.prototype['finally'] = function (f) {
+  return this.then(function (value) {
+    return Promise.resolve(f()).then(function () {
+      return value;
+    });
+  }, function (err) {
+    return Promise.resolve(f()).then(function () {
+      throw err;
+    });
+  });
+};
+
+},{"./core.js":5}],9:[function(require,module,exports){
+'use strict';
+
+module.exports = require('./core.js');
+require('./done.js');
+require('./finally.js');
+require('./es6-extensions.js');
+require('./node-extensions.js');
+require('./synchronous.js');
+
+},{"./core.js":5,"./done.js":6,"./es6-extensions.js":7,"./finally.js":8,"./node-extensions.js":10,"./synchronous.js":11}],10:[function(require,module,exports){
+'use strict';
+
+// This file contains then/promise specific extensions that are only useful
+// for node.js interop
+
+var Promise = require('./core.js');
+var asap = require('asap');
+
+module.exports = Promise;
+
+/* Static Functions */
+
+Promise.denodeify = function (fn, argumentCount) {
+  if (
+    typeof argumentCount === 'number' && argumentCount !== Infinity
+  ) {
+    return denodeifyWithCount(fn, argumentCount);
+  } else {
+    return denodeifyWithoutCount(fn);
+  }
+}
+
+var callbackFn = (
+  'function (err, res) {' +
+  'if (err) { rj(err); } else { rs(res); }' +
+  '}'
+);
+function denodeifyWithCount(fn, argumentCount) {
+  var args = [];
+  for (var i = 0; i < argumentCount; i++) {
+    args.push('a' + i);
+  }
+  var body = [
+    'return function (' + args.join(',') + ') {',
+    'var self = this;',
+    'return new Promise(function (rs, rj) {',
+    'var res = fn.call(',
+    ['self'].concat(args).concat([callbackFn]).join(','),
+    ');',
+    'if (res &&',
+    '(typeof res === "object" || typeof res === "function") &&',
+    'typeof res.then === "function"',
+    ') {rs(res);}',
+    '});',
+    '};'
+  ].join('');
+  return Function(['Promise', 'fn'], body)(Promise, fn);
+}
+function denodeifyWithoutCount(fn) {
+  var fnLength = Math.max(fn.length - 1, 3);
+  var args = [];
+  for (var i = 0; i < fnLength; i++) {
+    args.push('a' + i);
+  }
+  var body = [
+    'return function (' + args.join(',') + ') {',
+    'var self = this;',
+    'var args;',
+    'var argLength = arguments.length;',
+    'if (arguments.length > ' + fnLength + ') {',
+    'args = new Array(arguments.length + 1);',
+    'for (var i = 0; i < arguments.length; i++) {',
+    'args[i] = arguments[i];',
+    '}',
+    '}',
+    'return new Promise(function (rs, rj) {',
+    'var cb = ' + callbackFn + ';',
+    'var res;',
+    'switch (argLength) {',
+    args.concat(['extra']).map(function (_, index) {
+      return (
+        'case ' + (index) + ':' +
+        'res = fn.call(' + ['self'].concat(args.slice(0, index)).concat('cb').join(',') + ');' +
+        'break;'
+      );
+    }).join(''),
+    'default:',
+    'args[argLength] = cb;',
+    'res = fn.apply(self, args);',
+    '}',
+    
+    'if (res &&',
+    '(typeof res === "object" || typeof res === "function") &&',
+    'typeof res.then === "function"',
+    ') {rs(res);}',
+    '});',
+    '};'
+  ].join('');
+
+  return Function(
+    ['Promise', 'fn'],
+    body
+  )(Promise, fn);
+}
+
+Promise.nodeify = function (fn) {
+  return function () {
+    var args = Array.prototype.slice.call(arguments);
+    var callback =
+      typeof args[args.length - 1] === 'function' ? args.pop() : null;
+    var ctx = this;
+    try {
+      return fn.apply(this, arguments).nodeify(callback, ctx);
+    } catch (ex) {
+      if (callback === null || typeof callback == 'undefined') {
+        return new Promise(function (resolve, reject) {
+          reject(ex);
+        });
+      } else {
+        asap(function () {
+          callback.call(ctx, ex);
+        })
+      }
+    }
+  }
+}
+
+Promise.prototype.nodeify = function (callback, ctx) {
+  if (typeof callback != 'function') return this;
+
+  this.then(function (value) {
+    asap(function () {
+      callback.call(ctx, null, value);
+    });
+  }, function (err) {
+    asap(function () {
+      callback.call(ctx, err);
+    });
+  });
+}
+
+},{"./core.js":5,"asap":1}],11:[function(require,module,exports){
+'use strict';
+
+var Promise = require('./core.js');
+
+module.exports = Promise;
+Promise.enableSynchronous = function () {
+  Promise.prototype.isPending = function() {
+    return this.getState() == 0;
+  };
+
+  Promise.prototype.isFulfilled = function() {
+    return this.getState() == 1;
+  };
+
+  Promise.prototype.isRejected = function() {
+    return this.getState() == 2;
+  };
+
+  Promise.prototype.getValue = function () {
+    if (this._81 === 3) {
+      return this._65.getValue();
+    }
+
+    if (!this.isFulfilled()) {
+      throw new Error('Cannot get a value of an unfulfilled promise.');
+    }
+
+    return this._65;
+  };
+
+  Promise.prototype.getReason = function () {
+    if (this._81 === 3) {
+      return this._65.getReason();
+    }
+
+    if (!this.isRejected()) {
+      throw new Error('Cannot get a rejection reason of a non-rejected promise.');
+    }
+
+    return this._65;
+  };
+
+  Promise.prototype.getState = function () {
+    if (this._81 === 3) {
+      return this._65.getState();
+    }
+    if (this._81 === -1 || this._81 === -2) {
+      return 0;
+    }
+
+    return this._81;
+  };
+};
+
+Promise.disableSynchronous = function() {
+  Promise.prototype.isPending = undefined;
+  Promise.prototype.isFulfilled = undefined;
+  Promise.prototype.isRejected = undefined;
+  Promise.prototype.getValue = undefined;
+  Promise.prototype.getReason = undefined;
+  Promise.prototype.getState = undefined;
+};
+
+},{"./core.js":5}],12:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -2507,6 +2507,8 @@ var events = {
         var multiTags = this.multipleTags;
         var selectedValues = this.getSelectedValues();
         var val = selectedValues[0];
+        var selectedItems = this.getSelected();
+        var selectedText = selectedItems.length ? selectedItems[0].innerHTML : '';
         var selectedCount = selectedValues.length;
         var selected = this.refs.selected;
 
@@ -2515,7 +2517,7 @@ var events = {
                 this.setByIndex(0);
                 break;
             case 1:
-                selected.innerHTML = val === '' ? this.placeholder : selectedValues[0];
+                selected.innerHTML = val === '' ? this.placeholder : selectedText;
                 break;
             default:
                 selected.innerHTML = this.multipleMessage;
@@ -4288,9 +4290,9 @@ var utils = {
 exports['default'] = utils;
 module.exports = exports['default'];
 
-},{"./classes":14,"microbejs/src/modules/http":1}],20:[function(require,module,exports){
+},{"./classes":14,"microbejs/src/modules/http":3}],20:[function(require,module,exports){
 'use strict';
 
-module.exports = '0.6.2';
+module.exports = '0.6.3';
 
 },{}]},{},[17]);

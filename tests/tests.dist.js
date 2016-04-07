@@ -1067,7 +1067,7 @@ Promise.disableSynchronous = function() {
 },{"./core.js":5}],12:[function(require,module,exports){
 module.exports={
   "name": "flounder",
-  "version": "0.6.2",
+  "version": "0.6.3",
   "author": "Mouse Braun <mouse@knoblau.ch>",
   "description": "a native friendly dropdown menu",
   "repository": {
@@ -4350,7 +4350,7 @@ module.exports = exports['default'];
 },{"./classes":15,"microbejs/src/modules/http":3}],21:[function(require,module,exports){
 'use strict';
 
-module.exports = '0.6.2';
+module.exports = '0.6.3';
 
 },{}],22:[function(require,module,exports){
 
@@ -4801,14 +4801,13 @@ var tests = function tests(Flounder) {
     });
 
     /*
-     * ## closing Dropdown tests
+     * ## blur Opened Dropdowns
      *
      * @test exists
      * @test multiple targets returns an array
      * @test of flounders
      */
     QUnit.test('blurOpenedDropdown', function (assert) {
-        debugger;
         var data = [{
             text: "Item 1",
             value: "item1"
@@ -4827,7 +4826,7 @@ var tests = function tests(Flounder) {
 
         document.body.click();
 
-        assert.equal(flounder.refs.selected.innerHTML, 'Item 1', 'text' + ' stayed after focusout');
+        assert.equal(flounder.refs.selected.innerHTML, 'Item 1', 'text is' + ' stayed after focusout');
 
         flounder.destroy();
     });
