@@ -445,6 +445,7 @@ Change Log
 
 + defaults
     + added defaultEmpty
+    + fix removeAllChildren when selectDataOverride option is passed
 
 
 0.6.2
