@@ -2276,6 +2276,7 @@ var defaultOptions = {
         wrapper: ''
     },
     data: [],
+    defaultEmpty: false,
     defaultIndex: false,
     defaultValue: false,
     keepChangesOnDestroy: false,
@@ -2343,9 +2344,10 @@ var defaults = {
         var setPlaceholderDefault = function setPlaceholderDefault(_data) {
             var refs = self.refs;
             var select = refs.select;
+            var placeholder = configObj.placeholder;
 
             var _default = {
-                text: configObj.placeholder || defaultOptions.placeholder,
+                text: placeholder || placeholder === '' ? placeholder : defaultOptions.placeholder,
                 value: '',
                 index: 0,
                 extraClass: _classes2['default'].HIDDEN
@@ -2446,7 +2448,13 @@ var defaults = {
         var checkDefaultPriority = function checkDefaultPriority() {
             var _data = sortData(data);
 
-            if (configObj.placeholder || _data.length === 0) {
+            if (configObj.defaultEmpty) {
+                configObj.placeholder = '';
+            }
+
+            var placeholder = configObj.placeholder;
+
+            if (placeholder || placeholder === '' || _data.length === 0) {
                 return setPlaceholderDefault(self, _data);
             }
 
@@ -2569,6 +2577,7 @@ var events = {
         var selectedCount = selectedValues.length;
         var selected = this.refs.selected;
 
+        console.log('this.placeholder', this.placeholder);
         switch (selectedCount) {
             case 0:
                 this.setByIndex(0);
@@ -3519,6 +3528,10 @@ var Flounder = (function () {
                         this[clss + 'Class'] = propsClasses && propsClasses[clss] !== undefined ? propsClasses[clss] : _classes[clss];
                     }
                 }
+            }
+
+            if (props.defaultEmpty) {
+                this.placeholder = '';
             }
 
             if (this.multipleTags) {

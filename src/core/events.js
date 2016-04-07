@@ -84,6 +84,7 @@ const events = {
         let selectedCount   = selectedValues.length;
         let selected        = this.refs.selected;
 
+console.log( 'this.placeholder', this.placeholder );
         switch ( selectedCount )
         {
             case 0:
@@ -552,7 +553,8 @@ const events = {
             // tab, shift, ctrl, alt, caps, cmd
             let nonKeys = [ 9, 16, 17, 18, 20, 91 ];
 
-            if ( e || obj.type === 'blur' || ( keyCode && nonKeys.indexOf( keyCode ) === -1 ) )
+            if ( e || obj.type === 'blur' ||
+                ( keyCode && nonKeys.indexOf( keyCode ) === -1 ) )
             {
                 if ( this.toggleList.justOpened && !e )
                 {

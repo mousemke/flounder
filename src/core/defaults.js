@@ -9,6 +9,7 @@ const defaultOptions = {
         wrapper     : ''
     },
     data                    : [],
+    defaultEmpty            : false,
     defaultIndex            : false,
     defaultValue            : false,
     keepChangesOnDestroy    : false,
@@ -79,9 +80,10 @@ const defaults = {
         {
             let refs        = self.refs;
             let select      = refs.select;
+            let placeholder = configObj.placeholder;
 
             let _default    = {
-                text        : configObj.placeholder || defaultOptions.placeholder,
+                text        : placeholder || placeholder === '' ? placeholder : defaultOptions.placeholder,
                 value       : '',
                 index       : 0,
                 extraClass  : classes.HIDDEN
@@ -200,9 +202,16 @@ const defaults = {
          */
         let checkDefaultPriority = function()
         {
-            let _data = sortData( data );
+            let _data       = sortData( data );
 
-            if ( configObj.placeholder || _data.length === 0 )
+            if ( configObj.defaultEmpty )
+            {
+                configObj.placeholder = '';
+            }
+
+            let placeholder = configObj.placeholder;
+
+            if ( placeholder || placeholder === '' || _data.length === 0 )
             {
                 return setPlaceholderDefault( self, _data );
             }
