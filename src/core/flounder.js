@@ -351,6 +351,11 @@ class Flounder
             }
         }
 
+        if ( props.defaultEmpty )
+        {
+            this.placeholder = '';
+        }
+
         if ( this.multipleTags )
         {
             this.search         = true;

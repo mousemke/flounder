@@ -1,12 +1,12 @@
 /*!
- * Flounder JavaScript Stylable Selectbox v0.6.2
+ * Flounder JavaScript Stylable Selectbox v0.6.3
  * https://github.com/sociomantic-tsunami/flounder
  *
  * Copyright 2015-2016 Sociomantic Labs and other contributors
  * Released under the MIT license
  * https://github.com/sociomantic-tsunami/flounder/license
  *
- * Date: Tue Apr 05 2016
+ * Date: Thu Apr 07 2016
  * "This, so far, is the best Flounder ever"
  */
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
@@ -2219,6 +2219,7 @@ var defaultOptions = {
         wrapper: ''
     },
     data: [],
+    defaultEmpty: false,
     defaultIndex: false,
     defaultValue: false,
     keepChangesOnDestroy: false,
@@ -2286,9 +2287,10 @@ var defaults = {
         var setPlaceholderDefault = function setPlaceholderDefault(_data) {
             var refs = self.refs;
             var select = refs.select;
+            var placeholder = configObj.placeholder;
 
             var _default = {
-                text: configObj.placeholder || defaultOptions.placeholder,
+                text: placeholder || placeholder === '' ? placeholder : defaultOptions.placeholder,
                 value: '',
                 index: 0,
                 extraClass: _classes2['default'].HIDDEN
@@ -2389,7 +2391,13 @@ var defaults = {
         var checkDefaultPriority = function checkDefaultPriority() {
             var _data = sortData(data);
 
-            if (configObj.placeholder || _data.length === 0) {
+            if (configObj.defaultEmpty) {
+                configObj.placeholder = '';
+            }
+
+            var placeholder = configObj.placeholder;
+
+            if (placeholder || placeholder === '' || _data.length === 0) {
                 return setPlaceholderDefault(self, _data);
             }
 
@@ -2512,6 +2520,7 @@ var events = {
         var selectedCount = selectedValues.length;
         var selected = this.refs.selected;
 
+        console.log('this.placeholder', this.placeholder);
         switch (selectedCount) {
             case 0:
                 this.setByIndex(0);
@@ -3464,6 +3473,10 @@ var Flounder = (function () {
                 }
             }
 
+            if (props.defaultEmpty) {
+                this.placeholder = '';
+            }
+
             if (this.multipleTags) {
                 this.search = true;
                 this.multiple = true;
@@ -4293,7 +4306,7 @@ module.exports = exports['default'];
 },{"./classes":14,"microbejs/src/modules/http":3}],20:[function(require,module,exports){
 'use strict';
 
-module.exports = '0.6.2';
+module.exports = '0.6.3';
 
 },{}],21:[function(require,module,exports){
 

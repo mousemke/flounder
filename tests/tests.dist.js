@@ -1067,7 +1067,7 @@ Promise.disableSynchronous = function() {
 },{"./core.js":5}],12:[function(require,module,exports){
 module.exports={
   "name": "flounder",
-  "version": "0.6.2",
+  "version": "0.6.3",
   "author": "Mouse Braun <mouse@knoblau.ch>",
   "description": "a native friendly dropdown menu",
   "repository": {
@@ -2276,6 +2276,7 @@ var defaultOptions = {
         wrapper: ''
     },
     data: [],
+    defaultEmpty: false,
     defaultIndex: false,
     defaultValue: false,
     keepChangesOnDestroy: false,
@@ -2343,9 +2344,10 @@ var defaults = {
         var setPlaceholderDefault = function setPlaceholderDefault(_data) {
             var refs = self.refs;
             var select = refs.select;
+            var placeholder = configObj.placeholder;
 
             var _default = {
-                text: configObj.placeholder || defaultOptions.placeholder,
+                text: placeholder || placeholder === '' ? placeholder : defaultOptions.placeholder,
                 value: '',
                 index: 0,
                 extraClass: _classes2['default'].HIDDEN
@@ -2446,7 +2448,13 @@ var defaults = {
         var checkDefaultPriority = function checkDefaultPriority() {
             var _data = sortData(data);
 
-            if (configObj.placeholder || _data.length === 0) {
+            if (configObj.defaultEmpty) {
+                configObj.placeholder = '';
+            }
+
+            var placeholder = configObj.placeholder;
+
+            if (placeholder || placeholder === '' || _data.length === 0) {
                 return setPlaceholderDefault(self, _data);
             }
 
@@ -2569,6 +2577,7 @@ var events = {
         var selectedCount = selectedValues.length;
         var selected = this.refs.selected;
 
+        console.log('this.placeholder', this.placeholder);
         switch (selectedCount) {
             case 0:
                 this.setByIndex(0);
@@ -3521,6 +3530,10 @@ var Flounder = (function () {
                 }
             }
 
+            if (props.defaultEmpty) {
+                this.placeholder = '';
+            }
+
             if (this.multipleTags) {
                 this.search = true;
                 this.multiple = true;
@@ -4350,7 +4363,7 @@ module.exports = exports['default'];
 },{"./classes":15,"microbejs/src/modules/http":3}],21:[function(require,module,exports){
 'use strict';
 
-module.exports = '0.6.2';
+module.exports = '0.6.3';
 
 },{}],22:[function(require,module,exports){
 
@@ -4801,14 +4814,13 @@ var tests = function tests(Flounder) {
     });
 
     /*
-     * ## closing Dropdown tests
+     * ## blur Opened Dropdowns
      *
      * @test exists
      * @test multiple targets returns an array
      * @test of flounders
      */
     QUnit.test('blurOpenedDropdown', function (assert) {
-        debugger;
         var data = [{
             text: "Item 1",
             value: "item1"
@@ -4827,7 +4839,7 @@ var tests = function tests(Flounder) {
 
         document.body.click();
 
-        assert.equal(flounder.refs.selected.innerHTML, 'Item 1', 'text' + ' stayed after focusout');
+        assert.equal(flounder.refs.selected.innerHTML, 'Item 1', 'text is' + ' stayed after focusout');
 
         flounder.destroy();
     });

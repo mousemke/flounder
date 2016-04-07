@@ -137,6 +137,7 @@ new Flounder( document.getElementById( 'vanilla--input' ), {
 new Flounder( document.getElementById( 'vanilla--select' ), {
     defaultValue    : '1',
 
+    onSelect        : function(){ console.log( 'woot' ); },
     classes         : {
         flounder        : 'class--to--give--the--main--flounder--element',
         hidden          : 'class--to--denote--hidden',
