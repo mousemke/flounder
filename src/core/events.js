@@ -553,6 +553,7 @@ const events = {
             let nonKeys = [ 9, 16, 17, 18, 20, 91 ];
 
             if ( e || obj.type === 'blur' ||
+                ( !keyCode && obj.type === 'change' ) ||
                 ( keyCode && nonKeys.indexOf( keyCode ) === -1 ) )
             {
                 if ( this.toggleList.justOpened && !e )

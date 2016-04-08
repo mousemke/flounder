@@ -449,7 +449,7 @@ Change Log
 
 + events
     + fixed addPlaceholder method for blur of opened dropdown
-    + onSelect now reacts on change event
+    + onSelect now reacts on change events
 
 + traviscli
     + dropped support for node 0.11
