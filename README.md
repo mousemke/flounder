@@ -451,6 +451,10 @@ Change Log
     + fixed addPlaceholder method for blur of opened dropdown
     + onSelect now reacts on change event
 
++ traviscli
+    + dropped support for node 0.11
+    + added support for node 5.0.0
+
 + tests
     + add test "blurOpenedDropdown" to cover fix
 
