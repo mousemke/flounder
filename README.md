@@ -436,6 +436,10 @@ Change Log
 0.6.3
 -----
 
++ api
+    + fixed a specificity css issue preventing disabling things
+    + fixed a type issue that prevented disabling by value
+
 + tests
     + add test "blurOpenedDropdown" to cover fix
 
@@ -469,7 +473,7 @@ Change Log
     + updates and cleanup
 
 + documentation
-    + repo url update
+    + repo url updategi
     + general updates and clean up
 
 

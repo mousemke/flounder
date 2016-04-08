@@ -297,7 +297,7 @@ const api = {
         {
             let values = this.refs.selectOptions.map( function( el )
             {
-                return el.value === value ? el.index : null;
+                return el.value === value + '' ? el.index : null;
             } ).filter( a => !!a );
 
             return value ? this.disableByIndex( values, reenable ) : null;

@@ -84,7 +84,6 @@ const events = {
         let selectedCount   = selectedValues.length;
         let selected        = this.refs.selected;
 
-console.log( 'this.placeholder', this.placeholder );
         switch ( selectedCount )
         {
             case 0:

@@ -222,7 +222,7 @@
 }
 
 
-.flounder__disabled, .flounder__disabled--option
+.flounder__section .flounder__disabled, .flounder__disabled--option
 {
     pointer-events:                 none;
     cursor:                         auto;
