@@ -440,15 +440,18 @@ Change Log
     + fixed a specificity css issue preventing disabling things
     + fixed a type issue that prevented disabling by value
 
-+ tests
-    + add test "blurOpenedDropdown" to cover fix
++ build
+    + elements are now properly disabled with the disabled flag
+
++ defaults
+    + added defaultEmpty
 
 + events
     + fixed addPlaceholder method for blur of opened dropdown
     + onSelect now reacts on change event
 
-+ defaults
-    + added defaultEmpty
++ tests
+    + add test "blurOpenedDropdown" to cover fix
 
 
 0.6.2

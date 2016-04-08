@@ -233,7 +233,7 @@ const build = {
          *
          * builds an individual option tag for a flounder dropdown
          *
-         * @param {Object} dataObj [description]
+         * @param {Object} dataObj option build properties
          * @param {Number} i index
          *
          * @return {DOMElement}
@@ -249,6 +249,13 @@ const build = {
                                             value       : dataObj.value } );
                 let escapedText         = escapeHTML( dataObj.text );
                 selectOption.innerHTML  = escapedText;
+
+                let disabled = dataObj.disabled;
+                if ( disabled )
+                {
+                    selectOption.setAttribute( 'disabled', disabled );
+                }
+
                 select.appendChild( selectOption );
             }
             else
@@ -266,7 +273,7 @@ const build = {
 
             if ( selectOption.getAttribute( 'disabled' ) )
             {
-                addClass( data[ i ], classes.DISABLED_OPTION );
+                addClass( data[ i ], classes.DISABLED );
             }
 
             return selectOption;
