@@ -6,7 +6,7 @@
  * Released under the MIT license
  * https://github.com/sociomantic-tsunami/flounder/license
  *
- * Date: Thu Apr 07 2016
+ * Date: Fri Apr 08 2016
  * "This, so far, is the best Flounder ever"
  */
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
@@ -1376,7 +1376,7 @@ var api = {
             if (typeof _ret4 === 'object') return _ret4.v;
         } else {
             var values = this.refs.selectOptions.map(function (el) {
-                return el.value === value ? el.index : null;
+                return el.value === value + '' ? el.index : null;
             }).filter(function (a) {
                 return !!a;
             });
@@ -1935,7 +1935,7 @@ var build = {
          *
          * builds an individual option tag for a flounder dropdown
          *
-         * @param {Object} dataObj [description]
+         * @param {Object} dataObj option build properties
          * @param {Number} i index
          *
          * @return {DOMElement}
@@ -1949,6 +1949,12 @@ var build = {
                     value: dataObj.value });
                 var escapedText = escapeHTML(dataObj.text);
                 selectOption.innerHTML = escapedText;
+
+                var disabled = dataObj.disabled;
+                if (disabled) {
+                    selectOption.setAttribute('disabled', disabled);
+                }
+
                 select.appendChild(selectOption);
             } else {
                 var selectChild = selectRef.children[i];
@@ -1962,7 +1968,7 @@ var build = {
             }
 
             if (selectOption.getAttribute('disabled')) {
-                addClass(data[i], _classes2['default'].DISABLED_OPTION);
+                addClass(data[i], _classes2['default'].DISABLED);
             }
 
             return selectOption;
@@ -2052,7 +2058,7 @@ var build = {
                     _this2.data = data;
                 })();
             } else if (this.selectDataOverride) {
-                this.removeAllChildren(target);
+                _utils2['default'].removeAllChildren(target);
             }
 
             this.target = target.parentNode;
@@ -2520,7 +2526,6 @@ var events = {
         var selectedCount = selectedValues.length;
         var selected = this.refs.selected;
 
-        console.log('this.placeholder', this.placeholder);
         switch (selectedCount) {
             case 0:
                 this.setByIndex(0);
@@ -2915,7 +2920,7 @@ var events = {
             // tab, shift, ctrl, alt, caps, cmd
             var nonKeys = [9, 16, 17, 18, 20, 91];
 
-            if (e || obj.type === 'blur' || keyCode && nonKeys.indexOf(keyCode) === -1) {
+            if (e || obj.type === 'blur' || !keyCode && obj.type === 'change' || keyCode && nonKeys.indexOf(keyCode) === -1) {
                 if (this.toggleList.justOpened && !e) {
                     this.toggleList.justOpened = false;
                 } else {

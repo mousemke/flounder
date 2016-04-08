@@ -1433,7 +1433,7 @@ var api = {
             if (typeof _ret4 === 'object') return _ret4.v;
         } else {
             var values = this.refs.selectOptions.map(function (el) {
-                return el.value === value ? el.index : null;
+                return el.value === value + '' ? el.index : null;
             }).filter(function (a) {
                 return !!a;
             });
@@ -1992,7 +1992,7 @@ var build = {
          *
          * builds an individual option tag for a flounder dropdown
          *
-         * @param {Object} dataObj [description]
+         * @param {Object} dataObj option build properties
          * @param {Number} i index
          *
          * @return {DOMElement}
@@ -2006,6 +2006,12 @@ var build = {
                     value: dataObj.value });
                 var escapedText = escapeHTML(dataObj.text);
                 selectOption.innerHTML = escapedText;
+
+                var disabled = dataObj.disabled;
+                if (disabled) {
+                    selectOption.setAttribute('disabled', disabled);
+                }
+
                 select.appendChild(selectOption);
             } else {
                 var selectChild = selectRef.children[i];
@@ -2019,7 +2025,7 @@ var build = {
             }
 
             if (selectOption.getAttribute('disabled')) {
-                addClass(data[i], _classes2['default'].DISABLED_OPTION);
+                addClass(data[i], _classes2['default'].DISABLED);
             }
 
             return selectOption;
@@ -2109,7 +2115,7 @@ var build = {
                     _this2.data = data;
                 })();
             } else if (this.selectDataOverride) {
-                this.removeAllChildren(target);
+                _utils2['default'].removeAllChildren(target);
             }
 
             this.target = target.parentNode;
@@ -2577,7 +2583,6 @@ var events = {
         var selectedCount = selectedValues.length;
         var selected = this.refs.selected;
 
-        console.log('this.placeholder', this.placeholder);
         switch (selectedCount) {
             case 0:
                 this.setByIndex(0);
@@ -2972,7 +2977,7 @@ var events = {
             // tab, shift, ctrl, alt, caps, cmd
             var nonKeys = [9, 16, 17, 18, 20, 91];
 
-            if (e || obj.type === 'blur' || keyCode && nonKeys.indexOf(keyCode) === -1) {
+            if (e || obj.type === 'blur' || !keyCode && obj.type === 'change' || keyCode && nonKeys.indexOf(keyCode) === -1) {
                 if (this.toggleList.justOpened && !e) {
                     this.toggleList.justOpened = false;
                 } else {
