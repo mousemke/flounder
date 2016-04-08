@@ -373,7 +373,7 @@ const build = {
             }
             else if ( this.selectDataOverride )
             {
-                this.removeAllChildren( target );
+                utils.removeAllChildren( target );
             }
 
             this.target             = target.parentNode;
