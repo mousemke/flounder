@@ -60,9 +60,24 @@ const events = {
         {
             if ( dataObj.tagName === 'DIV' )
             {
+                dataObj.addEventListener( 'mouseenter', this.addHoverClass );
+                dataObj.addEventListener( 'mouseleave', this.removeHoverClass );
+
                 dataObj.addEventListener( 'click', this.clickSet );
             }
         } );
+    },
+
+
+    addHoverClass : function()
+    {
+        utils.addClass( this, classes.HOVER );
+    },
+
+
+    removeHoverClass : function()
+    {
+        utils.removeClass( this, classes.HOVER );
     },
 
 

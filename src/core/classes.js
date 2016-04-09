@@ -7,6 +7,7 @@ const classes =
     HEADER              : 'flounder__header',
     HIDDEN              : 'flounder--hidden',
     HIDDEN_IOS          : 'flounder--hidden--ios',
+    HOVER               : 'flounder__hover',
     LIST                : 'flounder__list',
     LOADING             : 'flounder__loading',
     LOADING_FAILED      : 'flounder__loading--failed',

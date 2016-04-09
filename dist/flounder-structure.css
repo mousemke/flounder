@@ -91,7 +91,7 @@
 }
 
 
-.flounder__option:hover
+.flounder__hover
 {
     background-color:               #eee;
 }
@@ -103,11 +103,17 @@
 }
 
 
-.flounder__option--selected:hover
+.flounder__option--selected.flounder__hover
 {
+    color:                          #ccc;
     background-color:               #aaa;
 }
 
+
+.flounder__option--selected.flounder__hover .flounder__option--description
+{
+    color:                          #eee;
+}
 
 
 /* -------------------------------------------------------------------------- */
@@ -222,7 +228,7 @@
 }
 
 
-.flounder__list .flounder__disabled, .flounder__disabled--option
+.flounder__disabled, .flounder__disabled--option
 {
     pointer-events:                 none;
     cursor:                         auto;
