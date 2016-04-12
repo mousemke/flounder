@@ -63,7 +63,8 @@ const build = {
      */
     bindThis : function()
     {
-            [ 'catchBodyClick',
+            [ 
+            'catchBodyClick',
             'checkClickTarget',
             'checkFlounderKeypress',
             'clearPlaceholder',
