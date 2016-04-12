@@ -1,4 +1,4 @@
-import { React, Component, ReactDOM, FlounderReact, Flounder }  from '../src/wrappers/flounder.react.jsx';
+import Flounder from '../src/core/flounder';
 
 window.Flounder = Flounder;
 
@@ -148,9 +148,9 @@ new Flounder( document.getElementById( 'vanilla--select' ), {
 
 
 /**
- * React from Div (multiple, tags, placeholder, built from element)
+ * Vanilla from Div (multiple, tags, placeholder, built from element)
  */
-ReactDOM.render( React.createElement( FlounderReact, {
+new Flounder( document.getElementById( 'react--multiple--tags' ), {
     placeholder         : 'placeholders!',
 
     multiple            : true,
@@ -159,26 +159,25 @@ ReactDOM.render( React.createElement( FlounderReact, {
 
     onInit              : function(){ this.data = buildData(); },
 
-    } ), document.getElementById( 'react--multiple--tags' )
-);
+} );
 
 
 /**
- * React from Span (default value, built from element)
+ * Vanilla from Span (default value, built from element)
  */
-ReactDOM.render( React.createElement( FlounderReact, {
+new Flounder( document.getElementById( 'react--span' ), {
+
     defaultValue        : 'tag',
 
-    onInit              : function(){ this.data = buildData(); },
+    onInit              : function(){ this.data = buildData(); }
 
-    } ), document.getElementById( 'react--span' )
-);
+} );
 
 
 /**
  * React from Div (multiple, description, default index, elements disabled, built from element)
  */
-ReactDOM.render( React.createElement( FlounderReact, {
+new Flounder( document.getElementById( 'react--multiple--desc' ), {
     defaultIndex        : 3,
 
     multiple            : true,
@@ -197,8 +196,8 @@ ReactDOM.render( React.createElement( FlounderReact, {
         } );
 
         this.data = res;
-    } } ), document.getElementById( 'react--multiple--desc' )
-);
+    }
+} );
 
 
 requirejs.config( {
@@ -313,4 +312,4 @@ requirejs( [ 'flounder' ], function( Flounder )
 } );
 
 
-export default { React, Component, ReactDOM, FlounderReact, Flounder };
+export default Flounder;

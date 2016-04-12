@@ -91,12 +91,6 @@ gulp.task( 'vanilla', function()
 } );
 
 
-gulp.task( 'react', function()
-{
-    build( 'wrappers', 'flounder.react', '.jsx' );
-} );
-
-
 gulp.task( 'amd', function()
 {
     build( 'wrappers', 'flounder.amd' );
@@ -117,14 +111,13 @@ gulp.task( 'microbe', function()
 
 gulp.task( 'default', [], function()
 {
-    gulp.start( [ 'vanilla', 'react', 'amd', 'jquery', 'microbe', 'demo', 'buildTests' ] );
+    gulp.start( [ 'vanilla', 'amd', 'jquery', 'microbe', 'demo', 'buildTests' ] );
 } );
 
 
 gulp.task( 'compile', [], function()
 {
         browserifyFiles( 'core', 'flounder' );
-        browserifyFiles( 'wrappers', 'flounder.react' );
         browserifyFiles( 'wrappers', 'flounder.amd' );
         browserifyFiles( 'wrappers', 'flounder.jquery' );
         browserifyFiles( 'wrappers', 'flounder.microbe' );
@@ -134,7 +127,6 @@ gulp.task( 'compile', [], function()
 gulp.task( 'min', [], function()
 {
         min( 'core', 'flounder' );
-        min( 'wrappers', 'flounder.react' );
         min( 'wrappers', 'flounder.amd' );
         min( 'wrappers', 'flounder.jquery' );
         min( 'wrappers', 'flounder.microbe' );

@@ -1067,7 +1067,7 @@ Promise.disableSynchronous = function() {
 },{"./core.js":5}],12:[function(require,module,exports){
 module.exports={
   "name": "flounder",
-  "version": "0.6.3",
+  "version": "0.6.4",
   "author": "Mouse Braun <mouse@knoblau.ch>",
   "description": "a native friendly dropdown menu",
   "repository": {
@@ -1082,7 +1082,6 @@ module.exports={
     "gulp": "./node_modules/.bin/gulp",
     "jquery": "./node_modules/.bin/gulp jquery",
     "microbe": "./node_modules/.bin/gulp microbe",
-    "react": "./node_modules/.bin/gulp react",
     "test": "node --harmony ./scripts/nightmare.js",
     "vanilla": "./node_modules/.bin/gulp vanilla",
     "versionBump": "node ./scripts/version_bump.js"
@@ -1098,8 +1097,6 @@ module.exports={
     "nightmare": "^2.1.1",
     "promise": "^7.1.1",
     "qunitjs": "^1.20.0",
-    "react": "^0.14.2",
-    "react-dom": "^0.14.2",
     "requirejs": "^2.1.22",
     "serve-static": "^1.10.0",
     "vo": "^1.0.3"
@@ -4368,7 +4365,7 @@ module.exports = exports['default'];
 },{"./classes":15,"microbejs/src/modules/http":3}],21:[function(require,module,exports){
 'use strict';
 
-module.exports = '0.6.3';
+module.exports = '0.6.4';
 
 },{}],22:[function(require,module,exports){
 

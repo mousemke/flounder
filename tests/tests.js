@@ -2,8 +2,8 @@
 /* jshint globalstrict: true */
 'use strict';
 
-import Flounder from '../src/core/flounder';
-import utils    from '../src/core/utils';
+import Flounder 		from '../src/core/flounder';
+import utils    		from '../src/core/utils';
 
 import constructorTest  from './unit/constructorTest';
 import flounderTest     from './unit/flounderTest';
