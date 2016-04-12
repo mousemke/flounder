@@ -145,7 +145,7 @@ new _srcCoreFlounder2['default'](document.getElementById('vanilla--select'), {
 /**
  * Vanilla from Div (multiple, tags, placeholder, built from element)
  */
-new _srcCoreFlounder2['default'](document.getElementById('react--multiple--tags'), {
+new _srcCoreFlounder2['default'](document.getElementById('vanilla--multiple--tags'), {
     placeholder: 'placeholders!',
 
     multiple: true,
@@ -161,7 +161,7 @@ new _srcCoreFlounder2['default'](document.getElementById('react--multiple--tags'
 /**
  * Vanilla from Span (default value, built from element)
  */
-new _srcCoreFlounder2['default'](document.getElementById('react--span'), {
+new _srcCoreFlounder2['default'](document.getElementById('vanilla--span'), {
 
     defaultValue: 'tag',
 
@@ -172,9 +172,9 @@ new _srcCoreFlounder2['default'](document.getElementById('react--span'), {
 });
 
 /**
- * React from Div (multiple, description, default index, elements disabled, built from element)
+ * Vanilla from Div (multiple, description, default index, elements disabled, built from element)
  */
-new _srcCoreFlounder2['default'](document.getElementById('react--multiple--desc'), {
+new _srcCoreFlounder2['default'](document.getElementById('vanilla--multiple--desc'), {
     defaultIndex: 3,
 
     multiple: true,
@@ -291,7 +291,7 @@ requirejs(['flounder'], function (Flounder) {
     });
 });
 
-exports['default'] = { React: React, Component: Component, ReactDOM: ReactDOM, FlounderReact: FlounderReact, Flounder: _srcCoreFlounder2['default'] };
+exports['default'] = _srcCoreFlounder2['default'];
 module.exports = exports['default'];
 
 },{"../src/core/flounder":18}],2:[function(require,module,exports){
@@ -2464,6 +2464,7 @@ var classes = {
     HEADER: 'flounder__header',
     HIDDEN: 'flounder--hidden',
     HIDDEN_IOS: 'flounder--hidden--ios',
+    HOVER: 'flounder__hover',
     LIST: 'flounder__list',
     LOADING: 'flounder__loading',
     LOADING_FAILED: 'flounder__loading--failed',
@@ -2789,9 +2790,20 @@ var events = {
 
         this.refs.data.forEach(function (dataObj, i) {
             if (dataObj.tagName === 'DIV') {
+                dataObj.addEventListener('mouseenter', _this.addHoverClass);
+                dataObj.addEventListener('mouseleave', _this.removeHoverClass);
+
                 dataObj.addEventListener('click', _this.clickSet);
             }
         });
+    },
+
+    addHoverClass: function addHoverClass() {
+        _utils2['default'].addClass(this, _classes2['default'].HOVER);
+    },
+
+    removeHoverClass: function removeHoverClass() {
+        _utils2['default'].removeClass(this, _classes2['default'].HOVER);
     },
 
     /**

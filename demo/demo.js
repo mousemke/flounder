@@ -150,7 +150,7 @@ new Flounder( document.getElementById( 'vanilla--select' ), {
 /**
  * Vanilla from Div (multiple, tags, placeholder, built from element)
  */
-new Flounder( document.getElementById( 'react--multiple--tags' ), {
+new Flounder( document.getElementById( 'vanilla--multiple--tags' ), {
     placeholder         : 'placeholders!',
 
     multiple            : true,
@@ -165,7 +165,7 @@ new Flounder( document.getElementById( 'react--multiple--tags' ), {
 /**
  * Vanilla from Span (default value, built from element)
  */
-new Flounder( document.getElementById( 'react--span' ), {
+new Flounder( document.getElementById( 'vanilla--span' ), {
 
     defaultValue        : 'tag',
 
@@ -175,9 +175,9 @@ new Flounder( document.getElementById( 'react--span' ), {
 
 
 /**
- * React from Div (multiple, description, default index, elements disabled, built from element)
+ * Vanilla from Div (multiple, description, default index, elements disabled, built from element)
  */
-new Flounder( document.getElementById( 'react--multiple--desc' ), {
+new Flounder( document.getElementById( 'vanilla--multiple--desc' ), {
     defaultIndex        : 3,
 
     multiple            : true,
