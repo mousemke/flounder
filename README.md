@@ -436,6 +436,9 @@ Change Log
 0.6.4
 -----
 
++ build
+    + complex data objects are now built correctly
+
 + wrappers
     + react moved to it's own repo
 
