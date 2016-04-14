@@ -442,6 +442,11 @@ Change Log
 + wrappers
     + react moved to it's own repo
 
++ css
+    + .flounder__arrow - background colors
+    + .flounder__arrow - :hover
+    + .flounder__arrow - :active
+
 
 0.6.3
 -----

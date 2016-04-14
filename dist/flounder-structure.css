@@ -22,13 +22,26 @@
 {
     position:                       absolute;
     background-color:               transparent;
-    top:                            12px;
-    right:                          10px;
-    width:                          9px;
-    height:                         5px;
+    top:                            0;
+    right:                          0;
+    width:                          30px;
+    height:                         100%;
     pointer-events:                 none;
     background-image:               url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAFCAYAAACXU8ZrAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEwAACxMBAJqcGAAAAIBJREFUCJljLG/v72b8x5DLgAP8Z2LsY2T4/5+xon3SMgZGhggMBQz/FndWFMQzMTAy/mf/+S6e4T/DbmQF/xgYtnH8+JDEwMj4nxEmWF8/hec7x999TAwMpgz//x1j/8nl2tiY/o2BgYGBEVl3UU+PCOtvlpmMDGwpHZVZ72HiAD31KSlM9h37AAAAAElFTkSuQmCC');
     background-repeat:              no-repeat;
+    background-position:            10px;
+}
+
+
+.flounder__option--selected--displayed:hover ~ .flounder__arrow
+{
+    background-color:               #eee;
+}
+
+
+.flounder__option--selected--displayed:active ~ .flounder__arrow
+{
+    background-color:               #ccc;
 }
 
 
