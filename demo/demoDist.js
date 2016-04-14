@@ -2279,7 +2279,16 @@ var build = {
                     section.appendChild(header);
                     optionsList.appendChild(section);
 
-                    dataObj.data.forEach(function (d) {
+                    var dataObjData = dataObj.data;
+
+                    dataObjData.forEach(function (d, i) {
+                        if (d !== 'object') {
+                            d = dataObjData[i] = {
+                                text: d,
+                                value: d
+                            };
+                        }
+
                         data[index] = buildDiv(d, index);
                         section.appendChild(data[index]);
                         selectOptions[index] = buildOption(d, index);
@@ -2294,6 +2303,7 @@ var build = {
             }
         });
 
+        console.log(originalData);
         return [data, selectOptions];
     },
 

@@ -304,8 +304,18 @@ const build = {
                 section.appendChild( header );
                 optionsList.appendChild( section );
 
-                dataObj.data.forEach( ( d ) =>
+                let dataObjData = dataObj.data;
+
+                dataObjData.forEach( ( d, i ) =>
                 {
+                    if ( d !== 'object' )
+                    {
+                        d = dataObjData[ i ] = {
+                            text    : d,
+                            value   : d
+                        };
+                    }
+
                     data[ index ]           = buildDiv( d, index );
                     section.appendChild( data[ index ] );
                     selectOptions[ index ]  = buildOption( d, index );
@@ -320,6 +330,7 @@ const build = {
                 index++;
             }
         } );
+
 
         return  [ data, selectOptions ];
     },
