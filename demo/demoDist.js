@@ -4638,6 +4638,6 @@ module.exports = exports['default'];
 },{"./classes":15,"microbejs/src/modules/http":4}],21:[function(require,module,exports){
 'use strict';
 
-module.exports = '0.6.4';
+module.exports = '0.7.0';
 
 },{}]},{},[1]);

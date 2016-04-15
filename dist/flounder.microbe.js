@@ -1,12 +1,12 @@
 /*!
- * Flounder JavaScript Stylable Selectbox v0.6.4
+ * Flounder JavaScript Stylable Selectbox v0.7.0
  * https://github.com/sociomantic-tsunami/flounder
  *
  * Copyright 2015-2016 Sociomantic Labs and other contributors
  * Released under the MIT license
  * https://github.com/sociomantic-tsunami/flounder/license
  *
- * Date: Thu Apr 14 2016
+ * Date: Fri Apr 15 2016
  * "This, so far, is the best Flounder ever"
  */
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
@@ -1803,6 +1803,7 @@ var build = {
      * @return _Void_
      */
     buildDom: function buildDom() {
+        var props = this.props;
         this.refs = {};
 
         var constructElement = _utils2['default'].constructElement;
@@ -1831,7 +1832,7 @@ var build = {
 
         var multiTagWrapper = this.multiple ? constructElement({ className: _classes2['default'].MULTI_TAG_LIST }) : null;
 
-        var arrow = constructElement({ className: _classes2['default'].ARROW });
+        var arrow = props.disableArrow ? null : constructElement({ className: _classes2['default'].ARROW });
         var optionsListWrapper = constructElement({ className: _classes2['default'].OPTIONS_WRAPPER + '  ' + _classes2['default'].HIDDEN });
         var optionsList = constructElement({ className: _classes2['default'].LIST });
         optionsList.setAttribute('role', 'listbox');
@@ -2018,7 +2019,6 @@ var build = {
             }
         });
 
-        console.log(originalData);
         return [data, selectOptions];
     },
 
@@ -2477,6 +2477,10 @@ var events = {
         var refs = this.refs;
         refs.selected.addEventListener('click', this.firstTouchController);
         refs.select.addEventListener('focus', this.firstTouchController);
+
+        if (this.props.openOnHover) {
+            refs.wrapper.addEventListener('mouseenter', this.firstTouchController);
+        }
     },
 
     /**
@@ -2493,7 +2497,14 @@ var events = {
         refs.select.addEventListener(changeEvent, this.divertTarget);
 
         refs.flounder.addEventListener('keydown', this.checkFlounderKeypress);
-        refs.selected.addEventListener('click', this.toggleList);
+
+        if (props.openOnHover) {
+            var wrapper = refs.wrapper;
+            wrapper.addEventListener('mouseenter', this.toggleList);
+            wrapper.addEventListener('mouseleave', this.toggleList);
+        } else {
+            refs.selected.addEventListener('click', this.toggleList);
+        }
 
         this.addFirstTouchListeners();
         this.addOptionsListeners();
@@ -2774,6 +2785,10 @@ var events = {
 
         refs.selected.removeEventListener('click', this.firstTouchController);
         refs.select.removeEventListener('focus', this.firstTouchController);
+
+        if (this.props.openOnHover) {
+            refs.wrapper.removeEventListener('mouseenter', this.firstTouchController);
+        }
     },
 
     /**
@@ -3075,16 +3090,17 @@ var events = {
         var optionsList = refs.optionsListWrapper;
         var wrapper = refs.wrapper;
         var hasClass = _utils2['default'].hasClass;
+        var type = e.type;
 
-        if (force === 'open' || force !== 'close' && _utils2['default'].hasClass(optionsList, _classes2['default'].HIDDEN)) {
-            if (e.type === 'keydown') {
+        if (type === 'mouseleave' || force === 'close' || !hasClass(optionsList, _classes2['default'].HIDDEN)) {
+            this.toggleList.justOpened = false;
+            this.toggleClosed(e, optionsList, refs, wrapper);
+        } else if (type === 'mouseenter' || force === 'open' || force !== 'close' && _utils2['default'].hasClass(optionsList, _classes2['default'].HIDDEN)) {
+            if (type === 'keydown') {
                 this.toggleList.justOpened = true;
             }
 
             this.toggleOpen(e, optionsList, refs, wrapper);
-        } else if (force === 'close' || !hasClass(optionsList, _classes2['default'].HIDDEN)) {
-            this.toggleList.justOpened = false;
-            this.toggleClosed(e, optionsList, refs, wrapper);
         }
     },
 
@@ -4333,7 +4349,7 @@ module.exports = exports['default'];
 },{"./classes":14,"microbejs/src/modules/http":3}],20:[function(require,module,exports){
 'use strict';
 
-module.exports = '0.6.4';
+module.exports = '0.7.0';
 
 },{}],21:[function(require,module,exports){
 
