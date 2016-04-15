@@ -114,6 +114,7 @@ If flounder is fed an element that already has a flounder, it will destroy it an
     defaultEmpty            : true,
     defaultValue            : defaultValue,
     defaultIndex            : defaultIndex,
+    disableArrow            : false,
     keepChangesOnDestroy    : false,
     multiple                : false,
     multipleTags            : false,
@@ -125,6 +126,7 @@ If flounder is fed an element that already has a flounder, it will destroy it an
     onInit                  : function(){},
     onOpen                  : function( e, valueArray ){},
     onSelect                : function( e, valueArray ){}
+    openOnHover             : false,
     placeholder             : 'Please choose an option',
     search                  : false,
     selectDataOverride      : false
@@ -438,6 +440,7 @@ Change Log
 
 + build
     + complex data objects are now built correctly
+    added the ability to disable the arrow element
 
 + wrappers
     + react moved to it's own repo
@@ -449,6 +452,7 @@ Change Log
 
 + events
     + hover is now javascript based for future expandability
+    + openOnHover now available
 
 
 0.6.3

@@ -17,6 +17,11 @@ const events = {
         let refs = this.refs;
         refs.selected.addEventListener( 'click', this.firstTouchController );
         refs.select.addEventListener( 'focus', this.firstTouchController );
+
+        if ( this.props.openOnHover )
+        {
+            refs.wrapper.addEventListener( 'mouseenter', this.firstTouchController );
+        }
     },
 
 
@@ -29,13 +34,24 @@ const events = {
      */
     addListeners : function( refs, props )
     {
-        let ios = this.isIos;
+        let ios         = this.isIos;
         let changeEvent = ios ? 'blur' : 'change';
+
 
         refs.select.addEventListener( changeEvent, this.divertTarget );
 
         refs.flounder.addEventListener( 'keydown', this.checkFlounderKeypress );
-        refs.selected.addEventListener( 'click', this.toggleList );
+
+        if ( props.openOnHover )
+        {
+            let wrapper = refs.wrapper;
+            wrapper.addEventListener( 'mouseenter', this.toggleList );
+            wrapper.addEventListener( 'mouseleave', this.toggleList );
+        }
+        else
+        {
+            refs.selected.addEventListener( 'click', this.toggleList );
+        }
 
         this.addFirstTouchListeners();
         this.addOptionsListeners();
@@ -371,6 +387,11 @@ const events = {
 
         refs.selected.removeEventListener( 'click', this.firstTouchController );
         refs.select.removeEventListener( 'focus', this.firstTouchController );
+
+        if ( this.props.openOnHover )
+        {
+            refs.wrapper.removeEventListener( 'mouseenter', this.firstTouchController );
+        }
     },
 
 
@@ -724,20 +745,23 @@ const events = {
         let optionsList = refs.optionsListWrapper;
         let wrapper     = refs.wrapper;
         let hasClass    = utils.hasClass;
+        let type        = e.type;
 
-        if ( force === 'open' || force !== 'close' && utils.hasClass( optionsList, classes.HIDDEN ) )
+        if ( type === 'mouseleave' || force === 'close' ||
+            !hasClass( optionsList, classes.HIDDEN ) )
         {
-            if ( e.type === 'keydown' )
+            this.toggleList.justOpened = false;
+            this.toggleClosed( e, optionsList, refs, wrapper );
+        }
+        else if ( type === 'mouseenter' || force === 'open' ||
+            force !== 'close' && utils.hasClass( optionsList, classes.HIDDEN ) )
+        {
+            if ( type === 'keydown' )
             {
                 this.toggleList.justOpened = true;
             }
 
             this.toggleOpen( e, optionsList, refs, wrapper );
-        }
-        else if ( force === 'close' || !hasClass( optionsList, classes.HIDDEN ) )
-        {
-            this.toggleList.justOpened = false;
-            this.toggleClosed( e, optionsList, refs, wrapper );
         }
     },
 

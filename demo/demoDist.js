@@ -169,7 +169,9 @@ new _srcCoreFlounder2['default'](document.getElementById('vanilla--span'), {
 
     onInit: function onInit() {
         this.data = buildData();
-    }
+    },
+
+    openOnHover: true
 
 });
 
@@ -2764,6 +2766,10 @@ var events = {
         var refs = this.refs;
         refs.selected.addEventListener('click', this.firstTouchController);
         refs.select.addEventListener('focus', this.firstTouchController);
+
+        if (this.props.openOnHover) {
+            refs.wrapper.addEventListener('mouseenter', this.firstTouchController);
+        }
     },
 
     /**
@@ -2780,7 +2786,14 @@ var events = {
         refs.select.addEventListener(changeEvent, this.divertTarget);
 
         refs.flounder.addEventListener('keydown', this.checkFlounderKeypress);
-        refs.selected.addEventListener('click', this.toggleList);
+
+        if (props.openOnHover) {
+            var wrapper = refs.wrapper;
+            wrapper.addEventListener('mouseenter', this.toggleList);
+            wrapper.addEventListener('mouseleave', this.toggleList);
+        } else {
+            refs.selected.addEventListener('click', this.toggleList);
+        }
 
         this.addFirstTouchListeners();
         this.addOptionsListeners();
@@ -3061,6 +3074,10 @@ var events = {
 
         refs.selected.removeEventListener('click', this.firstTouchController);
         refs.select.removeEventListener('focus', this.firstTouchController);
+
+        if (this.props.openOnHover) {
+            refs.wrapper.removeEventListener('mouseenter', this.firstTouchController);
+        }
     },
 
     /**
@@ -3362,16 +3379,17 @@ var events = {
         var optionsList = refs.optionsListWrapper;
         var wrapper = refs.wrapper;
         var hasClass = _utils2['default'].hasClass;
+        var type = e.type;
 
-        if (force === 'open' || force !== 'close' && _utils2['default'].hasClass(optionsList, _classes2['default'].HIDDEN)) {
-            if (e.type === 'keydown') {
+        if (type === 'mouseleave' || force === 'close' || !hasClass(optionsList, _classes2['default'].HIDDEN)) {
+            this.toggleList.justOpened = false;
+            this.toggleClosed(e, optionsList, refs, wrapper);
+        } else if (type === 'mouseenter' || force === 'open' || force !== 'close' && _utils2['default'].hasClass(optionsList, _classes2['default'].HIDDEN)) {
+            if (type === 'keydown') {
                 this.toggleList.justOpened = true;
             }
 
             this.toggleOpen(e, optionsList, refs, wrapper);
-        } else if (force === 'close' || !hasClass(optionsList, _classes2['default'].HIDDEN)) {
-            this.toggleList.justOpened = false;
-            this.toggleClosed(e, optionsList, refs, wrapper);
         }
     },
 

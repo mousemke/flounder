@@ -171,7 +171,9 @@ new Flounder( document.getElementById( 'vanilla--span' ), {
 
     defaultValue        : 'tag',
 
-    onInit              : function(){ this.data = buildData(); }
+    onInit              : function(){ this.data = buildData(); },
+
+    openOnHover         : true
 
 } );
 
