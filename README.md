@@ -444,7 +444,7 @@ Change Log
 
 + build
     + complex data objects are now built correctly
-    added the ability to disable the arrow element
+    + added the ability to disable the arrow element
 
 + wrappers
     + react moved to it's own repo
@@ -460,6 +460,9 @@ Change Log
 
 + defaults
     + fixed a bug where multiple defaults were being applied
+
++ api
+    fixed a bug in setDefaultValue concerning index 0
 
 
 0.6.3

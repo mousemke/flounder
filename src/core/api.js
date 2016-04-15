@@ -606,6 +606,7 @@ const api = {
      */
     setByValue : function( value, multiple, programmatic = true )
     {
+        console.log( typeof value !== 'string' );
         if ( typeof value !== 'string' && value.length )
         {
             let setByValue = this.setByValue.bind( this );
@@ -615,10 +616,11 @@ const api = {
         {
             let values = this.refs.selectOptions.map( function( el )
             {
+                console.log( value, el.value, el.value === value );
                 return el.value === value + '' ? el.index : null;
-            } ).filter( a => !!a );
-
-            return value ? this.setByIndex( values, multiple, programmatic ) : null;
+            } ).filter( a => a === 0 || !!a );
+            console.log( values );
+            return values.length !== 0 ? this.setByIndex( values, multiple, programmatic ) : null;
         }
     }
 };

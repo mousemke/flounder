@@ -231,6 +231,7 @@ const defaults = {
                 }
             }
 
+            // default prio
             def = configObj.defaultIndex ? setIndexDefault( _data ) : null;
             def = !def && configObj.defaultValue ? setValueDefault( _data ) : def;
             def = !def && configObj.multiple ? setPlaceholderDefault( self, _data ) :def;
