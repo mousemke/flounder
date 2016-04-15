@@ -163,6 +163,8 @@ new _srcCoreFlounder2['default'](document.getElementById('vanilla--multiple--tag
  */
 new _srcCoreFlounder2['default'](document.getElementById('vanilla--span'), {
 
+    disableArrow: true,
+
     defaultValue: 'tag',
 
     onInit: function onInit() {
@@ -2088,6 +2090,7 @@ var build = {
      * @return _Void_
      */
     buildDom: function buildDom() {
+        var props = this.props;
         this.refs = {};
 
         var constructElement = _utils2['default'].constructElement;
@@ -2116,7 +2119,7 @@ var build = {
 
         var multiTagWrapper = this.multiple ? constructElement({ className: _classes2['default'].MULTI_TAG_LIST }) : null;
 
-        var arrow = constructElement({ className: _classes2['default'].ARROW });
+        var arrow = props.disableArrow ? null : constructElement({ className: _classes2['default'].ARROW });
         var optionsListWrapper = constructElement({ className: _classes2['default'].OPTIONS_WRAPPER + '  ' + _classes2['default'].HIDDEN });
         var optionsList = constructElement({ className: _classes2['default'].LIST });
         optionsList.setAttribute('role', 'listbox');
@@ -2303,7 +2306,6 @@ var build = {
             }
         });
 
-        console.log(originalData);
         return [data, selectOptions];
     },
 

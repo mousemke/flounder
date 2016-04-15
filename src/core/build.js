@@ -93,6 +93,7 @@ const build = {
      */
     buildDom : function()
     {
+        let props               = this.props;
         this.refs               = {};
 
         let constructElement    = utils.constructElement;
@@ -124,7 +125,7 @@ const build = {
 
         let multiTagWrapper     = this.multiple ? constructElement( { className : classes.MULTI_TAG_LIST } ) : null;
 
-        let arrow               = constructElement( { className : classes.ARROW } );
+        let arrow               = props.disableArrow ? null : constructElement( { className : classes.ARROW } );
         let optionsListWrapper  = constructElement( { className : classes.OPTIONS_WRAPPER + '  ' + classes.HIDDEN } );
         let optionsList         = constructElement( { className : classes.LIST } );
         optionsList.setAttribute( 'role', 'listbox' );

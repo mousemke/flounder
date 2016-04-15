@@ -447,6 +447,9 @@ Change Log
     + .flounder__arrow - :hover
     + .flounder__arrow - :active
 
++ events
+    + hover is now javascript based for future expandability
+
 
 0.6.3
 -----

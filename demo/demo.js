@@ -167,6 +167,8 @@ new Flounder( document.getElementById( 'vanilla--multiple--tags' ), {
  */
 new Flounder( document.getElementById( 'vanilla--span' ), {
 
+    disableArrow        : true,
+
     defaultValue        : 'tag',
 
     onInit              : function(){ this.data = buildData(); }
