@@ -145,6 +145,8 @@ If flounder is fed an element that already has a flounder, it will destroy it an
 
 + `defaultIndex` - (number) Sets the default option to the passed index but only if it exists.  This overrides defaultValue. Multi-tag select boxes only support placeholders.
 
++ `disableArrow` - (boolean) does not add the dropdown arrow element
+
 + `keepChangesOnDestroy` - (boolean) Determines whether on destroy the old element is restored, or the flounder changes to the select box are kept.  This only applies when the initial element for flounder is a select box
 
 + `multiple` - (boolean) Determines whether it is a multi-select box or single
@@ -166,6 +168,8 @@ If flounder is fed an element that already has a flounder, it will destroy it an
 + `onOpen` - (function) Triggered when the selectbox is opened
 
 + `onSelect` - (function) Triggered when an option selectbox is closed
+
++ `openOnHover` - (boolean) replaces click to open action with hover
 
 + `placeholder` - (string) Builds a blank option with the placeholder text that is selected by default.  This overrides defaultIndex
 
@@ -453,6 +457,9 @@ Change Log
 + events
     + hover is now javascript based for future expandability
     + openOnHover now available
+
++ defaults
+    + fixed a bug where multiple defaults were being applied
 
 
 0.6.3

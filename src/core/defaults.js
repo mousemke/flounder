@@ -12,6 +12,7 @@ const defaultOptions = {
     defaultEmpty            : false,
     defaultIndex            : false,
     defaultValue            : false,
+    disableArrow            : false,
     keepChangesOnDestroy    : false,
     multiple                : false,
     multipleTags            : false,
@@ -23,6 +24,7 @@ const defaultOptions = {
     onInit                  : function(){},
     onOpen                  : function( e, selectedValues ){},
     onSelect                : function( e, selectedValues ){},
+    openOnHover             : false,
     placeholder             : 'Please choose an option',
     search                  : false,
     selectDataOverride      : false
@@ -216,7 +218,6 @@ const defaults = {
                 return setPlaceholderDefault( self, _data );
             }
 
-
             let def;
 
             if ( rebuild )
@@ -230,13 +231,12 @@ const defaults = {
                 }
             }
 
-            def = [ setIndexDefault( _data ),
-                    setValueDefault( _data ),
-                    configObj.multiple ?  setPlaceholderDefault( self, _data ) :
-                                        setIndexDefault( _data, 0 )
-                ];
+            def = configObj.defaultIndex ? setIndexDefault( _data ) : null;
+            def = !def && configObj.defaultValue ? setValueDefault( _data ) : def;
+            def = !def && configObj.multiple ? setPlaceholderDefault( self, _data ) :def;
+            def = !def ? setIndexDefault( _data, 0 ) : def;
 
-            return def.filter( _v => _v )[ 0 ];
+            return def;
         };
 
         return checkDefaultPriority();
