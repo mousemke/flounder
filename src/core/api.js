@@ -617,6 +617,7 @@ const api = {
             {
                 return el.value === value + '' ? el.index : null;
             } ).filter( a => a === 0 || !!a );
+
             return values.length !== 0 ? this.setByIndex( values, multiple, programmatic ) : null;
         }
     }

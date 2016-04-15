@@ -1990,10 +1990,10 @@ var api = {
             var values = this.refs.selectOptions.map(function (el) {
                 return el.value === value + '' ? el.index : null;
             }).filter(function (a) {
-                return !!a;
+                return a === 0 || !!a;
             });
 
-            return value ? this.setByIndex(values, multiple, programmatic) : null;
+            return values.length !== 0 ? this.setByIndex(values, multiple, programmatic) : null;
         }
     }
 };
@@ -2720,6 +2720,7 @@ var defaults = {
                 }
             }
 
+            // default prio
             def = configObj.defaultIndex ? setIndexDefault(_data) : null;
             def = !def && configObj.defaultValue ? setValueDefault(_data) : def;
             def = !def && configObj.multiple ? setPlaceholderDefault(self, _data) : def;
