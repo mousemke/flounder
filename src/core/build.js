@@ -83,74 +83,6 @@ const build = {
             } );
     },
 
-
-    /**
-     * ## buildDom
-     *
-     * builds flounder
-     *
-     * @return _Void_
-     */
-    buildDom : function()
-    {
-        let props               = this.props;
-        this.refs               = {};
-
-        let constructElement    = utils.constructElement;
-
-        let wrapperClass        = classes.MAIN_WRAPPER;
-        let wrapper             = utils.constructElement( { className : this.wrapperClass ?
-                                    wrapperClass + ' ' + this.wrapperClass : wrapperClass } );
-        let flounderClass       = classes.MAIN;
-        let flounder            = constructElement( { className : this.flounderClass ?
-                                    flounderClass + '  ' + this.flounderClass : flounderClass } );
-
-        flounder.setAttribute( 'aria-hidden', true );
-        flounder.tabIndex       = 0;
-        wrapper.appendChild( flounder );
-
-        let select              = this.initSelectBox( wrapper );
-        select.tabIndex         = -1;
-
-        if ( this.multiple === true )
-        {
-            select.setAttribute( 'multiple', '' );
-        }
-
-        let data                = this.data;
-        let defaultValue        = this._default = setDefaultOption( this, this.props, data );
-        let selected            = constructElement( { className : classes.SELECTED_DISPLAYED,
-                                        'data-value' : defaultValue.value, 'data-index' : defaultValue.index || -1 } );
-            selected.innerHTML  = defaultValue.text;
-
-        let multiTagWrapper     = this.multiple ? constructElement( { className : classes.MULTI_TAG_LIST } ) : null;
-
-        let arrow               = this.buildArrow( props, constructElement );
-        let optionsListWrapper  = constructElement( { className : classes.OPTIONS_WRAPPER + '  ' + classes.HIDDEN } );
-        let optionsList         = constructElement( { className : classes.LIST } );
-        optionsList.setAttribute( 'role', 'listbox' );
-        optionsListWrapper.appendChild( optionsList );
-
-        [ selected, multiTagWrapper, arrow, optionsListWrapper ].forEach( el =>
-        {
-            if ( el )
-            {
-                flounder.appendChild( el );
-            }
-        } );
-
-        let search = this.addSearch( flounder );
-        let selectOptions;
-
-        [ data, selectOptions ] = this.buildData( defaultValue, data, optionsList, select );
-
-        this.target.appendChild( wrapper );
-
-        this.refs = { wrapper, flounder, selected, arrow, optionsListWrapper,
-                    search, multiTagWrapper, optionsList, select, data, selectOptions };
-    },
-
-
     /**
      * ## buildArrow
      *
@@ -333,10 +265,9 @@ const build = {
                 optionsList.appendChild( section );
 
                 let dataObjData = dataObj.data;
-
                 dataObjData.forEach( ( d, i ) =>
                 {
-                    if ( d !== 'object' )
+                    if ( typeof d !== 'object' )
                     {
                         d = dataObjData[ i ] = {
                             text    : d,
@@ -361,6 +292,73 @@ const build = {
 
 
         return  [ data, selectOptions ];
+    },
+
+
+    /**
+     * ## buildDom
+     *
+     * builds flounder
+     *
+     * @return _Void_
+     */
+    buildDom : function()
+    {
+        let props               = this.props;
+        this.refs               = {};
+
+        let constructElement    = utils.constructElement;
+
+        let wrapperClass        = classes.MAIN_WRAPPER;
+        let wrapper             = utils.constructElement( { className : this.wrapperClass ?
+                                    wrapperClass + ' ' + this.wrapperClass : wrapperClass } );
+        let flounderClass       = classes.MAIN;
+        let flounder            = constructElement( { className : this.flounderClass ?
+                                    flounderClass + '  ' + this.flounderClass : flounderClass } );
+
+        flounder.setAttribute( 'aria-hidden', true );
+        flounder.tabIndex       = 0;
+        wrapper.appendChild( flounder );
+
+        let select              = this.initSelectBox( wrapper );
+        select.tabIndex         = -1;
+
+        if ( this.multiple === true )
+        {
+            select.setAttribute( 'multiple', '' );
+        }
+
+        let data                = this.data;
+        let defaultValue        = this._default = setDefaultOption( this, this.props, data );
+        let selected            = constructElement( { className : classes.SELECTED_DISPLAYED,
+                                        'data-value' : defaultValue.value, 'data-index' : defaultValue.index || -1 } );
+            selected.innerHTML  = defaultValue.text;
+
+        let multiTagWrapper     = this.multiple ? constructElement( { className : classes.MULTI_TAG_LIST } ) : null;
+
+        let arrow               = this.buildArrow( props, constructElement );
+        let optionsListWrapper  = constructElement( { className : classes.OPTIONS_WRAPPER + '  ' + classes.HIDDEN } );
+        let optionsList         = constructElement( { className : classes.LIST } );
+        optionsList.setAttribute( 'role', 'listbox' );
+        optionsListWrapper.appendChild( optionsList );
+
+        [ selected, multiTagWrapper, arrow, optionsListWrapper ].forEach( el =>
+        {
+            if ( el )
+            {
+                flounder.appendChild( el );
+            }
+        } );
+
+        let search = this.addSearch( flounder );
+        let selectOptions;
+
+        [ data, selectOptions ] = this.buildData( defaultValue, data, optionsList, select );
+
+        this.target.appendChild( wrapper );
+
+        this.refs = { wrapper, flounder, selected, arrow, optionsListWrapper,
+                    search, multiTagWrapper, optionsList, select, data, selectOptions };
     },
 
 

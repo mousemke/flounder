@@ -1,12 +1,12 @@
 /*!
- * Flounder JavaScript Stylable Selectbox v0.7.0
+ * Flounder JavaScript Stylable Selectbox v0.7.1
  * https://github.com/sociomantic-tsunami/flounder
  *
  * Copyright 2015-2016 Sociomantic Labs and other contributors
  * Released under the MIT license
  * https://github.com/sociomantic-tsunami/flounder/license
  *
- * Date: Fri Apr 15 2016
+ * Date: Mon Apr 18 2016
  * "This, so far, is the best Flounder ever"
  */
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
@@ -1796,68 +1796,25 @@ var build = {
     },
 
     /**
-     * ## buildDom
+     * ## buildArrow
      *
-     * builds flounder
+     * builds the arrow and the
      *
-     * @return _Void_
+     * @param {Object} props property object
+     * @param {Function} constructElement ref to this.constructElement
+     *
+     * @return {DOMElement} arrow
      */
-    buildDom: function buildDom() {
-        var props = this.props;
-        this.refs = {};
+    buildArrow: function buildArrow(props, constructElement) {
+        if (props.disableArrow) {
+            return null;
+        } else {
+            var arrow = constructElement({ className: _classes2['default'].ARROW });
+            var arrowInner = constructElement({ className: _classes2['default'].ARROW_INNER });
+            arrow.appendChild(arrowInner);
 
-        var constructElement = _utils2['default'].constructElement;
-
-        var wrapperClass = _classes2['default'].MAIN_WRAPPER;
-        var wrapper = _utils2['default'].constructElement({ className: this.wrapperClass ? wrapperClass + ' ' + this.wrapperClass : wrapperClass });
-        var flounderClass = _classes2['default'].MAIN;
-        var flounder = constructElement({ className: this.flounderClass ? flounderClass + '  ' + this.flounderClass : flounderClass });
-
-        flounder.setAttribute('aria-hidden', true);
-        flounder.tabIndex = 0;
-        wrapper.appendChild(flounder);
-
-        var select = this.initSelectBox(wrapper);
-        select.tabIndex = -1;
-
-        if (this.multiple === true) {
-            select.setAttribute('multiple', '');
+            return arrow;
         }
-
-        var data = this.data;
-        var defaultValue = this._default = (0, _defaults.setDefaultOption)(this, this.props, data);
-        var selected = constructElement({ className: _classes2['default'].SELECTED_DISPLAYED,
-            'data-value': defaultValue.value, 'data-index': defaultValue.index || -1 });
-        selected.innerHTML = defaultValue.text;
-
-        var multiTagWrapper = this.multiple ? constructElement({ className: _classes2['default'].MULTI_TAG_LIST }) : null;
-
-        var arrow = props.disableArrow ? null : constructElement({ className: _classes2['default'].ARROW });
-        var optionsListWrapper = constructElement({ className: _classes2['default'].OPTIONS_WRAPPER + '  ' + _classes2['default'].HIDDEN });
-        var optionsList = constructElement({ className: _classes2['default'].LIST });
-        optionsList.setAttribute('role', 'listbox');
-        optionsListWrapper.appendChild(optionsList);
-
-        [selected, multiTagWrapper, arrow, optionsListWrapper].forEach(function (el) {
-            if (el) {
-                flounder.appendChild(el);
-            }
-        });
-
-        var search = this.addSearch(flounder);
-        var selectOptions = undefined;
-
-        var _buildData = this.buildData(defaultValue, data, optionsList, select);
-
-        var _buildData2 = _slicedToArray(_buildData, 2);
-
-        data = _buildData2[0];
-        selectOptions = _buildData2[1];
-
-        this.target.appendChild(wrapper);
-
-        this.refs = { wrapper: wrapper, flounder: flounder, selected: selected, arrow: arrow, optionsListWrapper: optionsListWrapper,
-            search: search, multiTagWrapper: multiTagWrapper, optionsList: optionsList, select: select, data: data, selectOptions: selectOptions };
     },
 
     /**
@@ -1996,9 +1953,8 @@ var build = {
                     optionsList.appendChild(section);
 
                     var dataObjData = dataObj.data;
-
                     dataObjData.forEach(function (d, i) {
-                        if (d !== 'object') {
+                        if (typeof d !== 'object') {
                             d = dataObjData[i] = {
                                 text: d,
                                 value: d
@@ -2020,6 +1976,71 @@ var build = {
         });
 
         return [data, selectOptions];
+    },
+
+    /**
+     * ## buildDom
+     *
+     * builds flounder
+     *
+     * @return _Void_
+     */
+    buildDom: function buildDom() {
+        var props = this.props;
+        this.refs = {};
+
+        var constructElement = _utils2['default'].constructElement;
+
+        var wrapperClass = _classes2['default'].MAIN_WRAPPER;
+        var wrapper = _utils2['default'].constructElement({ className: this.wrapperClass ? wrapperClass + ' ' + this.wrapperClass : wrapperClass });
+        var flounderClass = _classes2['default'].MAIN;
+        var flounder = constructElement({ className: this.flounderClass ? flounderClass + '  ' + this.flounderClass : flounderClass });
+
+        flounder.setAttribute('aria-hidden', true);
+        flounder.tabIndex = 0;
+        wrapper.appendChild(flounder);
+
+        var select = this.initSelectBox(wrapper);
+        select.tabIndex = -1;
+
+        if (this.multiple === true) {
+            select.setAttribute('multiple', '');
+        }
+
+        var data = this.data;
+        var defaultValue = this._default = (0, _defaults.setDefaultOption)(this, this.props, data);
+        var selected = constructElement({ className: _classes2['default'].SELECTED_DISPLAYED,
+            'data-value': defaultValue.value, 'data-index': defaultValue.index || -1 });
+        selected.innerHTML = defaultValue.text;
+
+        var multiTagWrapper = this.multiple ? constructElement({ className: _classes2['default'].MULTI_TAG_LIST }) : null;
+
+        var arrow = this.buildArrow(props, constructElement);
+        var optionsListWrapper = constructElement({ className: _classes2['default'].OPTIONS_WRAPPER + '  ' + _classes2['default'].HIDDEN });
+        var optionsList = constructElement({ className: _classes2['default'].LIST });
+        optionsList.setAttribute('role', 'listbox');
+        optionsListWrapper.appendChild(optionsList);
+
+        [selected, multiTagWrapper, arrow, optionsListWrapper].forEach(function (el) {
+            if (el) {
+                flounder.appendChild(el);
+            }
+        });
+
+        var search = this.addSearch(flounder);
+        var selectOptions = undefined;
+
+        var _buildData = this.buildData(defaultValue, data, optionsList, select);
+
+        var _buildData2 = _slicedToArray(_buildData, 2);
+
+        data = _buildData2[0];
+        selectOptions = _buildData2[1];
+
+        this.target.appendChild(wrapper);
+
+        this.refs = { wrapper: wrapper, flounder: flounder, selected: selected, arrow: arrow, optionsListWrapper: optionsListWrapper,
+            search: search, multiTagWrapper: multiTagWrapper, optionsList: optionsList, select: select, data: data, selectOptions: selectOptions };
     },
 
     /**
@@ -2182,7 +2203,8 @@ Object.defineProperty(exports, '__esModule', {
     value: true
 });
 var classes = {
-    ARROW: 'flounder__arrow',
+    ARROW: 'flounder__arrow--wrapper',
+    ARROW_INNER: 'flounder__arrow--inner',
     DESCRIPTION: 'flounder__option--description',
     DISABLED: 'flounder__disabled',
     DISABLED_OPTION: 'flounder__disabled--option',
@@ -4353,7 +4375,7 @@ module.exports = exports['default'];
 },{"./classes":14,"microbejs/src/modules/http":3}],20:[function(require,module,exports){
 'use strict';
 
-module.exports = '0.7.0';
+module.exports = '0.7.1';
 
 },{}],21:[function(require,module,exports){
 

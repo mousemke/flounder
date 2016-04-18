@@ -1,4 +1,4 @@
-Flounder.js 0.7.0
+Flounder.js 0.7.1
 =================
 
 [![Flounder build status](https://travis-ci.org/sociomantic-tsunami/flounder.svg)](https://travis-ci.org)
@@ -19,23 +19,11 @@ import Flounder from 'flounder';
 Usage
 =====
 
-Flounder can be used in vanilla js or with [react](http://facebook.github.io/react/), [requirejs](http://requirejs.org/), [jquery](http://jquery.com/), and [microbe](https://github.com/sociomantic-tsunami/microbe).
+Flounder can be used in vanilla js, [requirejs](http://requirejs.org/), [jquery](http://jquery.com/), and [microbe](https://github.com/sociomantic-tsunami/microbe).
 
 ```js
 // vanilla
 new Flounder( target, configOptions );
-
-// react
-ReactDOM.render( React.createElement( FlounderReact, configOptions ), target );
-
-// react (JSX)
-React.render( <FlounderReact option1="" option2="">, target );
-
-// react has some caveats.  If you want to use react flounder, you should
-// build it from the source file.  ./dist/flounder.react.js is so
-// large because it already has a copy of react included.  Additionally,
-// react flounder can only be attached to a container, and not an
-// INPUT or SELECT
 
 // requirejs
 requirejs( [ 'flounder' ], function( Flounder )
@@ -392,34 +380,8 @@ flounder can be attached to basically anything
     } );
 ```
 
-a react flounder
 
-react flounder can only be attached to container elements (div, span, etc)
-
-
-```js
-
-    ReactDOM.render( React.createElement( FlounderReact, {
-        placeholder         : 'placeholders!',
-
-        onInit              : function()
-        {
-            var res = [];
-            data.forEach( function( dataObj )
-            {
-                res.push( {
-                    text        : dataObj.text,
-                    value       : dataObj.id
-                } );
-            } );
-
-            this.data = res;
-        } } ), document.getElementById( 'example' )
-    );
-```
-
-
-The result of either of these is shown here (only styled with the structural css)
+The result of these is shown here (only styled with the structural css)
 
 closed
 
@@ -438,6 +400,16 @@ See more examples on the [demo page](./demo/index.html)
 
 Change Log
 ==========
+
+0.7.1
+-----
+
++ css
+    + arrow changed from svg to css
+
++ build
+    + fixed a complex data objects bug
+
 
 0.7.0
 -----
