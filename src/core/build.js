@@ -125,7 +125,7 @@ const build = {
 
         let multiTagWrapper     = this.multiple ? constructElement( { className : classes.MULTI_TAG_LIST } ) : null;
 
-        let arrow               = props.disableArrow ? null : constructElement( { className : classes.ARROW } );
+        let arrow               = this.buildArrow( props, constructElement );
         let optionsListWrapper  = constructElement( { className : classes.OPTIONS_WRAPPER + '  ' + classes.HIDDEN } );
         let optionsList         = constructElement( { className : classes.LIST } );
         optionsList.setAttribute( 'role', 'listbox' );
@@ -148,6 +148,33 @@ const build = {
 
         this.refs = { wrapper, flounder, selected, arrow, optionsListWrapper,
                     search, multiTagWrapper, optionsList, select, data, selectOptions };
+    },
+
+
+    /**
+     * ## buildArrow
+     *
+     * builds the arrow and the
+     *
+     * @param {Object} props property object
+     * @param {Function} constructElement ref to this.constructElement
+     *
+     * @return {DOMElement} arrow
+     */
+    buildArrow : function( props, constructElement )
+    {
+        if (  props.disableArrow )
+        {
+            return null;
+        }
+        else
+        {
+            let arrow       = constructElement( { className : classes.ARROW } );
+            let arrowInner  = constructElement( { className : classes.ARROW_INNER } );
+            arrow.appendChild( arrowInner )
+
+            return arrow;
+        }
     },
 
 

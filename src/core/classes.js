@@ -1,6 +1,7 @@
 const classes =
 {
-    ARROW               : 'flounder__arrow',
+    ARROW               : 'flounder__arrow--wrapper',
+    ARROW_INNER         : 'flounder__arrow--inner',
     DESCRIPTION         : 'flounder__option--description',
     DISABLED            : 'flounder__disabled',
     DISABLED_OPTION     : 'flounder__disabled--option',
