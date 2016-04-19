@@ -234,28 +234,30 @@ These functions are intended for use in the user provided event callbacks
 
 ```js
 this.buildFromUrl( url, callback )
-this.clickByIndex( index, multiple )
-this.clickByText( text, multiple )
-this.clickByValue( value, multiple )
+this.clickByIndex( index, multiple* )
+this.clickByText( text, multiple* )
+this.clickByValue( value, multiple* )
 this.deselectAll()
 this.destroy()
-this.disable( bool )
+this.disable( bool* )
 this.disableByIndex( index )
 this.disableByText( text )
 this.disableByValue( value )
 this.enableByIndex( index )
 this.enableByText( text )
 this.enableByValue( value )
-this.getData( [ num ] )
+this.getData( num* )
 this.getSelected()
 this.getSelectedValues()
 this.loadDataFromUrl( url, callback )
 this.props
-this.rebuild( [ data, props ] )
+this.rebuild( data*, props*  )
 this.refs
-this.setByIndex( index, multiple )
-this.setByText( text, multiple )
-this.setByValue( value, multiple )
+this.setByIndex( index, multiple* )
+this.setByText( text, multiple* )
+this.setByValue( value, multiple* )
+
+*optional
 ```
 
 + `buildFromUrl( url, callback )` loads data from a remote address, passes it to a callback, then builds the flounder object
@@ -400,6 +402,13 @@ See more examples on the [demo page](./demo/index.html)
 
 Change Log
 ==========
+
+0.7.2
+-----
+
++ api
+    + rebuild bug fixed
+
 
 0.7.1
 -----

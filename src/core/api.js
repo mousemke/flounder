@@ -483,7 +483,7 @@ const api = {
     {
         if ( props || !props && ( typeof data === 'string' || typeof data.length !== 'number' ) )
         {
-            this.reconfigureFlounder( data, props );
+            this.reconfigure( data, props );
         }
 
         props           = this.props;
