@@ -165,6 +165,8 @@ const defaults = {
          */
         let sortData = function( data, res = [], i = 0 )
         {
+            console.log( data );
+            console.trace();
             data.forEach( function( d )
             {
                 if ( d.header )

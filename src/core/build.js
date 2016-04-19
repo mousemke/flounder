@@ -495,6 +495,7 @@ const build = {
         else if ( !props && typeof data === 'object' )
         {
             props       = data;
+            console.log( props );
             props.data  = props.data || this.data;
         }
         else

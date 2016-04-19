@@ -481,13 +481,14 @@ const api = {
      */
     rebuild : function( data, props )
     {
-        if ( props || !props && ( typeof data === 'string' || typeof data.length !== 'number' ) )
+        if ( props || !props && ( typeof data === 'string' ||
+            ( data && typeof data.length !== 'number' ) ) )
         {
-            this.reconfigure( data, props );
+            return this.reconfigure( data, props );
         }
 
-        props           = this.props;
         data            = this.data = data || this.data;
+        props           = this.props;
         let refs        = this.refs;
         let _select     = refs.select;
 
