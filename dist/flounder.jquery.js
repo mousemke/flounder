@@ -1,12 +1,12 @@
 /*!
- * Flounder JavaScript Stylable Selectbox v0.7.1
+ * Flounder JavaScript Stylable Selectbox v0.7.2
  * https://github.com/sociomantic-tsunami/flounder
  *
  * Copyright 2015-2016 Sociomantic Labs and other contributors
  * Released under the MIT license
  * https://github.com/sociomantic-tsunami/flounder/license
  *
- * Date: Mon Apr 18 2016
+ * Date: Tue Apr 19 2016
  * "This, so far, is the best Flounder ever"
  */
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
@@ -1538,12 +1538,12 @@ var api = {
      * @return _Object_ rebuilt flounder object
      */
     rebuild: function rebuild(data, props) {
-        if (props || !props && (typeof data === 'string' || typeof data.length !== 'number')) {
-            this.reconfigureFlounder(data, props);
+        if (props || !props && (typeof data === 'string' || data && typeof data.length !== 'number')) {
+            return this.reconfigure(data, props);
         }
 
-        props = this.props;
         data = this.data = data || this.data;
+        props = this.props;
         var refs = this.refs;
         var _select = refs.select;
 
@@ -2159,6 +2159,7 @@ var build = {
             props.data = data;
         } else if (!props && typeof data === 'object') {
             props = data;
+            console.log(props);
             props.data = props.data || this.data;
         } else {
             props.data = data || props.data || this.data;
@@ -2400,6 +2401,8 @@ var defaults = {
             var res = arguments.length <= 1 || arguments[1] === undefined ? [] : arguments[1];
             var i = arguments.length <= 2 || arguments[2] === undefined ? 0 : arguments[2];
 
+            console.log(data);
+            console.trace();
             data.forEach(function (d) {
                 if (d.header) {
                     res = sortData(d.data, res, i);
@@ -4375,7 +4378,7 @@ module.exports = exports['default'];
 },{"./classes":14,"microbejs/src/modules/http":3}],20:[function(require,module,exports){
 'use strict';
 
-module.exports = '0.7.1';
+module.exports = '0.7.2';
 
 },{}],21:[function(require,module,exports){
 

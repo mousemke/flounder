@@ -1067,7 +1067,7 @@ Promise.disableSynchronous = function() {
 },{"./core.js":5}],12:[function(require,module,exports){
 module.exports={
   "name": "flounder",
-  "version": "0.7.1",
+  "version": "0.7.2",
   "author": "Mouse Braun <mouse@knoblau.ch>",
   "description": "a native friendly dropdown menu",
   "repository": {
@@ -1592,12 +1592,12 @@ var api = {
      * @return _Object_ rebuilt flounder object
      */
     rebuild: function rebuild(data, props) {
-        if (props || !props && (typeof data === 'string' || typeof data.length !== 'number')) {
-            this.reconfigureFlounder(data, props);
+        if (props || !props && (typeof data === 'string' || data && typeof data.length !== 'number')) {
+            return this.reconfigure(data, props);
         }
 
-        props = this.props;
         data = this.data = data || this.data;
+        props = this.props;
         var refs = this.refs;
         var _select = refs.select;
 
@@ -2213,6 +2213,7 @@ var build = {
             props.data = data;
         } else if (!props && typeof data === 'object') {
             props = data;
+            console.log(props);
             props.data = props.data || this.data;
         } else {
             props.data = data || props.data || this.data;
@@ -2454,6 +2455,8 @@ var defaults = {
             var res = arguments.length <= 1 || arguments[1] === undefined ? [] : arguments[1];
             var i = arguments.length <= 2 || arguments[2] === undefined ? 0 : arguments[2];
 
+            console.log(data);
+            console.trace();
             data.forEach(function (d) {
                 if (d.header) {
                     res = sortData(d.data, res, i);
@@ -4429,7 +4432,7 @@ module.exports = exports['default'];
 },{"./classes":15,"microbejs/src/modules/http":3}],21:[function(require,module,exports){
 'use strict';
 
-module.exports = '0.7.1';
+module.exports = '0.7.2';
 
 },{}],22:[function(require,module,exports){
 
