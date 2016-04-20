@@ -286,7 +286,7 @@ this.setByValue( value, multiple* )
 
 + `enableByValue( value )` enables a flounder option by value
 
-+ `getData( [ num ] )` returns the option element and the div element at a specified index as an object `{ option : option element, div : div element }`. If no number is given, it will return all data.
++ `getData( num )` returns the option element and the div element at a specified index as an object `{ option : option element, div : div element }`. If no number is given, it will return all data.
 
 + `getSelected()` returns the currently selected option tags in an array
 
@@ -296,7 +296,7 @@ this.setByValue( value, multiple* )
 
 + `props` the props set in the initial constructor
 
-+ `rebuild( data, props )` rebuilds the select box options with new or altered data.  If props are set, this completely rebuilds flounder
++ `rebuild( data, props )` rebuilds the select box options with new or altered data.  If props are set, this completely rebuilds flounder. Here, props do not necessarily need to include data. If props include data, the data argument can be omitted. Both data and props are optional (rebuild w/ current options).
 
 + `refs` contains references to all flounder elements
 
