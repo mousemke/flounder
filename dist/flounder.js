@@ -1,12 +1,12 @@
 /*!
- * Flounder JavaScript Stylable Selectbox v0.7.2
+ * Flounder JavaScript Stylable Selectbox v0.7.3
  * https://github.com/sociomantic-tsunami/flounder
  *
  * Copyright 2015-2016 Sociomantic Labs and other contributors
  * Released under the MIT license
  * https://github.com/sociomantic-tsunami/flounder/license
  *
- * Date: Tue Apr 19 2016
+ * Date: Wed Apr 20 2016
  * "This, so far, is the best Flounder ever"
  */
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
@@ -2401,8 +2401,6 @@ var defaults = {
             var res = arguments.length <= 1 || arguments[1] === undefined ? [] : arguments[1];
             var i = arguments.length <= 2 || arguments[2] === undefined ? 0 : arguments[2];
 
-            console.log(data);
-            console.trace();
             data.forEach(function (d) {
                 if (d.header) {
                     res = sortData(d.data, res, i);
@@ -4378,6 +4376,6 @@ module.exports = exports['default'];
 },{"./classes":14,"microbejs/src/modules/http":3}],20:[function(require,module,exports){
 'use strict';
 
-module.exports = '0.7.2';
+module.exports = '0.7.3';
 
 },{}]},{},[17]);

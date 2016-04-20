@@ -1067,7 +1067,7 @@ Promise.disableSynchronous = function() {
 },{"./core.js":5}],12:[function(require,module,exports){
 module.exports={
   "name": "flounder",
-  "version": "0.7.2",
+  "version": "0.7.3",
   "author": "Mouse Braun <mouse@knoblau.ch>",
   "description": "a native friendly dropdown menu",
   "repository": {
@@ -2455,8 +2455,6 @@ var defaults = {
             var res = arguments.length <= 1 || arguments[1] === undefined ? [] : arguments[1];
             var i = arguments.length <= 2 || arguments[2] === undefined ? 0 : arguments[2];
 
-            console.log(data);
-            console.trace();
             data.forEach(function (d) {
                 if (d.header) {
                     res = sortData(d.data, res, i);
@@ -4432,7 +4430,7 @@ module.exports = exports['default'];
 },{"./classes":15,"microbejs/src/modules/http":3}],21:[function(require,module,exports){
 'use strict';
 
-module.exports = '0.7.2';
+module.exports = '0.7.3';
 
 },{}],22:[function(require,module,exports){
 
