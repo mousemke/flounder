@@ -134,7 +134,8 @@ const build = {
         let selectedClass           = this.selectedClass;
         let escapeHTML              = utils.escapeHTML;
         let addClass                = utils.addClass;
-        let selectRef               = this.refs.select;
+        let refs                    = this.refs;
+        let selectRef               = refs.select;
         let allowHTML               = this.allowHTML;
 
 
@@ -224,13 +225,19 @@ const build = {
                 let selectChild     = selectRef.children[ i ];
                 selectOption        = selectChild;
                 selectChild.setAttribute( 'value', selectChild.value );
-                addClass( selectChild, 'flounder--option--tag' );
+
+                if ( selectChild.disabled === true && data[ i ] )
+                {
+                    addClass( data[ i ], classes.DISABLED );
+                }
+                addClass( selectChild, classes.OPTION_TAG );
             }
 
             if ( i === defaultValue.index )
             {
                 selectOption.selected = true;
             }
+
 
             if ( selectOption.getAttribute( 'disabled' ) )
             {

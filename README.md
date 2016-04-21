@@ -403,6 +403,13 @@ See more examples on the [demo page](./demo/index.html)
 Change Log
 ==========
 
+0.7.4
+-----
+
++ build
+    + disabled select options are now correctly detected
+
+
 0.7.2
 -----
 
