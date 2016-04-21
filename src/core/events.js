@@ -157,7 +157,7 @@ const events = {
     addSearchListeners : function()
     {
         let search = this.refs.search;
-        search.addEventListener( 'click', this.toggleList );
+        search.addEventListener( 'click', this.toggleListSearchClick );
         search.addEventListener( 'keyup', this.fuzzySearch );
         search.addEventListener( 'focus', this.clearPlaceholder );
     },
@@ -208,7 +208,6 @@ const events = {
         if ( ! this.checkClickTarget( e ) )
         {
             this.toggleList( e );
-
             this.addPlaceholder();
         }
     },
@@ -723,6 +722,22 @@ const events = {
             {
                 console.log( 'something may be wrong in "onClose"', e );
             }
+        }
+    },
+
+
+    /**
+     * ## toggleListSearchClick
+     *
+     * toggleList wrapper for search.  only triggered if flounder is closed
+     *
+     * @return _Void_
+     */
+    toggleListSearchClick : function( e )
+    {
+        if ( !utils.hasClass( this.refs.wrapper, 'open' ) )
+        {
+            this.toggleList( e, 'open' );
         }
     },
 

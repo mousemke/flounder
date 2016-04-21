@@ -43,13 +43,19 @@
 }
 
 
-.flounder__option--selected--displayed:hover ~ .flounder__arrow--wrapper
+.flounder__option--selected--displayed:hover ~ .flounder__arrow--wrapper,
+.flounder__list--wrapper:hover ~ .flounder__arrow--wrapper,
+.flounder__input--search:hover ~ .flounder__arrow--wrapper,
+.flounder__option--selected--displayed:focus ~ .flounder__arrow--wrapper,
+.flounder__list--wrapper:focus ~ .flounder__arrow--wrapper,
+.flounder__input--search:focus ~ .flounder__arrow--wrapper
 {
     background-color:               #eee;
 }
 
 
-.flounder__option--selected--displayed:active ~ .flounder__arrow--wrapper
+.flounder__option--selected--displayed:active ~ .flounder__arrow--wrapper,
+.flounder__input--search:active ~ .flounder__arrow--wrapper
 {
     background-color:               #ccc;
 }

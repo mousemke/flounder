@@ -408,12 +408,16 @@ Change Log
 
 + build
     + disabled select options are now correctly detected
+    + moved the build order of the search box and list wrapper for css reasons
 
 + events
     + click targets are now correctly detected and menu is closed
+    + fixed esc / search behaviors
+    + fixed click / search behavior
 
 + css
     + fixed a hover / z-index issue
+    + added fuller basic focus, hover, and active indicators
 
 
 0.7.2

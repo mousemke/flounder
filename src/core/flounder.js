@@ -286,6 +286,12 @@ class Flounder
                     this.fuzzySearchReset();
                 }
             }
+            else if ( keyCode === 27 )
+            {
+                this.fuzzySearchReset();
+                this.toggleList( e, 'close' );
+                this.addPlaceholder();
+            }
             else
             {
                 this.setSelectValue( e );

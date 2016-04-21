@@ -76,7 +76,8 @@ const build = {
             'removeMultiTag',
             'setKeypress',
             'setSelectValue',
-            'toggleList' ].forEach( func =>
+            'toggleList',
+            'toggleListSearchClick' ].forEach( func =>
             {
                 this[ func ] = this[ func ].bind( this );
                 this[ func ].___isBound = true;
@@ -343,13 +344,16 @@ const build = {
 
         let multiTagWrapper     = this.multiple ? constructElement( { className : classes.MULTI_TAG_LIST } ) : null;
 
-        let arrow               = this.buildArrow( props, constructElement );
+        let search              = this.addSearch( flounder );
+
         let optionsListWrapper  = constructElement( { className : classes.OPTIONS_WRAPPER + '  ' + classes.HIDDEN } );
         let optionsList         = constructElement( { className : classes.LIST } );
         optionsList.setAttribute( 'role', 'listbox' );
         optionsListWrapper.appendChild( optionsList );
 
-        [ selected, multiTagWrapper, arrow, optionsListWrapper ].forEach( el =>
+        let arrow               = this.buildArrow( props, constructElement );
+
+        [ selected, multiTagWrapper, optionsListWrapper, arrow ].forEach( el =>
         {
             if ( el )
             {
@@ -357,7 +361,6 @@ const build = {
             }
         } );
 
-        let search = this.addSearch( flounder );
         let selectOptions;
 
         [ data, selectOptions ] = this.buildData( defaultValue, data, optionsList, select );
