@@ -2078,7 +2078,7 @@ var build = {
     bindThis: function bindThis() {
         var _this = this;
 
-        ['catchBodyClick', 'checkClickTarget', 'checkFlounderKeypress', 'clearPlaceholder', 'clickSet', 'divertTarget', 'displayMultipleTags', 'firstTouchController', 'fuzzySearch', 'removeMultiTag', 'setKeypress', 'setSelectValue', 'toggleList'].forEach(function (func) {
+        ['catchBodyClick', 'checkClickTarget', 'checkFlounderKeypress', 'clearPlaceholder', 'clickSet', 'divertTarget', 'displayMultipleTags', 'firstTouchController', 'fuzzySearch', 'removeMultiTag', 'setKeypress', 'setSelectValue', 'toggleList', 'toggleListSearchClick'].forEach(function (func) {
             _this[func] = _this[func].bind(_this);
             _this[func].___isBound = true;
         });
@@ -2129,7 +2129,8 @@ var build = {
         var selectedClass = this.selectedClass;
         var escapeHTML = _utils2['default'].escapeHTML;
         var addClass = _utils2['default'].addClass;
-        var selectRef = this.refs.select;
+        var refs = this.refs;
+        var selectRef = refs.select;
         var allowHTML = this.allowHTML;
 
         /**
@@ -2207,7 +2208,11 @@ var build = {
                 var selectChild = selectRef.children[i];
                 selectOption = selectChild;
                 selectChild.setAttribute('value', selectChild.value);
-                addClass(selectChild, 'flounder--option--tag');
+
+                if (selectChild.disabled === true && data[i]) {
+                    addClass(data[i], _classes2['default'].DISABLED);
+                }
+                addClass(selectChild, _classes2['default'].OPTION_TAG);
             }
 
             if (i === defaultValue.index) {
@@ -2304,19 +2309,21 @@ var build = {
 
         var multiTagWrapper = this.multiple ? constructElement({ className: _classes2['default'].MULTI_TAG_LIST }) : null;
 
-        var arrow = this.buildArrow(props, constructElement);
+        var search = this.addSearch(flounder);
+
         var optionsListWrapper = constructElement({ className: _classes2['default'].OPTIONS_WRAPPER + '  ' + _classes2['default'].HIDDEN });
         var optionsList = constructElement({ className: _classes2['default'].LIST });
         optionsList.setAttribute('role', 'listbox');
         optionsListWrapper.appendChild(optionsList);
 
-        [selected, multiTagWrapper, arrow, optionsListWrapper].forEach(function (el) {
+        var arrow = this.buildArrow(props, constructElement);
+
+        [selected, multiTagWrapper, optionsListWrapper, arrow].forEach(function (el) {
             if (el) {
                 flounder.appendChild(el);
             }
         });
 
-        var search = this.addSearch(flounder);
         var selectOptions = undefined;
 
         var _buildData = this.buildData(defaultValue, data, optionsList, select);
@@ -2909,7 +2916,7 @@ var events = {
      */
     addSearchListeners: function addSearchListeners() {
         var search = this.refs.search;
-        search.addEventListener('click', this.toggleList);
+        search.addEventListener('click', this.toggleListSearchClick);
         search.addEventListener('keyup', this.fuzzySearch);
         search.addEventListener('focus', this.clearPlaceholder);
     },
@@ -2954,7 +2961,6 @@ var events = {
     catchBodyClick: function catchBodyClick(e) {
         if (!this.checkClickTarget(e)) {
             this.toggleList(e);
-
             this.addPlaceholder();
         }
     },
@@ -2970,8 +2976,7 @@ var events = {
      * @return _Boolean_
      */
     checkClickTarget: function checkClickTarget(e, target) {
-        target = target || this.refs.data[e.target.getAttribute('data-index')] || e.target;
-
+        target = target || e.target;
         if (target === document) {
             return false;
         } else if (target === this.refs.flounder) {
@@ -3393,6 +3398,19 @@ var events = {
     },
 
     /**
+     * ## toggleListSearchClick
+     *
+     * toggleList wrapper for search.  only triggered if flounder is closed
+     *
+     * @return _Void_
+     */
+    toggleListSearchClick: function toggleListSearchClick(e) {
+        if (!_utils2['default'].hasClass(this.refs.wrapper, 'open')) {
+            this.toggleList(e, 'open');
+        }
+    },
+
+    /**
      * ## toggleList
      *
      * on click of flounder--selected, this shows or hides the options list
@@ -3778,6 +3796,10 @@ var Flounder = (function () {
                     } else {
                         this.fuzzySearchReset();
                     }
+                } else if (keyCode === 27) {
+                    this.fuzzySearchReset();
+                    this.toggleList(e, 'close');
+                    this.addPlaceholder();
                 } else {
                     this.setSelectValue(e);
                     this.setKeypress(e);
@@ -4665,6 +4687,6 @@ module.exports = exports['default'];
 },{"./classes":15,"microbejs/src/modules/http":4}],21:[function(require,module,exports){
 'use strict';
 
-module.exports = '0.7.3';
+module.exports = '0.7.4';
 
 },{}]},{},[1]);
