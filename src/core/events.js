@@ -226,10 +226,7 @@ const events = {
      */
     checkClickTarget : function( e, target )
     {
-        target = target ||
-                    this.refs.data[ e.target.getAttribute( 'data-index' ) ] ||
-                    e.target;
-
+        target = target || e.target;
         if ( target === document )
         {
             return false;

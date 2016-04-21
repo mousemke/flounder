@@ -1,4 +1,4 @@
-Flounder.js 0.7.3
+Flounder.js 0.7.4
 =================
 
 [![Flounder build status](https://travis-ci.org/sociomantic-tsunami/flounder.svg)](https://travis-ci.org)
@@ -409,6 +409,9 @@ Change Log
 + build
     + disabled select options are now correctly detected
 
++ events
+    + click targets are now correctly detected and menu is closed
+
 
 0.7.2
 -----
@@ -451,65 +454,6 @@ Change Log
 
 + api
     fixed a bug in setDefaultValue concerning index 0
-
-
-0.6.3
------
-
-+ api
-    + fixed a specificity css issue preventing disabling things
-    + fixed a type issue that prevented disabling by value
-
-+ build
-    + elements are now properly disabled with the disabled flag
-
-+ defaults
-    + added defaultEmpty
-    + fix removeAllChildren when selectDataOverride option is passed
-
-+ events
-    + fixed addPlaceholder method for blur of opened dropdown
-    + onSelect now reacts on change events
-
-+ traviscli
-    + dropped support for node 0.11
-    + added support for node 5.0.0
-
-+ tests
-    + add test "blurOpenedDropdown" to cover fix
-
-
-0.6.2
------
-
-+ tests
-    + version test completed
-    + default priority fixed
-
-+ default
-    + priority fixed
-    + null default bug fixed
-
-
-0.6.1
------
-
-+ tests
-    + utils tests completed
-
-+ demo
-    + updates and cleanup
-
-+ documentation
-    + repo url updategi
-    + general updates and clean up
-
-
-0.6.0
------
-
-+ api
-    + added allowHTML
 
 
 

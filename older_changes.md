@@ -3,6 +3,66 @@ Older changes
 
 This is truncated from the readme file to keep down the size
 
+
+0.6.3
+-----
+
++ api
+    + fixed a specificity css issue preventing disabling things
+    + fixed a type issue that prevented disabling by value
+
++ build
+    + elements are now properly disabled with the disabled flag
+
++ defaults
+    + added defaultEmpty
+    + fix removeAllChildren when selectDataOverride option is passed
+
++ events
+    + fixed addPlaceholder method for blur of opened dropdown
+    + onSelect now reacts on change events
+
++ traviscli
+    + dropped support for node 0.11
+    + added support for node 5.0.0
+
++ tests
+    + add test "blurOpenedDropdown" to cover fix
+
+
+0.6.2
+-----
+
++ tests
+    + version test completed
+    + default priority fixed
+
++ default
+    + priority fixed
+    + null default bug fixed
+
+
+0.6.1
+-----
+
++ tests
+    + utils tests completed
+
++ demo
+    + updates and cleanup
+
++ documentation
+    + repo url updategi
+    + general updates and clean up
+
+
+0.6.0
+-----
+
++ api
+    + added allowHTML
+
+
 0.5.0
 -----
 
