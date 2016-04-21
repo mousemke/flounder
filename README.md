@@ -412,6 +412,9 @@ Change Log
 + events
     + click targets are now correctly detected and menu is closed
 
++ css
+    + fixed a hover / z-index issue
+
 
 0.7.2
 -----
