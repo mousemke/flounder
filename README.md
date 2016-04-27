@@ -1,4 +1,4 @@
-Flounder.js 0.7.5
+Flounder.js 0.7.6
 =================
 
 [![Flounder build status](https://travis-ci.org/sociomantic-tsunami/flounder.svg)](https://travis-ci.org)
@@ -403,11 +403,12 @@ See more examples on the [demo page](./demo/index.html)
 Change Log
 ==========
 
-0.7.5
+0.7.6
 -----
 
 + css
     + inner arrow pointer-events set to none
+    + adjusted padding-right under arrow
 
 
 0.7.4
