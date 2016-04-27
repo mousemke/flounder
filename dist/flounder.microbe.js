@@ -1,5 +1,5 @@
 /*!
- * Flounder JavaScript Stylable Selectbox v0.7.5
+ * Flounder JavaScript Stylable Selectbox v0.7.6
  * https://github.com/sociomantic-tsunami/flounder
  *
  * Copyright 2015-2016 Sociomantic Labs and other contributors
@@ -4398,7 +4398,7 @@ module.exports = exports['default'];
 },{"./classes":14,"microbejs/src/modules/http":3}],20:[function(require,module,exports){
 'use strict';
 
-module.exports = '0.7.5';
+module.exports = '0.7.6';
 
 },{}],21:[function(require,module,exports){
 
