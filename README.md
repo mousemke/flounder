@@ -403,6 +403,13 @@ See more examples on the [demo page](./demo/index.html)
 Change Log
 ==========
 
+0.7.7
+-----
+
++ css
+    + added 3px padding to selected
+
+
 0.7.6
 -----
 
