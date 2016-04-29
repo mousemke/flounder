@@ -423,6 +423,43 @@ let tests = function( Flounder )
 
         flounder.destroy();
     } );
+
+
+    /**
+     * Destroy input when it has siblings.
+     * Flounder is added as last sibling.
+     * Flounder container should be remove properly on destroy.
+     */
+    QUnit.test( 'destroyInput', function( assert )
+    {
+        let data = [
+            {
+                text : "Item 1",
+                value : "item1"
+            },
+            {
+                text : "Item 2",
+                value : "item2"
+            }
+        ];
+
+        let container = document.createElement( 'div' ),
+            target = document.createElement( 'input' ),
+            someLabel = document.createElement( 'label' );
+
+        container.appendChild(target);
+        container.appendChild(someLabel);
+
+        document.body.appendChild( container );
+
+        let flounder    = ( new Flounder( target, { data : data } ) ),
+            flounderDomEl = flounder.refs.flounder.parentNode;
+
+        assert.ok( flounderDomEl.parentNode , 'flounder is in DOM' );
+        flounder.destroy();
+        assert.notOk( flounderDomEl.parentNode, 'flounder is NOT in DOM' +
+            ' anymore' );
+    } );
 };
 
 export default tests;
