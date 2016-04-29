@@ -135,9 +135,10 @@ new Flounder( document.getElementById( 'vanilla--input' ), {
  * Vanilla from Select (default value, custom classes, built from element)
  */
 new Flounder( document.getElementById( 'vanilla--select' ), {
-    defaultValue    : '1',
+    defaultValue    : '2',
 
     onSelect        : function(){ console.log( 'woot' ); },
+
     classes         : {
         flounder        : 'class--to--give--the--main--flounder--element',
         hidden          : 'class--to--denote--hidden',
