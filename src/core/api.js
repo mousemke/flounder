@@ -96,10 +96,10 @@ const api = {
         let originalTarget      = this.originalTarget;
         let tagName             =  originalTarget.tagName;
 
-        refs.flounder.flounder  = originalTarget.flounder = this.target.flounder = null;
-
         if ( tagName === 'INPUT' || tagName === 'SELECT' )
         {
+            let target = originalTarget.nextElementSibling;
+
             if ( tagName === 'SELECT' )
             {
                 let firstOption = originalTarget[0];
@@ -108,9 +108,9 @@ const api = {
                 {
                     originalTarget.removeChild( firstOption );
                 }
+            } else if ( tagName === 'INPUT' ) {
+                target = refs.flounder.parentNode;
             }
-
-            let target = originalTarget.nextElementSibling;
 
             try
             {
@@ -136,6 +136,9 @@ const api = {
                 throw ' : this flounder may have already been removed';
             }
         }
+
+        refs.flounder.flounder  = originalTarget.flounder = this.target.flounder = null;
+
     },
 
 
