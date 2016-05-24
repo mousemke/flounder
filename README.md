@@ -409,6 +409,9 @@ Change Log
 + css
     + added 3px padding to selected
 
++ api
+    + destroy now spares surrounding elements
+
 
 0.7.6
 -----
