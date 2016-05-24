@@ -4778,11 +4778,12 @@ var tests = function tests(Flounder) {
     QUnit.test('removeMultiTag', function (assert) {
         var data = ['doge', 'moon'];
 
-        var flounder = new Flounder(document.body, { data: data, defaultIndex: 0, multipleTags: true });
+        var flounder = new Flounder(document.body, { data: data, placeholder: 'placeholders!', multipleTags: true });
         assert.ok(flounder.removeMultiTag, 'exists');
 
         var refs = document.body.flounder.refs;
         var doge = refs.data[1];
+
         doge.click();
 
         var multiTagWrapper = refs.multiTagWrapper;
@@ -4805,8 +4806,9 @@ var tests = function tests(Flounder) {
         assert.ok(flounder.removeSelectedClass, 'exists');
 
         var refs = document.body.flounder.refs;
+
+        refs.data[0].click();
         refs.data[1].click();
-        refs.data[2].click();
 
         flounder.removeSelectedClass();
         var selected = refs.optionsList.querySelectorAll('.flounder__option--selected');
@@ -4828,8 +4830,8 @@ var tests = function tests(Flounder) {
         assert.ok(flounder.removeSelectedValue, 'exists');
 
         var refs = flounder.refs;
+        refs.data[0].click();
         refs.data[1].click();
-        refs.data[2].click();
 
         flounder.removeSelectedValue();
 

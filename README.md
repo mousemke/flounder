@@ -403,6 +403,16 @@ See more examples on the [demo page](./demo/index.html)
 Change Log
 ==========
 
+0.7.8
+-----
+
++ api
+    + destroy is now much safer
+
++ jenkins
+    + node 0.12 is no longer tested
+
+
 0.7.7
 -----
 

@@ -236,11 +236,12 @@ let tests = function( Flounder )
             'moon'
         ];
 
-        let flounder    = new Flounder( document.body, { data : data, defaultIndex : 0, multipleTags : true } );
+        let flounder    = new Flounder( document.body, { data : data, placeholder : 'placeholders!', multipleTags : true } );
         assert.ok( flounder.removeMultiTag, 'exists' );
 
         let refs = document.body.flounder.refs;
         let doge = refs.data[1];
+
         doge.click();
 
         let multiTagWrapper = refs.multiTagWrapper;
@@ -268,8 +269,9 @@ let tests = function( Flounder )
         assert.ok( flounder.removeSelectedClass, 'exists' );
 
         let refs = document.body.flounder.refs;
+
+        refs.data[0].click();
         refs.data[1].click();
-        refs.data[2].click();
 
         flounder.removeSelectedClass();
         let selected = refs.optionsList.querySelectorAll( '.flounder__option--selected' );
@@ -296,8 +298,8 @@ let tests = function( Flounder )
         assert.ok( flounder.removeSelectedValue, 'exists' );
 
         let refs = flounder.refs;
+        refs.data[0].click();
         refs.data[1].click();
-        refs.data[2].click();
 
         flounder.removeSelectedValue();
 
