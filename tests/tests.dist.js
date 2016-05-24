@@ -1067,7 +1067,7 @@ Promise.disableSynchronous = function() {
 },{"./core.js":5}],12:[function(require,module,exports){
 module.exports={
   "name": "flounder",
-  "version": "0.7.6",
+  "version": "0.7.7",
   "author": "Mouse Braun <mouse@knoblau.ch>",
   "description": "a native friendly dropdown menu",
   "repository": {
@@ -1234,18 +1234,18 @@ var api = {
         var originalTarget = this.originalTarget;
         var tagName = originalTarget.tagName;
 
-        refs.flounder.flounder = originalTarget.flounder = this.target.flounder = null;
-
         if (tagName === 'INPUT' || tagName === 'SELECT') {
+            var target = originalTarget.nextElementSibling;
+
             if (tagName === 'SELECT') {
                 var firstOption = originalTarget[0];
 
                 if (firstOption && firstOption.textContent === this.props.placeholder) {
                     originalTarget.removeChild(firstOption);
                 }
+            } else if (tagName === 'INPUT') {
+                target = refs.flounder.parentNode;
             }
-
-            var target = originalTarget.nextElementSibling;
 
             try {
                 target.parentNode.removeChild(target);
@@ -1263,6 +1263,8 @@ var api = {
                 throw ' : this flounder may have already been removed';
             }
         }
+
+        refs.flounder.flounder = originalTarget.flounder = this.target.flounder = null;
     },
 
     /**
@@ -1654,7 +1656,7 @@ var api = {
 
             if (typeof _ret5 === 'object') return _ret5.v;
         } else {
-            var data = refs.data;
+            var data = this.data;
             var _length3 = data.length;
 
             if (index < 0) {
@@ -2311,6 +2313,10 @@ var _classes = require('./classes');
 
 var _classes2 = _interopRequireDefault(_classes);
 
+var _utils = require('./utils');
+
+var _utils2 = _interopRequireDefault(_utils);
+
 var defaultOptions = {
     allowHTML: false,
     classes: {
@@ -2400,7 +2406,7 @@ var defaults = {
             };
 
             if (select) {
-                var escapedText = self.allowHTML ? _default.text : self.escapeHTML(_default.text);
+                var escapedText = self.allowHTML ? _default.text : _utils2['default'].escapeHTML(_default.text);
 
                 if (!select[0] || select[0].value !== '') {
                     var defaultOption = self.constructElement({ tagname: 'option',
@@ -2531,7 +2537,7 @@ var defaults = {
 exports['default'] = defaults;
 module.exports = exports['default'];
 
-},{"./classes":15}],17:[function(require,module,exports){
+},{"./classes":15,"./utils":20}],17:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -3628,8 +3634,8 @@ var Flounder = (function () {
                 this.multiple = true;
                 this.selectedClass += '  ' + _classes3['default'].SELECTED_HIDDEN;
 
-                if (!props.placeholder) {
-                    props.placeholder = _defaults.defaultOptions.placeholder;
+                if (!this.placeholder) {
+                    this.placeholder = _defaults.defaultOptions.placeholder;
                 }
             }
         }
@@ -4452,7 +4458,7 @@ module.exports = exports['default'];
 },{"./classes":15,"microbejs/src/modules/http":3}],21:[function(require,module,exports){
 'use strict';
 
-module.exports = '0.7.6';
+module.exports = '0.7.7';
 
 },{}],22:[function(require,module,exports){
 
@@ -4931,6 +4937,37 @@ var tests = function tests(Flounder) {
         assert.equal(flounder.refs.selected.innerHTML, 'Item 1', 'text is' + ' stayed after focusout');
 
         flounder.destroy();
+    });
+
+    /**
+     * Destroy input when it has siblings.
+     * Flounder is added as last sibling.
+     * Flounder container should be remove properly on destroy.
+     */
+    QUnit.test('destroyInput', function (assert) {
+        var data = [{
+            text: "Item 1",
+            value: "item1"
+        }, {
+            text: "Item 2",
+            value: "item2"
+        }];
+
+        var container = document.createElement('div'),
+            target = document.createElement('input'),
+            someLabel = document.createElement('label');
+
+        container.appendChild(target);
+        container.appendChild(someLabel);
+
+        document.body.appendChild(container);
+
+        var flounder = new Flounder(target, { data: data }),
+            flounderDomEl = flounder.refs.flounder.parentNode;
+
+        assert.ok(flounderDomEl.parentNode, 'flounder is in DOM');
+        flounder.destroy();
+        assert.notOk(flounderDomEl.parentNode, 'flounder is NOT in DOM' + ' anymore');
     });
 };
 

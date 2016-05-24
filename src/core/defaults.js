@@ -1,4 +1,5 @@
 import classes              from './classes';
+import utils                from './utils';
 
 const defaultOptions = {
     allowHTML               : false,
@@ -93,7 +94,7 @@ const defaults = {
 
             if ( select )
             {
-                let escapedText     = self.allowHTML ? _default.text : self.escapeHTML( _default.text );
+                let escapedText     = self.allowHTML ? _default.text : utils.escapeHTML( _default.text );
 
                 if ( !select[ 0 ] || select[ 0 ].value !== '' )
                 {

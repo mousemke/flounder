@@ -535,7 +535,7 @@ const api = {
         }
         else
         {
-            let data    = refs.data;
+            let data    = this.data;
             let length  = data.length;
 
             if ( index < 0 )

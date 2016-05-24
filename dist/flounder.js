@@ -1,12 +1,12 @@
 /*!
- * Flounder JavaScript Stylable Selectbox v0.7.6
+ * Flounder JavaScript Stylable Selectbox v0.7.7
  * https://github.com/sociomantic-tsunami/flounder
  *
  * Copyright 2015-2016 Sociomantic Labs and other contributors
  * Released under the MIT license
  * https://github.com/sociomantic-tsunami/flounder/license
  *
- * Date: Wed Apr 27 2016
+ * Date: Tue May 24 2016
  * "This, so far, is the best Flounder ever"
  */
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
@@ -1180,18 +1180,18 @@ var api = {
         var originalTarget = this.originalTarget;
         var tagName = originalTarget.tagName;
 
-        refs.flounder.flounder = originalTarget.flounder = this.target.flounder = null;
-
         if (tagName === 'INPUT' || tagName === 'SELECT') {
+            var target = originalTarget.nextElementSibling;
+
             if (tagName === 'SELECT') {
                 var firstOption = originalTarget[0];
 
                 if (firstOption && firstOption.textContent === this.props.placeholder) {
                     originalTarget.removeChild(firstOption);
                 }
+            } else if (tagName === 'INPUT') {
+                target = refs.flounder.parentNode;
             }
-
-            var target = originalTarget.nextElementSibling;
 
             try {
                 target.parentNode.removeChild(target);
@@ -1209,6 +1209,8 @@ var api = {
                 throw ' : this flounder may have already been removed';
             }
         }
+
+        refs.flounder.flounder = originalTarget.flounder = this.target.flounder = null;
     },
 
     /**
@@ -1600,7 +1602,7 @@ var api = {
 
             if (typeof _ret5 === 'object') return _ret5.v;
         } else {
-            var data = refs.data;
+            var data = this.data;
             var _length3 = data.length;
 
             if (index < 0) {
@@ -2257,6 +2259,10 @@ var _classes = require('./classes');
 
 var _classes2 = _interopRequireDefault(_classes);
 
+var _utils = require('./utils');
+
+var _utils2 = _interopRequireDefault(_utils);
+
 var defaultOptions = {
     allowHTML: false,
     classes: {
@@ -2346,7 +2352,7 @@ var defaults = {
             };
 
             if (select) {
-                var escapedText = self.allowHTML ? _default.text : self.escapeHTML(_default.text);
+                var escapedText = self.allowHTML ? _default.text : _utils2['default'].escapeHTML(_default.text);
 
                 if (!select[0] || select[0].value !== '') {
                     var defaultOption = self.constructElement({ tagname: 'option',
@@ -2477,7 +2483,7 @@ var defaults = {
 exports['default'] = defaults;
 module.exports = exports['default'];
 
-},{"./classes":14}],16:[function(require,module,exports){
+},{"./classes":14,"./utils":19}],16:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -3574,8 +3580,8 @@ var Flounder = (function () {
                 this.multiple = true;
                 this.selectedClass += '  ' + _classes3['default'].SELECTED_HIDDEN;
 
-                if (!props.placeholder) {
-                    props.placeholder = _defaults.defaultOptions.placeholder;
+                if (!this.placeholder) {
+                    this.placeholder = _defaults.defaultOptions.placeholder;
                 }
             }
         }
@@ -4398,6 +4404,6 @@ module.exports = exports['default'];
 },{"./classes":14,"microbejs/src/modules/http":3}],20:[function(require,module,exports){
 'use strict';
 
-module.exports = '0.7.6';
+module.exports = '0.7.7';
 
 },{}]},{},[17]);
