@@ -4802,13 +4802,13 @@ var tests = function tests(Flounder) {
     QUnit.test('removeSelectedClass', function (assert) {
         var data = ['doge', 'moon'];
 
-        var flounder = new Flounder(document.body, { data: data, defaultIndex: 0, multipleTags: true });
+        var flounder = new Flounder(document.body, { data: data, placeholder: 'moon', multipleTags: true });
         assert.ok(flounder.removeSelectedClass, 'exists');
 
         var refs = document.body.flounder.refs;
 
-        refs.data[0].click();
         refs.data[1].click();
+        refs.data[2].click();
 
         flounder.removeSelectedClass();
         var selected = refs.optionsList.querySelectorAll('.flounder__option--selected');

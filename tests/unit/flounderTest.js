@@ -265,13 +265,13 @@ let tests = function( Flounder )
             'moon'
         ];
 
-        let flounder    = new Flounder( document.body, { data : data, defaultIndex : 0, multipleTags : true } );
+        let flounder    = new Flounder( document.body, { data : data, placeholder:'moon', multipleTags : true } );
         assert.ok( flounder.removeSelectedClass, 'exists' );
 
         let refs = document.body.flounder.refs;
 
-        refs.data[0].click();
         refs.data[1].click();
+        refs.data[2].click();
 
         flounder.removeSelectedClass();
         let selected = refs.optionsList.querySelectorAll( '.flounder__option--selected' );
