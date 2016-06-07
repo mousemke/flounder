@@ -1,4 +1,4 @@
-Flounder.js 0.7.8
+Flounder.js 0.8.0
 =================
 
 [![Flounder build status](https://travis-ci.org/sociomantic-tsunami/flounder.svg)](https://travis-ci.org)
@@ -402,6 +402,16 @@ See more examples on the [demo page](./demo/index.html)
 
 Change Log
 ==========
+
+0.8.0
+-----
+
++ events
+    + added onInputChange
+
++ general
+    + altered the gitignore to a release branch structure
+
 
 0.7.8
 -----

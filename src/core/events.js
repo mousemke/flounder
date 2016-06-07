@@ -12,7 +12,7 @@ const events = {
      *
      * @return _Void_
      */
-    addFirstTouchListeners : function()
+    addFirstTouchListeners()
     {
         let refs = this.refs;
         refs.selected.addEventListener( 'click', this.firstTouchController );
@@ -26,13 +26,26 @@ const events = {
 
 
     /**
+     * ## addHoverClass
+     *
+     * adds a hover class to an element
+     *
+     * @return Void_
+     */
+    addHoverClass()
+    {
+        utils.addClass( this, classes.HOVER );
+    },
+
+
+    /**
      * ## addListeners
      *
      * adds listeners on render
      *
      * @return _Void_
      */
-    addListeners : function( refs, props )
+    addListeners( refs, props )
     {
         let ios         = this.isIos;
         let changeEvent = ios ? 'blur' : 'change';
@@ -70,7 +83,7 @@ const events = {
      *
      * @return _Void_
      */
-    addOptionsListeners : function()
+    addOptionsListeners()
     {
         this.refs.data.forEach( ( dataObj, i ) =>
         {
@@ -85,18 +98,6 @@ const events = {
     },
 
 
-    addHoverClass : function()
-    {
-        utils.addClass( this, classes.HOVER );
-    },
-
-
-    removeHoverClass : function()
-    {
-        utils.removeClass( this, classes.HOVER );
-    },
-
-
     /**
      * ## addPlaceholder
      *
@@ -105,7 +106,7 @@ const events = {
      *
      * @return _Void_
      */
-    addPlaceholder : function()
+    addPlaceholder()
     {
         let multiTags       = this.multipleTags;
         let selectedValues  = this.getSelectedValues();
@@ -154,7 +155,7 @@ const events = {
      *
      * @return _Void_
      */
-    addSearchListeners : function()
+    addSearchListeners()
     {
         let search = this.refs.search;
         search.addEventListener( 'click', this.toggleListSearchClick );
@@ -171,7 +172,7 @@ const events = {
      *
      * @return _Void_
      */
-    addSelectKeyListener : function()
+    addSelectKeyListener()
     {
         let refs    = this.refs;
         let select  = refs.select;
@@ -203,7 +204,7 @@ const events = {
      *
      * @return _Void_
      */
-    catchBodyClick : function( e )
+    catchBodyClick( e )
     {
         if ( ! this.checkClickTarget( e ) )
         {
@@ -223,7 +224,7 @@ const events = {
      *
      * @return _Boolean_
      */
-    checkClickTarget : function( e, target )
+    checkClickTarget( e, target )
     {
         target = target || e.target;
         if ( target === document )
@@ -255,7 +256,7 @@ const events = {
      *
      * @return _Void_
      */
-    checkFlounderKeypress : function( e )
+    checkFlounderKeypress( e )
     {
         let keyCode = e.keyCode;
 
@@ -286,7 +287,7 @@ const events = {
      *
      * @return _Void_
      */
-     clearPlaceholder : function( e )
+     clearPlaceholder( e )
      {
         let selected    = this.refs.selected;
         selected.innerHTML = '';
@@ -302,7 +303,7 @@ const events = {
      *
      * @return _Void_
      */
-    clickSet : function( e )
+    clickSet( e )
     {
         this.setSelectValue( {}, e );
 
@@ -321,7 +322,7 @@ const events = {
      *
      * @return _Void_
      */
-    divertTarget : function( e )
+    divertTarget( e )
     {
         // weird shit
         // http://stackoverflow.com/questions/34660500/mobile-safari-multi-select-bug
@@ -368,7 +369,7 @@ const events = {
      *
      * @return _Void_
      */
-    firstTouchController : function( e )
+    firstTouchController( e )
     {
         let refs = this.refs;
 
@@ -392,13 +393,26 @@ const events = {
 
 
     /**
+     * ## addHoverClass
+     *
+     * adds a hover class to an element
+     *
+     * @return Void_
+     */
+    removeHoverClass()
+    {
+        utils.removeClass( this, classes.HOVER );
+    },
+
+    
+    /**
      * ## removeListeners
      *
      * removes event listeners from flounder.  normally pre unload
      *
      * @return _Void_
      */
-    removeListeners : function()
+    removeListeners()
     {
         let refs        = this.refs;
 
@@ -429,7 +443,7 @@ const events = {
      *
      * @return _Void_
      */
-    removeOptionsListeners : function()
+    removeOptionsListeners()
     {
         this.refs.data.forEach( dataObj =>
         {
@@ -448,7 +462,7 @@ const events = {
      *
      * @return _Void_
      */
-    removeSearchListeners : function()
+    removeSearchListeners()
     {
         let search = this.refs.search;
         search.removeEventListener( 'click', this.toggleList );
@@ -464,7 +478,7 @@ const events = {
      *
      * @return _Void_
      */
-    removeSelectKeyListener : function()
+    removeSelectKeyListener()
     {
         let select = this.refs.select;
         select.removeEventListener( 'keyup', this.setSelectValue );
@@ -480,7 +494,7 @@ const events = {
      *
      * @return _Void_
      */
-    setKeypress : function( e )
+    setKeypress( e )
     {
         let refs        = this.refs;
         let increment   = 0;
@@ -562,7 +576,7 @@ const events = {
      *
      * @return _Void_
      */
-    setSelectValue : function( obj, e )
+    setSelectValue( obj, e )
     {
         let refs        = this.refs;
         let keyCode;
@@ -617,7 +631,7 @@ const events = {
      *
      * @return _Void_
      */
-    setSelectValueButton : function()
+    setSelectValueButton()
     {
         let refs            = this.refs;
         let data            = refs.data;
@@ -651,7 +665,7 @@ const events = {
      *
      * @return _Void_
      */
-    setSelectValueClick : function( e )
+    setSelectValueClick( e )
     {
         let _multiple       = this.multiple;
         let refs            = this.refs;
@@ -695,7 +709,7 @@ const events = {
      *
      * @return _Void_
      */
-    toggleClosed : function( e, optionsList, refs, wrapper )
+    toggleClosed( e, optionsList, refs, wrapper )
     {
         utils.addClass( optionsList, classes.HIDDEN );
         this.removeSelectKeyListener();
@@ -733,7 +747,7 @@ const events = {
      *
      * @return _Void_
      */
-    toggleListSearchClick : function( e )
+    toggleListSearchClick( e )
     {
         if ( !utils.hasClass( this.refs.wrapper, 'open' ) )
         {
@@ -751,7 +765,7 @@ const events = {
      *
      * @return _Void_
      */
-    toggleList : function( e, force )
+    toggleList( e, force )
     {
         let refs        = this.refs;
         let optionsList = refs.optionsListWrapper;
@@ -790,7 +804,7 @@ const events = {
      *
      * @return _Void_
      */
-    toggleOpen : function( e, optionsList, refs, wrapper )
+    toggleOpen( e, optionsList, refs, wrapper )
     {
         this.addSelectKeyListener();
 
