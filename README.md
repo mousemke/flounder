@@ -417,6 +417,9 @@ Change Log
 0.8.0
 -----
 
++ css
+    + css is nnow copied to `./dist` from `./src` directory
+
 + events
     + added onInputChange
 
