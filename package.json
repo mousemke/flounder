@@ -8,11 +8,11 @@
     "url": "git+https://github.com/sociomantic-tsunami/flounder.git"
   },
   "scripts": {
-    "build": "./node_modules/.bin/gulp && npm test && echo \"All builds complete and tests passed.\"",
+    "build": "mkdir -p dist && ./node_modules/.bin/gulp && npm test && echo \"All builds complete and tests passed.\"",
     "amd": "./node_modules/.bin/gulp amd",
     "buildTests": "./node_modules/.bin/gulp buildTests",
     "demo": "./node_modules/.bin/gulp demo",
-    "gulp": "./node_modules/.bin/gulp",
+    "gulp": "mkdir -p dist && ./node_modules/.bin/gulp",
     "jquery": "./node_modules/.bin/gulp jquery",
     "microbe": "./node_modules/.bin/gulp microbe",
     "test": "node --harmony ./scripts/nightmare.js",
