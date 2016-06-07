@@ -27,12 +27,11 @@ var licenceShort    = '/*! Flounder v' + _package.version + ' | (c) ' + ( 2015 =
 
 function build( folder, filename, ext )
 {
-    browserifyFiles( folder, filename, ext );
-    min( folder, filename, ext );
-}
+    browserifyFiles( folder, filename, ext, min )
+};
 
 
-function browserifyFiles( folder, filename, ext )
+function browserifyFiles( folder, filename, ext, _cb )
 {
     ext = ext || '.js';
 
@@ -44,7 +43,12 @@ function browserifyFiles( folder, filename, ext )
         {
             gulp.src( './dist/' + filename + ext )
                 .pipe( header( licenceLong ) )
-                .pipe( gulp.dest( './dist/' ) )
+                .pipe( gulp.dest( './dist/' ) );
+
+            if ( _cb )
+            {
+                _cb( folder, filename, ext );
+            }
         } );
 };
 
