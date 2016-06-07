@@ -112,6 +112,7 @@ If flounder is fed an element that already has a flounder, it will destroy it an
     onComponentWillUnmount  : function(){},
     onFirstTouch            : function( e ){},
     onInit                  : function(){},
+    onInputChange           : function( e ){},
     onOpen                  : function( e, valueArray ){},
     onSelect                : function( e, valueArray ){}
     openOnHover             : false,
@@ -152,6 +153,8 @@ If flounder is fed an element that already has a flounder, it will destroy it an
 + `onFirstTouch` - (function) Triggered the first time flounder is interacted with. An example usage would be calling an api for a list of data to populate a drop down, but waiting to see if the user interacts with it
 
 + `onInit` - (function) Triggered when the selectbox is initiated, but before it's built
+
++ `onInputChange` - (function) Triggered when someone types in a search box.  note: this will do nothing if search is not enabled.
 
 + `onOpen` - (function) Triggered when the selectbox is opened
 
@@ -419,6 +422,10 @@ Change Log
 
 + general
     + altered the gitignore to a release branch structure
+
++ travis-ci
+    + changed node test versions
+    + changed packages to better accomodate travis builds
 
 
 0.7.8

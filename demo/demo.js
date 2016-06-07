@@ -59,6 +59,8 @@ new Flounder( '.vanilla--input--tags', {
 
     multipleTags    : true,
 
+    onInputChange   : function(){ console.log( 'moon' ); },
+
     onInit          : function()
     {
         let res = [];

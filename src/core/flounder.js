@@ -255,6 +255,15 @@ class Flounder
      */
     fuzzySearch( e )
     {
+        try
+        {
+            this.onInputChange( e );
+        }
+        catch( e )
+        {
+            console.log( 'something may be wrong in "onInputChange"', e );
+        }
+
         if ( !this.toggleList.justOpened )
         {
             e.preventDefault();

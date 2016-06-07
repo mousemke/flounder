@@ -23,6 +23,7 @@ const defaultOptions = {
     onComponentWillUnmount  : function(){},
     onFirstTouch            : function( e ){},
     onInit                  : function(){},
+    onInputChange           : function( e ){},
     onOpen                  : function( e, selectedValues ){},
     onSelect                : function( e, selectedValues ){},
     openOnHover             : false,

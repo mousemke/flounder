@@ -8,15 +8,12 @@
     "url": "git+https://github.com/sociomantic-tsunami/flounder.git"
   },
   "scripts": {
-    "build": "mkdir -p dist && ./node_modules/.bin/gulp && npm test && echo \"All builds complete and tests passed.\"",
-    "amd": "./node_modules/.bin/gulp amd",
+    "bash": "mkdir -p dist && cp ./src/styles/flounder-structure.css ./dist/flounder-structure.css",
+    "build": "npm run bash && ./node_modules/.bin/gulp && npm test && echo \"All builds complete and tests passed.\"",
     "buildTests": "./node_modules/.bin/gulp buildTests",
     "demo": "./node_modules/.bin/gulp demo",
-    "gulp": "mkdir -p dist && ./node_modules/.bin/gulp",
-    "jquery": "./node_modules/.bin/gulp jquery",
-    "microbe": "./node_modules/.bin/gulp microbe",
+    "gulp": "npm run bash && ./node_modules/.bin/gulp",
     "test": "node --harmony ./scripts/nightmare.js",
-    "vanilla": "./node_modules/.bin/gulp vanilla",
     "versionBump": "node ./scripts/version_bump.js"
   },
   "devDependencies": {

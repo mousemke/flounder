@@ -317,6 +317,8 @@ const events = {
     /**
      * ## divertTarget
      *
+     * @param {Object} e event object
+     * 
      * on interaction with the raw select box, the target will be diverted to
      * the corresponding flounder list element
      *
