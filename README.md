@@ -1,4 +1,4 @@
-Flounder.js 0.8.0
+Flounder.js NaN.8.1
 =================
 
 [![Flounder build status](https://travis-ci.org/sociomantic-tsunami/flounder.svg)](https://travis-ci.org)
@@ -413,6 +413,12 @@ When you release a new verion, commit it to dev (keeps dev upto date), commit it
 
 Change Log
 ==========
+
+0.8.1
+-----
+
++ release issues...
+
 
 0.8.0
 -----

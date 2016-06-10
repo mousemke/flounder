@@ -1,1 +1,1 @@
-module.exports = `0.8.0`;
+module.exports = 'NaN.8.1';
