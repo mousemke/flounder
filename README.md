@@ -417,6 +417,12 @@ Change Log
 0.8.0
 -----
 
++ general
+    + altered the gitignore to a release branch structure
+    + changed node test versions
+    + changed packages to better accomodate travis builds
+    + moving things to a more es6 sytax
+
 + build
     + placeholders now have their own class
 
@@ -429,11 +435,6 @@ Change Log
 + events
     + added onInputChange
     + changed removeMultipleTags action
-
-+ general
-    + altered the gitignore to a release branch structure
-    + changed node test versions
-    + changed packages to better accomodate travis builds
 
 + api
     + console.log is now console.warn

@@ -42,7 +42,7 @@ class Flounder
         }
         catch( e )
         {
-            console.warn( 'something may be wrong in "onComponentWillUnmount"', e );
+            console.warn( `something may be wrong in "onComponentWillUnmount"`, e );
         }
 
         this.removeListeners();
@@ -72,15 +72,15 @@ class Flounder
         }
         else if ( target )
         {
-            if ( typeof target === 'string' )
+            if ( typeof target === `string` )
             {
                 target = document.querySelectorAll( target );
             }
-            if ( target.length && target.tagName !== 'SELECT' )
+            if ( target.length && target.tagName !== `SELECT` )
             {
                 return this.arrayOfFlounders( target, props );
             }
-            else if ( ( !target.length && target.length !== 0 ) || target.tagName === 'SELECT' )
+            else if ( ( !target.length && target.length !== 0 ) || target.tagName === `SELECT` )
             {
                 if ( target.flounder )
                 {
@@ -103,7 +103,7 @@ class Flounder
                 }
                 catch( e )
                 {
-                    console.warn( 'something may be wrong in "onInit"', e );
+                    console.warn( `something may be wrong in "onInit"`, e );
                 }
                 this.buildDom();
                 let { isOsx, isIos, multiSelect } = utils.setPlatform();
@@ -118,7 +118,7 @@ class Flounder
                 }
                 catch( e )
                 {
-                    console.warn( 'something may be wrong in "onComponentDidMount"', e );
+                    console.warn( `something may be wrong in "onComponentDidMount"`, e );
                 }
 
                 this.ready = true;
@@ -147,23 +147,23 @@ class Flounder
 
         [ ...multiTagWrapper.children ].forEach( function( el )
         {
-            el.firstChild.removeEventListener( 'click', removeMultiTag );
+            el.firstChild.removeEventListener( `click`, removeMultiTag );
         } );
 
-        multiTagWrapper.innerHTML = '';
+        multiTagWrapper.innerHTML = ``;
 
         if ( selectedOptions.length > 0 )
         {
             selectedOptions.forEach( function( option )
             {
-                if ( option.value !== '' )
+                if ( option.value !== `` )
                 {
-                    let span        = document.createElement( 'span' )
+                    let span        = document.createElement( `span` )
                     span.className  = classes.MULTIPLE_SELECT_TAG;
 
-                    let a           = document.createElement( 'a' )
+                    let a           = document.createElement( `a` )
                     a.className     = classes.MULTIPLE_TAG_CLOSE;
-                    a.setAttribute( 'data-index', option.index );
+                    a.setAttribute( `data-index`, option.index );
 
                     span.appendChild( a );
 
@@ -179,7 +179,7 @@ class Flounder
 
             [ ...multiTagWrapper.children ].forEach( function( el )
             {
-                el.firstChild.addEventListener( 'click', removeMultiTag );
+                el.firstChild.addEventListener( `click`, removeMultiTag );
             } );
         }
         else
@@ -227,7 +227,7 @@ class Flounder
         {
             if ( multipleTags )
             {
-                selected.innerHTML  = '';
+                selected.innerHTML  = ``;
                 this.displayMultipleTags( selectedOption, refs.multiTagWrapper );
             }
             else
@@ -239,8 +239,8 @@ class Flounder
             value = selectedOption.map( option => option.value );
         }
 
-        selected.setAttribute( 'data-value', value );
-        selected.setAttribute( 'data-index', index );
+        selected.setAttribute( `data-value`, value );
+        selected.setAttribute( `data-index`, index );
     }
 
 
@@ -261,7 +261,7 @@ class Flounder
         }
         catch( e )
         {
-            console.warn( 'something may be wrong in "onInputChange"', e );
+            console.warn( `something may be wrong in "onInputChange"`, e );
         }
 
         if ( !this.toggleList.justOpened )
@@ -298,7 +298,7 @@ class Flounder
             else if ( keyCode === 27 )
             {
                 this.fuzzySearchReset();
-                this.toggleList( e, 'close' );
+                this.toggleList( e, `close` );
                 this.addPlaceholder();
             }
             else
@@ -330,7 +330,7 @@ class Flounder
             utils.removeClass( dataObj, classes.SEARCH_HIDDEN );
         } );
 
-        refs.search.value = '';
+        refs.search.value = ``;
     }
 
 
@@ -348,18 +348,18 @@ class Flounder
 
         for ( let opt in defaultOptions )
         {
-            if ( defaultOptions.hasOwnProperty( opt ) && opt !== 'classes' )
+            if ( defaultOptions.hasOwnProperty( opt ) && opt !== `classes` )
             {
                 this[ opt ] = props[ opt ] !== undefined ? props[ opt ] : defaultOptions[ opt ];
             }
-            else if ( opt === 'classes' )
+            else if ( opt === `classes` )
             {
                 let classes         = defaultOptions[ opt ];
                 let propsClasses    = props.classes;
 
                 for ( let clss in classes )
                 {
-                    this[ clss + 'Class' ] = propsClasses && propsClasses[ clss ] !== undefined ?
+                    this[ `${clss}Class` ] = propsClasses && propsClasses[ clss ] !== undefined ?
                                                 propsClasses[ clss ] :
                                                 classes[ clss ];
                 }
@@ -368,14 +368,14 @@ class Flounder
 
         if ( props.defaultEmpty )
         {
-            this.placeholder = '';
+            this.placeholder = ``;
         }
 
         if ( this.multipleTags )
         {
             this.search         = true;
             this.multiple       = true;
-            this.selectedClass  += '  ' + classes.SELECTED_HIDDEN;
+            this.selectedClass  += `  ${classes.SELECTED_HIDDEN}`;
 
             if ( !this.placeholder )
             {
@@ -431,7 +431,7 @@ class Flounder
         let target          = e.target;
         let defaultValue    = this._default;
         let data            = this.refs.data;
-        let targetIndex     = target.getAttribute( 'data-index' );
+        let targetIndex     = target.getAttribute( `data-index` );
         select[ targetIndex ].selected = false;
 
         let selectedOptions = this.getSelected();
@@ -439,7 +439,7 @@ class Flounder
         utils.removeClass( data[ targetIndex ], classes.SELECTED_HIDDEN );
         utils.removeClass( data[ targetIndex ], classes.SELECTED );
 
-        target.removeEventListener( 'click', this.removeMultiTag );
+        target.removeEventListener( `click`, this.removeMultiTag );
 
         let span = target.parentNode;
         span.parentNode.removeChild( span );
@@ -448,7 +448,7 @@ class Flounder
         {
             this.addPlaceholder();
             index               = -1;
-            value               = '';
+            value               = ``;
         }
         else
         {
@@ -465,8 +465,8 @@ class Flounder
 
         this.setTextMultiTagIndent();
 
-        selected.setAttribute( 'data-value', value );
-        selected.setAttribute( 'data-index', index );
+        selected.setAttribute( `data-value`, value );
+        selected.setAttribute( `data-index`, index );
 
         try
         {
@@ -474,7 +474,7 @@ class Flounder
         }
         catch( e )
         {
-            console.warn( 'something may be wrong in "onSelect"', e );
+            console.warn( `something may be wrong in "onSelect"`, e );
         }
     }
 
@@ -535,7 +535,7 @@ class Flounder
                 offset += utils.getElWidth( e, this.setTextMultiTagIndent, this );
             } );
 
-            search.style.textIndent = offset + 'px';
+            search.style.textIndent = `${offset}px`;
         }
     }
 
@@ -557,7 +557,7 @@ class Flounder
             }
             else
             {
-                if ( typeof d !== 'object' )
+                if ( typeof d !== `object` )
                 {
                     d = {
                         text    : d,
@@ -585,14 +585,14 @@ class Flounder
  *
  * sets version with getters and no setters for the sake of being read-only
  */
-Object.defineProperty( Flounder, 'version', {
+Object.defineProperty( Flounder, `version`, {
     get : function()
     {
         return version;
     }
 } );
 
-Object.defineProperty( Flounder.prototype, 'version', {
+Object.defineProperty( Flounder.prototype, `version`, {
     get : function()
     {
         return version;

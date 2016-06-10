@@ -17,7 +17,7 @@ const build = {
      */
     addOptionDescription( el, text )
     {
-        let div         = document.createElement( 'div' );
+        let div         = document.createElement( `div` );
         div.innerHTML   = text;
         div.className   = classes.DESCRIPTION;
         el.appendChild( div );
@@ -38,8 +38,8 @@ const build = {
         if ( this.search )
         {
             let search = utils.constructElement( {
-                                    tagname     : 'input',
-                                    type        : 'text',
+                                    tagname     : `input`,
+                                    type        : `text`,
                                     className   : classes.SEARCH
                                 } );
             flounder.appendChild( search );
@@ -62,20 +62,20 @@ const build = {
     bindThis()
     {
             [ 
-            'catchBodyClick',
-            'checkClickTarget',
-            'checkFlounderKeypress',
-            'clearPlaceholder',
-            'clickSet',
-            'divertTarget',
-            'displayMultipleTags',
-            'firstTouchController',
-            'fuzzySearch',
-            'removeMultiTag',
-            'setKeypress',
-            'setSelectValue',
-            'toggleList',
-            'toggleListSearchClick' ].forEach( func =>
+            `catchBodyClick`,
+            `checkClickTarget`,
+            `checkFlounderKeypress`,
+            `clearPlaceholder`,
+            `clickSet`,
+            `divertTarget`,
+            `displayMultipleTags`,
+            `firstTouchController`,
+            `fuzzySearch`,
+            `removeMultiTag`,
+            `setKeypress`,
+            `setSelectValue`,
+            `toggleList`,
+            `toggleListSearchClick` ].forEach( func =>
             {
                 this[ func ] = this[ func ].bind( this );
                 this[ func ].___isBound = true;
@@ -146,11 +146,11 @@ const build = {
          * @param {Object} dataObj [description]
          * @param {Number} i index
          *
-         * @return {DOMElement}
+         * @return _DOMElement_
          */
         let buildDiv = function( dataObj, i )
         {
-            if ( typeof dataObj !== 'object' )
+            if ( typeof dataObj !== `object` )
             {
                 dataObj = {
                     text    : dataObj,
@@ -159,7 +159,7 @@ const build = {
             }
             dataObj.index   = i;
 
-            let extraClass  = i === defaultValue.index ? '  ' + selectedClass : '';
+            let extraClass  = i === defaultValue.index ? `  ${selectedClass}` : ``;
 
             let res = {
                 className       : classes.OPTION + extraClass,
@@ -168,7 +168,7 @@ const build = {
 
             for ( let o in dataObj )
             {
-                if ( o !== 'text' && o !== 'description' )
+                if ( o !== `text` && o !== `description` )
                 {
                     res[ o ] = dataObj[ o ];
                 }
@@ -182,8 +182,8 @@ const build = {
                 addOptionDescription( data, dataObj.description );
             }
 
-            data.className += dataObj.extraClass ? '  ' + dataObj.extraClass : '';
-            data.setAttribute( 'role', 'option' );
+            data.className += dataObj.extraClass ? `  ${dataObj.extraClass}` : ``;
+            data.setAttribute( `role`, `option` );
 
             return data;
         };
@@ -197,7 +197,7 @@ const build = {
          * @param {Object} dataObj option build properties
          * @param {Number} i index
          *
-         * @return {DOMElement}
+         * @return _DOMElement_
          */
         let buildOption = function( dataObj, i )
         {
@@ -205,7 +205,7 @@ const build = {
 
             if ( !selectRef )
             {
-                selectOption            = constructElement( { tagname : 'option',
+                selectOption            = constructElement( { tagname : `option`,
                                             className   : classes.OPTION_TAG,
                                             value       : dataObj.value } );
                 let escapedText         = escapeHTML( dataObj.text );
@@ -214,7 +214,7 @@ const build = {
                 let disabled = dataObj.disabled;
                 if ( disabled )
                 {
-                    selectOption.setAttribute( 'disabled', disabled );
+                    selectOption.setAttribute( `disabled`, disabled );
                 }
 
                 select.appendChild( selectOption );
@@ -223,7 +223,7 @@ const build = {
             {
                 let selectChild     = selectRef.children[ i ];
                 selectOption        = selectChild;
-                selectChild.setAttribute( 'value', selectChild.value );
+                selectChild.setAttribute( `value`, selectChild.value );
 
                 if ( selectChild.disabled === true && data[ i ] )
                 {
@@ -238,7 +238,7 @@ const build = {
             }
 
 
-            if ( selectOption.getAttribute( 'disabled' ) )
+            if ( selectOption.getAttribute( `disabled` ) )
             {
                 addClass( data[ i ], classes.DISABLED );
             }
@@ -252,7 +252,7 @@ const build = {
         {
             let dataObjType = typeof dataObj;
 
-            if ( dataObjType !== 'object' )
+            if ( dataObjType !== `object` )
             {
                 dataObj = originalData[ i ] = {
                     text    : dataObj,
@@ -262,9 +262,9 @@ const build = {
 
             if ( dataObj.header )
             {
-                let section = constructElement( { tagname   : 'div',
+                let section = constructElement( { tagname   : `div`,
                                                 className   : classes.SECTION } );
-                let header = constructElement( { tagname    : 'div',
+                let header = constructElement( { tagname    : `div`,
                                                 className   : classes.HEADER } );
                 header.textContent = dataObj.header;
                 section.appendChild( header );
@@ -273,7 +273,7 @@ const build = {
                 let dataObjData = dataObj.data;
                 dataObjData.forEach( ( d, i ) =>
                 {
-                    if ( typeof d !== 'object' )
+                    if ( typeof d !== `object` )
                     {
                         d = dataObjData[ i ] = {
                             text    : d,
@@ -317,12 +317,12 @@ const build = {
 
         let wrapperClass        = classes.MAIN_WRAPPER;
         let wrapper             = utils.constructElement( { className : this.wrapperClass ?
-                                    wrapperClass + ' ' + this.wrapperClass : wrapperClass } );
+                                    `${wrapperClass}  ${this.wrapperClass}` : wrapperClass } );
         let flounderClass       = classes.MAIN;
         let flounder            = constructElement( { className : this.flounderClass ?
-                                    flounderClass + '  ' + this.flounderClass : flounderClass } );
+                                    `${flounderClass}  ${this.flounderClass}` : flounderClass } );
 
-        flounder.setAttribute( 'aria-hidden', true );
+        flounder.setAttribute( `aria-hidden`, true );
         flounder.tabIndex       = 0;
         wrapper.appendChild( flounder );
 
@@ -331,7 +331,7 @@ const build = {
 
         if ( this.multiple === true )
         {
-            select.setAttribute( 'multiple', '' );
+            select.setAttribute( `multiple`, `` );
         }
 
         let data                = this.data;
@@ -343,9 +343,9 @@ const build = {
 
         let search              = this.addSearch( flounder );
 
-        let optionsListWrapper  = constructElement( { className : classes.OPTIONS_WRAPPER + '  ' + classes.HIDDEN } );
+        let optionsListWrapper  = constructElement( { className : `${classes.OPTIONS_WRAPPER}  ${classes.HIDDEN}` } );
         let optionsList         = constructElement( { className : classes.LIST } );
-        optionsList.setAttribute( 'role', 'listbox' );
+        optionsList.setAttribute( `role`, `listbox` );
         optionsListWrapper.appendChild( optionsList );
 
         let arrow               = this.buildArrow( props, constructElement );
@@ -403,7 +403,7 @@ const build = {
         let refs    = this.refs;
         let select  = refs.select;
 
-        if ( target.tagName === 'SELECT' )
+        if ( target.tagName === `SELECT` )
         {
             utils.addClass( target, classes.SELECT_TAG );
             utils.addClass( target, classes.HIDDEN );
@@ -444,7 +444,7 @@ const build = {
         }
         else
         {
-            select = utils.constructElement( { tagname : 'SELECT', className : classes.SELECT_TAG + '  ' + classes.HIDDEN } );
+            select = utils.constructElement( { tagname : `SELECT`, className : `${classes.SELECT_TAG}  ${classes.HIDDEN}` } );
             wrapper.appendChild( select );
         }
 
@@ -512,12 +512,12 @@ const build = {
      */
     reconfigure( data, props )
     {
-        if ( typeof data !== 'string' && typeof data.length === 'number' )
+        if ( typeof data !== `string` && typeof data.length === `number` )
         {
             props       = props       = props || this.props;
             props.data  = data;
         }
-        else if ( !props && typeof data === 'object' )
+        else if ( !props && typeof data === `object` )
         {
             props       = data;
             props.data  = props.data || this.data;
@@ -547,10 +547,10 @@ const build = {
         this.originalTarget = target;
         target.flounder     = this;
 
-        if ( target.tagName === 'INPUT' )
+        if ( target.tagName === `INPUT` )
         {
             utils.addClass( target, classes.HIDDEN );
-            target.setAttribute( 'aria-hidden', true );
+            target.setAttribute( `aria-hidden`, true );
             target.tabIndex = -1;
             target          = target.parentNode;
         }

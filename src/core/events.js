@@ -15,12 +15,12 @@ const events = {
     addFirstTouchListeners()
     {
         let refs = this.refs;
-        refs.selected.addEventListener( 'click', this.firstTouchController );
-        refs.select.addEventListener( 'focus', this.firstTouchController );
+        refs.selected.addEventListener( `click`, this.firstTouchController );
+        refs.select.addEventListener( `focus`, this.firstTouchController );
 
         if ( this.props.openOnHover )
         {
-            refs.wrapper.addEventListener( 'mouseenter', this.firstTouchController );
+            refs.wrapper.addEventListener( `mouseenter`, this.firstTouchController );
         }
     },
 
@@ -48,22 +48,22 @@ const events = {
     addListeners( refs, props )
     {
         let ios         = this.isIos;
-        let changeEvent = ios ? 'blur' : 'change';
+        let changeEvent = ios ? `blur` : `change`;
 
 
         refs.select.addEventListener( changeEvent, this.divertTarget );
 
-        refs.flounder.addEventListener( 'keydown', this.checkFlounderKeypress );
+        refs.flounder.addEventListener( `keydown`, this.checkFlounderKeypress );
 
         if ( props.openOnHover )
         {
             let wrapper = refs.wrapper;
-            wrapper.addEventListener( 'mouseenter', this.toggleList );
-            wrapper.addEventListener( 'mouseleave', this.toggleList );
+            wrapper.addEventListener( `mouseenter`, this.toggleList );
+            wrapper.addEventListener( `mouseleave`, this.toggleList );
         }
         else
         {
-            refs.selected.addEventListener( 'click', this.toggleList );
+            refs.selected.addEventListener( `click`, this.toggleList );
         }
 
         this.addFirstTouchListeners();
@@ -87,12 +87,12 @@ const events = {
     {
         this.refs.data.forEach( ( dataObj, i ) =>
         {
-            if ( dataObj.tagName === 'DIV' )
+            if ( dataObj.tagName === `DIV` )
             {
-                dataObj.addEventListener( 'mouseenter', this.addHoverClass );
-                dataObj.addEventListener( 'mouseleave', this.removeHoverClass );
+                dataObj.addEventListener( `mouseenter`, this.addHoverClass );
+                dataObj.addEventListener( `mouseleave`, this.removeHoverClass );
 
-                dataObj.addEventListener( 'click', this.clickSet );
+                dataObj.addEventListener( `click`, this.clickSet );
             }
         } );
     },
@@ -112,7 +112,7 @@ const events = {
         let selectedValues  = this.getSelectedValues();
         let val             = selectedValues[0];
         let selectedItems   = this.getSelected();
-        let selectedText    = selectedItems.length ? selectedItems[0].innerHTML : '';
+        let selectedText    = selectedItems.length ? selectedItems[0].innerHTML : ``;
         let selectedCount   = selectedValues.length;
         let selected        = this.refs.selected;
 
@@ -122,7 +122,7 @@ const events = {
                 this.setByIndex( 0 );
                 break;
             case 1:
-                selected.innerHTML = val === '' ? this.placeholder : selectedText;
+                selected.innerHTML = val === `` ? this.placeholder : selectedText;
                 break;
             default:
                 selected.innerHTML = this.multipleMessage;
@@ -136,13 +136,13 @@ const events = {
                 this.setByIndex( 0 );
             }
 
-            if ( !val || val === '' )
+            if ( !val || val === `` )
             {
                 selected.innerHTML = this.placeholder;
             }
             else
             {
-                selected.innerHTML = '';
+                selected.innerHTML = ``;
             }
         }
     },
@@ -158,9 +158,9 @@ const events = {
     addSearchListeners()
     {
         let search = this.refs.search;
-        search.addEventListener( 'click', this.toggleListSearchClick );
-        search.addEventListener( 'keyup', this.fuzzySearch );
-        search.addEventListener( 'focus', this.clearPlaceholder );
+        search.addEventListener( `click`, this.toggleListSearchClick );
+        search.addEventListener( `keyup`, this.fuzzySearch );
+        search.addEventListener( `focus`, this.clearPlaceholder );
     },
 
 
@@ -177,15 +177,15 @@ const events = {
         let refs    = this.refs;
         let select  = refs.select;
 
-        select.addEventListener( 'keyup', this.setSelectValue );
-        select.addEventListener( 'keydown', this.setKeypress );
+        select.addEventListener( `keyup`, this.setSelectValue );
+        select.addEventListener( `keydown`, this.setKeypress );
 
         // weird shit
         // http://stackoverflow.com/questions/34660500/mobile-safari-multi-select-bug
         if ( this.isIos )
         {
             let firstOption = select[0];
-            let plug        = document.createElement( 'OPTION' );
+            let plug        = document.createElement( `OPTION` );
             plug.disabled   = true;
             plug.className  = classes.PLUG;
             select.insertBefore( plug, firstOption );
@@ -260,7 +260,7 @@ const events = {
     {
         let keyCode = e.keyCode;
 
-        if ( keyCode === 13 || ( keyCode === 32 && e.target.tagName !== 'INPUT' ) )
+        if ( keyCode === 13 || ( keyCode === 32 && e.target.tagName !== `INPUT` ) )
         {
             e.preventDefault();
             this.toggleList( e );
@@ -270,9 +270,9 @@ const events = {
         {
             let refs = this.refs;
 
-            if ( refs.search && e.target.tagName === 'INPUT' )
+            if ( refs.search && e.target.tagName === `INPUT` )
             {
-                refs.selected.innerHTML = '';
+                refs.selected.innerHTML = ``;
             }
         }
     },
@@ -290,7 +290,7 @@ const events = {
      clearPlaceholder( e )
      {
         let selected    = this.refs.selected;
-        selected.innerHTML = '';
+        selected.innerHTML = ``;
      },
 
 
@@ -331,7 +331,7 @@ const events = {
         if ( this.isIos )
         {
             let select  = this.refs.select;
-            let plug    = select.querySelector( '.' + classes.PLUG );
+            let plug    = select.querySelector( `.${classes.PLUG}` );
 
             if ( plug )
             {
@@ -356,7 +356,7 @@ const events = {
 
         if ( !this.multiple )
         {
-            this.toggleList( e, 'close' );
+            this.toggleList( e, `close` );
         }
     },
 
@@ -381,15 +381,15 @@ const events = {
         }
         catch( e )
         {
-            console.warn( 'something may be wrong in "onFirstTouch"', e );
+            console.warn( `something may be wrong in "onFirstTouch"`, e );
         }
 
-        refs.selected.removeEventListener( 'click', this.firstTouchController );
-        refs.select.removeEventListener( 'focus', this.firstTouchController );
+        refs.selected.removeEventListener( `click`, this.firstTouchController );
+        refs.select.removeEventListener( `focus`, this.firstTouchController );
 
         if ( this.props.openOnHover )
         {
-            refs.wrapper.removeEventListener( 'mouseenter', this.firstTouchController );
+            refs.wrapper.removeEventListener( `mouseenter`, this.firstTouchController );
         }
     },
 
@@ -420,16 +420,16 @@ const events = {
 
         this.removeOptionsListeners();
 
-        let qsHTML          = document.querySelector( 'html' );
+        let qsHTML          = document.querySelector( `html` );
         let catchBodyClick  = this.catchBodyClick;
-        qsHTML.removeEventListener( 'click', catchBodyClick );
-        qsHTML.removeEventListener( 'touchend', catchBodyClick );
+        qsHTML.removeEventListener( `click`, catchBodyClick );
+        qsHTML.removeEventListener( `touchend`, catchBodyClick );
 
         let select = refs.select;
-        select.removeEventListener( 'change', this.divertTarget  );
-        select.removeEventListener( 'blur', this.divertTarget );
-        refs.selected.removeEventListener( 'click', this.toggleList );
-        refs.flounder.removeEventListener( 'keydown', this.checkFlounderKeypress );
+        select.removeEventListener( `change`, this.divertTarget  );
+        select.removeEventListener( `blur`, this.divertTarget );
+        refs.selected.removeEventListener( `click`, this.toggleList );
+        refs.flounder.removeEventListener( `keydown`, this.checkFlounderKeypress );
 
         if ( this.search )
         {
@@ -449,9 +449,9 @@ const events = {
     {
         this.refs.data.forEach( dataObj =>
         {
-            if ( dataObj.tagName === 'DIV' )
+            if ( dataObj.tagName === `DIV` )
             {
-                dataObj.removeEventListener( 'click', this.clickSet );
+                dataObj.removeEventListener( `click`, this.clickSet );
             }
         } );
     },
@@ -467,9 +467,9 @@ const events = {
     removeSearchListeners()
     {
         let search = this.refs.search;
-        search.removeEventListener( 'click', this.toggleList );
-        search.removeEventListener( 'keyup', this.fuzzySearch );
-        search.removeEventListener( 'focus', this.clearPlaceholder );
+        search.removeEventListener( `click`, this.toggleList );
+        search.removeEventListener( `keyup`, this.fuzzySearch );
+        search.removeEventListener( `focus`, this.clearPlaceholder );
     },
 
 
@@ -483,7 +483,7 @@ const events = {
     removeSelectKeyListener()
     {
         let select = this.refs.select;
-        select.removeEventListener( 'keyup', this.setSelectValue );
+        select.removeEventListener( `keyup`, this.setSelectValue );
     },
 
 
@@ -524,7 +524,7 @@ const events = {
 
                 if ( search )
                 {
-                    search.value = '';
+                    search.value = ``;
                 }
 
                 increment = keyCode - 39;
@@ -600,8 +600,8 @@ const events = {
             // tab, shift, ctrl, alt, caps, cmd
             let nonKeys = [ 9, 16, 17, 18, 20, 91 ];
 
-            if ( e || obj.type === 'blur' ||
-                ( !keyCode && obj.type === 'change' ) ||
+            if ( e || obj.type === `blur` ||
+                ( !keyCode && obj.type === `change` ) ||
                 ( keyCode && nonKeys.indexOf( keyCode ) === -1 ) )
             {
                 if ( this.toggleList.justOpened && !e )
@@ -616,7 +616,7 @@ const events = {
                     }
                     catch( e )
                     {
-                        console.warn( 'something may be wrong in "onSelect"', e );
+                        console.warn( `something may be wrong in "onSelect"`, e );
                     }
                 }
             }
@@ -683,7 +683,7 @@ const events = {
         let target              = e.target;
 
         utils.toggleClass( target, selectedClass );
-        index                   = target.getAttribute( 'data-index' );
+        index                   = target.getAttribute( `data-index` );
 
         selectedOption          = refs.selectOptions[ index ];
 
@@ -691,7 +691,7 @@ const events = {
 
         let firstOption = refs.selectOptions[ 0 ];
 
-        if ( firstOption.value === '' && this.getSelected().length > 1 )
+        if ( firstOption.value === `` && this.getSelected().length > 1 )
         {
             utils.removeClass( refs.data[0], selectedClass );
             refs.selectOptions[0].selected = false;
@@ -715,11 +715,11 @@ const events = {
     {
         utils.addClass( optionsList, classes.HIDDEN );
         this.removeSelectKeyListener();
-        utils.removeClass( wrapper, 'open' );
+        utils.removeClass( wrapper, `open` );
 
-        let qsHTML = document.querySelector( 'html' );
-        qsHTML.removeEventListener( 'click', this.catchBodyClick );
-        qsHTML.removeEventListener( 'touchend', this.catchBodyClick );
+        let qsHTML = document.querySelector( `html` );
+        qsHTML.removeEventListener( `click`, this.catchBodyClick );
+        qsHTML.removeEventListener( `touchend`, this.catchBodyClick );
 
         if ( this.search )
         {
@@ -736,7 +736,7 @@ const events = {
             }
             catch( e )
             {
-                console.warn( 'something may be wrong in "onClose"', e );
+                console.warn( `something may be wrong in "onClose"`, e );
             }
         }
     },
@@ -751,9 +751,9 @@ const events = {
      */
     toggleListSearchClick( e )
     {
-        if ( !utils.hasClass( this.refs.wrapper, 'open' ) )
+        if ( !utils.hasClass( this.refs.wrapper, `open` ) )
         {
-            this.toggleList( e, 'open' );
+            this.toggleList( e, `open` );
         }
     },
 
@@ -775,16 +775,16 @@ const events = {
         let hasClass    = utils.hasClass;
         let type        = e.type;
 
-        if ( type === 'mouseleave' || force === 'close' ||
+        if ( type === `mouseleave` || force === `close` ||
             !hasClass( optionsList, classes.HIDDEN ) )
         {
             this.toggleList.justOpened = false;
             this.toggleClosed( e, optionsList, refs, wrapper );
         }
-        else if ( type === 'mouseenter' || force === 'open' ||
-            force !== 'close' && utils.hasClass( optionsList, classes.HIDDEN ) )
+        else if ( type === `mouseenter` || force === `open` ||
+            force !== `close` && utils.hasClass( optionsList, classes.HIDDEN ) )
         {
-            if ( type === 'keydown' )
+            if ( type === `keydown` )
             {
                 this.toggleList.justOpened = true;
             }
@@ -813,12 +813,12 @@ const events = {
         if ( !this.isIos || this.search || ( this.multipleTags === true && this.multiple === true ) )
         {
             utils.removeClass( optionsList, classes.HIDDEN );
-            utils.addClass( wrapper, 'open' );
+            utils.addClass( wrapper, `open` );
 
-            let qsHTML = document.querySelector( 'html' );
+            let qsHTML = document.querySelector( `html` );
 
-            qsHTML.addEventListener( 'click', this.catchBodyClick );
-            qsHTML.addEventListener( 'touchend', this.catchBodyClick );
+            qsHTML.addEventListener( `click`, this.catchBodyClick );
+            qsHTML.addEventListener( `touchend`, this.catchBodyClick );
         }
 
 
@@ -846,7 +846,7 @@ const events = {
             }
             catch( e )
             {
-                console.warn( 'something may be wrong in "onOpen"', e );
+                console.warn( `something may be wrong in "onOpen"`, e );
             }
         }
     }

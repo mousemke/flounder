@@ -15,7 +15,7 @@ const utils = {
      */
     addClass( _el, _class )
     {
-        if ( typeof _class !== 'string' && _class.length )
+        if ( typeof _class !== `string` && _class.length )
         {
             _class.forEach( function( _c )
             {
@@ -54,7 +54,7 @@ const utils = {
 
         for ( let att in _elObj )
         {
-            if ( att.indexOf( 'data-' ) !== -1 )
+            if ( att.indexOf( `data-` ) !== -1 )
             {
                 _el.setAttribute( att, _elObj[ att ] );
             }
@@ -75,7 +75,7 @@ const utils = {
      */
     constructElement( _elObj )
     {
-        let _el         = document.createElement( _elObj.tagname || 'div' );
+        let _el         = document.createElement( _elObj.tagname || `div` );
 
         utils.attachAttributes( _el, _elObj );
 
@@ -128,10 +128,10 @@ const utils = {
      */
     escapeHTML( string )
     {
-        return String( string ).replace( /&/g, '&amp;' )
-                                .replace( /</g, '&lt;' )
-                                .replace( />/g, '&gt;' )
-                                .replace( /"/g, '&quot;' );
+        return String( string ).replace( /&/g, `&amp;` )
+                                .replace( /</g, `&lt;` )
+                                .replace( />/g, `&gt;` )
+                                .replace( /"/g, `&quot;` );
     },
 
 
@@ -161,8 +161,8 @@ const utils = {
             this.__checkWidthAgain !== false
         }
 
-        return el.offsetWidth + parseInt( style[ 'margin-left' ] ) +
-                                parseInt( style[ 'margin-right' ] );
+        return el.offsetWidth + parseInt( style[ `margin-left` ] ) +
+                                parseInt( style[ `margin-right` ] );
     },
 
 
@@ -200,10 +200,10 @@ const utils = {
 
         if ( /iPad|iPhone|iPod/.test( navigator.platform ) )
         {
-            if ( !!window.indexedDB ) { return '8+'; }
-            if ( !!window.SpeechSynthesisUtterance ) { return '7'; }
-            if ( !!window.webkitAudioContext ) { return '6'; }
-            return '5-';
+            if ( !!window.indexedDB ) { return `8+`; }
+            if ( !!window.SpeechSynthesisUtterance ) { return `7`; }
+            if ( !!window.webkitAudioContext ) { return `6`; }
+            return `5-`;
         }
 
         return false;
@@ -240,7 +240,7 @@ const utils = {
      */
     removeClass( el, _class )
     {
-        if ( typeof _class !== 'string' && _class.length )
+        if ( typeof _class !== `string` && _class.length )
         {
             _class.forEach( function( _c )
             {
@@ -256,19 +256,19 @@ const utils = {
 
         if ( baseClass === _class )
         {
-            baseClass = '';
+            baseClass = ``;
         }
-        else if ( baseClass.slice( 0, classLength + 1 ) === _class + ' ' )
+        else if ( baseClass.slice( 0, classLength + 1 ) === `${_class} ` )
         {
             baseClass = baseClass.slice( classLength + 1, baseClassLength );
         }
-        else if ( baseClass.slice( baseClassLength - classLength - 1, baseClassLength ) === ' ' + _class )
+        else if ( baseClass.slice( baseClassLength - classLength - 1, baseClassLength ) === ` ${_class}` )
         {
             baseClass = baseClass.slice( 0, baseClassLength - classLength - 1 );
         }
         else if ( baseClass.indexOf( ` ${_class} ` ) !== -1 )
         {
-            baseClass = baseClass.replace( ` ${_class} `, ' ' );
+            baseClass = baseClass.replace( ` ${_class} `, ` ` );
         }
 
         el.className = baseClass.trim();
@@ -312,9 +312,9 @@ const utils = {
      */
     setPlatform()
     {
-        let isOsx       = window.navigator.platform.indexOf( 'Mac' ) === -1 ? false : true;
+        let isOsx       = window.navigator.platform.indexOf( `Mac` ) === -1 ? false : true;
         let isIos       = utils.iosVersion();
-        let multiSelect = isOsx ? 'metaKey' : 'ctrlKey';
+        let multiSelect = isOsx ? `metaKey` : `ctrlKey`;
 
         return { isOsx, isIos, multiSelect };
     },
