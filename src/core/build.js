@@ -206,7 +206,7 @@ const build = {
             if ( !selectRef )
             {
                 selectOption            = constructElement( { tagname : `option`,
-                                            className   : classes.OPTION_TAG,
+                                            className   : `${classes.OPTION_TAG}  ${dataObj.extraClass}`,
                                             value       : dataObj.value } );
                 let escapedText         = escapeHTML( dataObj.text );
                 selectOption.innerHTML  = escapedText;
@@ -336,6 +336,7 @@ const build = {
 
         let data                = this.data;
         let defaultValue        = this._default = setDefaultOption( this, this.props, data );
+
         let selected            = constructElement( { className : classes.SELECTED_DISPLAYED,
                                         'data-value' : defaultValue.value, 'data-index' : defaultValue.index || -1 } );
 
