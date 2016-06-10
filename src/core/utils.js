@@ -15,7 +15,7 @@ const utils = {
      *
      * @return _Void_
      */
-    addClass : function( _el, _class )
+    addClass( _el, _class )
     {
         if ( typeof _class !== 'string' && _class.length )
         {
@@ -50,7 +50,7 @@ const utils = {
      *
      * @return _Void_
      */
-    attachAttributes : function( _el, _elObj )
+    attachAttributes( _el, _elObj )
     {
         _elObj = _elObj || {};
 
@@ -75,7 +75,7 @@ const utils = {
      *
      * @return _Element_
      */
-    constructElement : function( _elObj )
+    constructElement( _elObj )
     {
         let _el         = document.createElement( _elObj.tagname || 'div' );
 
@@ -94,7 +94,7 @@ const utils = {
      *
      * @return {Class} modified class object
      */
-    extendClass : function( _extend, ...objects )
+    extendClass( _extend, ...objects )
     {
         _extend = _extend.prototype;
 
@@ -128,7 +128,7 @@ const utils = {
      *
      * @return _Void_
      */
-    escapeHTML : function( string )
+    escapeHTML( string )
     {
         return String( string ).replace( /&/g, '&amp;' )
                                 .replace( /</g, '&lt;' )
@@ -146,7 +146,7 @@ const utils = {
      *
      * @return _Integer_ adjusted width
      */
-    getElWidth : function( el, _cb, context )
+    getElWidth( el, _cb, context )
     {
         let style = getComputedStyle( el );
 
@@ -178,7 +178,7 @@ const utils = {
      *
      * @return _Void_
      */
-    hasClass : function( _el, _class )
+    hasClass( _el, _class )
     {
         let _elClass    = _el.className;
         let regex       = new RegExp( '(^' + _class + ' )|( ' + _class + '$)|( ' + _class + ' )|(^' + _class + '$)' );
@@ -197,7 +197,7 @@ const utils = {
      *
      * @return _Void_:
      */
-    iosVersion : function()
+    iosVersion()
     {
 
         if ( /iPad|iPhone|iPod/.test( navigator.platform ) )
@@ -221,7 +221,7 @@ const utils = {
      *
      * @return _Void_
      */
-    removeAllChildren : function( target )
+    removeAllChildren( target )
     {
         nativeSlice.call( target.children ).forEach( function( el )
         {
@@ -240,7 +240,7 @@ const utils = {
      *
      * @return _Void_
      */
-    removeClass : function( el, _class )
+    removeClass( el, _class )
     {
         if ( typeof _class !== 'string' && _class.length )
         {
@@ -286,7 +286,7 @@ const utils = {
      *
      *@return _Void_
      */
-    scrollTo : function( element )
+    scrollTo( element )
     {
         let parent      = element.parentNode.parentNode;
         let elHeight    = element.offsetHeight;
@@ -312,7 +312,7 @@ const utils = {
      *
      * @return _Void_
      */
-    setPlatform : function()
+    setPlatform()
     {
         let isOsx       = window.navigator.platform.indexOf( 'Mac' ) === -1 ? false : true;
         let isIos       = utils.iosVersion();
@@ -332,7 +332,7 @@ const utils = {
      *
      * @return _Void_
      */
-    toggleClass : function( _el, _class )
+    toggleClass( _el, _class )
     {
         let _addClass       = utils.addClass;
         let _removeClass    = utils.removeClass;

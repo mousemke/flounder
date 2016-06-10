@@ -3,8 +3,6 @@ import classes              from './classes';
 import utils                from './utils';
 import { setDefaultOption } from './defaults';
 
-const nativeSlice =  Array.prototype.slice;
-
 const api = {
 
     /**
@@ -17,7 +15,7 @@ const api = {
      *
      * @return _Void_
      */
-    buildFromUrl : function( url, callback )
+    buildFromUrl( url, callback )
     {
         this.loadDataFromUrl( url, data =>
         {
@@ -43,7 +41,7 @@ const api = {
      *
      * return _Void_
      */
-    clickByIndex : function( index, multiple )
+    clickByIndex( index, multiple )
     {
         return this.setByIndex( index, multiple, false );
     },
@@ -59,7 +57,7 @@ const api = {
      *
      * return _Void_
      */
-    clickByText : function( text, multiple )
+    clickByText( text, multiple )
     {
         return this.setByText( text, multiple, false );
     },
@@ -75,7 +73,7 @@ const api = {
      *
      * return _Void_
      */
-    clickByValue : function( value, multiple )
+    clickByValue( value, multiple )
     {
         return this.setByValue( value, multiple, false );
     },
@@ -88,7 +86,7 @@ const api = {
      *
      * @return _Void_
      */
-    destroy : function()
+    destroy()
     {
         this.componentWillUnmount();
 
@@ -149,7 +147,7 @@ const api = {
      *
      * @return _Void_
      */
-    deselectAll : function()
+    deselectAll()
     {
         this.removeSelectedClass();
         this.removeSelectedValue();
@@ -165,7 +163,7 @@ const api = {
      *
      * @return _Void_
      */
-    disable : function( bool )
+    disable( bool )
     {
         let refs        = this.refs;
         let flounder    = refs.flounder;
@@ -198,7 +196,7 @@ const api = {
      *
      * return _Void_
      */
-    disableByIndex : function( index, reenable )
+    disableByIndex( index, reenable )
     {
         let refs = this.refs;
 
@@ -253,7 +251,7 @@ const api = {
      *
      * return _Void_
      */
-    disableByText : function( text, reenable )
+    disableByText( text, reenable )
     {
         if ( typeof text !== 'string' && text.length )
         {
@@ -289,7 +287,7 @@ const api = {
      *
      * return _Void_
      */
-    disableByValue : function( value, reenable )
+    disableByValue( value, reenable )
     {
         if ( typeof value !== 'string' && value.length )
         {
@@ -317,7 +315,7 @@ const api = {
      *
      * @return {Object} flounder(s)
      */
-    enableByIndex : function( index )
+    enableByIndex( index )
     {
         return this.disableByIndex( index, true );
     },
@@ -332,7 +330,7 @@ const api = {
      *
      * @return {Object} flounder(s)
      */
-    enableByText : function( text )
+    enableByText( text )
     {
         return this.disableByText( text, true );
     },
@@ -347,7 +345,7 @@ const api = {
      *
      * @return {Object} flounder(s)
      */
-    enableByValue : function( value )
+    enableByValue( value )
     {
         this.disableByValue( value, true );
     },
@@ -362,7 +360,7 @@ const api = {
      *
      * @return _Object_ option and div tage
      */
-    getData : function( _i )
+    getData( _i )
     {
         let refs = this.refs;
 
@@ -387,7 +385,7 @@ const api = {
      *
      * @return _Void_
      */
-    getSelected : function()
+    getSelected()
     {
         let _el         = this.refs.select;
         let opts        = [], opt;
@@ -414,7 +412,7 @@ const api = {
      *
      * @return _Void_
      */
-    getSelectedValues : function()
+    getSelectedValues()
     {
         return this.getSelected().map( ( _v ) => _v.value )
     },
@@ -430,7 +428,7 @@ const api = {
      *
      * @return _Void_
      */
-    loadDataFromUrl : function( url, callback )
+    loadDataFromUrl( url, callback )
     {
         try
         {
@@ -482,7 +480,7 @@ const api = {
      *
      * @return _Object_ rebuilt flounder object
      */
-    rebuild : function( data, props )
+    rebuild( data, props )
     {
         if ( props || !props && ( typeof data === 'string' ||
             ( data && typeof data.length !== 'number' ) ) )
@@ -524,7 +522,7 @@ const api = {
      *
      * return _Void_
      */
-    setByIndex : function( index, multiple, programmatic = true )
+    setByIndex( index, multiple, programmatic = true )
     {
         let refs = this.refs;
 
@@ -572,7 +570,7 @@ const api = {
      *
      * return _Void_
      */
-    setByText : function( text, multiple, programmatic = true )
+    setByText( text, multiple, programmatic = true )
     {
         if ( typeof text !== 'string' && text.length )
         {
@@ -608,7 +606,7 @@ const api = {
      *
      * return _Void_
      */
-    setByValue : function( value, multiple, programmatic = true )
+    setByValue( value, multiple, programmatic = true )
     {
         if ( typeof value !== 'string' && value.length )
         {

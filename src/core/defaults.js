@@ -47,7 +47,7 @@ const defaults = {
      *
      * @return _Void_
      */
-    setDefaultOption : function( self, configObj, data = [], rebuild = false )
+    setDefaultOption( self, configObj, data = [], rebuild = false )
     {
         /**
          * ## setIndexDefault

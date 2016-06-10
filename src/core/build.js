@@ -17,7 +17,7 @@ const build = {
      *
      * @return _Void_
      */
-    addOptionDescription : function( el, text )
+    addOptionDescription( el, text )
     {
         let div         = document.createElement( 'div' );
         div.innerHTML   = text;
@@ -35,7 +35,7 @@ const build = {
      *
      * @return _Mixed_ search node or false
      */
-    addSearch : function( flounder )
+    addSearch( flounder )
     {
         if ( this.search )
         {
@@ -61,7 +61,7 @@ const build = {
      *
      * @return _Void_
      */
-    bindThis : function()
+    bindThis()
     {
             [ 
             'catchBodyClick',
@@ -94,7 +94,7 @@ const build = {
      *
      * @return {DOMElement} arrow
      */
-    buildArrow : function( props, constructElement )
+    buildArrow( props, constructElement )
     {
         if (  props.disableArrow )
         {
@@ -124,7 +124,7 @@ const build = {
      *
      * @return _Array_ refs to both container elements
      */
-    buildData : function( defaultValue, originalData, optionsList, select )
+    buildData( defaultValue, originalData, optionsList, select )
     {
         originalData                = originalData || [];
         let index                   = 0;
@@ -310,7 +310,7 @@ const build = {
      *
      * @return _Void_
      */
-    buildDom : function()
+    buildDom()
     {
         let props               = this.props;
         this.refs               = {};
@@ -399,7 +399,7 @@ const build = {
      *
      * @return _DOMElement_ select box
      */
-    initSelectBox : function( wrapper )
+    initSelectBox( wrapper )
     {
         let target  = this.target;
         let refs    = this.refs;
@@ -464,7 +464,7 @@ const build = {
      *
      * @return _Void_
      */
-    popInSelectElements : function( select )
+    popInSelectElements( select )
     {
         utils.removeAllChildren( select );
 
@@ -485,7 +485,7 @@ const build = {
      *
      * @return _Void_
      */
-    popOutSelectElements : function( select )
+    popOutSelectElements( select )
     {
         let res = [];
         let children = this.originalChildren = nativeSlice.call( select.children );
@@ -512,7 +512,7 @@ const build = {
      *
      * @return _Object_ rebuilt flounder object
      */
-    reconfigure : function( data, props )
+    reconfigure( data, props )
     {
         if ( typeof data !== 'string' && typeof data.length === 'number' )
         {
@@ -542,7 +542,7 @@ const build = {
      *
      * @return _Void_
      */
-    setTarget : function( target )
+    setTarget( target )
     {
         target      = target.nodeType === 1 ? target : document.querySelector( target );
 
