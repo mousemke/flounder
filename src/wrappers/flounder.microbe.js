@@ -1,7 +1,4 @@
 
-/* jshint globalstrict: true */
-'use strict';
-
 import Flounder from '../core/flounder';
 
 ( function( µ ) {

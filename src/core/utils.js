@@ -2,8 +2,6 @@
 import classes          from './classes';
 import microbeHttp      from 'microbejs/src/modules/http';
 
-const nativeSlice = Array.prototype.slice;
-
 const utils = {
     /**
      * ## addClass
@@ -30,10 +28,10 @@ const utils = {
         let _elClass        = _el.className;
         let _elClassLength  = _elClass.length;
 
-        if ( !utils.hasClass( _el, _class ) && _elClass.slice( 0, _class.length + 1 ) !== _class + ' ' &&
-            _elClass.slice( _elClassLength - _class.length - 1, _elClassLength ) !== ' ' + _class )
+        if ( !utils.hasClass( _el, _class ) && _elClass.slice( 0, _class.length + 1 ) !== `${_class} ` &&
+            _elClass.slice( _elClassLength - _class.length - 1, _elClassLength ) !== ` ${_class}` )
         {
-            _elClass += ( '  ' + _class );
+            _elClass += ( `  ${_class}` );
         }
 
         _el.className = _elClass.trim();
@@ -181,7 +179,7 @@ const utils = {
     hasClass( _el, _class )
     {
         let _elClass    = _el.className;
-        let regex       = new RegExp( '(^' + _class + ' )|( ' + _class + '$)|( ' + _class + ' )|(^' + _class + '$)' );
+        let regex       = new RegExp( `(^${_class} )|( ${_class}$)|( ${_class} )|(^${_class}$)` );
         return !!_elClass.match( regex );
     },
 
@@ -223,7 +221,7 @@ const utils = {
      */
     removeAllChildren( target )
     {
-        nativeSlice.call( target.children ).forEach( function( el )
+        [ ...target.children ].forEach( function( el )
         {
             target.removeChild( el );
         } );
@@ -268,9 +266,9 @@ const utils = {
         {
             baseClass = baseClass.slice( 0, baseClassLength - classLength - 1 );
         }
-        else if ( baseClass.indexOf( ' ' + _class + ' ' ) !== -1 )
+        else if ( baseClass.indexOf( ` ${_class} ` ) !== -1 )
         {
-            baseClass = baseClass.replace( ' ' + _class + ' ', ' ' );
+            baseClass = baseClass.replace( ` ${_class} `, ' ' );
         }
 
         el.className = baseClass.trim();

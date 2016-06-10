@@ -3,8 +3,6 @@ import classes                  from './classes';
 import { setDefaultOption }     from './defaults';
 import utils                    from './utils';
 
-const nativeSlice = Array.prototype.slice;
-
 const build = {
 
     /**
@@ -423,7 +421,7 @@ const build = {
                 let data            = [],
                     selectOptions   = [];
 
-                nativeSlice.apply( target.children ).forEach( function( optionEl )
+                [ ...target.children ].forEach( function( optionEl )
                 {
                     selectOptions.push( optionEl );
                     data.push( {
@@ -488,7 +486,7 @@ const build = {
     popOutSelectElements( select )
     {
         let res = [];
-        let children = this.originalChildren = nativeSlice.call( select.children );
+        let children = this.originalChildren = [ ...select.children ];
 
         children.forEach( function( _el, i )
         {
