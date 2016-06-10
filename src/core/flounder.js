@@ -1,7 +1,4 @@
 
-/* jshint globalstrict: true */
-'use strict';
-
 import { defaultOptions }   from './defaults';
 import utils                from './utils';
 import api                  from './api';
@@ -48,7 +45,7 @@ class Flounder
         }
         catch( e )
         {
-            console.log( 'something may be wrong in "onComponentWillUnmount"', e );
+            console.warn( 'something may be wrong in "onComponentWillUnmount"', e );
         }
 
         this.removeListeners();
@@ -109,7 +106,7 @@ class Flounder
                 }
                 catch( e )
                 {
-                    console.log( 'something may be wrong in "onInit"', e );
+                    console.warn( 'something may be wrong in "onInit"', e );
                 }
                 this.buildDom();
                 let { isOsx, isIos, multiSelect } = utils.setPlatform();
@@ -124,7 +121,7 @@ class Flounder
                 }
                 catch( e )
                 {
-                    console.log( 'something may be wrong in "onComponentDidMount"', e );
+                    console.warn( 'something may be wrong in "onComponentDidMount"', e );
                 }
 
                 this.ready = true;
@@ -158,35 +155,42 @@ class Flounder
 
         multiTagWrapper.innerHTML = '';
 
-        selectedOptions.forEach( function( option )
+        if ( selectedOptions.length > 0 )
         {
-            if ( option.value !== '' )
+            selectedOptions.forEach( function( option )
             {
-                let span        = document.createElement( 'span' )
-                span.className  = classes.MULTIPLE_SELECT_TAG;
+                if ( option.value !== '' )
+                {
+                    let span        = document.createElement( 'span' )
+                    span.className  = classes.MULTIPLE_SELECT_TAG;
 
-                let a           = document.createElement( 'a' )
-                a.className     = classes.MULTIPLE_TAG_CLOSE;
-                a.setAttribute( 'data-index', option.index );
+                    let a           = document.createElement( 'a' )
+                    a.className     = classes.MULTIPLE_TAG_CLOSE;
+                    a.setAttribute( 'data-index', option.index );
 
-                span.appendChild( a );
+                    span.appendChild( a );
 
-                span.innerHTML += option.innerHTML;
+                    span.innerHTML += option.innerHTML;
 
-                multiTagWrapper.appendChild( span );
-            }
-            else
+                    multiTagWrapper.appendChild( span );
+                }
+                else
+                {
+                    option.selected = false;
+                }
+            } );
+
+            nativeSlice.call( multiTagWrapper.children ).forEach( function( el )
             {
-                option.selected = false;
-            }
-        } );
+                el.firstChild.addEventListener( 'click', removeMultiTag );
+            } );
+        }
+        else
+        {
+            this.addPlaceholder();
+        }
 
         this.setTextMultiTagIndent();
-
-        nativeSlice.call( multiTagWrapper.children ).forEach( function( el )
-        {
-            el.firstChild.addEventListener( 'click', removeMultiTag );
-        } );
     }
 
 
@@ -206,29 +210,28 @@ class Flounder
         let index = -1;
 
         let selectedOption  = this.getSelected();
-
         let selectedLength  = selectedOption.length;
+        let multipleTags    = this.multipleTags;
 
-        if ( !this.multiple || ( !this.multipleTags && selectedLength ===  1 ) )
+        if ( !multipleTags && selectedLength ===  1 )
         {
             index               = selectedOption[0].index;
-            selected.innerHTML  = this.refs.data[ index ].innerHTML;
+            selected.innerHTML  = refs.data[ index ].innerHTML;
             value               = selectedOption[0].value;
         }
-        else if ( selectedLength === 0 )
+        else if ( !multipleTags && selectedLength === 0 )
         {
-            let defaultValue = this._default;
-
-            index               = defaultValue.index || -1;
+            let defaultValue    = this._default;
+            index               = defaultValue.index || -1;
             selected.innerHTML  = defaultValue.text;
             value               = defaultValue.value;
         }
         else
         {
-            if ( this.multipleTags )
+            if ( multipleTags )
             {
                 selected.innerHTML  = '';
-                this.displayMultipleTags( selectedOption, this.refs.multiTagWrapper );
+                this.displayMultipleTags( selectedOption, refs.multiTagWrapper );
             }
             else
             {
@@ -261,7 +264,7 @@ class Flounder
         }
         catch( e )
         {
-            console.log( 'something may be wrong in "onInputChange"', e );
+            console.warn( 'something may be wrong in "onInputChange"', e );
         }
 
         if ( !this.toggleList.justOpened )
@@ -446,9 +449,9 @@ class Flounder
 
         if ( selectedOptions.length === 0 )
         {
-            index               = defaultValue.index || -1;
-            selected.innerHTML  = defaultValue.text;
-            value               = defaultValue.value;
+            this.addPlaceholder();
+            index               = -1;
+            value               = '';
         }
         else
         {
@@ -474,7 +477,7 @@ class Flounder
         }
         catch( e )
         {
-            console.log( 'something may be wrong in "onSelect"', e );
+            console.warn( 'something may be wrong in "onSelect"', e );
         }
     }
 
@@ -524,12 +527,13 @@ class Flounder
      */
     setTextMultiTagIndent()
     {
-        let search = this.refs.search;
-        let offset = 0;
+        let refs    = this.refs;
+        let search  = refs.search;
+        let offset  = 0;
 
         if ( search )
         {
-            let els = document.getElementsByClassName( classes.MULTIPLE_SELECT_TAG );
+            let els = refs.multiTagWrapper.children;
 
             nativeSlice.call( els ).forEach( ( e, i ) =>
             {

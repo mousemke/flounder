@@ -108,7 +108,7 @@ const events = {
      */
     addPlaceholder()
     {
-        let multiTags       = this.multipleTags;
+        console.log( this )
         let selectedValues  = this.getSelectedValues();
         let val             = selectedValues[0];
         let selectedItems   = this.getSelected();
@@ -129,7 +129,7 @@ const events = {
                 break;
         }
 
-        if ( multiTags )
+        if ( this.multipleTags )
         {
             if ( selectedCount === 0 )
             {
@@ -381,7 +381,7 @@ const events = {
         }
         catch( e )
         {
-            console.log( 'something may be wrong in "onFirstTouch"', e );
+            console.warn( 'something may be wrong in "onFirstTouch"', e );
         }
 
         refs.selected.removeEventListener( 'click', this.firstTouchController );
@@ -616,7 +616,7 @@ const events = {
                     }
                     catch( e )
                     {
-                        console.log( 'something may be wrong in "onSelect"', e );
+                        console.warn( 'something may be wrong in "onSelect"', e );
                     }
                 }
             }
@@ -736,7 +736,7 @@ const events = {
             }
             catch( e )
             {
-                console.log( 'something may be wrong in "onClose"', e );
+                console.warn( 'something may be wrong in "onClose"', e );
             }
         }
     },
@@ -846,7 +846,7 @@ const events = {
             }
             catch( e )
             {
-                console.log( 'something may be wrong in "onOpen"', e );
+                console.warn( 'something may be wrong in "onOpen"', e );
             }
         }
     }

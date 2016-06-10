@@ -90,7 +90,7 @@ const defaults = {
                 text        : placeholder || placeholder === '' ? placeholder : defaultOptions.placeholder,
                 value       : '',
                 index       : 0,
-                extraClass  : classes.HIDDEN
+                extraClass  : classes.HIDDEN + '  ' +  classes.PLACEHOLDER
             };
 
             if ( select )
@@ -208,6 +208,13 @@ const defaults = {
         {
             let _data       = sortData( data );
 
+            if ( ( configObj.multipleTags || configObj.multiple ) 
+                    && !configObj.defaultIndex 
+                    && !configObj.defaultValue )
+            {
+                configObj.placeholder = configObj.placeholder || defaultOptions.placeholder;
+            }
+
             if ( configObj.defaultEmpty )
             {
                 configObj.placeholder = '';
@@ -236,7 +243,6 @@ const defaults = {
             // default prio
             def = configObj.defaultIndex ? setIndexDefault( _data ) : null;
             def = !def && configObj.defaultValue ? setValueDefault( _data ) : def;
-            def = !def && configObj.multiple ? setPlaceholderDefault( self, _data ) :def;
             def = !def ? setIndexDefault( _data, 0 ) : def;
 
             return def;

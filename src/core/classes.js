@@ -20,6 +20,7 @@ const classes =
     OPTION              : 'flounder__option',
     OPTION_TAG          : 'flounder--option--tag',
     OPTIONS_WRAPPER     : 'flounder__list--wrapper',
+    PLACEHOLDER         : 'flounder__placeholder',
     PLUG                : 'flounder__ios--plug',
     SECTION             : 'flounder__section',
     SELECTED            : 'flounder__option--selected',

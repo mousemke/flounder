@@ -340,9 +340,8 @@ const build = {
         let defaultValue        = this._default = setDefaultOption( this, this.props, data );
         let selected            = constructElement( { className : classes.SELECTED_DISPLAYED,
                                         'data-value' : defaultValue.value, 'data-index' : defaultValue.index || -1 } );
-            selected.innerHTML  = defaultValue.text;
 
-        let multiTagWrapper     = this.multiple ? constructElement( { className : classes.MULTI_TAG_LIST } ) : null;
+        let multiTagWrapper     = this.multipleTags ? constructElement( { className : classes.MULTI_TAG_LIST } ) : null;
 
         let search              = this.addSearch( flounder );
 
@@ -369,6 +368,24 @@ const build = {
 
         this.refs = { wrapper, flounder, selected, arrow, optionsListWrapper,
                     search, multiTagWrapper, optionsList, select, data, selectOptions };
+
+        if ( this.multipleTags )
+        {
+            let selectedOptions = this.getSelected();
+
+            if ( selectedOptions.length === 0 )
+            {
+                selected.innerHTML = defaultValue.text;
+            }
+            else
+            {
+                this.displayMultipleTags( selectedOptions, multiTagWrapper );
+            }
+        }
+        else
+        {
+            selected.innerHTML = defaultValue.text;
+        }
     },
 
 
@@ -505,7 +522,6 @@ const build = {
         else if ( !props && typeof data === 'object' )
         {
             props       = data;
-            console.log( props );
             props.data  = props.data || this.data;
         }
         else

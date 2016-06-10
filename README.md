@@ -417,18 +417,26 @@ Change Log
 0.8.0
 -----
 
++ build
+    + placeholders now have their own class
+
++ default
+    + changed how multipleTags handle defaults
+
 + css
-    + css is nnow copied to `./dist` from `./src` directory
+    + css is now copied to `./dist` from `./src` directory
 
 + events
     + added onInputChange
+    + changed removeMultipleTags action
 
 + general
     + altered the gitignore to a release branch structure
-
-+ travis-ci
     + changed node test versions
     + changed packages to better accomodate travis builds
+
++ api
+    + console.log is now console.warn
 
 
 0.7.8

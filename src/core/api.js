@@ -397,7 +397,7 @@ const api = {
         {
             opt = _data[ i ];
 
-            if ( opt.selected )
+            if ( opt.selected && !utils.hasClass( opt, classes.PLACEHOLDER ) )
             {
                 opts.push( opt );
             }
@@ -446,11 +446,11 @@ const api = {
                 }
                 else
                 {
-                    console.log( 'no data recieved' );
+                    console.warn( 'no data recieved' );
                 }
             } ).catch( e =>
             {
-                console.log( 'something happened: ', e );
+                console.warn( 'something happened: ', e );
                 this.rebuild( [ {
                             text        : '',
                             value       : '',
@@ -461,7 +461,7 @@ const api = {
         }
         catch ( e )
         {
-            console.log( 'something happened.  check your loadDataFromUrl callback ', e );
+            console.warn( 'something happened.  check your loadDataFromUrl callback ', e );
         }
 
         return [ {
