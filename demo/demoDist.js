@@ -4732,8 +4732,8 @@ exports['default'] = utils;
 module.exports = exports['default'];
 
 },{"./classes":15,"microbejs/src/modules/http":4}],21:[function(require,module,exports){
-"use strict";
+'use strict';
 
-module.exports = "0.8.0";
+module.exports = '0.8.1';
 
 },{}]},{},[1]);
