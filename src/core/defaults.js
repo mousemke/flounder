@@ -4,10 +4,10 @@ import utils                from './utils';
 const defaultOptions = {
     allowHTML               : false,
     classes                 : {
-        flounder    : '',
-        hidden      : 'flounder--hidden',
-        selected    : 'flounder__option--selected',
-        wrapper     : ''
+        flounder    : ``,
+        hidden      : `flounder--hidden`,
+        selected    : `flounder__option--selected`,
+        wrapper     : ``
     },
     data                    : [],
     defaultEmpty            : false,
@@ -17,16 +17,17 @@ const defaultOptions = {
     keepChangesOnDestroy    : false,
     multiple                : false,
     multipleTags            : false,
-    multipleMessage         : '(Multiple Items Selected)',
+    multipleMessage         : `(Multiple Items Selected)`,
     onClose                 : function( e, selectedValues ){},
     onComponentDidMount     : function(){},
     onComponentWillUnmount  : function(){},
     onFirstTouch            : function( e ){},
     onInit                  : function(){},
+    onInputChange           : function( e ){},
     onOpen                  : function( e, selectedValues ){},
     onSelect                : function( e, selectedValues ){},
     openOnHover             : false,
-    placeholder             : 'Please choose an option',
+    placeholder             : `Please choose an option`,
     search                  : false,
     selectDataOverride      : false
 };
@@ -46,7 +47,7 @@ const defaults = {
      *
      * @return _Void_
      */
-    setDefaultOption : function( self, configObj, data = [], rebuild = false )
+    setDefaultOption( self, configObj, data = [], rebuild = false )
     {
         /**
          * ## setIndexDefault
@@ -86,19 +87,19 @@ const defaults = {
             let placeholder = configObj.placeholder;
 
             let _default    = {
-                text        : placeholder || placeholder === '' ? placeholder : defaultOptions.placeholder,
-                value       : '',
+                text        : placeholder || placeholder === `` ? placeholder : defaultOptions.placeholder,
+                value       : ``,
                 index       : 0,
-                extraClass  : classes.HIDDEN
+                extraClass  : `${classes.HIDDEN}  ${classes.PLACEHOLDER}`
             };
 
             if ( select )
             {
                 let escapedText     = self.allowHTML ? _default.text : utils.escapeHTML( _default.text );
 
-                if ( !select[ 0 ] || select[ 0 ].value !== '' )
+                if ( !select[ 0 ] || select[ 0 ].value !== `` )
                 {
-                    let defaultOption   = self.constructElement( { tagname : 'option',
+                    let defaultOption   = self.constructElement( { tagname : `option`,
                                                 className   : classes.OPTION_TAG,
                                                 value       :  _default.value } );
                     defaultOption.innerHTML = escapedText;
@@ -132,12 +133,12 @@ const defaults = {
          */
         let setValueDefault = function( _data, _val )
         {
-            let defaultProp = _val || configObj.defaultValue + '';
+            let defaultProp = _val || `${configObj.defaultValue}`;
             let index;
 
             _data.forEach( function( dataObj, i )
             {
-                let dataObjValue = dataObj.value + '';
+                let dataObjValue = `${dataObj.value}`;
 
                 if ( dataObjValue === defaultProp )
                 {
@@ -174,7 +175,7 @@ const defaults = {
                 }
                 else
                 {
-                    if ( typeof d !== 'object' )
+                    if ( typeof d !== `object` )
                     {
                         d = {
                             text    : d,
@@ -207,14 +208,21 @@ const defaults = {
         {
             let _data       = sortData( data );
 
+            if ( ( configObj.multipleTags || configObj.multiple ) 
+                    && !configObj.defaultIndex 
+                    && !configObj.defaultValue )
+            {
+                configObj.placeholder = configObj.placeholder || defaultOptions.placeholder;
+            }
+
             if ( configObj.defaultEmpty )
             {
-                configObj.placeholder = '';
+                configObj.placeholder = ``;
             }
 
             let placeholder = configObj.placeholder;
 
-            if ( placeholder || placeholder === '' || _data.length === 0 )
+            if ( placeholder || placeholder === `` || _data.length === 0 )
             {
                 return setPlaceholderDefault( self, _data );
             }
@@ -223,7 +231,7 @@ const defaults = {
 
             if ( rebuild )
             {
-                let val = self.refs.selected.getAttribute( 'data-value' );
+                let val = self.refs.selected.getAttribute( `data-value` );
                 def     = setValueDefault( _data, val );
 
                 if ( def )
@@ -235,7 +243,6 @@ const defaults = {
             // default prio
             def = configObj.defaultIndex ? setIndexDefault( _data ) : null;
             def = !def && configObj.defaultValue ? setValueDefault( _data ) : def;
-            def = !def && configObj.multiple ? setPlaceholderDefault( self, _data ) :def;
             def = !def ? setIndexDefault( _data, 0 ) : def;
 
             return def;

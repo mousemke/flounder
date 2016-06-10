@@ -1,7 +1,4 @@
 
-/* jshint globalstrict: true */
-'use strict';
-
 import { defaultOptions }   from './defaults';
 import utils                from './utils';
 import api                  from './api';
@@ -10,8 +7,6 @@ import events               from './events';
 import classes              from './classes';
 import Search               from './search';
 import version              from './version';
-
-const nativeSlice = Array.prototype.slice;
 
 class Flounder
 {
@@ -28,8 +23,7 @@ class Flounder
      */
     arrayOfFlounders( targets, props )
     {
-        targets = nativeSlice.call( targets );
-        return targets.map( ( el, i ) => new this.constructor( el, props ) );
+        return [ ...targets ].map( ( el, i ) => new this.constructor( el, props ) );
     }
 
 
@@ -48,7 +42,7 @@ class Flounder
         }
         catch( e )
         {
-            console.log( 'something may be wrong in "onComponentWillUnmount"', e );
+            console.warn( `something may be wrong in "onComponentWillUnmount"`, e );
         }
 
         this.removeListeners();
@@ -78,15 +72,15 @@ class Flounder
         }
         else if ( target )
         {
-            if ( typeof target === 'string' )
+            if ( typeof target === `string` )
             {
                 target = document.querySelectorAll( target );
             }
-            if ( target.length && target.tagName !== 'SELECT' )
+            if ( target.length && target.tagName !== `SELECT` )
             {
                 return this.arrayOfFlounders( target, props );
             }
-            else if ( ( !target.length && target.length !== 0 ) || target.tagName === 'SELECT' )
+            else if ( ( !target.length && target.length !== 0 ) || target.tagName === `SELECT` )
             {
                 if ( target.flounder )
                 {
@@ -109,7 +103,7 @@ class Flounder
                 }
                 catch( e )
                 {
-                    console.log( 'something may be wrong in "onInit"', e );
+                    console.warn( `something may be wrong in "onInit"`, e );
                 }
                 this.buildDom();
                 let { isOsx, isIos, multiSelect } = utils.setPlatform();
@@ -124,7 +118,7 @@ class Flounder
                 }
                 catch( e )
                 {
-                    console.log( 'something may be wrong in "onComponentDidMount"', e );
+                    console.warn( `something may be wrong in "onComponentDidMount"`, e );
                 }
 
                 this.ready = true;
@@ -149,44 +143,51 @@ class Flounder
     {
         let span, a;
 
-        let removeMultiTag = this.removeMultiTag
+        let removeMultiTag = this.removeMultiTag;
 
-        nativeSlice.call( multiTagWrapper.children ).forEach( function( el )
+        [ ...multiTagWrapper.children ].forEach( function( el )
         {
-            el.firstChild.removeEventListener( 'click', removeMultiTag );
+            el.firstChild.removeEventListener( `click`, removeMultiTag );
         } );
 
-        multiTagWrapper.innerHTML = '';
+        multiTagWrapper.innerHTML = ``;
 
-        selectedOptions.forEach( function( option )
+        if ( selectedOptions.length > 0 )
         {
-            if ( option.value !== '' )
+            selectedOptions.forEach( function( option )
             {
-                let span        = document.createElement( 'span' )
-                span.className  = classes.MULTIPLE_SELECT_TAG;
+                if ( option.value !== `` )
+                {
+                    let span        = document.createElement( `span` )
+                    span.className  = classes.MULTIPLE_SELECT_TAG;
 
-                let a           = document.createElement( 'a' )
-                a.className     = classes.MULTIPLE_TAG_CLOSE;
-                a.setAttribute( 'data-index', option.index );
+                    let a           = document.createElement( `a` )
+                    a.className     = classes.MULTIPLE_TAG_CLOSE;
+                    a.setAttribute( `data-index`, option.index );
 
-                span.appendChild( a );
+                    span.appendChild( a );
 
-                span.innerHTML += option.innerHTML;
+                    span.innerHTML += option.innerHTML;
 
-                multiTagWrapper.appendChild( span );
-            }
-            else
+                    multiTagWrapper.appendChild( span );
+                }
+                else
+                {
+                    option.selected = false;
+                }
+            } );
+
+            [ ...multiTagWrapper.children ].forEach( function( el )
             {
-                option.selected = false;
-            }
-        } );
+                el.firstChild.addEventListener( `click`, removeMultiTag );
+            } );
+        }
+        else
+        {
+            this.addPlaceholder();
+        }
 
         this.setTextMultiTagIndent();
-
-        nativeSlice.call( multiTagWrapper.children ).forEach( function( el )
-        {
-            el.firstChild.addEventListener( 'click', removeMultiTag );
-        } );
     }
 
 
@@ -206,29 +207,28 @@ class Flounder
         let index = -1;
 
         let selectedOption  = this.getSelected();
-
         let selectedLength  = selectedOption.length;
+        let multipleTags    = this.multipleTags;
 
-        if ( !this.multiple || ( !this.multipleTags && selectedLength ===  1 ) )
+        if ( !multipleTags && selectedLength ===  1 )
         {
             index               = selectedOption[0].index;
-            selected.innerHTML  = this.refs.data[ index ].innerHTML;
+            selected.innerHTML  = refs.data[ index ].innerHTML;
             value               = selectedOption[0].value;
         }
-        else if ( selectedLength === 0 )
+        else if ( !multipleTags && selectedLength === 0 )
         {
-            let defaultValue = this._default;
-
-            index               = defaultValue.index || -1;
+            let defaultValue    = this._default;
+            index               = defaultValue.index || -1;
             selected.innerHTML  = defaultValue.text;
             value               = defaultValue.value;
         }
         else
         {
-            if ( this.multipleTags )
+            if ( multipleTags )
             {
-                selected.innerHTML  = '';
-                this.displayMultipleTags( selectedOption, this.refs.multiTagWrapper );
+                selected.innerHTML  = ``;
+                this.displayMultipleTags( selectedOption, refs.multiTagWrapper );
             }
             else
             {
@@ -239,8 +239,8 @@ class Flounder
             value = selectedOption.map( option => option.value );
         }
 
-        selected.setAttribute( 'data-value', value );
-        selected.setAttribute( 'data-index', index );
+        selected.setAttribute( `data-value`, value );
+        selected.setAttribute( `data-index`, index );
     }
 
 
@@ -255,6 +255,15 @@ class Flounder
      */
     fuzzySearch( e )
     {
+        try
+        {
+            this.onInputChange( e );
+        }
+        catch( e )
+        {
+            console.warn( `something may be wrong in "onInputChange"`, e );
+        }
+
         if ( !this.toggleList.justOpened )
         {
             e.preventDefault();
@@ -289,7 +298,7 @@ class Flounder
             else if ( keyCode === 27 )
             {
                 this.fuzzySearchReset();
-                this.toggleList( e, 'close' );
+                this.toggleList( e, `close` );
                 this.addPlaceholder();
             }
             else
@@ -321,7 +330,7 @@ class Flounder
             utils.removeClass( dataObj, classes.SEARCH_HIDDEN );
         } );
 
-        refs.search.value = '';
+        refs.search.value = ``;
     }
 
 
@@ -339,18 +348,18 @@ class Flounder
 
         for ( let opt in defaultOptions )
         {
-            if ( defaultOptions.hasOwnProperty( opt ) && opt !== 'classes' )
+            if ( defaultOptions.hasOwnProperty( opt ) && opt !== `classes` )
             {
                 this[ opt ] = props[ opt ] !== undefined ? props[ opt ] : defaultOptions[ opt ];
             }
-            else if ( opt === 'classes' )
+            else if ( opt === `classes` )
             {
                 let classes         = defaultOptions[ opt ];
                 let propsClasses    = props.classes;
 
                 for ( let clss in classes )
                 {
-                    this[ clss + 'Class' ] = propsClasses && propsClasses[ clss ] !== undefined ?
+                    this[ `${clss}Class` ] = propsClasses && propsClasses[ clss ] !== undefined ?
                                                 propsClasses[ clss ] :
                                                 classes[ clss ];
                 }
@@ -359,14 +368,14 @@ class Flounder
 
         if ( props.defaultEmpty )
         {
-            this.placeholder = '';
+            this.placeholder = ``;
         }
 
         if ( this.multipleTags )
         {
             this.search         = true;
             this.multiple       = true;
-            this.selectedClass  += '  ' + classes.SELECTED_HIDDEN;
+            this.selectedClass  += `  ${classes.SELECTED_HIDDEN}`;
 
             if ( !this.placeholder )
             {
@@ -422,7 +431,7 @@ class Flounder
         let target          = e.target;
         let defaultValue    = this._default;
         let data            = this.refs.data;
-        let targetIndex     = target.getAttribute( 'data-index' );
+        let targetIndex     = target.getAttribute( `data-index` );
         select[ targetIndex ].selected = false;
 
         let selectedOptions = this.getSelected();
@@ -430,16 +439,16 @@ class Flounder
         utils.removeClass( data[ targetIndex ], classes.SELECTED_HIDDEN );
         utils.removeClass( data[ targetIndex ], classes.SELECTED );
 
-        target.removeEventListener( 'click', this.removeMultiTag );
+        target.removeEventListener( `click`, this.removeMultiTag );
 
         let span = target.parentNode;
         span.parentNode.removeChild( span );
 
         if ( selectedOptions.length === 0 )
         {
-            index               = defaultValue.index || -1;
-            selected.innerHTML  = defaultValue.text;
-            value               = defaultValue.value;
+            this.addPlaceholder();
+            index               = -1;
+            value               = ``;
         }
         else
         {
@@ -456,8 +465,8 @@ class Flounder
 
         this.setTextMultiTagIndent();
 
-        selected.setAttribute( 'data-value', value );
-        selected.setAttribute( 'data-index', index );
+        selected.setAttribute( `data-value`, value );
+        selected.setAttribute( `data-index`, index );
 
         try
         {
@@ -465,7 +474,7 @@ class Flounder
         }
         catch( e )
         {
-            console.log( 'something may be wrong in "onSelect"', e );
+            console.warn( `something may be wrong in "onSelect"`, e );
         }
     }
 
@@ -515,19 +524,18 @@ class Flounder
      */
     setTextMultiTagIndent()
     {
-        let search = this.refs.search;
-        let offset = 0;
+        let refs    = this.refs;
+        let search  = refs.search;
+        let offset  = 0;
 
         if ( search )
         {
-            let els = document.getElementsByClassName( classes.MULTIPLE_SELECT_TAG );
-
-            nativeSlice.call( els ).forEach( ( e, i ) =>
+            [ ...refs.multiTagWrapper.children ].forEach( ( e, i ) =>
             {
                 offset += utils.getElWidth( e, this.setTextMultiTagIndent, this );
             } );
 
-            search.style.textIndent = offset + 'px';
+            search.style.textIndent = `${offset}px`;
         }
     }
 
@@ -549,7 +557,7 @@ class Flounder
             }
             else
             {
-                if ( typeof d !== 'object' )
+                if ( typeof d !== `object` )
                 {
                     d = {
                         text    : d,
@@ -577,14 +585,14 @@ class Flounder
  *
  * sets version with getters and no setters for the sake of being read-only
  */
-Object.defineProperty( Flounder, 'version', {
+Object.defineProperty( Flounder, `version`, {
     get : function()
     {
         return version;
     }
 } );
 
-Object.defineProperty( Flounder.prototype, 'version', {
+Object.defineProperty( Flounder.prototype, `version`, {
     get : function()
     {
         return version;

@@ -3,8 +3,6 @@ import classes                  from './classes';
 import { setDefaultOption }     from './defaults';
 import utils                    from './utils';
 
-const nativeSlice = Array.prototype.slice;
-
 const build = {
 
     /**
@@ -17,9 +15,9 @@ const build = {
      *
      * @return _Void_
      */
-    addOptionDescription : function( el, text )
+    addOptionDescription( el, text )
     {
-        let div         = document.createElement( 'div' );
+        let div         = document.createElement( `div` );
         div.innerHTML   = text;
         div.className   = classes.DESCRIPTION;
         el.appendChild( div );
@@ -35,13 +33,13 @@ const build = {
      *
      * @return _Mixed_ search node or false
      */
-    addSearch : function( flounder )
+    addSearch( flounder )
     {
         if ( this.search )
         {
             let search = utils.constructElement( {
-                                    tagname     : 'input',
-                                    type        : 'text',
+                                    tagname     : `input`,
+                                    type        : `text`,
                                     className   : classes.SEARCH
                                 } );
             flounder.appendChild( search );
@@ -61,23 +59,23 @@ const build = {
      *
      * @return _Void_
      */
-    bindThis : function()
+    bindThis()
     {
             [ 
-            'catchBodyClick',
-            'checkClickTarget',
-            'checkFlounderKeypress',
-            'clearPlaceholder',
-            'clickSet',
-            'divertTarget',
-            'displayMultipleTags',
-            'firstTouchController',
-            'fuzzySearch',
-            'removeMultiTag',
-            'setKeypress',
-            'setSelectValue',
-            'toggleList',
-            'toggleListSearchClick' ].forEach( func =>
+            `catchBodyClick`,
+            `checkClickTarget`,
+            `checkFlounderKeypress`,
+            `clearPlaceholder`,
+            `clickSet`,
+            `divertTarget`,
+            `displayMultipleTags`,
+            `firstTouchController`,
+            `fuzzySearch`,
+            `removeMultiTag`,
+            `setKeypress`,
+            `setSelectValue`,
+            `toggleList`,
+            `toggleListSearchClick` ].forEach( func =>
             {
                 this[ func ] = this[ func ].bind( this );
                 this[ func ].___isBound = true;
@@ -94,7 +92,7 @@ const build = {
      *
      * @return {DOMElement} arrow
      */
-    buildArrow : function( props, constructElement )
+    buildArrow( props, constructElement )
     {
         if (  props.disableArrow )
         {
@@ -124,7 +122,7 @@ const build = {
      *
      * @return _Array_ refs to both container elements
      */
-    buildData : function( defaultValue, originalData, optionsList, select )
+    buildData( defaultValue, originalData, optionsList, select )
     {
         originalData                = originalData || [];
         let index                   = 0;
@@ -148,11 +146,11 @@ const build = {
          * @param {Object} dataObj [description]
          * @param {Number} i index
          *
-         * @return {DOMElement}
+         * @return _DOMElement_
          */
         let buildDiv = function( dataObj, i )
         {
-            if ( typeof dataObj !== 'object' )
+            if ( typeof dataObj !== `object` )
             {
                 dataObj = {
                     text    : dataObj,
@@ -161,7 +159,7 @@ const build = {
             }
             dataObj.index   = i;
 
-            let extraClass  = i === defaultValue.index ? '  ' + selectedClass : '';
+            let extraClass  = i === defaultValue.index ? `  ${selectedClass}` : ``;
 
             let res = {
                 className       : classes.OPTION + extraClass,
@@ -170,7 +168,7 @@ const build = {
 
             for ( let o in dataObj )
             {
-                if ( o !== 'text' && o !== 'description' )
+                if ( o !== `text` && o !== `description` )
                 {
                     res[ o ] = dataObj[ o ];
                 }
@@ -184,8 +182,8 @@ const build = {
                 addOptionDescription( data, dataObj.description );
             }
 
-            data.className += dataObj.extraClass ? '  ' + dataObj.extraClass : '';
-            data.setAttribute( 'role', 'option' );
+            data.className += dataObj.extraClass ? `  ${dataObj.extraClass}` : ``;
+            data.setAttribute( `role`, `option` );
 
             return data;
         };
@@ -199,7 +197,7 @@ const build = {
          * @param {Object} dataObj option build properties
          * @param {Number} i index
          *
-         * @return {DOMElement}
+         * @return _DOMElement_
          */
         let buildOption = function( dataObj, i )
         {
@@ -207,8 +205,8 @@ const build = {
 
             if ( !selectRef )
             {
-                selectOption            = constructElement( { tagname : 'option',
-                                            className   : classes.OPTION_TAG,
+                selectOption            = constructElement( { tagname : `option`,
+                                            className   : `${classes.OPTION_TAG}  ${dataObj.extraClass}`,
                                             value       : dataObj.value } );
                 let escapedText         = escapeHTML( dataObj.text );
                 selectOption.innerHTML  = escapedText;
@@ -216,7 +214,7 @@ const build = {
                 let disabled = dataObj.disabled;
                 if ( disabled )
                 {
-                    selectOption.setAttribute( 'disabled', disabled );
+                    selectOption.setAttribute( `disabled`, disabled );
                 }
 
                 select.appendChild( selectOption );
@@ -225,7 +223,7 @@ const build = {
             {
                 let selectChild     = selectRef.children[ i ];
                 selectOption        = selectChild;
-                selectChild.setAttribute( 'value', selectChild.value );
+                selectChild.setAttribute( `value`, selectChild.value );
 
                 if ( selectChild.disabled === true && data[ i ] )
                 {
@@ -240,7 +238,7 @@ const build = {
             }
 
 
-            if ( selectOption.getAttribute( 'disabled' ) )
+            if ( selectOption.getAttribute( `disabled` ) )
             {
                 addClass( data[ i ], classes.DISABLED );
             }
@@ -254,7 +252,7 @@ const build = {
         {
             let dataObjType = typeof dataObj;
 
-            if ( dataObjType !== 'object' )
+            if ( dataObjType !== `object` )
             {
                 dataObj = originalData[ i ] = {
                     text    : dataObj,
@@ -264,9 +262,9 @@ const build = {
 
             if ( dataObj.header )
             {
-                let section = constructElement( { tagname   : 'div',
+                let section = constructElement( { tagname   : `div`,
                                                 className   : classes.SECTION } );
-                let header = constructElement( { tagname    : 'div',
+                let header = constructElement( { tagname    : `div`,
                                                 className   : classes.HEADER } );
                 header.textContent = dataObj.header;
                 section.appendChild( header );
@@ -275,7 +273,7 @@ const build = {
                 let dataObjData = dataObj.data;
                 dataObjData.forEach( ( d, i ) =>
                 {
-                    if ( typeof d !== 'object' )
+                    if ( typeof d !== `object` )
                     {
                         d = dataObjData[ i ] = {
                             text    : d,
@@ -310,7 +308,7 @@ const build = {
      *
      * @return _Void_
      */
-    buildDom : function()
+    buildDom()
     {
         let props               = this.props;
         this.refs               = {};
@@ -319,12 +317,12 @@ const build = {
 
         let wrapperClass        = classes.MAIN_WRAPPER;
         let wrapper             = utils.constructElement( { className : this.wrapperClass ?
-                                    wrapperClass + ' ' + this.wrapperClass : wrapperClass } );
+                                    `${wrapperClass}  ${this.wrapperClass}` : wrapperClass } );
         let flounderClass       = classes.MAIN;
         let flounder            = constructElement( { className : this.flounderClass ?
-                                    flounderClass + '  ' + this.flounderClass : flounderClass } );
+                                    `${flounderClass}  ${this.flounderClass}` : flounderClass } );
 
-        flounder.setAttribute( 'aria-hidden', true );
+        flounder.setAttribute( `aria-hidden`, true );
         flounder.tabIndex       = 0;
         wrapper.appendChild( flounder );
 
@@ -333,22 +331,22 @@ const build = {
 
         if ( this.multiple === true )
         {
-            select.setAttribute( 'multiple', '' );
+            select.setAttribute( `multiple`, `` );
         }
 
         let data                = this.data;
         let defaultValue        = this._default = setDefaultOption( this, this.props, data );
+
         let selected            = constructElement( { className : classes.SELECTED_DISPLAYED,
                                         'data-value' : defaultValue.value, 'data-index' : defaultValue.index || -1 } );
-            selected.innerHTML  = defaultValue.text;
 
-        let multiTagWrapper     = this.multiple ? constructElement( { className : classes.MULTI_TAG_LIST } ) : null;
+        let multiTagWrapper     = this.multipleTags ? constructElement( { className : classes.MULTI_TAG_LIST } ) : null;
 
         let search              = this.addSearch( flounder );
 
-        let optionsListWrapper  = constructElement( { className : classes.OPTIONS_WRAPPER + '  ' + classes.HIDDEN } );
+        let optionsListWrapper  = constructElement( { className : `${classes.OPTIONS_WRAPPER}  ${classes.HIDDEN}` } );
         let optionsList         = constructElement( { className : classes.LIST } );
-        optionsList.setAttribute( 'role', 'listbox' );
+        optionsList.setAttribute( `role`, `listbox` );
         optionsListWrapper.appendChild( optionsList );
 
         let arrow               = this.buildArrow( props, constructElement );
@@ -369,6 +367,24 @@ const build = {
 
         this.refs = { wrapper, flounder, selected, arrow, optionsListWrapper,
                     search, multiTagWrapper, optionsList, select, data, selectOptions };
+
+        if ( this.multipleTags )
+        {
+            let selectedOptions = this.getSelected();
+
+            if ( selectedOptions.length === 0 )
+            {
+                selected.innerHTML = defaultValue.text;
+            }
+            else
+            {
+                this.displayMultipleTags( selectedOptions, multiTagWrapper );
+            }
+        }
+        else
+        {
+            selected.innerHTML = defaultValue.text;
+        }
     },
 
 
@@ -382,13 +398,13 @@ const build = {
      *
      * @return _DOMElement_ select box
      */
-    initSelectBox : function( wrapper )
+    initSelectBox( wrapper )
     {
         let target  = this.target;
         let refs    = this.refs;
         let select  = refs.select;
 
-        if ( target.tagName === 'SELECT' )
+        if ( target.tagName === `SELECT` )
         {
             utils.addClass( target, classes.SELECT_TAG );
             utils.addClass( target, classes.HIDDEN );
@@ -406,7 +422,7 @@ const build = {
                 let data            = [],
                     selectOptions   = [];
 
-                nativeSlice.apply( target.children ).forEach( function( optionEl )
+                [ ...target.children ].forEach( function( optionEl )
                 {
                     selectOptions.push( optionEl );
                     data.push( {
@@ -429,7 +445,7 @@ const build = {
         }
         else
         {
-            select = utils.constructElement( { tagname : 'SELECT', className : classes.SELECT_TAG + '  ' + classes.HIDDEN } );
+            select = utils.constructElement( { tagname : `SELECT`, className : `${classes.SELECT_TAG}  ${classes.HIDDEN}` } );
             wrapper.appendChild( select );
         }
 
@@ -447,7 +463,7 @@ const build = {
      *
      * @return _Void_
      */
-    popInSelectElements : function( select )
+    popInSelectElements( select )
     {
         utils.removeAllChildren( select );
 
@@ -468,10 +484,10 @@ const build = {
      *
      * @return _Void_
      */
-    popOutSelectElements : function( select )
+    popOutSelectElements( select )
     {
         let res = [];
-        let children = this.originalChildren = nativeSlice.call( select.children );
+        let children = this.originalChildren = [ ...select.children ];
 
         children.forEach( function( _el, i )
         {
@@ -495,17 +511,16 @@ const build = {
      *
      * @return _Object_ rebuilt flounder object
      */
-    reconfigure : function( data, props )
+    reconfigure( data, props )
     {
-        if ( typeof data !== 'string' && typeof data.length === 'number' )
+        if ( typeof data !== `string` && typeof data.length === `number` )
         {
             props       = props       = props || this.props;
             props.data  = data;
         }
-        else if ( !props && typeof data === 'object' )
+        else if ( !props && typeof data === `object` )
         {
             props       = data;
-            console.log( props );
             props.data  = props.data || this.data;
         }
         else
@@ -526,17 +541,17 @@ const build = {
      *
      * @return _Void_
      */
-    setTarget : function( target )
+    setTarget( target )
     {
         target      = target.nodeType === 1 ? target : document.querySelector( target );
 
         this.originalTarget = target;
         target.flounder     = this;
 
-        if ( target.tagName === 'INPUT' )
+        if ( target.tagName === `INPUT` )
         {
             utils.addClass( target, classes.HIDDEN );
-            target.setAttribute( 'aria-hidden', true );
+            target.setAttribute( `aria-hidden`, true );
             target.tabIndex = -1;
             target          = target.parentNode;
         }

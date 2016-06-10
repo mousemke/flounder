@@ -20,16 +20,16 @@ let defaults = {
      * called as:
      * score += this.scoreThis( search[ param ], weights[ param ] );
      */
-    scoreProperties     : [ 'text', 'textFlat', 'textSplit', 'value', 'valueFlat',
-                                    'valueSplit', 'description', 'descriptionSplit' ],
+    scoreProperties     : [ `text`, `textFlat`, `textSplit`, `value`, `valueFlat`,
+                                    `valueSplit`, `description`, `descriptionSplit` ],
 
     /*
      * params to test with startsWith
      *
      * called as:
-     * score += startsWith( query, search[ param ], weights[ param + 'StartsWith' ] );
+     * score += startsWith( query, search[ param ], weights[ param + `StartsWith` ] );
      */
-    startsWithProperties : [ 'text', 'value' ],
+    startsWithProperties : [ `text`, `value` ],
 
     /*
      * scoring weight
@@ -54,7 +54,7 @@ let defaults = {
 /**
  * ## Sole
  *
- * turns out there's all kinds of flounders
+ * turns out there`s all kinds of flounders
  */
 export class Sole
 {
@@ -116,7 +116,7 @@ export class Sole
      */
     escapeRegExp( string )
     {
-        return string.replace( /[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&' );
+        return string.replace( /[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, `\\$&` );
     }
 
 
@@ -137,7 +137,7 @@ export class Sole
 
         if ( query.length >= defaults.minimumValueLength )
         {
-            this.query          = query.toLowerCase().split( ' ' );
+            this.query          = query.toLowerCase().split( ` ` );
 
             let scoreThis       = this.scoreThis;
             let startsWith      = this.startsWith;
@@ -153,14 +153,14 @@ export class Sole
 
                 search.text             = d.text;
                 search.textFlat         = d.text.toLowerCase();
-                search.textSplit        = search.textFlat.split( ' ' );
+                search.textSplit        = search.textFlat.split( ` ` );
 
                 search.value            = d.value;
                 search.valueFlat        = d.value.toLowerCase();
-                search.valueSplit       = search.valueFlat.split( ' ' );
+                search.valueSplit       = search.valueFlat.split( ` ` );
 
                 search.description      = d.description ? d.description.toLowerCase() : null;
-                search.descriptionSplit = d.description ? search.description.split( ' ' ) : null;
+                search.descriptionSplit = d.description ? search.description.split( ` ` ) : null;
 
                 defaults.scoreProperties.forEach( function( param )
                 {
@@ -169,7 +169,7 @@ export class Sole
 
                 defaults.startsWithProperties.forEach( function( param )
                 {
-                    score += startsWith( query, search[ param ], weights[ param + 'StartsWith' ] );
+                    score += startsWith( query, search[ param ], weights[ `${param}StartsWith` ] );
                 } );
 
                 res.score = score;
@@ -257,9 +257,9 @@ export class Sole
                 queryWord = this.escapeRegExp( queryWord );
                 let count = 0;
 
-                if ( typeof target === 'string' )
+                if ( typeof target === `string` )
                 {
-                    queryWord   = new RegExp( queryWord, 'g' );
+                    queryWord   = new RegExp( queryWord, `g` );
                     count       = ( target.match( queryWord ) || [] ).length;
                 }
                 else if ( target[ 0 ] ) // array.  what if the words obj has the word length?

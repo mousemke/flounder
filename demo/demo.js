@@ -59,6 +59,8 @@ new Flounder( '.vanilla--input--tags', {
 
     multipleTags    : true,
 
+    onInputChange   : function(){ console.log( 'moon' ); },
+
     onInit          : function()
     {
         let res = [];
@@ -92,7 +94,9 @@ new Flounder( '.vanilla--input--tags', {
         } );
 
         this.data = [ top, bottom ];
-    }
+    },
+
+    placeholder         : 'placeholder!!'
 } );
 
 
@@ -152,9 +156,8 @@ new Flounder( document.getElementById( 'vanilla--select' ), {
  * Vanilla from Div (multiple, tags, placeholder, built from element)
  */
 new Flounder( document.getElementById( 'vanilla--multiple--tags' ), {
-    placeholder         : 'placeholders!',
-
-    multiple            : true,
+    
+    defaultIndex        : 2,
 
     multipleTags        : true,
 

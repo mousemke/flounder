@@ -3,8 +3,6 @@ import classes              from './classes';
 import utils                from './utils';
 import { setDefaultOption } from './defaults';
 
-const nativeSlice =  Array.prototype.slice;
-
 const api = {
 
     /**
@@ -17,7 +15,7 @@ const api = {
      *
      * @return _Void_
      */
-    buildFromUrl : function( url, callback )
+    buildFromUrl( url, callback )
     {
         this.loadDataFromUrl( url, data =>
         {
@@ -43,7 +41,7 @@ const api = {
      *
      * return _Void_
      */
-    clickByIndex : function( index, multiple )
+    clickByIndex( index, multiple )
     {
         return this.setByIndex( index, multiple, false );
     },
@@ -59,7 +57,7 @@ const api = {
      *
      * return _Void_
      */
-    clickByText : function( text, multiple )
+    clickByText( text, multiple )
     {
         return this.setByText( text, multiple, false );
     },
@@ -75,7 +73,7 @@ const api = {
      *
      * return _Void_
      */
-    clickByValue : function( value, multiple )
+    clickByValue( value, multiple )
     {
         return this.setByValue( value, multiple, false );
     },
@@ -84,11 +82,11 @@ const api = {
     /**
      * ## destroy
      *
-     * removes flounder and all it's events from the dom
+     * removes flounder and all it`s events from the dom
      *
      * @return _Void_
      */
-    destroy : function()
+    destroy()
     {
         this.componentWillUnmount();
 
@@ -96,11 +94,11 @@ const api = {
         let originalTarget      = this.originalTarget;
         let tagName             =  originalTarget.tagName;
 
-        if ( tagName === 'INPUT' || tagName === 'SELECT' )
+        if ( tagName === `INPUT` || tagName === `SELECT` )
         {
             let target = originalTarget.nextElementSibling;
 
-            if ( tagName === 'SELECT' )
+            if ( tagName === `SELECT` )
             {
                 let firstOption = originalTarget[0];
 
@@ -108,7 +106,7 @@ const api = {
                 {
                     originalTarget.removeChild( firstOption );
                 }
-            } else if ( tagName === 'INPUT' ) {
+            } else if ( tagName === `INPUT` ) {
                 target = refs.flounder.parentNode;
             }
 
@@ -120,7 +118,7 @@ const api = {
             }
             catch( e )
             {
-                throw ' : this flounder may have already been removed';
+                throw ` : this flounder may have already been removed`;
             }
         }
         else
@@ -133,7 +131,7 @@ const api = {
             }
             catch( e )
             {
-                throw ' : this flounder may have already been removed';
+                throw ` : this flounder may have already been removed`;
             }
         }
 
@@ -149,7 +147,7 @@ const api = {
      *
      * @return _Void_
      */
-    deselectAll : function()
+    deselectAll()
     {
         this.removeSelectedClass();
         this.removeSelectedValue();
@@ -165,7 +163,7 @@ const api = {
      *
      * @return _Void_
      */
-    disable : function( bool )
+    disable( bool )
     {
         let refs        = this.refs;
         let flounder    = refs.flounder;
@@ -173,15 +171,15 @@ const api = {
 
         if ( bool )
         {
-            refs.flounder.removeEventListener( 'keydown', this.checkFlounderKeypress );
-            refs.selected.removeEventListener( 'click', this.toggleList );
+            refs.flounder.removeEventListener( `keydown`, this.checkFlounderKeypress );
+            refs.selected.removeEventListener( `click`, this.toggleList );
             utils.addClass( selected, classes.DISABLED );
             utils.addClass( flounder, classes.DISABLED );
         }
         else
         {
-            refs.flounder.addEventListener( 'keydown', this.checkFlounderKeypress );
-            refs.selected.addEventListener( 'click', this.toggleList );
+            refs.flounder.addEventListener( `keydown`, this.checkFlounderKeypress );
+            refs.selected.addEventListener( `click`, this.toggleList );
             utils.removeClass( selected, classes.DISABLED );
             utils.removeClass( flounder, classes.DISABLED );
         }
@@ -198,11 +196,11 @@ const api = {
      *
      * return _Void_
      */
-    disableByIndex : function( index, reenable )
+    disableByIndex( index, reenable )
     {
         let refs = this.refs;
 
-        if ( typeof index !== 'string' && index.length )
+        if ( typeof index !== `string` && index.length )
         {
             let disableByIndex = this.disableByIndex.bind( this );
             return index.map( _i => disableByIndex( _i, reenable ) );
@@ -227,12 +225,12 @@ const api = {
                 if ( reenable )
                 {
                     opt.disabled = false;
-                    utils.removeClass( el, 'flounder__disabled' );
+                    utils.removeClass( el, classes.DISABLED );
                 }
                 else
                 {
                     opt.disabled = true;
-                    utils.addClass( el, 'flounder__disabled' );
+                    utils.addClass( el, classes.DISABLED );
                 }
 
                 return [ el, opt ];
@@ -253,9 +251,9 @@ const api = {
      *
      * return _Void_
      */
-    disableByText : function( text, reenable )
+    disableByText( text, reenable )
     {
-        if ( typeof text !== 'string' && text.length )
+        if ( typeof text !== `string` && text.length )
         {
             let disableByText = this.disableByText.bind( this );
             return text.map( _t => disableByText( _t, reenable ) );
@@ -289,9 +287,9 @@ const api = {
      *
      * return _Void_
      */
-    disableByValue : function( value, reenable )
+    disableByValue( value, reenable )
     {
-        if ( typeof value !== 'string' && value.length )
+        if ( typeof value !== `string` && value.length )
         {
             let disableByValue = this.disableByValue.bind( this );
             return value.map( _v => disableByValue( _v, reenable ) );
@@ -300,7 +298,7 @@ const api = {
         {
             let values = this.refs.selectOptions.map( function( el )
             {
-                return el.value === value + '' ? el.index : null;
+                return el.value === `${value}` ? el.index : null;
             } ).filter( a => !!a );
 
             return value ? this.disableByIndex( values, reenable ) : null;
@@ -317,7 +315,7 @@ const api = {
      *
      * @return {Object} flounder(s)
      */
-    enableByIndex : function( index )
+    enableByIndex( index )
     {
         return this.disableByIndex( index, true );
     },
@@ -332,7 +330,7 @@ const api = {
      *
      * @return {Object} flounder(s)
      */
-    enableByText : function( text )
+    enableByText( text )
     {
         return this.disableByText( text, true );
     },
@@ -347,7 +345,7 @@ const api = {
      *
      * @return {Object} flounder(s)
      */
-    enableByValue : function( value )
+    enableByValue( value )
     {
         this.disableByValue( value, true );
     },
@@ -362,11 +360,11 @@ const api = {
      *
      * @return _Object_ option and div tage
      */
-    getData : function( _i )
+    getData( _i )
     {
         let refs = this.refs;
 
-        if ( typeof _i === 'number' )
+        if ( typeof _i === `number` )
         {
             return { option : refs.selectOptions[ _i ], div : refs.data[ _i ] };
         }
@@ -387,7 +385,7 @@ const api = {
      *
      * @return _Void_
      */
-    getSelected : function()
+    getSelected()
     {
         let _el         = this.refs.select;
         let opts        = [], opt;
@@ -397,7 +395,7 @@ const api = {
         {
             opt = _data[ i ];
 
-            if ( opt.selected )
+            if ( opt.selected && !utils.hasClass( opt, classes.PLACEHOLDER ) )
             {
                 opts.push( opt );
             }
@@ -414,7 +412,7 @@ const api = {
      *
      * @return _Void_
      */
-    getSelectedValues : function()
+    getSelectedValues()
     {
         return this.getSelected().map( ( _v ) => _v.value )
     },
@@ -430,7 +428,7 @@ const api = {
      *
      * @return _Void_
      */
-    loadDataFromUrl : function( url, callback )
+    loadDataFromUrl( url, callback )
     {
         try
         {
@@ -446,14 +444,14 @@ const api = {
                 }
                 else
                 {
-                    console.log( 'no data recieved' );
+                    console.warn( `no data recieved` );
                 }
             } ).catch( e =>
             {
-                console.log( 'something happened: ', e );
+                console.warn( `something happened: `, e );
                 this.rebuild( [ {
-                            text        : '',
-                            value       : '',
+                            text        : ``,
+                            value       : ``,
                             index       : 0,
                             extraClass  : classes.LOADING_FAILED
                         } ] );
@@ -461,12 +459,12 @@ const api = {
         }
         catch ( e )
         {
-            console.log( 'something happened.  check your loadDataFromUrl callback ', e );
+            console.warn( `something happened.  check your loadDataFromUrl callback `, e );
         }
 
         return [ {
-            text        : '',
-            value       : '',
+            text        : ``,
+            value       : ``,
             index       : 0,
             extraClass  : classes.LOADING
         } ];
@@ -482,10 +480,10 @@ const api = {
      *
      * @return _Object_ rebuilt flounder object
      */
-    rebuild : function( data, props )
+    rebuild( data, props )
     {
-        if ( props || !props && ( typeof data === 'string' ||
-            ( data && typeof data.length !== 'number' ) ) )
+        if ( props || !props && ( typeof data === `string` ||
+            ( data && typeof data.length !== `number` ) ) )
         {
             return this.reconfigure( data, props );
         }
@@ -497,10 +495,10 @@ const api = {
 
         this.deselectAll();
         this.removeOptionsListeners();
-        refs.select.innerHTML       = '';
+        refs.select.innerHTML       = ``;
         refs.select                 = false;
         this._default               = setDefaultOption( this, props, data, true );
-        refs.optionsList.innerHTML  = '';
+        refs.optionsList.innerHTML  = ``;
 
         [ refs.data, refs.selectOptions ] = this.buildData( this._default, this.data, refs.optionsList, _select );
         refs.select                 = _select;
@@ -524,11 +522,11 @@ const api = {
      *
      * return _Void_
      */
-    setByIndex : function( index, multiple, programmatic = true )
+    setByIndex( index, multiple, programmatic = true )
     {
         let refs = this.refs;
 
-        if ( typeof index !== 'string' && index.length )
+        if ( typeof index !== `string` && index.length )
         {
             let setByIndex = this.setByIndex.bind( this );
             return index.map( _i => setByIndex( _i, multiple, programmatic ) );
@@ -548,8 +546,8 @@ const api = {
 
             if ( el )
             {
-                let isOpen = utils.hasClass( refs.wrapper, 'open' );
-                this.toggleList( isOpen ? 'close' : 'open' );
+                let isOpen = utils.hasClass( refs.wrapper, `open` );
+                this.toggleList( isOpen ? `close` : `open` );
                 this.___forceMultiple       = multiple;
                 this.___programmaticClick   = programmatic;
                 el.click();
@@ -572,9 +570,9 @@ const api = {
      *
      * return _Void_
      */
-    setByText : function( text, multiple, programmatic = true )
+    setByText( text, multiple, programmatic = true )
     {
-        if ( typeof text !== 'string' && text.length )
+        if ( typeof text !== `string` && text.length )
         {
             let setByText = this.setByText.bind( this );
             return text.map( _i => setByText( _i, multiple, programmatic ) );
@@ -608,9 +606,9 @@ const api = {
      *
      * return _Void_
      */
-    setByValue : function( value, multiple, programmatic = true )
+    setByValue( value, multiple, programmatic = true )
     {
-        if ( typeof value !== 'string' && value.length )
+        if ( typeof value !== `string` && value.length )
         {
             let setByValue = this.setByValue.bind( this );
             return value.map( _i => setByValue( _i, multiple, programmatic ) );
@@ -619,7 +617,7 @@ const api = {
         {
             let values = this.refs.selectOptions.map( function( el )
             {
-                return el.value === value + '' ? el.index : null;
+                return el.value === `${value}` ? el.index : null;
             } ).filter( a => a === 0 || !!a );
 
             return values.length !== 0 ? this.setByIndex( values, multiple, programmatic ) : null;

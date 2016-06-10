@@ -2,8 +2,6 @@
 import classes          from './classes';
 import microbeHttp      from 'microbejs/src/modules/http';
 
-const nativeSlice = Array.prototype.slice;
-
 const utils = {
     /**
      * ## addClass
@@ -15,9 +13,9 @@ const utils = {
      *
      * @return _Void_
      */
-    addClass : function( _el, _class )
+    addClass( _el, _class )
     {
-        if ( typeof _class !== 'string' && _class.length )
+        if ( typeof _class !== `string` && _class.length )
         {
             _class.forEach( function( _c )
             {
@@ -30,10 +28,10 @@ const utils = {
         let _elClass        = _el.className;
         let _elClassLength  = _elClass.length;
 
-        if ( !utils.hasClass( _el, _class ) && _elClass.slice( 0, _class.length + 1 ) !== _class + ' ' &&
-            _elClass.slice( _elClassLength - _class.length - 1, _elClassLength ) !== ' ' + _class )
+        if ( !utils.hasClass( _el, _class ) && _elClass.slice( 0, _class.length + 1 ) !== `${_class} ` &&
+            _elClass.slice( _elClassLength - _class.length - 1, _elClassLength ) !== ` ${_class}` )
         {
-            _elClass += ( '  ' + _class );
+            _elClass += ( `  ${_class}` );
         }
 
         _el.className = _elClass.trim();
@@ -50,13 +48,13 @@ const utils = {
      *
      * @return _Void_
      */
-    attachAttributes : function( _el, _elObj )
+    attachAttributes( _el, _elObj )
     {
         _elObj = _elObj || {};
 
         for ( let att in _elObj )
         {
-            if ( att.indexOf( 'data-' ) !== -1 )
+            if ( att.indexOf( `data-` ) !== -1 )
             {
                 _el.setAttribute( att, _elObj[ att ] );
             }
@@ -75,9 +73,9 @@ const utils = {
      *
      * @return _Element_
      */
-    constructElement : function( _elObj )
+    constructElement( _elObj )
     {
-        let _el         = document.createElement( _elObj.tagname || 'div' );
+        let _el         = document.createElement( _elObj.tagname || `div` );
 
         utils.attachAttributes( _el, _elObj );
 
@@ -94,7 +92,7 @@ const utils = {
      *
      * @return {Class} modified class object
      */
-    extendClass : function( _extend, ...objects )
+    extendClass( _extend, ...objects )
     {
         _extend = _extend.prototype;
 
@@ -128,12 +126,12 @@ const utils = {
      *
      * @return _Void_
      */
-    escapeHTML : function( string )
+    escapeHTML( string )
     {
-        return String( string ).replace( /&/g, '&amp;' )
-                                .replace( /</g, '&lt;' )
-                                .replace( />/g, '&gt;' )
-                                .replace( /"/g, '&quot;' );
+        return String( string ).replace( /&/g, `&amp;` )
+                                .replace( /</g, `&lt;` )
+                                .replace( />/g, `&gt;` )
+                                .replace( /"/g, `&quot;` );
     },
 
 
@@ -146,7 +144,7 @@ const utils = {
      *
      * @return _Integer_ adjusted width
      */
-    getElWidth : function( el, _cb, context )
+    getElWidth( el, _cb, context )
     {
         let style = getComputedStyle( el );
 
@@ -163,8 +161,8 @@ const utils = {
             this.__checkWidthAgain !== false
         }
 
-        return el.offsetWidth + parseInt( style[ 'margin-left' ] ) +
-                                parseInt( style[ 'margin-right' ] );
+        return el.offsetWidth + parseInt( style[ `margin-left` ] ) +
+                                parseInt( style[ `margin-right` ] );
     },
 
 
@@ -178,10 +176,10 @@ const utils = {
      *
      * @return _Void_
      */
-    hasClass : function( _el, _class )
+    hasClass( _el, _class )
     {
         let _elClass    = _el.className;
-        let regex       = new RegExp( '(^' + _class + ' )|( ' + _class + '$)|( ' + _class + ' )|(^' + _class + '$)' );
+        let regex       = new RegExp( `(^${_class} )|( ${_class}$)|( ${_class} )|(^${_class}$)` );
         return !!_elClass.match( regex );
     },
 
@@ -197,15 +195,15 @@ const utils = {
      *
      * @return _Void_:
      */
-    iosVersion : function()
+    iosVersion()
     {
 
         if ( /iPad|iPhone|iPod/.test( navigator.platform ) )
         {
-            if ( !!window.indexedDB ) { return '8+'; }
-            if ( !!window.SpeechSynthesisUtterance ) { return '7'; }
-            if ( !!window.webkitAudioContext ) { return '6'; }
-            return '5-';
+            if ( !!window.indexedDB ) { return `8+`; }
+            if ( !!window.SpeechSynthesisUtterance ) { return `7`; }
+            if ( !!window.webkitAudioContext ) { return `6`; }
+            return `5-`;
         }
 
         return false;
@@ -221,9 +219,9 @@ const utils = {
      *
      * @return _Void_
      */
-    removeAllChildren : function( target )
+    removeAllChildren( target )
     {
-        nativeSlice.call( target.children ).forEach( function( el )
+        [ ...target.children ].forEach( function( el )
         {
             target.removeChild( el );
         } );
@@ -240,9 +238,9 @@ const utils = {
      *
      * @return _Void_
      */
-    removeClass : function( el, _class )
+    removeClass( el, _class )
     {
-        if ( typeof _class !== 'string' && _class.length )
+        if ( typeof _class !== `string` && _class.length )
         {
             _class.forEach( function( _c )
             {
@@ -258,19 +256,19 @@ const utils = {
 
         if ( baseClass === _class )
         {
-            baseClass = '';
+            baseClass = ``;
         }
-        else if ( baseClass.slice( 0, classLength + 1 ) === _class + ' ' )
+        else if ( baseClass.slice( 0, classLength + 1 ) === `${_class} ` )
         {
             baseClass = baseClass.slice( classLength + 1, baseClassLength );
         }
-        else if ( baseClass.slice( baseClassLength - classLength - 1, baseClassLength ) === ' ' + _class )
+        else if ( baseClass.slice( baseClassLength - classLength - 1, baseClassLength ) === ` ${_class}` )
         {
             baseClass = baseClass.slice( 0, baseClassLength - classLength - 1 );
         }
-        else if ( baseClass.indexOf( ' ' + _class + ' ' ) !== -1 )
+        else if ( baseClass.indexOf( ` ${_class} ` ) !== -1 )
         {
-            baseClass = baseClass.replace( ' ' + _class + ' ', ' ' );
+            baseClass = baseClass.replace( ` ${_class} `, ` ` );
         }
 
         el.className = baseClass.trim();
@@ -286,7 +284,7 @@ const utils = {
      *
      *@return _Void_
      */
-    scrollTo : function( element )
+    scrollTo( element )
     {
         let parent      = element.parentNode.parentNode;
         let elHeight    = element.offsetHeight;
@@ -312,11 +310,11 @@ const utils = {
      *
      * @return _Void_
      */
-    setPlatform : function()
+    setPlatform()
     {
-        let isOsx       = window.navigator.platform.indexOf( 'Mac' ) === -1 ? false : true;
+        let isOsx       = window.navigator.platform.indexOf( `Mac` ) === -1 ? false : true;
         let isIos       = utils.iosVersion();
-        let multiSelect = isOsx ? 'metaKey' : 'ctrlKey';
+        let multiSelect = isOsx ? `metaKey` : `ctrlKey`;
 
         return { isOsx, isIos, multiSelect };
     },
@@ -332,7 +330,7 @@ const utils = {
      *
      * @return _Void_
      */
-    toggleClass : function( _el, _class )
+    toggleClass( _el, _class )
     {
         let _addClass       = utils.addClass;
         let _removeClass    = utils.removeClass;

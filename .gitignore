@@ -16,3 +16,7 @@ node_modules/
 .tmp
 config.js
 npm-debug.log
+
+dist/**
+demo/demoDist.js
+tests/tests.dist.js

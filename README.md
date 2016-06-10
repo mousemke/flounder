@@ -1,4 +1,4 @@
-Flounder.js 0.7.8
+Flounder.js 0.8.0
 =================
 
 [![Flounder build status](https://travis-ci.org/sociomantic-tsunami/flounder.svg)](https://travis-ci.org)
@@ -112,6 +112,7 @@ If flounder is fed an element that already has a flounder, it will destroy it an
     onComponentWillUnmount  : function(){},
     onFirstTouch            : function( e ){},
     onInit                  : function(){},
+    onInputChange           : function( e ){},
     onOpen                  : function( e, valueArray ){},
     onSelect                : function( e, valueArray ){}
     openOnHover             : false,
@@ -152,6 +153,8 @@ If flounder is fed an element that already has a flounder, it will destroy it an
 + `onFirstTouch` - (function) Triggered the first time flounder is interacted with. An example usage would be calling an api for a list of data to populate a drop down, but waiting to see if the user interacts with it
 
 + `onInit` - (function) Triggered when the selectbox is initiated, but before it's built
+
++ `onInputChange` - (function) Triggered when someone types in a search box.  note: this will do nothing if search is not enabled.
 
 + `onOpen` - (function) Triggered when the selectbox is opened
 
@@ -410,6 +413,32 @@ When you release a new verion, commit it to dev (keeps dev upto date), commit it
 
 Change Log
 ==========
+
+0.8.0
+-----
+
++ general
+    + altered the gitignore to a release branch structure
+    + changed node test versions
+    + changed packages to better accomodate travis builds
+    + moving things to a more es6 sytax
+
++ build
+    + placeholders now have their own class
+
++ default
+    + changed how multipleTags handle defaults
+
++ css
+    + css is now copied to `./dist` from `./src` directory
+
++ events
+    + added onInputChange
+    + changed removeMultipleTags action
+
++ api
+    + console.log is now console.warn
+
 
 0.7.8
 -----
