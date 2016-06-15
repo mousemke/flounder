@@ -221,7 +221,7 @@ const utils = {
      */
     removeAllChildren( target )
     {
-        [ ...target.children ].forEach( function( el )
+        Array.prototype.slice.call( target.children, 0 ).forEach( function( el )
         {
             target.removeChild( el );
         } );

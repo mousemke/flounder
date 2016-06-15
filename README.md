@@ -1,4 +1,4 @@
-Flounder.js 0.8.1
+Flounder.js 0.8.2
 =================
 
 [![Flounder build status](https://travis-ci.org/sociomantic-tsunami/flounder.svg)](https://travis-ci.org)
@@ -413,6 +413,13 @@ When you release a new verion, commit it to dev (keeps dev upto date), commit it
 
 Change Log
 ==========
+
+0.8.2
+-----
+
++ general
+    rolled back the switch from slice to spread
+
 
 0.8.1
 -----
