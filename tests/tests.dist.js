@@ -1067,7 +1067,7 @@ Promise.disableSynchronous = function() {
 },{"./core.js":5}],12:[function(require,module,exports){
 module.exports={
   "name": "flounder",
-  "version": "0.8.1",
+  "version": "0.8.2",
   "author": "Mouse Braun <mouse@knoblau.ch>",
   "description": "a native friendly dropdown menu",
   "repository": {
@@ -1774,8 +1774,6 @@ var _slicedToArray = (function () { function sliceIterator(arr, i) { var _arr = 
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i]; return arr2; } else { return Array.from(arr); } }
-
 var _classes = require('./classes');
 
 var _classes2 = _interopRequireDefault(_classes);
@@ -2146,7 +2144,7 @@ var build = {
                     var data = [],
                         selectOptions = [];
 
-                    [].concat(_toConsumableArray(target.children)).forEach(function (optionEl) {
+                    Array.prototype.slice.call(target.children, 0).forEach(function (optionEl) {
                         selectOptions.push(optionEl);
                         data.push({
                             text: optionEl.innerHTML,
@@ -2202,7 +2200,7 @@ var build = {
      */
     popOutSelectElements: function popOutSelectElements(select) {
         var res = [];
-        var children = this.originalChildren = [].concat(_toConsumableArray(select.children));
+        var children = this.originalChildren = Array.prototype.slice.call(select.children, 0);
 
         children.forEach(function (_el, i) {
             res[i] = _el.cloneNode(true);
@@ -3298,8 +3296,6 @@ var _createClass = (function () { function defineProperties(target, props) { for
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i]; return arr2; } else { return Array.from(arr); } }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
 var _defaults = require('./defaults');
@@ -3350,7 +3346,7 @@ var Flounder = (function () {
         value: function arrayOfFlounders(targets, props) {
             var _this = this;
 
-            return [].concat(_toConsumableArray(targets)).map(function (el, i) {
+            return Array.prototype.slice.call(targets, 0).map(function (el, i) {
                 return new _this.constructor(el, props);
             });
         }
@@ -3471,7 +3467,7 @@ var Flounder = (function () {
 
             var removeMultiTag = this.removeMultiTag;
 
-            [].concat(_toConsumableArray(multiTagWrapper.children)).forEach(function (el) {
+            Array.prototype.slice.call(multiTagWrapper.children, 0).forEach(function (el) {
                 el.firstChild.removeEventListener('click', removeMultiTag);
             });
 
@@ -3497,7 +3493,7 @@ var Flounder = (function () {
                     }
                 });
 
-                [].concat(_toConsumableArray(multiTagWrapper.children)).forEach(function (el) {
+                Array.prototype.slice.call(multiTagWrapper.children, 0).forEach(function (el) {
                     el.firstChild.addEventListener('click', removeMultiTag);
                 });
             } else {
@@ -3813,7 +3809,7 @@ var Flounder = (function () {
             var offset = 0;
 
             if (search) {
-                [].concat(_toConsumableArray(refs.multiTagWrapper.children)).forEach(function (e, i) {
+                Array.prototype.slice.call(refs.multiTagWrapper.children, 0).forEach(function (e, i) {
                     offset += _utils2['default'].getElWidth(e, _this5.setTextMultiTagIndent, _this5);
                 });
 
@@ -4181,8 +4177,6 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i]; return arr2; } else { return Array.from(arr); } }
-
 var _classes = require('./classes');
 
 var _classes2 = _interopRequireDefault(_classes);
@@ -4381,7 +4375,7 @@ var utils = {
      * @return _Void_
      */
     removeAllChildren: function removeAllChildren(target) {
-        [].concat(_toConsumableArray(target.children)).forEach(function (el) {
+        Array.prototype.slice.call(target.children, 0).forEach(function (el) {
             target.removeChild(el);
         });
     },
@@ -4490,7 +4484,7 @@ module.exports = exports['default'];
 },{"./classes":15,"microbejs/src/modules/http":3}],21:[function(require,module,exports){
 'use strict';
 
-module.exports = '0.8.1';
+module.exports = '0.8.2';
 
 },{}],22:[function(require,module,exports){
 
