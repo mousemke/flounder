@@ -1,4 +1,4 @@
-Flounder.js 0.8.1
+Flounder.js 0.8.2
 =================
 
 [![Flounder build status](https://travis-ci.org/sociomantic-tsunami/flounder.svg)](https://travis-ci.org)

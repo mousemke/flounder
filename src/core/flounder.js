@@ -8,6 +8,7 @@ import classes              from './classes';
 import Search               from './search';
 import version              from './version';
 
+
 class Flounder
 {
     /**
@@ -23,7 +24,7 @@ class Flounder
      */
     arrayOfFlounders( targets, props )
     {
-        return [ ...targets ].map( ( el, i ) => new this.constructor( el, props ) );
+        return Array.prototype.slice.call( targets, 0 ).map( ( el, i ) => new this.constructor( el, props ) );
     }
 
 
@@ -145,7 +146,7 @@ class Flounder
 
         let removeMultiTag = this.removeMultiTag;
 
-        [ ...multiTagWrapper.children ].forEach( function( el )
+        Array.prototype.slice.call( multiTagWrapper.children, 0 ).forEach( function( el )
         {
             el.firstChild.removeEventListener( `click`, removeMultiTag );
         } );
@@ -177,7 +178,7 @@ class Flounder
                 }
             } );
 
-            [ ...multiTagWrapper.children ].forEach( function( el )
+            Array.prototype.slice.call( multiTagWrapper.children, 0 ).forEach( function( el )
             {
                 el.firstChild.addEventListener( `click`, removeMultiTag );
             } );
@@ -530,7 +531,7 @@ class Flounder
 
         if ( search )
         {
-            [ ...refs.multiTagWrapper.children ].forEach( ( e, i ) =>
+            Array.prototype.slice.call( refs.multiTagWrapper.children, 0 ).forEach( ( e, i ) =>
             {
                 offset += utils.getElWidth( e, this.setTextMultiTagIndent, this );
             } );

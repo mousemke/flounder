@@ -422,7 +422,7 @@ const build = {
                 let data            = [],
                     selectOptions   = [];
 
-                [ ...target.children ].forEach( function( optionEl )
+                Array.prototype.slice.call( target.children, 0 ).forEach( function( optionEl )
                 {
                     selectOptions.push( optionEl );
                     data.push( {
@@ -487,7 +487,7 @@ const build = {
     popOutSelectElements( select )
     {
         let res = [];
-        let children = this.originalChildren = [ ...select.children ];
+        let children = this.originalChildren = Array.prototype.slice.call( select.children, 0 );
 
         children.forEach( function( _el, i )
         {
