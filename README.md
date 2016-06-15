@@ -414,6 +414,13 @@ When you release a new verion, commit it to dev (keeps dev upto date), commit it
 Change Log
 ==========
 
+0.8.2
+-----
+
++ general
+    rolled back the switch from slice to spread
+
+
 0.8.1
 -----
 
