@@ -150,13 +150,15 @@ export class Sole
                 let res     = { i : i, d : d };
                 let search  = d.search  = d.search || {};
                 let weights = defaults.weights;
-
-                search.text             = d.text;
-                search.textFlat         = d.text.toLowerCase();
+                let dText   = `${d.text}`;
+                let dValue  = `${d.value}`;
+                
+                search.text             = dText;
+                search.textFlat         = dText.toLowerCase();
                 search.textSplit        = search.textFlat.split( ` ` );
 
-                search.value            = d.value;
-                search.valueFlat        = d.value.toLowerCase();
+                search.value            = dValue;
+                search.valueFlat        = dValue.toLowerCase();
                 search.valueSplit       = search.valueFlat.split( ` ` );
 
                 search.description      = d.description ? d.description.toLowerCase() : null;

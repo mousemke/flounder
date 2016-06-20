@@ -414,6 +414,13 @@ When you release a new verion, commit it to dev (keeps dev upto date), commit it
 Change Log
 ==========
 
+0.8.3
+-----
+
++ search
+    + fixed a bug where search would break when only numbers were entered
+
+
 0.8.2
 -----
 
