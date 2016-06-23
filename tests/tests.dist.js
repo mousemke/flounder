@@ -1067,7 +1067,7 @@ Promise.disableSynchronous = function() {
 },{"./core.js":5}],12:[function(require,module,exports){
 module.exports={
   "name": "flounder",
-  "version": "0.8.2",
+  "version": "0.8.3",
   "author": "Mouse Braun <mouse@knoblau.ch>",
   "description": "a native friendly dropdown menu",
   "repository": {
@@ -1272,6 +1272,15 @@ var api = {
     deselectAll: function deselectAll() {
         this.removeSelectedClass();
         this.removeSelectedValue();
+
+        var multiTagWrapper = this.refs.multiTagWrapper;
+
+        if (multiTagWrapper) {
+            var tags = Array.prototype.slice.call(multiTagWrapper.children);
+            tags.forEach(function (el) {
+                return el.children[0].click();
+            });
+        }
     },
 
     /**
@@ -2657,7 +2666,6 @@ var events = {
      * @return _Void_
      */
     addPlaceholder: function addPlaceholder() {
-        console.log(this);
         var selectedValues = this.getSelectedValues();
         var val = selectedValues[0];
         var selectedItems = this.getSelected();
@@ -4070,13 +4078,15 @@ var Sole = (function () {
                         var res = { i: i, d: d };
                         var search = d.search = d.search || {};
                         var weights = defaults.weights;
+                        var dText = "" + d.text;
+                        var dValue = "" + d.value;
 
-                        search.text = d.text;
-                        search.textFlat = d.text.toLowerCase();
+                        search.text = dText;
+                        search.textFlat = dText.toLowerCase();
                         search.textSplit = search.textFlat.split(" ");
 
-                        search.value = d.value;
-                        search.valueFlat = d.value.toLowerCase();
+                        search.value = dValue;
+                        search.valueFlat = dValue.toLowerCase();
                         search.valueSplit = search.valueFlat.split(" ");
 
                         search.description = d.description ? d.description.toLowerCase() : null;
@@ -4484,7 +4494,7 @@ module.exports = exports['default'];
 },{"./classes":15,"microbejs/src/modules/http":3}],21:[function(require,module,exports){
 'use strict';
 
-module.exports = '0.8.2';
+module.exports = '0.8.3';
 
 },{}],22:[function(require,module,exports){
 

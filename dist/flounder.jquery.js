@@ -1,12 +1,12 @@
 /*!
- * Flounder JavaScript Stylable Selectbox v0.8.2
+ * Flounder JavaScript Stylable Selectbox v0.8.3
  * https://github.com/sociomantic-tsunami/flounder
  *
  * Copyright 2015-2016 Sociomantic Labs and other contributors
  * Released under the MIT license
  * https://github.com/sociomantic-tsunami/flounder/license
  *
- * Date: Wed Jun 15 2016
+ * Date: Thu Jun 23 2016
  * "This, so far, is the best Flounder ever"
  */
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
@@ -1221,6 +1221,15 @@ var api = {
     deselectAll: function deselectAll() {
         this.removeSelectedClass();
         this.removeSelectedValue();
+
+        var multiTagWrapper = this.refs.multiTagWrapper;
+
+        if (multiTagWrapper) {
+            var tags = Array.prototype.slice.call(multiTagWrapper.children);
+            tags.forEach(function (el) {
+                return el.children[0].click();
+            });
+        }
     },
 
     /**
@@ -2606,7 +2615,6 @@ var events = {
      * @return _Void_
      */
     addPlaceholder: function addPlaceholder() {
-        console.log(this);
         var selectedValues = this.getSelectedValues();
         var val = selectedValues[0];
         var selectedItems = this.getSelected();
@@ -4019,13 +4027,15 @@ var Sole = (function () {
                         var res = { i: i, d: d };
                         var search = d.search = d.search || {};
                         var weights = defaults.weights;
+                        var dText = "" + d.text;
+                        var dValue = "" + d.value;
 
-                        search.text = d.text;
-                        search.textFlat = d.text.toLowerCase();
+                        search.text = dText;
+                        search.textFlat = dText.toLowerCase();
                         search.textSplit = search.textFlat.split(" ");
 
-                        search.value = d.value;
-                        search.valueFlat = d.value.toLowerCase();
+                        search.value = dValue;
+                        search.valueFlat = dValue.toLowerCase();
                         search.valueSplit = search.valueFlat.split(" ");
 
                         search.description = d.description ? d.description.toLowerCase() : null;
@@ -4433,7 +4443,7 @@ module.exports = exports['default'];
 },{"./classes":14,"microbejs/src/modules/http":3}],20:[function(require,module,exports){
 'use strict';
 
-module.exports = '0.8.2';
+module.exports = '0.8.3';
 
 },{}],21:[function(require,module,exports){
 'use strict';
