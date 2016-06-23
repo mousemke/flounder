@@ -1,4 +1,4 @@
-Flounder.js 0.8.2
+Flounder.js 0.8.3
 =================
 
 [![Flounder build status](https://travis-ci.org/sociomantic-tsunami/flounder.svg)](https://travis-ci.org)
@@ -419,6 +419,9 @@ Change Log
 
 + search
     + fixed a bug where search would break when only numbers were entered
+
++ api
+    + fixed a bug in deselectAll where tags would remain
 
 
 0.8.2

@@ -151,6 +151,15 @@ const api = {
     {
         this.removeSelectedClass();
         this.removeSelectedValue();
+
+
+        let multiTagWrapper = this.refs.multiTagWrapper;
+
+        if ( multiTagWrapper )
+        {
+            let tags = Array.prototype.slice.call( multiTagWrapper.children );
+            tags.forEach( el => el.children[0].click() );
+        }
     },
 
 
