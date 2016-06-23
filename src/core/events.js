@@ -108,7 +108,6 @@ const events = {
      */
     addPlaceholder()
     {
-        console.log( this )
         let selectedValues  = this.getSelectedValues();
         let val             = selectedValues[0];
         let selectedItems   = this.getSelected();
