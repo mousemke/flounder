@@ -12,23 +12,6 @@ import version              from './version';
 class Flounder
 {
     /**
-     * ## arrayOfFlounders
-     *
-     * called when a jquery object, microbe, or array is fed into flounder
-     * as a target
-     *
-     * @param {DOMElement} target flounder mount point
-     * @param {Object} props passed options
-     *
-     * @return {Array} array of flounders
-     */
-    arrayOfFlounders( targets, props )
-    {
-        return Array.prototype.slice.call( targets, 0 ).map( ( el, i ) => new this.constructor( el, props ) );
-    }
-
-
-    /**
      * ## componentWillUnmount
      *
      * on unmount, removes events
@@ -69,7 +52,7 @@ class Flounder
     {
         if ( !target && !props )
         {
-            return this.constructor;
+            console.warn( 'Flounder - No target element found.' );
         }
         else if ( target )
         {
@@ -77,9 +60,19 @@ class Flounder
             {
                 target = document.querySelectorAll( target );
             }
-            if ( target.length && target.tagName !== `SELECT` )
+            if ( ( target.length || target.length === 0 ) && target.tagName !== `SELECT` )
             {
-                return this.arrayOfFlounders( target, props );
+                if ( target.length > 1 )
+                {
+                    console.warn( 'Flounder - More than one element found. Dropping all but the first.' );
+                }
+                else if ( target.length === 0 )
+                {
+                    console.warn( 'Flounder - No target element found.' );
+                }
+
+                return new this.constructor( target[ 0 ], props );
+
             }
             else if ( ( !target.length && target.length !== 0 ) || target.tagName === `SELECT` )
             {
@@ -127,121 +120,6 @@ class Flounder
                 return this.refs.flounder.flounder = this.originalTarget.flounder = this.target.flounder = this;
             }
         }
-    }
-
-
-    /**
-     * ## displayMultipleTags
-     *
-     * handles the display and management of tags
-     *
-     * @param  {Array} selectedOptions currently selected options
-     * @param  {DOMElement} selected div to display currently selected options
-     *
-     * @return _Void_
-     */
-    displayMultipleTags( selectedOptions, multiTagWrapper )
-    {
-        let span, a;
-
-        let removeMultiTag = this.removeMultiTag;
-
-        Array.prototype.slice.call( multiTagWrapper.children, 0 ).forEach( function( el )
-        {
-            el.firstChild.removeEventListener( `click`, removeMultiTag );
-        } );
-
-        multiTagWrapper.innerHTML = ``;
-
-        if ( selectedOptions.length > 0 )
-        {
-            selectedOptions.forEach( function( option )
-            {
-                if ( option.value !== `` )
-                {
-                    let span        = document.createElement( `span` )
-                    span.className  = classes.MULTIPLE_SELECT_TAG;
-
-                    let a           = document.createElement( `a` )
-                    a.className     = classes.MULTIPLE_TAG_CLOSE;
-                    a.setAttribute( `data-index`, option.index );
-
-                    span.appendChild( a );
-
-                    span.innerHTML += option.innerHTML;
-
-                    multiTagWrapper.appendChild( span );
-                }
-                else
-                {
-                    option.selected = false;
-                }
-            } );
-
-            Array.prototype.slice.call( multiTagWrapper.children, 0 ).forEach( function( el )
-            {
-                el.firstChild.addEventListener( `click`, removeMultiTag );
-            } );
-        }
-        else
-        {
-            this.addPlaceholder();
-        }
-
-        this.setTextMultiTagIndent();
-    }
-
-
-    /**
-     * ## displaySelected
-     *
-     * formats and displays the chosen options
-     *
-     * @param {DOMElement} selected display area for the selected option(s)
-     * @param {Object} refs element references
-     *
-     * @return _Void_
-     */
-    displaySelected( selected, refs )
-    {
-        let value = [];
-        let index = -1;
-
-        let selectedOption  = this.getSelected();
-        let selectedLength  = selectedOption.length;
-        let multipleTags    = this.multipleTags;
-
-        if ( !multipleTags && selectedLength ===  1 )
-        {
-            index               = selectedOption[0].index;
-            selected.innerHTML  = refs.data[ index ].innerHTML;
-            value               = selectedOption[0].value;
-        }
-        else if ( !multipleTags && selectedLength === 0 )
-        {
-            let defaultValue    = this._default;
-            index               = defaultValue.index || -1;
-            selected.innerHTML  = defaultValue.text;
-            value               = defaultValue.value;
-        }
-        else
-        {
-            if ( multipleTags )
-            {
-                selected.innerHTML  = ``;
-                this.displayMultipleTags( selectedOption, refs.multiTagWrapper );
-            }
-            else
-            {
-                selected.innerHTML  = this.multipleMessage;
-            }
-
-            index = selectedOption.map( option => option.index );
-            value = selectedOption.map( option => option.value );
-        }
-
-        selected.setAttribute( `data-value`, value );
-        selected.setAttribute( `data-index`, index );
     }
 
 
@@ -407,137 +285,6 @@ class Flounder
         }
 
         this.addListeners( refs, props );
-    }
-
-
-    /**
-     * ## removeMultiTag
-     *
-     * removes a multi selection tag on click; fixes all references to value and state
-     *
-     * @param  {Object} e event object
-     *
-     * @return _Void_
-     */
-    removeMultiTag( e )
-    {
-        e.preventDefault();
-        e.stopPropagation();
-
-        let value;
-        let index;
-        let refs            = this.refs;
-        let select          = refs.select;
-        let selected        = refs.selected;
-        let target          = e.target;
-        let defaultValue    = this._default;
-        let data            = this.refs.data;
-        let targetIndex     = target.getAttribute( `data-index` );
-        select[ targetIndex ].selected = false;
-
-        let selectedOptions = this.getSelected();
-
-        utils.removeClass( data[ targetIndex ], classes.SELECTED_HIDDEN );
-        utils.removeClass( data[ targetIndex ], classes.SELECTED );
-
-        target.removeEventListener( `click`, this.removeMultiTag );
-
-        let span = target.parentNode;
-        span.parentNode.removeChild( span );
-
-        if ( selectedOptions.length === 0 )
-        {
-            this.addPlaceholder();
-            index               = -1;
-            value               = ``;
-        }
-        else
-        {
-            value = selectedOptions.map( function( option )
-            {
-                return option.value;
-            } );
-
-            index = selectedOptions.map( function( option )
-            {
-                return option.index;
-            } );
-        }
-
-        this.setTextMultiTagIndent();
-
-        selected.setAttribute( `data-value`, value );
-        selected.setAttribute( `data-index`, index );
-
-        try
-        {
-            this.onSelect( e, this.getSelectedValues() );
-        }
-        catch( e )
-        {
-            console.warn( `something may be wrong in "onSelect"`, e );
-        }
-    }
-
-
-    /**
-     * ## removeSelectedClass
-     *
-     * removes the [[this.selectedClass]] from all data
-     *
-     * @return _Void_
-     */
-    removeSelectedClass( data )
-    {
-        data = data || this.refs.data;
-
-        data.forEach( ( dataObj, i ) =>
-        {
-            utils.removeClass( dataObj, this.selectedClass );
-        } );
-    }
-
-
-    /**
-     * ## removeSelectedValue
-     *
-     * sets the selected property to false for all data
-     *
-     * @return _Void_
-     */
-    removeSelectedValue( data )
-    {
-        data = data || this.refs.data;
-
-        data.forEach( ( d, i ) =>
-        {
-            this.refs.select[ i ].selected = false;
-        } );
-    }
-
-
-    /**
-     * ## setTextMultiTagIndent
-     *
-     * sets the text-indent on the search field to go around selected tags
-     *
-     * @return _Void_
-     */
-    setTextMultiTagIndent()
-    {
-        let refs    = this.refs;
-        let search  = refs.search;
-        let offset  = 0;
-
-        if ( search )
-        {
-            Array.prototype.slice.call( refs.multiTagWrapper.children, 0 ).forEach( ( e, i ) =>
-            {
-                offset += utils.getElWidth( e, this.setTextMultiTagIndent, this );
-            } );
-
-            search.style.textIndent = `${offset}px`;
-        }
     }
 
 

@@ -389,6 +389,35 @@ const build = {
 
 
     /**
+     * ## buildMultiTag
+     *
+     * builds and returns a single multiTag
+     *
+     * @param {String} optionText text to add to the tag and role
+     * 
+     * @return _DOMElement_ option tag
+     */
+    buildMultiTag( option )
+    {
+        let optionText  = option.innerHTML;
+        let span        = document.createElement( `span` )
+        span.className  = classes.MULTIPLE_SELECT_TAG;
+        span.setAttribute( `role`, `deselect ${optionText}` );
+        span.setAttribute( `tabindex`, 0 );
+
+        let a           = document.createElement( `a` )
+        a.className     = classes.MULTIPLE_TAG_CLOSE;
+        a.setAttribute( `data-index`, option.index );
+
+        span.appendChild( a );
+
+        span.innerHTML += optionText;
+
+        return span;
+    },
+
+
+    /**
      * ## initSelectBox
      *
      * builds the initial select box.  if the given wrapper element is a select

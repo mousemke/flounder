@@ -1,4 +1,4 @@
-Flounder.js 0.8.3
+Flounder.js 1.0.0
 =================
 
 [![Flounder build status](https://travis-ci.org/sociomantic-tsunami/flounder.svg)](https://travis-ci.org)
@@ -46,18 +46,12 @@ document.querySelector( '#vanilla--select' ).flounder.destroy()
 
 ###Target options
 
-Flounder's target is quite flexible.
+Flounder's target is quite flexible, however since it will only build on the first element it finds.
 
 you can give it an element:
 
 ```js
 new Flounder( document.getElementsByTagName( 'input--el' )[0], options );
-```
-
-an array:
-
-```js
-new Flounder( [ el1, el2, el3 ], options );
 ```
 
 an HTML collection:
@@ -414,6 +408,23 @@ When you release a new verion, commit it to dev (keeps dev upto date), commit it
 Change Log
 ==========
 
+1.0.0
+-----
+
++ Flounder
+    + Flounder now only handles one element
+    + Flounder _always_ returns a instance of Flounder
+    + Flounder will warn if it drops elements
+    + some methods moved to events.js because that's obviously where they live
+
++ events
+    + multiTags now support aria
+    + multiTags now support keyboard navigation
+
++ build
+    + multiTag construction added to build
+
+
 0.8.3
 -----
 
@@ -462,93 +473,6 @@ Change Log
 + api
     + console.log is now console.warn
 
-
-0.7.8
------
-
-+ api
-    + destroy is now much safer
-
-+ jenkins
-    + node 0.12 is no longer tested
-
-
-0.7.7
------
-
-+ css
-    + added 3px padding to selected
-
-+ api
-    + destroy now spares surrounding elements
-
-
-0.7.6
------
-
-+ css
-    + inner arrow pointer-events set to none
-    + adjusted padding-right under arrow
-
-
-0.7.4
------
-
-+ build
-    + disabled select options are now correctly detected
-    + moved the build order of the search box and list wrapper for css reasons
-
-+ events
-    + click targets are now correctly detected and menu is closed
-    + fixed esc / search behaviors
-    + fixed click / search behavior
-
-+ css
-    + fixed a hover / z-index issue
-    + added fuller basic focus, hover, and active indicators
-
-
-0.7.2
------
-
-+ api
-    + rebuild bug fixed
-
-
-0.7.1
------
-
-+ css
-    + arrow changed from svg to css
-
-+ build
-    + fixed a complex data objects bug
-
-
-0.7.0
------
-
-+ build
-    + complex data objects are now built correctly
-    + added the ability to disable the arrow element
-
-+ wrappers
-    + react moved to it's own repo
-
-+ css
-    + .flounder__arrow - background colors
-    + .flounder__arrow - :hover
-    + .flounder__arrow - :active
-
-+ events
-    + hover is now javascript based for future expandability
-    + openOnHover now available
-
-+ defaults
-    + fixed a bug where multiple defaults were being applied
-
-+ api
-    fixed a bug in setDefaultValue concerning index 0
 
 
 
