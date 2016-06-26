@@ -3,7 +3,7 @@ Flounder.js 1.0.0
 
 [![Flounder build status](https://travis-ci.org/sociomantic-tsunami/flounder.svg)](https://travis-ci.org)
 
-(for modern browsers and ie9+)
+(for modern browsers and ie10+)
 
 Flounder is a styled select box replacement aimed at being easily configurable while conforming to native functionality and accessibility standards.
 
