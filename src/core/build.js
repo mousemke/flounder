@@ -329,11 +329,6 @@ const build = {
         let select              = this.initSelectBox( wrapper );
         select.tabIndex         = -1;
 
-        if ( this.multiple === true )
-        {
-            select.setAttribute( `multiple`, `` );
-        }
-
         let data                = this.data;
         let defaultValue        = this._default = setDefaultOption( this, this.props, data );
 
@@ -342,12 +337,16 @@ const build = {
 
         let multiTagWrapper     = this.multipleTags ? constructElement( { className : classes.MULTI_TAG_LIST } ) : null;
 
-        let search              = this.addSearch( flounder );
-
         let optionsListWrapper  = constructElement( { className : `${classes.OPTIONS_WRAPPER}  ${classes.HIDDEN}` } );
         let optionsList         = constructElement( { className : classes.LIST } );
         optionsList.setAttribute( `role`, `listbox` );
         optionsListWrapper.appendChild( optionsList );
+
+        if ( this.multiple === true )
+        {
+            select.setAttribute( `multiple`, `` );
+            optionsList.setAttribute( `aria-multiselectable`, `true` );
+        }
 
         let arrow               = this.buildArrow( props, constructElement );
 
@@ -358,6 +357,8 @@ const build = {
                 flounder.appendChild( el );
             }
         } );
+
+        let search              = this.addSearch( flounder );
 
         let selectOptions;
 
@@ -402,7 +403,7 @@ const build = {
         let optionText  = option.innerHTML;
         let span        = document.createElement( `span` )
         span.className  = classes.MULTIPLE_SELECT_TAG;
-        span.setAttribute( `role`, `deselect ${optionText}` );
+        span.setAttribute( `aria-label`, `Deselect ${optionText}` );
         span.setAttribute( `tabindex`, 0 );
 
         let a           = document.createElement( `a` )

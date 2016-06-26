@@ -423,6 +423,7 @@ Change Log
 
 + build
     + multiTag construction added to build
+    + changed build order of DOM elements to fix muhltiTag tab order
 
 
 0.8.3
