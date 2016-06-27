@@ -195,15 +195,6 @@ class Flounder
             }
             else if ( keyCode === keycodes.ESCAPE || keyCode === keycodes.ENTER )
             {
-
-                if ( keyCode === keycodes.ENTER )
-                {
-                    let visibleOptions = refs.data.map( el => !utils.hasClass( el, classes.HIDDEN ) )
-                                                    .filter( r => r )
-                                                    .length;
-                    console.log( visibleOptions );
-                }   
-
                 this.fuzzySearchReset();
                 this.toggleList( e, `close` );
                 this.addPlaceholder();

@@ -229,6 +229,7 @@ const events = {
     checkClickTarget( e, target )
     {
         target = target || e.target;
+
         if ( target === document )
         {
             return false;
@@ -244,10 +245,6 @@ const events = {
         {
             return this.checkClickTarget( e, target );
         }
-        else
-        {
-            return false;
-        }
     },
 
 
@@ -262,7 +259,8 @@ const events = {
     {
         let keyCode = e.keyCode;
 
-        if ( keyCode === 13 || ( keyCode === 32 && e.target.tagName !== `INPUT` ) )
+        if ( keyCode === keycodes.ENTER || 
+            ( keyCode === keycodes.SPACE && e.target.tagName !== `INPUT` ) )
         {
             e.preventDefault();
             this.toggleList( e );
