@@ -21,6 +21,8 @@ Usage
 
 Flounder can be used in vanilla js, [requirejs](http://requirejs.org/), [jquery](http://jquery.com/), and [microbe](https://github.com/sociomantic-tsunami/microbe).
 
+Flounder can also be used in react, however there is a [seperate repo](https://github.com/sociomantic-tsunami/flounder-react) for that
+
 ```js
 // vanilla
 new Flounder( target, configOptions );
@@ -47,6 +49,8 @@ document.querySelector( '#vanilla--select' ).flounder.destroy()
 ###Target options
 
 Flounder's target is quite flexible, however since it will only build on the first element it finds.
+
+* if you would like to build multiple flounders from an array or selector, use `Flounder.find( <selector or array-like object>, [options] )
 
 you can give it an element:
 
@@ -401,7 +405,7 @@ See more examples on the [demo page](./demo/index.html)
 Releasing
 --------
 
-When you release a new verion, commit it to dev (keeps dev upto date), commit it to master, then commit it to release. It must be released from the `release` branch.  It is the *only* branch that commits the dist files
+When you release a new verion, commit it to dev (keeps dev up to date), commit it to master, then commit it to release. It must be released from the `release` branch.  It is the *only* branch that commits the dist files
 
 
 
