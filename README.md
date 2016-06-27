@@ -50,39 +50,39 @@ document.querySelector( '#vanilla--select' ).flounder.destroy()
 
 Flounder's target is quite flexible, however since it will only build on the first element it finds.
 
-* if you would like to build multiple flounders from an array or selector, use `Flounder.find( <selector or array-like object>, [options] )
+* if you would like to build multiple flounders from an array or selector, use `Flounder.find( <selector or array-like object>, [configOptions] )
 
 you can give it an element:
 
 ```js
-new Flounder( document.getElementsByTagName( 'input--el' )[0], options );
+new Flounder( document.getElementsByTagName( 'input--el' )[0], configOptions );
 ```
 
 an HTML collection:
 
 ```js
-new Flounder( document.getElementsByTagName( 'input' ), options );
+new Flounder( document.getElementsByTagName( 'input' ), configOptions );
 ```
 
 a jQuery object:
 
 ```js
-new Flounder( $( 'input' ), options );
+new Flounder( $( 'input' ), configOptions );
 ```
 
 a microbe:
 
 ```js
-new Flounder( µ( 'input' ), options );
+new Flounder( µ( 'input' ), configOptions );
 ```
 
 or, just a selector string:
 
 ```js
-new Flounder( 'input', options );
+new Flounder( 'input', configOptions );
 ```
 
-If flounder is fed an element that already has a flounder, it will destroy it and re initialize it with the new options.
+If flounder is fed an element that already has a flounder, it will destroy it and re initialize it with the new config options.
 
 
 ###Available config options
@@ -417,10 +417,10 @@ Change Log
 
 + Flounder
     + Flounder now only handles one element
-    + Flounder _always_ returns a instance of Flounder
+    + new Flounder _always_ returns a instance of Flounder
     + Flounder will warn if it drops elements
     + some methods moved to events.js because that's obviously where they live
-    + Flounder now gets Flounder.find() to apply build multiples.  This accepts arrays, elements, and selector strings
+    + Flounder now gets Flounder.find() to apply build multiples.  This accepts anything array-like, elements, and selector strings
 
 + events
     + multiTags now support aria
@@ -429,7 +429,7 @@ Change Log
 
 + build
     + multiTag construction added to build
-    + changed build order of DOM elements to fix muhltiTag tab order
+    + changed build order of DOM elements to fix multiTag tab order
 
 
 0.8.3

@@ -292,10 +292,18 @@ const events = {
      */
     checkMultiTagKeydown( e )
     {
-        let keyCode = e.keyCode;
+        let keyCode             = e.keyCode;
+        let refs                = this.refs;
+        let clearPlaceholder    = this.clearPlaceholder;
 
-        if ( keyCode === keycodes.BACKSPACE || keyCode === keycodes.SPACE || 
-                keyCode === keycodes.ENTER )
+        function focusSearch()
+        {
+            refs.search.focus();
+            clearPlaceholder();
+        }
+
+        if ( keyCode === keycodes.LEFT || keyCode === keycodes.RIGHT || 
+            keyCode === keycodes.BACKSPACE )
         {
             e.preventDefault();
             e.stopPropagation();
@@ -306,18 +314,43 @@ const events = {
             let siblings    = children.length - 1;
             let index       = children.indexOf( target );
 
-            target.firstChild.click();
+            if ( keyCode === keycodes.BACKSPACE )
+            {
+                target.firstChild.click();
 
-            if ( siblings > 0 )
-            {
-                children        = nativeSlice.call( parent.children, 0 );
-                children[ index === 0 ? 0 : index - 1 ].focus();
+                if ( siblings > 0 )
+                {
+                    children = nativeSlice.call( parent.children, 0 );
+                    children[ index === 0 ? 0 : index - 1 ].focus();
+                }
+                else
+                {
+                    focusSearch();
+                }
             }
-            else
+            else if ( keyCode === keycodes.LEFT || keyCode === keycodes.RIGHT )
             {
-                this.refs.search.focus();
-                this.clearPlaceholder();
+                let adjustment  = keyCode - 38;
+                let newIndex    = index + adjustment;
+                let length      = children.length - 1;
+
+                if ( newIndex < 0 )
+                {
+                    newIndex = 0;
+                }
+                else if ( newIndex > length )
+                {
+                    focusSearch();
+                }
+                else
+                {
+                    children[ newIndex ].focus();
+                }
             }
+        }
+        else if ( e.key.length < 2 )
+        {
+            focusSearch();
         }
     },
 
@@ -775,12 +808,14 @@ const events = {
                 return false;
             }
 
-            if ( keyCode === 13 || keyCode === 27 || keyCode === 32 ) // space enter escape
+            if ( keyCode === keycodes.ENTER || keyCode === keycodes.ESCAPE || 
+                    keyCode === keycodes.SPACE )
             {
                 this.toggleList( e );
                 return false;
             }
-            else if ( !window.sidebar && ( keyCode === 38 || keyCode === 40 ) ) // up and down
+            else if ( !window.sidebar && ( keyCode === keycodes.UP || 
+                            keyCode === keycodes.DOWN ) )
             {
                 e.preventDefault();
                 let search = refs.search;

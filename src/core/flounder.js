@@ -135,6 +135,8 @@ class Flounder
      */
     fuzzySearch( e )
     {
+        this.fuzzySearch.__previousValue = this.fuzzySearch.__previousValue || '';
+
         try
         {
             this.onInputChange( e );
@@ -147,20 +149,27 @@ class Flounder
         if ( !this.toggleList.justOpened )
         {
             e.preventDefault();
-            let keyCode = e.keyCode;
 
-            let val = e.target.value.trim();
+            let keyCode = e.keyCode;
+            let val     = e.target.value.trim();
 
             if ( keyCode !== keycodes.UP && keyCode !== keycodes.DOWN &&
                     keyCode !== keycodes.ENTER && keyCode !== keycodes.ESCAPE )
             {
-                if ( keyCode === keycodes.BACKSPACE && val === '' )
+                if ( keyCode === keycodes.BACKSPACE && this.fuzzySearch.__previousValue === '' )
                 {
-                    console.log( 'placeholder for select last tag' );
+                    let lastTag = this.refs.multiTagWrapper.lastChild;
+                    
+                    if ( lastTag )
+                    {
+                        lastTag.focus();
+                    }
                 }
                 else
                 {
                     let val = e.target.value.trim();
+
+                    this.fuzzySearch.__previousValue = val;
 
                     let matches = this.search.isThereAnythingRelatedTo( val );
 
@@ -184,8 +193,17 @@ class Flounder
                     }
                 }
             }
-            else if ( keyCode === keycodes.ESCAPE )
+            else if ( keyCode === keycodes.ESCAPE || keyCode === keycodes.ENTER )
             {
+
+                if ( keyCode === keycodes.ENTER )
+                {
+                    let visibleOptions = refs.data.map( el => !utils.hasClass( el, classes.HIDDEN ) )
+                                                    .filter( r => r )
+                                                    .length;
+                    console.log( visibleOptions );
+                }   
+
                 this.fuzzySearchReset();
                 this.toggleList( e, `close` );
                 this.addPlaceholder();
