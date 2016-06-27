@@ -416,10 +416,12 @@ Change Log
     + Flounder _always_ returns a instance of Flounder
     + Flounder will warn if it drops elements
     + some methods moved to events.js because that's obviously where they live
+    + Flounder now gets Flounder.find() to apply build multiples.  This accepts arrays, elements, and selector strings
 
 + events
     + multiTags now support aria
     + multiTags now support keyboard navigation
+    + keyboard navigation flow / tag selection optimized
 
 + build
     + multiTag construction added to build

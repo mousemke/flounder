@@ -13,16 +13,13 @@ let tests = function( Flounder )
     QUnit.test( 'Flounder', function( assert )
     {
         assert.ok( Flounder, 'Flounder Exists' );
-        let flounder = new Flounder;
 
-        assert.deepEqual( Flounder, flounder, 'empty returns a new constructor' );
+        // let flounders = Flounder.find( [ document.body ] );
+        // assert.ok( Array.isArray( flounders ), 'multiple targets returns an array' );
+        // assert.ok( flounders[0] instanceof Flounder, 'of flounders' );
+        // flounders[0].destroy();
 
-        let flounders = new Flounder( [ document.body ] );
-        assert.ok( Array.isArray( flounders ), 'multiple targets returns an array' );
-        assert.ok( flounders[0] instanceof Flounder, 'of flounders' );
-        flounders[0].destroy();
-
-        flounder = new Flounder( document.body );
+        let flounder = new Flounder( document.body );
         assert.ok( flounder instanceof Flounder, 'a single target makes a flounder' );
         flounder.destroy();
 
@@ -41,6 +38,26 @@ let tests = function( Flounder )
 
         assert.ok( ( !ref && !oTarget && !target ), 'and removes them all' );
     });
+
+
+    /*
+     * ## find tests
+     *
+     * @test exists
+     * @test multiple targets returns an array
+     * @test of flounders
+     */
+    QUnit.test( 'find', function( assert )
+    {
+        assert.ok( Flounder.find, 'exists' );
+
+        let flounders   = Flounder.find( [ document.body ], {} );
+        assert.ok( Array.isArray( flounders ), 'multiple targets returns an array' );
+        assert.ok( flounders[0] instanceof Flounder, 'of flounders' );
+
+        flounders.forEach( function( el ){ el.destroy() } );
+    } );
+
 };
 
 export default tests;

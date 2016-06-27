@@ -2,6 +2,7 @@
 import classes          from './classes';
 import search           from './search';
 import utils            from './utils';
+import keycodes         from './keycodes';
 
 const nativeSlice = Array.prototype.slice;
 
@@ -280,6 +281,48 @@ const events = {
 
 
     /**
+     * ## checkMultiTagKeydown
+     *
+     * when a tag is selected, this decided how to handle it by either 
+     * passing the event on, or handling tag removal
+     *
+     * @param {Object} e event object
+     *
+     * @return _Void_
+     */
+    checkMultiTagKeydown( e )
+    {
+        let keyCode = e.keyCode;
+
+        if ( keyCode === keycodes.BACKSPACE || keyCode === keycodes.SPACE || 
+                keyCode === keycodes.ENTER )
+        {
+            e.preventDefault();
+            e.stopPropagation();
+
+            let target      = e.target;
+            let parent      = target.parentNode;
+            let children    = nativeSlice.call( parent.children, 0 );
+            let siblings    = children.length - 1;
+            let index       = children.indexOf( target );
+
+            target.firstChild.click();
+
+            if ( siblings > 0 )
+            {
+                children        = nativeSlice.call( parent.children, 0 );
+                children[ index === 0 ? 0 : index - 1 ].focus();
+            }
+            else
+            {
+                this.refs.search.focus();
+                this.clearPlaceholder();
+            }
+        }
+    },
+
+
+    /**
      * ## checkPlaceholder
      *
      * clears or re-adds the placeholder
@@ -329,11 +372,15 @@ const events = {
     {
         let self = this;
 
-        let removeMultiTag = this.removeMultiTag;
+        let removeMultiTag          = this.removeMultiTag;
+        let checkMultiTagKeydown    = this.checkMultiTagKeydown;
 
         nativeSlice.call( multiTagWrapper.children, 0 ).forEach( function( el )
         {
-            el.firstChild.removeEventListener( `click`, removeMultiTag );
+            let firstChild = el.firstChild;
+
+            firstChild.removeEventListener( `click`, removeMultiTag );
+            el.removeEventListener( `keydown`, checkMultiTagKeydown );
         } );
 
         multiTagWrapper.innerHTML = ``;
@@ -356,7 +403,10 @@ const events = {
 
             nativeSlice.call( multiTagWrapper.children, 0 ).forEach( function( el )
             {
-                el.firstChild.addEventListener( `click`, removeMultiTag );
+                let firstChild = el.firstChild;
+
+                firstChild.addEventListener( `click`, removeMultiTag );
+                el.addEventListener( `keydown`, checkMultiTagKeydown );
             } );
         }
         else

@@ -7,6 +7,7 @@ import events               from './events';
 import classes              from './classes';
 import Search               from './search';
 import version              from './version';
+import keycodes             from './keycodes';
 
 
 class Flounder
@@ -148,33 +149,42 @@ class Flounder
             e.preventDefault();
             let keyCode = e.keyCode;
 
-            if ( keyCode !== 38 && keyCode !== 40 &&
-                    keyCode !== 13 && keyCode !== 27 )
+            let val = e.target.value.trim();
+
+            if ( keyCode !== keycodes.UP && keyCode !== keycodes.DOWN &&
+                    keyCode !== keycodes.ENTER && keyCode !== keycodes.ESCAPE )
             {
-                let val = e.target.value.trim();
-
-                let matches = this.search.isThereAnythingRelatedTo( val );
-
-                if ( matches )
+                if ( keyCode === keycodes.BACKSPACE && val === '' )
                 {
-                    let data    = this.refs.data;
-
-                    data.forEach( ( el, i ) =>
-                    {
-                        utils.addClass( el, classes.SEARCH_HIDDEN );
-                    } );
-
-                    matches.forEach( e =>
-                    {
-                        utils.removeClass( data[ e.i ], classes.SEARCH_HIDDEN );
-                    } );
+                    console.log( 'placeholder for select last tag' );
                 }
                 else
                 {
-                    this.fuzzySearchReset();
+                    let val = e.target.value.trim();
+
+                    let matches = this.search.isThereAnythingRelatedTo( val );
+
+                    if ( matches )
+                    {
+                        let data    = this.refs.data;
+
+                        data.forEach( ( el, i ) =>
+                        {
+                            utils.addClass( el, classes.SEARCH_HIDDEN );
+                        } );
+
+                        matches.forEach( e =>
+                        {
+                            utils.removeClass( data[ e.i ], classes.SEARCH_HIDDEN );
+                        } );
+                    }
+                    else
+                    {
+                        this.fuzzySearchReset();
+                    }
                 }
             }
-            else if ( keyCode === 27 )
+            else if ( keyCode === keycodes.ESCAPE )
             {
                 this.fuzzySearchReset();
                 this.toggleList( e, `close` );
@@ -326,6 +336,32 @@ class Flounder
         return res;
     }
 }
+
+
+/**
+ * ## arrayOfFlounders
+ *
+ * called when a jquery object, microbe, or array is fed into flounder
+ * as a target
+ *
+ * @param {DOMElement} target flounder mount point
+ * @param {Object} props passed options
+ *
+ * @return {Array} array of flounders
+ */
+Flounder.find = function( targets, props )
+{
+    if ( typeof targets === `string` )
+    {
+        targets = document.querySelectorAll( targets );
+    }
+    else if ( targets.nodeType === 1 )
+    {
+        targets = [ targets ];   
+    }
+
+    return Array.prototype.slice.call( targets, 0 ).map( el => new Flounder( el, props ) );
+};
 
 
 /**

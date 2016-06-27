@@ -65,6 +65,7 @@ const build = {
             `catchBodyClick`,
             `checkClickTarget`,
             `checkFlounderKeypress`,
+            `checkMultiTagKeydown`,
             `clearPlaceholder`,
             `clickSet`,
             `divertTarget`,
