@@ -286,7 +286,7 @@ export class Sole
                 }
                 else
                 {
-                    count       = target[ queryWord ] || 0.000001;
+                    count = target[ queryWord ] || 0.000001;
                 }
 
                 if ( count && count > 0 )

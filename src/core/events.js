@@ -531,13 +531,13 @@ const events = {
 
         if ( !multipleTags && selectedLength ===  1 )
         {
-            let { index, value }    = selectedOption[0];
-            selected.innerHTML      = refs.data[ index ].innerHTML;
+            { index, value }             = selectedOption[0];
+            selected.innerHTML          = refs.data[ index ].innerHTML;
         }
         else if ( !multipleTags && selectedLength === 0 )
         {
             let defaultValue            = this._default;
-            let { index = -1, value }   = defaultValue;
+            { index = -1, value }       = defaultValue;
             selected.innerHTML          = defaultValue.text;
         }
         else
