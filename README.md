@@ -1,6 +1,8 @@
 Flounder.js 0.8.4
 =================
 
+*** Flounder 1.0.0 is being built right now, so there is a feature freeze on earlier versions, but feel free to open issues for 0.X.X and feature issues for 1.0.0 should anything come up ***
+
 [![Flounder build status](https://travis-ci.org/sociomantic-tsunami/flounder.svg)](https://travis-ci.org)
 
 (for modern browsers and ie9+)
