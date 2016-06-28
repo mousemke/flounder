@@ -1,12 +1,12 @@
 /*!
- * Flounder JavaScript Stylable Selectbox v0.8.3
+ * Flounder JavaScript Stylable Selectbox v0.8.4
  * https://github.com/sociomantic-tsunami/flounder
  *
  * Copyright 2015-2016 Sociomantic Labs and other contributors
  * Released under the MIT license
  * https://github.com/sociomantic-tsunami/flounder/license
  *
- * Date: Thu Jun 23 2016
+ * Date: Tue Jun 28 2016
  * "This, so far, is the best Flounder ever"
  */
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
@@ -4443,7 +4443,7 @@ module.exports = exports['default'];
 },{"./classes":14,"microbejs/src/modules/http":3}],20:[function(require,module,exports){
 'use strict';
 
-module.exports = '0.8.3';
+module.exports = '0.8.4';
 
 },{}],21:[function(require,module,exports){
 'use strict';
