@@ -80,6 +80,37 @@ const events = {
 
 
     /**
+     * ## addMultipleTags
+     *
+     * adds a tag for each selected option and attaches the correct events to it
+     */
+    addMultipleTags( selectedOptions, multiTagWrapper )
+    {
+        selectedOptions.forEach( option =>
+        {
+            if ( option.value !== `` )
+            {
+                let tag = this.buildMultiTag( option );
+
+                multiTagWrapper.appendChild( tag );
+            }
+            else
+            {
+                option.selected = false;
+            }
+        } );
+
+        nativeSlice.call( multiTagWrapper.children, 0 ).forEach( el =>
+        {
+            let firstChild = el.firstChild;
+
+            firstChild.addEventListener( `click`, this.removeMultiTag );
+            el.addEventListener( `keydown`, this.checkMultiTagKeydown );
+        } );
+    },
+
+
+    /**
      * ## addOptionsListeners
      *
      * adds listeners to the options
@@ -288,7 +319,7 @@ const events = {
                 refs.search.focus();
             }
         }
-    }
+    },
 
 
     /**
@@ -456,44 +487,19 @@ const events = {
      */
     displayMultipleTags( selectedOptions, multiTagWrapper )
     {
-        let self = this;
-
-        let removeMultiTag          = this.removeMultiTag;
-        let checkMultiTagKeydown    = this.checkMultiTagKeydown;
-
-        nativeSlice.call( multiTagWrapper.children, 0 ).forEach( function( el )
+        nativeSlice.call( multiTagWrapper.children, 0 ).forEach( el =>
         {
             let firstChild = el.firstChild;
 
-            firstChild.removeEventListener( `click`, removeMultiTag );
-            el.removeEventListener( `keydown`, checkMultiTagKeydown );
+            firstChild.removeEventListener( `click`, this.removeMultiTag );
+            el.removeEventListener( `keydown`, this.checkMultiTagKeydown );
         } );
 
         multiTagWrapper.innerHTML = ``;
 
         if ( selectedOptions.length > 0 )
         {
-            selectedOptions.forEach( function( option )
-            {
-                if ( option.value !== `` )
-                {
-                    let tag = self.buildMultiTag( option );
-
-                    multiTagWrapper.appendChild( tag );
-                }
-                else
-                {
-                    option.selected = false;
-                }
-            } );
-
-            nativeSlice.call( multiTagWrapper.children, 0 ).forEach( function( el )
-            {
-                let firstChild = el.firstChild;
-
-                firstChild.addEventListener( `click`, removeMultiTag );
-                el.addEventListener( `keydown`, checkMultiTagKeydown );
-            } );
+            this.addMultipleTags( selectedOptions, multiTagWrapper );
         }
         else
         {
@@ -525,16 +531,14 @@ const events = {
 
         if ( !multipleTags && selectedLength ===  1 )
         {
-            index               = selectedOption[0].index;
-            selected.innerHTML  = refs.data[ index ].innerHTML;
-            value               = selectedOption[0].value;
+            let { index, value }    = selectedOption[0];
+            selected.innerHTML      = refs.data[ index ].innerHTML;
         }
         else if ( !multipleTags && selectedLength === 0 )
         {
-            let defaultValue    = this._default;
-            index               = defaultValue.index || -1;
-            selected.innerHTML  = defaultValue.text;
-            value               = defaultValue.value;
+            let defaultValue            = this._default;
+            let { index = -1, value }   = defaultValue;
+            selected.innerHTML          = defaultValue.text;
         }
         else
         {

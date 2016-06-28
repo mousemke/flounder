@@ -121,6 +121,52 @@ export class Sole
 
 
     /**
+     * ## getResultWeights
+     *
+     * after the data is prepared this is mapped through the data to get weighted results
+     * 
+     * @param  {Object} data object
+     * @param  {Number} i index
+     * 
+     * @return _Object_ res weighted results
+     */
+    getResultWeights = ( d, i ) =>
+    {
+        let score   = 0 ;
+        let res     = { i : i, d : d };
+        let search  = d.search  = d.search || {};
+        let weights = defaults.weights;
+        let dText   = `${d.text}`;
+        let dValue  = `${d.value}`;
+        
+        search.text             = dText;
+        search.textFlat         = dText.toLowerCase();
+        search.textSplit        = search.textFlat.split( ` ` );
+
+        search.value            = dValue;
+        search.valueFlat        = dValue.toLowerCase();
+        search.valueSplit       = search.valueFlat.split( ` ` );
+
+        search.description      = d.description ? d.description.toLowerCase() : null;
+        search.descriptionSplit = d.description ? search.description.split( ` ` ) : null;
+
+        defaults.scoreProperties.forEach( param =>
+        {
+            score += this.scoreThis( search[ param ], weights[ param ] );
+        } );
+
+        defaults.startsWithProperties.forEach( param =>
+        {
+            score += this.startsWith( this.query, search[ param ], weights[ `${param}StartsWith` ] );
+        } );
+
+        res.score = score;
+
+        return res;
+    }
+
+
+    /**
      * ## isThereAnythingRelatedTo
      *
      * Check our search content for related query words,
@@ -141,45 +187,10 @@ export class Sole
         {
             this.query          = query.toLowerCase().split( ` ` );
 
-            let scoreThis       = this.scoreThis;
-            let startsWith      = this.startsWith;
             let data            = this.flounder.data;
                 data            = this.flounder.sortData( data );
 
-            ratedResults    = this.ratedResults = data.map( function( d, i )
-            {
-                let score   = 0 ;
-                let res     = { i : i, d : d };
-                let search  = d.search  = d.search || {};
-                let weights = defaults.weights;
-                let dText   = `${d.text}`;
-                let dValue  = `${d.value}`;
-                
-                search.text             = dText;
-                search.textFlat         = dText.toLowerCase();
-                search.textSplit        = search.textFlat.split( ` ` );
-
-                search.value            = dValue;
-                search.valueFlat        = dValue.toLowerCase();
-                search.valueSplit       = search.valueFlat.split( ` ` );
-
-                search.description      = d.description ? d.description.toLowerCase() : null;
-                search.descriptionSplit = d.description ? search.description.split( ` ` ) : null;
-
-                defaults.scoreProperties.forEach( function( param )
-                {
-                    score += scoreThis( search[ param ], weights[ param ] );
-                } );
-
-                defaults.startsWithProperties.forEach( function( param )
-                {
-                    score += startsWith( query, search[ param ], weights[ `${param}StartsWith` ] );
-                } );
-
-                res.score = score;
-
-                return res;
-            } );
+            ratedResults    = this.ratedResults = data.map( this.getResultWeights );
         }
         else
         {
@@ -202,7 +213,7 @@ export class Sole
      * @param {String} value string to search in
      * @param {Integer} weight amount of points to give an exact match
      *
-     * @return {Integer} points to award
+     * @return _Integer_ points to award
      */
     startsWith( query, value, weight )
     {
