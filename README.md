@@ -421,6 +421,7 @@ Change Log
     + Flounder will warn if it drops elements
     + some methods moved to events.js because that's obviously where they live
     + Flounder now gets Flounder.find() to apply build multiples.  This accepts anything array-like, elements, and selector strings
+    + internal refactoring
 
 + events
     + multiTags now support aria
@@ -430,6 +431,10 @@ Change Log
 + build
     + multiTag construction added to build
     + changed build order of DOM elements to fix multiTag tab order
+    + fixed a selectOption class bug
+
++ search
+    + imporoved imteraction between tags and search box
 
 
 0.8.3

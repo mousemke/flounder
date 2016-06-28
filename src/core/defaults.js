@@ -118,7 +118,6 @@ const defaults = {
                 data.unshift( _default );
             }
 
-
             return _default;
         };
 

@@ -42,9 +42,9 @@ class Flounder
     /**
      * ## constructor
      *
-     * main constuctor
+     * filters and sets up the main init
      *
-     * @param {DOMElement} target flounder mount point
+     * @param {DOMElement, String, Array} target flounder mount point
      * @param {Object} props passed options
      *
      * @return _Object_ new flounder object
@@ -73,7 +73,6 @@ class Flounder
                 }
 
                 return new this.constructor( target[ 0 ], props );
-
             }
             else if ( ( !target.length && target.length !== 0 ) || target.tagName === `SELECT` )
             {
@@ -81,45 +80,43 @@ class Flounder
                 {
                     target.flounder.destroy();
                 }
-
-                this.props = props;
-                this.setTarget( target );
-                this.bindThis();
-                this.initializeOptions();
-
-                if ( this.search )
-                {
-                    this.search = new Search( this );
-                }
-
-                try
-                {
-                    this.onInit();
-                }
-                catch( e )
-                {
-                    console.warn( `something may be wrong in "onInit"`, e );
-                }
-                this.buildDom();
-                let { isOsx, isIos, multiSelect } = utils.setPlatform();
-                this.isOsx          = isOsx;
-                this.isIos          = isIos;
-                this.multiSelect    = multiSelect;
-                this.onRender();
-
-                try
-                {
-                    this.onComponentDidMount();
-                }
-                catch( e )
-                {
-                    console.warn( `something may be wrong in "onComponentDidMount"`, e );
-                }
-
-                this.ready = true;
-
-                return this.refs.flounder.flounder = this.originalTarget.flounder = this.target.flounder = this;
+                return this.init( target, props );
             }
+        }
+    }
+
+
+    /**
+     * ## filterSearchResults
+     *
+     * filters results and adjusts the search hidden class on the dataOptions
+     * 
+     */
+    filterSearchResults( e )
+    {
+        let val = e.target.value.trim();
+
+        this.fuzzySearch.__previousValue = val;
+
+        let matches = this.search.isThereAnythingRelatedTo( val );
+
+        if ( matches )
+        {
+            let data    = this.refs.data;
+
+            data.forEach( ( el, i ) =>
+            {
+                utils.addClass( el, classes.SEARCH_HIDDEN );
+            } );
+
+            matches.forEach( e =>
+            {
+                utils.removeClass( data[ e.i ], classes.SEARCH_HIDDEN );
+            } );
+        }
+        else
+        {
+            this.fuzzySearchReset();
         }
     }
 
@@ -127,7 +124,7 @@ class Flounder
     /**
      * ## fuzzySearch
      *
-     * searches for things
+     * filters events to determine the correct actions, based on events from the search box
      *
      * @param {Object} e event object
      *
@@ -167,30 +164,7 @@ class Flounder
                 }
                 else
                 {
-                    let val = e.target.value.trim();
-
-                    this.fuzzySearch.__previousValue = val;
-
-                    let matches = this.search.isThereAnythingRelatedTo( val );
-
-                    if ( matches )
-                    {
-                        let data    = this.refs.data;
-
-                        data.forEach( ( el, i ) =>
-                        {
-                            utils.addClass( el, classes.SEARCH_HIDDEN );
-                        } );
-
-                        matches.forEach( e =>
-                        {
-                            utils.removeClass( data[ e.i ], classes.SEARCH_HIDDEN );
-                        } );
-                    }
-                    else
-                    {
-                        this.fuzzySearchReset();
-                    }
+                    this.filterSearchResults( e );
                 }
             }
             else if ( keyCode === keycodes.ESCAPE || keyCode === keycodes.ENTER )
@@ -209,6 +183,58 @@ class Flounder
         {
             this.toggleList.justOpened = false;
         }
+    }
+
+
+    /**
+     * ## init
+     *
+     * post setup, this sets initial values and starts the build process
+     *
+     * @param {DOMElement} target flounder mount point
+     * @param {Object} props passed options
+     *
+     * @return _Object_ new flounder object
+     */
+    init( target, props )
+    {
+        this.props = props;
+        this.setTarget( target );
+        this.bindThis();
+        this.initializeOptions();
+
+        if ( this.search )
+        {
+            this.search = new Search( this );
+        }
+
+        try
+        {
+            this.onInit();
+        }
+        catch( e )
+        {
+            console.warn( `something may be wrong in "onInit"`, e );
+        }
+        this.buildDom();
+        let { isOsx, isIos, multiSelect } = utils.setPlatform();
+        this.isOsx          = isOsx;
+        this.isIos          = isIos;
+        this.multiSelect    = multiSelect;
+        this.onRender();
+
+        try
+        {
+            this.onComponentDidMount();
+        }
+        catch( e )
+        {
+            console.warn( `something may be wrong in "onComponentDidMount"`, e );
+        }
+
+        this.ready = true;
+
+        return this.refs.flounder.flounder = this.originalTarget.flounder = this.target.flounder = this;
     }
 
 
@@ -275,10 +301,8 @@ class Flounder
             this.multiple       = true;
             this.selectedClass  += `  ${classes.SELECTED_HIDDEN}`;
 
-            if ( !this.placeholder )
-            {
-                this.placeholder = defaultOptions.placeholder;
-            }
+            this.placeholder    = this.placeholder === '' ? this.placeholder 
+                                                    : defaultOptions.placeholder;
         }
     }
 

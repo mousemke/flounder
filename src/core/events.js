@@ -249,6 +249,49 @@ const events = {
 
 
     /**
+     * ## checkEnterOnSearch
+     *
+     * if enter is pressed in the searchox, if there is only one option matching,
+     * this selects it
+     *
+     * @param {Object} e event object
+     * @param {Object} refs element references
+     *
+     * @return _Void_
+     */
+    checkEnterOnSearch( e , refs )
+    {
+        let val  = e.target.value;
+
+        if ( val && val !== '' )
+        {
+            let res         = []; 
+            let options     = refs.data.length;
+            let selected    = this.getSelected();
+            let matches     = this.search.isThereAnythingRelatedTo( val );
+
+            matches.forEach( el =>
+            {
+                let index   = el.i;
+                el          = refs.selectOptions[ index ];
+
+                if ( selected.indexOf( el ) === -1 )
+                {
+                    res.push( el );
+                }
+            } );
+
+            if ( res.length === 1 )
+            {
+                let el = res[ 0 ];
+                refs.data[ el.index ].click();
+                refs.search.focus();
+            }
+        }
+    }
+
+
+    /**
      * ## checkFlounderKeypress
      *
      * checks flounder focused keypresses and filters all but space and enter
@@ -258,18 +301,22 @@ const events = {
     checkFlounderKeypress( e )
     {
         let keyCode = e.keyCode;
+        let refs    = this.refs;
 
         if ( keyCode === keycodes.ENTER || 
             ( keyCode === keycodes.SPACE && e.target.tagName !== `INPUT` ) )
         {
+            if ( keyCode === keycodes.ENTER && this.search )
+            {
+                return this.checkEnterOnSearch( e, refs );
+            }
+
             e.preventDefault();
             this.toggleList( e );
         }
         else if ( ( keyCode >= 48 && keyCode <= 57 ) ||
                     ( keyCode >= 65 && keyCode <= 90 ) ) // letters - allows native behavior
         {
-            let refs = this.refs;
-
             if ( refs.search && e.target.tagName === `INPUT` )
             {
                 refs.selected.innerHTML = ``;
@@ -290,14 +337,21 @@ const events = {
      */
     checkMultiTagKeydown( e )
     {
-        let keyCode             = e.keyCode;
-        let refs                = this.refs;
-        let clearPlaceholder    = this.clearPlaceholder;
+        let keyCode                 = e.keyCode;
+        let refs                    = this.refs;
+        let clearPlaceholder        = this.clearPlaceholder;
+        let toggleListSearchClick   = this.toggleListSearchClick;
+        let target                  = e.target;
+        let parent                  = target.parentNode;
+        let children                = nativeSlice.call( parent.children, 0 );
+        let siblings                = children.length - 1;
+        let index                   = children.indexOf( target );
 
         function focusSearch()
         {
             refs.search.focus();
             clearPlaceholder();
+            toggleListSearchClick( e );
         }
 
         if ( keyCode === keycodes.LEFT || keyCode === keycodes.RIGHT || 
@@ -306,11 +360,6 @@ const events = {
             e.preventDefault();
             e.stopPropagation();
 
-            let target      = e.target;
-            let parent      = target.parentNode;
-            let children    = nativeSlice.call( parent.children, 0 );
-            let siblings    = children.length - 1;
-            let index       = children.indexOf( target );
 
             if ( keyCode === keycodes.BACKSPACE )
             {
@@ -348,6 +397,12 @@ const events = {
         }
         else if ( e.key.length < 2 )
         {
+            focusSearch();
+        }
+        else if ( keyCode === keycodes.TAB && index === children.length - 1 )
+        {
+            e.preventDefault();
+            e.stopPropagation();
             focusSearch();
         }
     },

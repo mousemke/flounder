@@ -106,7 +106,9 @@ const api = {
                 {
                     originalTarget.removeChild( firstOption );
                 }
-            } else if ( tagName === `INPUT` ) {
+            } 
+            else if ( tagName === `INPUT` ) 
+            {
                 target = refs.flounder.parentNode;
             }
 
@@ -136,7 +138,6 @@ const api = {
         }
 
         refs.flounder.flounder  = originalTarget.flounder = this.target.flounder = null;
-
     },
 
 
@@ -244,8 +245,6 @@ const api = {
 
                 return [ el, opt ];
             }
-
-            return null;
         }
     },
 
