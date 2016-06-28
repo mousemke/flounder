@@ -206,8 +206,9 @@ const build = {
 
             if ( !selectRef )
             {
+                let selectOptionClass   = `${classes.OPTION_TAG}  ${dataObj.extraClass || ''}`;
                 selectOption            = constructElement( { tagname : `option`,
-                                            className   : `${classes.OPTION_TAG}  ${dataObj.extraClass}`,
+                                            className   : selectOptionClass.trim(),
                                             value       : dataObj.value } );
                 let escapedText         = escapeHTML( dataObj.text );
                 selectOption.innerHTML  = escapedText;

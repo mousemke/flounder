@@ -4,7 +4,7 @@ let defaults = {
      *
      * _Number_
      */
-    minimumValueLength  : 1,
+    minimumValueLength  : 0,
 
     /*
      * minimum score to display
@@ -131,9 +131,11 @@ export class Sole
      *
      * @return _Array_ results returns array of relevant search results
      */
-    isThereAnythingRelatedTo( query )
+    isThereAnythingRelatedTo( query = '' )
     {
         let ratedResults;
+
+        query = query.length ? query : `${query}`;
 
         if ( query.length >= defaults.minimumValueLength )
         {
