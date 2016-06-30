@@ -1,4 +1,4 @@
-Flounder.js 0.8.4
+Flounder.js 0.8.5
 =================
 
 *** Flounder 1.0.0 is being built right now, so there is a feature freeze on earlier versions, but feel free to open issues for 0.X.X and feature issues for 1.0.0 should anything come up ***
@@ -416,14 +416,28 @@ When you release a new verion, commit it to dev (keeps dev upto date), commit it
 Change Log
 ==========
 
+0.8.5
+-----
+
++ events
+    + fixed a bubbling bug in clickSet
+
++ api
+    + fixed a bug in ie where setByValue wouldn't work as the DOM was still building
+
+
+0.8.4
+-----
+
++ api
+    + fixed a bug in deselectAll where tags would remain
+
+    
 0.8.3
 -----
 
 + search
     + fixed a bug where search would break when only numbers were entered
-
-+ api
-    + fixed a bug in deselectAll where tags would remain
 
 
 0.8.2
