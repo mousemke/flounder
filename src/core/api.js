@@ -271,13 +271,13 @@ const api = {
         {
             let res     = [];
 
-            this.refs.data.forEach( function( el )
+            this.refs.data.forEach( function( el, i )
             {
                 let _elText = el.innerHTML;
 
                 if ( _elText === text )
                 {
-                    res.push( el.index );
+                    res.push( i );
                 }
             } );
 
@@ -305,9 +305,9 @@ const api = {
         }
         else
         {
-            let values = this.refs.selectOptions.map( function( el )
+            let values = this.refs.selectOptions.map( function( el, i )
             {
-                return el.value === `${value}` ? el.index : null;
+                return el.value === `${value}` ? i : null;
             } ).filter( a => !!a );
 
             return value ? this.disableByIndex( values, reenable ) : null;
@@ -590,13 +590,13 @@ const api = {
         {
             let res     = [];
 
-            this.refs.data.forEach( function( el )
+            this.refs.data.forEach( function( el, i )
             {
                 let _elText = el.innerHTML;
 
                 if ( _elText === text )
                 {
-                    res.push( el.index );
+                    res.push( i );
                 }
             } );
 
@@ -624,10 +624,12 @@ const api = {
         }
         else
         {
-            let values = this.refs.selectOptions.map( function( el )
+            let values = this.refs.selectOptions.map( function( el, i )
             {
-                return el.value === `${value}` ? el.index : null;
-            } ).filter( a => a === 0 || !!a );
+                return el.value === `${value}` ? i : null;
+            } )
+
+            values = values.filter( a => a === 0 || !!a );
 
             return values.length !== 0 ? this.setByIndex( values, multiple, programmatic ) : null;
         }
