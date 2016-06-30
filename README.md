@@ -420,6 +420,9 @@ Change Log
 + events
     + fixed a bubbling bug in clickSet
 
++ api
+    + fixed a bug in ie where setByValue wouldn't work as the DOM was still building
+
 
 0.8.4
 -----
