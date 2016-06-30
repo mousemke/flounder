@@ -1,5 +1,5 @@
 /*!
- * Flounder JavaScript Stylable Selectbox v0.8.4
+ * Flounder JavaScript Stylable Selectbox v0.8.5
  * https://github.com/sociomantic-tsunami/flounder
  *
  * Copyright 2015-2016 Sociomantic Labs and other contributors
@@ -1342,11 +1342,11 @@ var api = {
             var _ret3 = (function () {
                 var res = [];
 
-                _this3.refs.data.forEach(function (el) {
+                _this3.refs.data.forEach(function (el, i) {
                     var _elText = el.innerHTML;
 
                     if (_elText === text) {
-                        res.push(el.index);
+                        res.push(i);
                     }
                 });
 
@@ -1384,8 +1384,8 @@ var api = {
 
             if (typeof _ret4 === 'object') return _ret4.v;
         } else {
-            var values = this.refs.selectOptions.map(function (el) {
-                return el.value === '' + value ? el.index : null;
+            var values = this.refs.selectOptions.map(function (el, i) {
+                return el.value === '' + value ? i : null;
             }).filter(function (a) {
                 return !!a;
             });
@@ -1621,7 +1621,7 @@ var api = {
 
             if (el) {
                 var isOpen = _utils2['default'].hasClass(refs.wrapper, 'open');
-                this.toggleList(isOpen ? 'close' : 'open');
+                this.toggleList({}, isOpen ? 'close' : 'open');
                 this.___forceMultiple = multiple;
                 this.___programmaticClick = programmatic;
                 el.click();
@@ -1663,11 +1663,11 @@ var api = {
             var _ret7 = (function () {
                 var res = [];
 
-                _this8.refs.data.forEach(function (el) {
+                _this8.refs.data.forEach(function (el, i) {
                     var _elText = el.innerHTML;
 
                     if (_elText === text) {
-                        res.push(el.index);
+                        res.push(i);
                     }
                 });
 
@@ -1707,9 +1707,11 @@ var api = {
 
             if (typeof _ret8 === 'object') return _ret8.v;
         } else {
-            var values = this.refs.selectOptions.map(function (el) {
-                return el.value === '' + value ? el.index : null;
-            }).filter(function (a) {
+            var values = this.refs.selectOptions.map(function (el, i) {
+                return el.value === '' + value ? i : null;
+            });
+
+            values = values.filter(function (a) {
                 return a === 0 || !!a;
             });
 
@@ -2021,9 +2023,10 @@ var build = {
 
         var data = this.data;
         var defaultValue = this._default = (0, _defaults.setDefaultOption)(this, this.props, data);
+        defaultValue.index = defaultValue.index || defaultValue.index === 0 ? defaultValue.index : -1;
 
         var selected = constructElement({ className: _classes2['default'].SELECTED_DISPLAYED,
-            'data-value': defaultValue.value, 'data-index': defaultValue.index || -1 });
+            'data-value': defaultValue.value, 'data-index': defaultValue.index });
 
         var multiTagWrapper = this.multipleTags ? constructElement({ className: _classes2['default'].MULTI_TAG_LIST }) : null;
 
@@ -2779,6 +2782,9 @@ var events = {
      * @return _Void_
      */
     clickSet: function clickSet(e) {
+        e.preventDefault();
+        e.stopPropagation();
+
         this.setSelectValue({}, e);
 
         if (!this.multiple || !e[this.multiSelect]) {
@@ -4443,7 +4449,7 @@ module.exports = exports['default'];
 },{"./classes":14,"microbejs/src/modules/http":3}],20:[function(require,module,exports){
 'use strict';
 
-module.exports = '0.8.4';
+module.exports = '0.8.5';
 
 },{}],21:[function(require,module,exports){
 'use strict';
