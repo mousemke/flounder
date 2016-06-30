@@ -414,14 +414,25 @@ When you release a new verion, commit it to dev (keeps dev upto date), commit it
 Change Log
 ==========
 
+0.8.5
+-----
+
++ events
+    + fixed a bubbling bug in clickSet
+
+
+0.8.4
+-----
+
++ api
+    + fixed a bug in deselectAll where tags would remain
+
+    
 0.8.3
 -----
 
 + search
     + fixed a bug where search would break when only numbers were entered
-
-+ api
-    + fixed a bug in deselectAll where tags would remain
 
 
 0.8.2
