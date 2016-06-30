@@ -466,6 +466,9 @@ const events = {
      */
     clickSet( e )
     {
+        e.preventDefault();
+        e.stopPropagation();
+        
         this.setSelectValue( {}, e );
 
         if ( !this.multiple || !e[ this.multiSelect ] )
