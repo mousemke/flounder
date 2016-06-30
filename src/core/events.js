@@ -534,14 +534,16 @@ const events = {
 
         if ( !multipleTags && selectedLength ===  1 )
         {
-            { index, value }             = selectedOption[0];
-            selected.innerHTML          = refs.data[ index ].innerHTML;
+            index               = selectedOption[0].index;
+            value               = selectedOption[0].value;
+            selected.innerHTML  = refs.data[ index ].innerHTML;
         }
         else if ( !multipleTags && selectedLength === 0 )
         {
-            let defaultValue            = this._default;
-            { index = -1, value }       = defaultValue;
-            selected.innerHTML          = defaultValue.text;
+            let defaultValue    = this._default;
+            index               = defaultValue.index;
+            value               = defaultValue.value;
+            selected.innerHTML  = defaultValue.text;
         }
         else
         {
