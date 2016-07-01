@@ -37,7 +37,7 @@ function browserifyFiles( folder, filename, ext )
     ext = ext || '.js';
 
     browserify( './src/' + folder + '/' + filename + ext )
-        .transform( babelify, { stage : 0 } )
+        .transform( babelify )
         .bundle()
         .pipe( fs.createWriteStream( __dirname + '/dist/' + filename + ext ) )
         .on( 'finish', function()
@@ -54,7 +54,7 @@ function min( folder, filename, ext )
     ext = ext || '.js';
 
     browserify( './src/' + folder + '/' + filename + ext )
-        .transform( babelify, { stage : 0 } )
+        .transform( babelify )
         .bundle()
         .pipe( fs.createWriteStream( __dirname + '/dist/' + filename + '.min' + ext ) )
         .on( 'finish', function()
@@ -70,7 +70,7 @@ function min( folder, filename, ext )
 gulp.task( 'demo', function()
 {
     browserify( './demo/demo.js' )
-        .transform( babelify, { stage : 0 } )
+        .transform( babelify )
         .bundle()
         .pipe( fs.createWriteStream( __dirname + '/demo/demoDist.js' ) );
 } );
