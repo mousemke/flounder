@@ -100,7 +100,10 @@ export class Sole
      */
     constructor( flounder )
     {
-        this.flounder = flounder;
+        this.flounder           = flounder;
+        this.getResultWeights   = this.getResultWeights.bind( this );
+        this.scoreThis          = this.scoreThis.bind( this );
+
         return this;
     }
 
@@ -130,7 +133,7 @@ export class Sole
      * 
      * @return _Object_ res weighted results
      */
-    getResultWeights = ( d, i ) =>
+    getResultWeights( d, i )
     {
         let score   = 0 ;
         let res     = { i : i, d : d };
@@ -261,7 +264,7 @@ export class Sole
      *
      * @return _Integer_ the final weight adjusted score
      */
-    scoreThis = ( target, weight, noPunishment ) =>
+    scoreThis( target, weight, noPunishment )
     {
         let score = 0;
 

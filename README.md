@@ -405,7 +405,7 @@ See more examples on the [demo page](./demo/index.html)
 Releasing
 --------
 
-When you release a new verion, commit it to dev (keeps dev up to date), commit it to master, then commit it to release. It must be released from the `release` branch.  It is the *only* branch that commits the dist files
+When you release a new verion, commit it to master, then commit it to release. It must be released from the `release` branch.  It is the *only* branch that commits the dist files
 
 
 
