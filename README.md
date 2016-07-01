@@ -308,6 +308,26 @@ this.setByValue( value, multiple* )
 + `setByValue( value, multiple )` sets the item with the passed value as selected.  If multiple is true and it is a multi-select box, it is selected additionally.  Otherwise it's selected instead. This accepts arrays as well.  Without multiple equaling true it will only select the last option. This does not fire the onClick event.
 
 
+npm scripts
+===========
+
++ `bash` creates the `dist` folder and copies `flounder-structure.css` to it
+
++ `build` runs `bash`, `gulp` and `test:coverage:cli`
+
++ `demo` builds the demo
+
++ `gulp` runs bash and compiles flounder
+
++ `test` runs the `nyan` tests
+
++ `test:coverage` runs the `istanbul` tests and opens the browser report
+
++ `test:coverage:cli` runs the `istanbul` tests on the command line
+
++ `versionBump` bumps the version by 0.0.1
+
+
 Contributing
 ============
 
@@ -434,7 +454,15 @@ Change Log
     + fixed a selectOption class bug
 
 + search
-    + imporoved imteraction between tags and search box
+    + improved imteraction between tags and search box
+
++ readme
+    + npm scripts added
+
++ tests
+    + removed qunit
+    + added mocha
+    + added istanbul
 
 
 0.8.5
