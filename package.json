@@ -13,7 +13,7 @@
     "demo": "./node_modules/.bin/gulp demo",
     "gulp": "npm run bash && ./node_modules/.bin/gulp",
     "test": "node_modules/.bin/babel-node node_modules/.bin/_mocha ./test/test.js -R nyan -r ./test/test-setup",
-    "test:coverage": "test:coverage:cli && open coverage/lcov-report/index.html",
+    "test:coverage": "npm run test:coverage:cli && open coverage/lcov-report/index.html",
     "test:coverage:cli": "node_modules/.bin/babel-node node_modules/.bin/babel-istanbul cover _mocha -- -R spec -r ./test/test-setup",
     "versionBump": "node ./scripts/version_bump.js"
   },
