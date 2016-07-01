@@ -19,4 +19,4 @@ npm-debug.log
 
 dist/**
 demo/demoDist.js
-tests/tests.dist.js
+coverage/
