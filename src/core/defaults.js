@@ -106,7 +106,7 @@ export const setDefaultOption = ( self, configObj, data = [], rebuild = false ) 
             }
             else
             {
-                data[ 0 ] = _default;
+                data.unshift( _default );
             }
         }
         else
