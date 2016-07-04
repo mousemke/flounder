@@ -343,7 +343,9 @@ const build = {
 
         let multiTagWrapper     = this.multipleTags ? constructElement( { className : classes.MULTI_TAG_LIST } ) : null;
 
-        let search              = this.addSearch( flounder );
+        let searchLocation      = multiTagWrapper || flounder;
+
+        let search              = this.addSearch( searchLocation );
 
         let optionsListWrapper  = constructElement( { className : `${classes.OPTIONS_WRAPPER}  ${classes.HIDDEN}` } );
         let optionsList         = constructElement( { className : classes.LIST } );

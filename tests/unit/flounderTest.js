@@ -310,40 +310,6 @@ let tests = function( Flounder )
 
 
     /*
-     * ## setTextMultiTagIndent tests
-     *
-     * @test exists
-     */
-    QUnit.test( 'setTextMultiTagIndent', function( assert )
-    {
-        let data = [
-            'doge',
-            'moon'
-        ];
-
-        let flounder    = new Flounder( document.body, { data : data, defaultIndex : 0, multipleTags : true } );
-        assert.ok( flounder.setTextMultiTagIndent, 'exists' );
-
-        let refs = flounder.refs;
-
-        let span = document.createElement( 'SPAN' );
-        span.className = 'flounder__multiple--select--tag';
-        span.innerHTML = '<a class="flounder__multiple__tag__close" data-index="1"></a>doge';
-
-        refs.multiTagWrapper.appendChild( span );
-
-        flounder.setTextMultiTagIndent();
-
-        let style = getComputedStyle( span );
-
-        let spanOffset = span.offsetWidth + parseInt( style[ 'margin-left' ] ) + parseInt( style[ 'margin-right' ] );
-        assert.equal( refs.search.style.textIndent, spanOffset + 'px', 'search box text indent is correctly set' );
-
-        flounder.destroy();
-    } );
-
-
-    /*
      * ## sortData tests
      *
      * @test exists
