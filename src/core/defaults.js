@@ -45,6 +45,8 @@ export const defaultOptions = {
  */
 export const setDefaultOption = ( self, configObj, data = [], rebuild = false ) =>
 {
+    let _configObj = Object.assign( {}, configObj );
+
     /**
      * ## setIndexDefault
      *
@@ -55,7 +57,7 @@ export const setDefaultOption = ( self, configObj, data = [], rebuild = false ) 
      */
     let setIndexDefault = function( _data, index )
     {
-        let defaultIndex        = index || index === 0 ? index : configObj.defaultIndex;
+        let defaultIndex        = index || index === 0 ? index : _configObj.defaultIndex;
         let defaultOption       = _data[ defaultIndex ];
 
         if ( defaultOption )
@@ -80,7 +82,7 @@ export const setDefaultOption = ( self, configObj, data = [], rebuild = false ) 
     {
         let refs        = self.refs;
         let select      = refs.select;
-        let placeholder = configObj.placeholder;
+        let placeholder = _configObj.placeholder;
 
         let _default    = {
             text        : placeholder || placeholder === `` ? placeholder : defaultOptions.placeholder,
@@ -129,7 +131,7 @@ export const setDefaultOption = ( self, configObj, data = [], rebuild = false ) 
      */
     let setValueDefault = function( _data, _val )
     {
-        let defaultProp = _val || `${configObj.defaultValue}`;
+        let defaultProp = _val || `${_configObj.defaultValue}`;
         let index;
 
         _data.forEach( function( dataObj, i )
@@ -204,19 +206,19 @@ export const setDefaultOption = ( self, configObj, data = [], rebuild = false ) 
     {
         let _data       = sortData( data );
 
-        if ( ( configObj.multipleTags || configObj.multiple )
-                && !configObj.defaultIndex
-                && !configObj.defaultValue )
+        if ( ( _configObj.multipleTags || _configObj.multiple )
+                && !_configObj.defaultIndex
+                && !_configObj.defaultValue )
         {
-            configObj.placeholder = configObj.placeholder || defaultOptions.placeholder;
+            _configObj.placeholder = _configObj.placeholder || defaultOptions.placeholder;
         }
 
-        if ( configObj.defaultEmpty )
+        if ( _configObj.defaultEmpty )
         {
-            configObj.placeholder = ``;
+            _configObj.placeholder = ``;
         }
 
-        let placeholder = configObj.placeholder;
+        let placeholder = _configObj.placeholder;
 
         if ( placeholder || placeholder === `` || _data.length === 0 )
         {
@@ -237,8 +239,8 @@ export const setDefaultOption = ( self, configObj, data = [], rebuild = false ) 
         }
 
         // default prio
-        def = configObj.defaultIndex ? setIndexDefault( _data ) : null;
-        def = !def && configObj.defaultValue ? setValueDefault( _data ) : def;
+        def = _configObj.defaultIndex ? setIndexDefault( _data ) : null;
+        def = !def && _configObj.defaultValue ? setValueDefault( _data ) : def;
         def = !def ? setIndexDefault( _data, 0 ) : def;
 
         return def;
