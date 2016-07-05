@@ -338,7 +338,9 @@ const build = {
         let defaultValue        = this._default = setDefaultOption( this, this.props, data );
         defaultValue.index      = defaultValue.index || defaultValue.index === 0 ? defaultValue.index : -1;
 
-        let selected            = constructElement( { className : classes.SELECTED_DISPLAYED,
+        let selectedDisplayedClasses = this.multipleTags ? classes.SELECTED_DISPLAYED + ' ' + classes.MULTIPLE_SELECTED : classes.SELECTED_DISPLAYED;
+
+        let selected            = constructElement( { className : selectedDisplayedClasses,
                                         'data-value' : defaultValue.value, 'data-index' : defaultValue.index } );
 
         let multiTagWrapper     = this.multipleTags ? constructElement( { className : classes.MULTI_TAG_LIST } ) : null;

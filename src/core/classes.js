@@ -16,6 +16,7 @@ const classes =
     MAIN_WRAPPER        : `flounder--wrapper  flounder__input--select`,
     MULTI_TAG_LIST      : `flounder__multi--tag--list`,
     MULTIPLE_SELECT_TAG : `flounder__multiple--select--tag`,
+    MULTIPLE_SELECTED   : `flounder__multiple--selected`,
     MULTIPLE_TAG_CLOSE  : `flounder__multiple__tag__close`,
     OPTION              : `flounder__option`,
     OPTION_TAG          : `flounder--option--tag`,
