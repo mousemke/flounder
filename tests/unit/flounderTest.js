@@ -247,7 +247,7 @@ let tests = function( Flounder )
         let multiTagWrapper = refs.multiTagWrapper;
         multiTagWrapper.children[0].children[0].click();
 
-        assert.equal( multiTagWrapper.children.length, 0, 'tag is removed' );
+        assert.equal( multiTagWrapper.children.length, 1, 'tag is removed' );
 
         flounder.destroy();
     } );
