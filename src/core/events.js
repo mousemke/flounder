@@ -296,7 +296,7 @@ const events = {
 
         if ( val && val !== '' )
         {
-            let res         = []; 
+            let res         = [];
             let options     = refs.data.length;
             let selected    = this.getSelected();
             let matches     = this.search.isThereAnythingRelatedTo( val );
@@ -334,7 +334,7 @@ const events = {
         let keyCode = e.keyCode;
         let refs    = this.refs;
 
-        if ( keyCode === keycodes.ENTER || 
+        if ( keyCode === keycodes.ENTER ||
             ( keyCode === keycodes.SPACE && e.target.tagName !== `INPUT` ) )
         {
             if ( keyCode === keycodes.ENTER && this.search )
@@ -359,7 +359,7 @@ const events = {
     /**
      * ## checkMultiTagKeydown
      *
-     * when a tag is selected, this decided how to handle it by either 
+     * when a tag is selected, this decided how to handle it by either
      * passing the event on, or handling tag removal
      *
      * @param {Object} e event object
@@ -385,7 +385,7 @@ const events = {
             toggleListSearchClick( e );
         }
 
-        if ( keyCode === keycodes.LEFT || keyCode === keycodes.RIGHT || 
+        if ( keyCode === keycodes.LEFT || keyCode === keycodes.RIGHT ||
             keyCode === keycodes.BACKSPACE )
         {
             e.preventDefault();
@@ -430,12 +430,6 @@ const events = {
         {
             focusSearch();
         }
-        else if ( keyCode === keycodes.TAB && index === children.length - 1 )
-        {
-            e.preventDefault();
-            e.stopPropagation();
-            focusSearch();
-        }
     },
 
 
@@ -468,7 +462,7 @@ const events = {
     {
         e.preventDefault();
         e.stopPropagation();
-        
+
         this.setSelectValue( {}, e );
 
         if ( !this.multiple || !e[ this.multiSelect ] )
@@ -570,7 +564,7 @@ const events = {
      * ## divertTarget
      *
      * @param {Object} e event object
-     * 
+     *
      * on interaction with the raw select box, the target will be diverted to
      * the corresponding flounder list element
      *
@@ -658,7 +652,7 @@ const events = {
         utils.removeClass( this, classes.HOVER );
     },
 
-    
+
     /**
      * ## removeListeners
      *
@@ -870,7 +864,7 @@ const events = {
                 return false;
             }
 
-            if ( keyCode === keycodes.ENTER || keyCode === keycodes.ESCAPE || 
+            if ( keyCode === keycodes.ENTER || keyCode === keycodes.ESCAPE ||
                     keyCode === keycodes.SPACE )
             {
                 this.toggleList( e );
