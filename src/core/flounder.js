@@ -90,7 +90,10 @@ class Flounder
      * ## filterSearchResults
      *
      * filters results and adjusts the search hidden class on the dataOptions
-     * 
+     *
+     * @param {Object} e event object
+     *
+     * @return _Void_
      */
     filterSearchResults( e )
     {
@@ -156,7 +159,7 @@ class Flounder
                 if ( keyCode === keycodes.BACKSPACE && this.fuzzySearch.__previousValue === '' )
                 {
                     let lastTag = this.refs.multiTagWrapper.lastChild;
-                    
+
                     if ( lastTag )
                     {
                         lastTag.focus();
@@ -183,6 +186,26 @@ class Flounder
         {
             this.toggleList.justOpened = false;
         }
+    }
+
+
+    /**
+     * ## fuzzySearchReset
+     *
+     * resets all options to visible
+     *
+     * @return _Void_
+     */
+    fuzzySearchReset()
+    {
+        let refs = this.refs;
+
+        refs.data.forEach( dataObj =>
+        {
+            utils.removeClass( dataObj, classes.SEARCH_HIDDEN );
+        } );
+
+        refs.search.value = ``;
     }
 
 
@@ -239,26 +262,6 @@ class Flounder
 
 
     /**
-     * ## fuzzySearchReset
-     *
-     * resets all options to visible
-     *
-     * @return _Void_
-     */
-    fuzzySearchReset()
-    {
-        let refs = this.refs;
-
-        refs.data.forEach( dataObj =>
-        {
-            utils.removeClass( dataObj, classes.SEARCH_HIDDEN );
-        } );
-
-        refs.search.value = ``;
-    }
-
-
-    /**
      * ## initializeOptions
      *
      * inserts the initial options into the flounder object, setting defaults
@@ -301,7 +304,7 @@ class Flounder
             this.multiple       = true;
             this.selectedClass  += `  ${classes.SELECTED_HIDDEN}`;
 
-            this.placeholder    = this.placeholder === '' ? this.placeholder 
+            this.placeholder    = this.placeholder === '' ? this.placeholder
                                                     : defaultOptions.placeholder;
         }
     }
@@ -390,7 +393,7 @@ Flounder.find = function( targets, props )
     }
     else if ( targets.nodeType === 1 )
     {
-        targets = [ targets ];   
+        targets = [ targets ];
     }
 
     return Array.prototype.slice.call( targets, 0 ).map( el => new Flounder( el, props ) );
