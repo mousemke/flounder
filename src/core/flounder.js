@@ -377,10 +377,9 @@ class Flounder
 /**
  * ## arrayOfFlounders
  *
- * called when a jquery object, microbe, or array is fed into flounder
- * as a target
+ * accepts arral-like objects and selector strings to make multiple flounders
  *
- * @param {DOMElement} target flounder mount point
+ * @param {Array or String} flounder target(s)
  * @param {Object} props passed options
  *
  * @return {Array} array of flounders

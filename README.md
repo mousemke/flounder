@@ -313,7 +313,7 @@ npm scripts
 
 + `bash` creates the `dist` folder and copies `flounder-structure.css` to it
 
-+ `build` runs `bash`, `gulp` and `test:coverage:cli`
++ `build` runs `bash`, `gulp` and `test:unit:coverage:cli`
 
 + `demo` builds the demo
 
@@ -321,9 +321,9 @@ npm scripts
 
 + `test` runs the `nyan` tests
 
-+ `test:coverage` runs the `istanbul` tests and opens the browser report
++ `test:unit:coverage` runs the `istanbul` tests and opens the browser report
 
-+ `test:coverage:cli` runs the `istanbul` tests on the command line
++ `test:unit:coverage:cli` runs the `istanbul` tests on the command line
 
 + `versionBump` bumps the version by 0.0.1
 
