@@ -1,7 +1,7 @@
 import classes              from './classes';
 import utils                from './utils';
 
-const defaultOptions = {
+export const defaultOptions = {
     allowHTML               : false,
     classes                 : {
         flounder    : ``,
@@ -250,5 +250,9 @@ const defaults = {
         return checkDefaultPriority();
     }
 };
+
+
+export const setDefaultOption = defaults.setDefaultOption;
+
 
 export default defaults;

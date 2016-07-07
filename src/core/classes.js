@@ -30,6 +30,6 @@ const classes =
     SEARCH              : `flounder__input--search`,
     SEARCH_HIDDEN       : `flounder--search--hidden`,
     SELECT_TAG          : `flounder--select--tag`
-}
+};
 
 export default classes;
