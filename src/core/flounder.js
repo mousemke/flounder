@@ -154,6 +154,8 @@ class Flounder
             }
         } );
 
+        this.removeSearchListeners();
+
         multiTagWrapper.innerHTML = ``;
 
         if ( selectedOptions.length > 0 )
@@ -194,7 +196,9 @@ class Flounder
             this.addPlaceholder();
         }
 
-        this.addSearch( multiTagWrapper );
+
+        this.refs.search = this.addSearch( multiTagWrapper );
+        this.addSearchListeners();
     }
 
 
