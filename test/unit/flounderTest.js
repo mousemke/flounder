@@ -4,6 +4,9 @@ import sinon    from 'sinon';
 
 import Flounder from '/core/flounder';
 import version  from '/core/version';
+import classes  from '/core/classes';
+import keycodes from '/core/keycodes';
+import utils    from '/core/utils';
 
 
 /**
@@ -22,6 +25,7 @@ describe( 'componentWillUnmount', () =>
         assert.ok( flounder.componentWillUnmount, 'exists' );
     } );
 
+
     flounder.originalChildren       = true;
     let popInSelectElementsSpy      = sinon.stub( flounder, 'popInSelectElements', () => {} );
 
@@ -32,6 +36,7 @@ describe( 'componentWillUnmount', () =>
     {
         assert.ok( popInSelectElementsSpy.callCount === 1 );
     } );
+
 
 
     it( 'should remove event listeners', () =>
@@ -95,6 +100,7 @@ describe( 'constructor', () =>
     } );
 
 
+
     it( 'shouldn\'t run if there is no target', () =>
     {
         let consoleSpy  = sinon.stub( console, 'warn', () => {} );
@@ -105,6 +111,7 @@ describe( 'constructor', () =>
 
         assert.throws( () => new Flounder( 'moon' ), 'Flounder - No target element found.' );
     } );
+
 
 
     it( 'should make a single flounder from a target(s)', () =>
@@ -119,6 +126,7 @@ describe( 'constructor', () =>
 
         assert.equal( consoleSpy.callCount, 1 );
     } );
+
 
 
     it( 'should destroy any previously added flounder on the same element', () =>
@@ -141,7 +149,28 @@ describe( 'constructor', () =>
  */
 describe( 'filterSearchResults', () =>
 {
+    let flounder        = new Flounder( 'div', { data: [ 'a', 'b', 'c' ], search: true } );
 
+    it( 'should find all matching field and unhide them', () =>
+    {
+        let e               = { target: { value: 'a' } };
+        flounder.filterSearchResults( e );
+
+        assert.equal( flounder.refs.wrapper.querySelectorAll( `.${classes.SEARCH_HIDDEN}` ).length, 2 );
+    } );
+
+
+
+    it( 'should reset the field is there are no matches', () =>
+    {
+        let e               = { target: { value: 'd  ' } };
+        let searchResetSpy  = sinon.stub( flounder, 'fuzzySearchReset', () => {} );
+
+        flounder.filterSearchResults( e );
+
+        assert.equal( flounder.fuzzySearchReset.callCount, 1 );
+        flounder.fuzzySearchReset.restore();
+    } );
 } );
 
 
@@ -156,28 +185,120 @@ describe( 'filterSearchResults', () =>
  */
 describe( 'fuzzySearch', () =>
 {
+    let data = [
+        'doge',
+        'moon',
+        'such'
+    ];
 
-// let data = [
-//             'doge',
-//             'moon'
-//         ];
+    let flounder    = new Flounder( document.body, {
+                                                        multipleTags    : true,
+                                                        data            : data,
+                                                        defaultIndex    : 0,
+                                                        search          : true
+                                                    } );
+    let e = {
+                keyCode : 77,
+                preventDefault : e => e,
+                target  : { value : 'm  ' }
+            };
 
-//         let flounder    = new Flounder( document.body, { data : data, defaultIndex : 0, search : true } );
 
-//         assert.ok( flounder.fuzzySearch, 'exists' );
+    it( 'should exist', () =>
+    {
+        assert.ok( flounder.fuzzySearch, 'exists' );
+    } );
 
-//         let flounderRefs = flounder.refs;
 
-//         flounderRefs.search.click();
-//         flounder.fuzzySearch( { keyCode : 77,
-//                                 preventDefault : e => e,
-//                                 target  : { value : 'm  ' }
-//                                 } );
 
-//         let hiddenOptions = flounderRefs.optionsListWrapper.querySelectorAll( '.' + classes.SEARCH_HIDDEN );
+    it( 'should correctly filter data elements', () =>
+    {
+        let flounderRefs = flounder.refs;
 
-//         assert.deepEqual( hiddenOptions[ 0 ], flounderRefs.data[ 0 ], 'correctly filters data elements' );
-//         flounder.destroy();
+        flounderRefs.search.click();
+        flounder.fuzzySearch( e );
+
+        let hiddenOptions = flounderRefs.optionsListWrapper.querySelectorAll( '.' + classes.SEARCH_HIDDEN );
+
+        assert.deepEqual( hiddenOptions[ 0 ], flounderRefs.data[ 0 ], 'correctly filters data elements' );
+    } );
+
+
+
+    it( 'should correctly report failed running of user .onInputChange()', () =>
+    {
+        sinon.stub( flounder, 'onInputChange', () => { a+ b } );
+        sinon.stub( console, 'warn', () => {} );
+        flounder.toggleList.justOpened = true;
+
+        flounder.fuzzySearch( e );
+        assert.equal( flounder.onInputChange.callCount, 1 );
+        assert.equal( console.warn.callCount, 1 );
+
+
+        flounder.onInputChange.restore();
+        console.warn.restore();
+    } );
+
+
+
+    it( 'should skip the search if it was just opened', () =>
+    {
+        assert.equal( flounder.toggleList.justOpened, false );
+    } );
+
+
+
+    it( 'should close the list on enter and escape', () =>
+    {
+        e.keyCode = keycodes.ENTER;
+
+        utils.addClass( flounder.refs.wrapper, classes.OPEN );
+        flounder.fuzzySearch( e );
+        assert.equal( utils.hasClass( flounder.refs.wrapper, classes.OPEN ), false );
+
+        e.keyCode = keycodes.ESCAPE;
+
+        utils.addClass( flounder.refs.wrapper, classes.OPEN );
+        flounder.fuzzySearch( e );
+        assert.equal( utils.hasClass( flounder.refs.wrapper, classes.OPEN ), false );
+    } );
+
+
+
+    it( 'should go to the last tag when backspace is hit in an empty searchbox', () =>
+    {
+        e.keyCode = keycodes.BACKSPACE;
+
+        flounder.fuzzySearch.__previousValue = '';
+
+        flounder.fuzzySearch( e );
+
+        flounder.refs.multiTagWrapper.innerHTML = '<span class="flounder__multiple--select--tag" aria-label="Deselect All" tabindex="0"><a class="flounder__multiple__tag__close" data-index="1"></a>All</span><span class="flounder__multiple--select--tag" aria-label="Deselect Tags" tabindex="0"><a class="flounder__multiple__tag__close" data-index="2"></a>Tags</span>';
+        sinon.spy( flounder.refs.multiTagWrapper.lastChild, 'focus' );
+
+        flounder.fuzzySearch( e );
+
+        assert.equal( flounder.refs.multiTagWrapper.lastChild.focus.callCount, 1 );
+    } );
+
+
+    it( 'should totally ignore up and down', () =>
+    {
+        let flounderRefs    = flounder.refs;
+        let hiddenOptions1  = flounderRefs.optionsListWrapper.querySelectorAll( '.' + classes.SEARCH_HIDDEN );
+        e.keyCode           = keycodes.UP;
+
+        flounder.fuzzySearch( e );
+        let hiddenOptions2 = flounderRefs.optionsListWrapper.querySelectorAll( '.' + classes.SEARCH_HIDDEN );
+        assert.equal( hiddenOptions1.length, hiddenOptions2.length );
+
+        e.keyCode = keycodes.DOWN;
+        flounder.fuzzySearch( e );
+
+        let hiddenOptions3 = flounderRefs.optionsListWrapper.querySelectorAll( '.' + classes.SEARCH_HIDDEN );
+        assert.equal( hiddenOptions1.length, hiddenOptions3.length );
+    } );
 } );
 
 
@@ -191,28 +312,35 @@ describe( 'fuzzySearch', () =>
  */
 describe( 'fuzzySearchReset', () =>
 {
-        // let data = [
-        //     'doge',
-        //     'moon'
-        // ];
+    let data = [
+        'doge',
+        'moon'
+    ];
 
-        // let flounder    = new Flounder( document.body, { data : data, defaultIndex : 0, search : true } );
+    let flounder    = new Flounder( document.body, { data : data, defaultIndex : 0, search : true } );
 
-        // assert.ok( flounder.fuzzySearchReset, 'exists' );
+    it( 'should exist', () =>
+    {
+        assert.ok( flounder.fuzzySearchReset, 'exists' );
+    } );
 
-        // let flounderRefs = flounder.refs;
 
-        // flounderRefs.search.click();
-        // flounder.fuzzySearch( { keyCode : 77,
-        //                         preventDefault : e => e,
-        //                         target  : { value : 'm  ' }
-        //                         } );
-        // flounder.fuzzySearchReset();
-        // let hiddenOptions = flounderRefs.optionsListWrapper.querySelectorAll( '.' + classes.SEARCH_HIDDEN );
+    it( 'should correctly reset all search elements', () =>
+    {
 
-        // assert.equal( flounderRefs.search.value, '', 'correctly blanks the search input' );
-        // assert.equal( hiddenOptions.length, 0, 'correctly resets search filtered elements' );
-        // flounder.destroy();
+        let flounderRefs = flounder.refs;
+
+        flounderRefs.search.click();
+        flounder.fuzzySearch( { keyCode : 77,
+                                preventDefault : e => e,
+                                target  : { value : 'm  ' }
+                                } );
+        flounder.fuzzySearchReset();
+        let hiddenOptions = flounderRefs.optionsListWrapper.querySelectorAll( '.' + classes.SEARCH_HIDDEN );
+
+        assert.equal( flounderRefs.search.value, '', 'correctly blanks the search input' );
+        assert.equal( hiddenOptions.length, 0, 'correctly resets search filtered elements' );
+    } );
 } );
 
 
@@ -230,17 +358,17 @@ describe( 'fuzzySearchReset', () =>
 describe( 'init', () =>
 {
 
-    it( 'should create all flounder refs', () =>
-    {
-        let flounder = new Flounder( document.body );
+    // it( 'should create all flounder refs', () =>
+    // {
+    //     let flounder = new Flounder( document.body );
 
-        let ref     = flounder.refs.flounder.flounder instanceof Flounder;
-        let oTarget = flounder.originalTarget.flounder instanceof Flounder;
-        let target  = flounder.target.flounder instanceof Flounder;
+    //     let ref     = flounder.refs.flounder.flounder instanceof Flounder;
+    //     let oTarget = flounder.originalTarget.flounder instanceof Flounder;
+    //     let target  = flounder.target.flounder instanceof Flounder;
 
-        assert.ok( ref === true && oTarget === true && target === true, 'creates all refs' );
-        flounder.destroy();
-    } );
+    //     assert.ok( ref === true && oTarget === true && target === true, 'creates all refs' );
+    //     flounder.destroy();
+    // } );
 } );
 
 

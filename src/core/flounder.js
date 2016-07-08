@@ -62,27 +62,26 @@ class Flounder
                 target = document.querySelectorAll( target );
             }
 
-            if ( ( target.length || target.length === 0 ) && target.tagName !== `SELECT` )
+            if ( ( target.length || target.length === 0 ) && target.tagName !== `SELECT`)
             {
                 if ( target.length > 1 )
                 {
                     console.warn( 'Flounder - More than one element found. Dropping all but the first.' );
-
-                    return new this.constructor( target[ 0 ], props );
                 }
                 else if ( target.length === 0 )
                 {
                     throw 'Flounder - No target element found.';
                 }
+
+                target = target[ 0 ];
             }
-            else
+
+            if ( target.flounder )
             {
-                if ( target.flounder )
-                {
-                    target.flounder.destroy();
-                }
-                return this.init( target, props );
+                target.flounder.destroy();
             }
+
+            return this.init( target, props );
         }
     }
 
@@ -104,7 +103,7 @@ class Flounder
 
         let matches = this.search.isThereAnythingRelatedTo( val );
 
-        if ( matches )
+        if ( matches && matches.length !== 0 )
         {
             let data    = this.refs.data;
 
@@ -157,7 +156,8 @@ class Flounder
             if ( keyCode !== keycodes.UP && keyCode !== keycodes.DOWN &&
                     keyCode !== keycodes.ENTER && keyCode !== keycodes.ESCAPE )
             {
-                if ( keyCode === keycodes.BACKSPACE && this.fuzzySearch.__previousValue === '' )
+                if ( this.multipleTags && keyCode === keycodes.BACKSPACE &&
+                        this.fuzzySearch.__previousValue === '' )
                 {
                     let lastTag = this.refs.multiTagWrapper.lastChild;
 
@@ -176,11 +176,6 @@ class Flounder
                 this.fuzzySearchReset();
                 this.toggleList( e, `close` );
                 this.addPlaceholder();
-            }
-            else
-            {
-                this.setSelectValue( e );
-                this.setKeypress( e );
             }
         }
         else
