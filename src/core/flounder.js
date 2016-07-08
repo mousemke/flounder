@@ -51,30 +51,31 @@ class Flounder
      */
     constructor( target, props )
     {
-        if ( !target && !props )
+        if ( !target )
         {
             console.warn( 'Flounder - No target element found.' );
         }
-        else if ( target )
+        else
         {
             if ( typeof target === `string` )
             {
                 target = document.querySelectorAll( target );
             }
+
             if ( ( target.length || target.length === 0 ) && target.tagName !== `SELECT` )
             {
                 if ( target.length > 1 )
                 {
                     console.warn( 'Flounder - More than one element found. Dropping all but the first.' );
+
+                    return new this.constructor( target[ 0 ], props );
                 }
                 else if ( target.length === 0 )
                 {
-                    console.warn( 'Flounder - No target element found.' );
+                    throw 'Flounder - No target element found.';
                 }
-
-                return new this.constructor( target[ 0 ], props );
             }
-            else if ( ( !target.length && target.length !== 0 ) || target.tagName === `SELECT` )
+            else
             {
                 if ( target.flounder )
                 {

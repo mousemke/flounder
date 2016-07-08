@@ -6,32 +6,6 @@ let tests = function( Flounder )
 {
     QUnit.module( 'flounder.js' );
 
-
-    // /*
-    //  * ## componentWillUnmount tests
-    //  *
-    //  * @test exists
-    //  * @test events are removed
-    //  */
-    // QUnit.test( 'componentWillUnmount', function( assert )
-    // {
-    //     let flounder    = ( new Flounder( document.body ) );
-    //     assert.ok( flounder.componentWillUnmount, 'exists' );
-
-    //     let refs        = flounder.refs;
-    //     refs.selected.click();
-
-    //     let firstCheck = refs.wrapper.className.indexOf( 'open' );
-    //     flounder.componentWillUnmount();
-    //     refs.selected.click();
-
-    //     let secondCheck = refs.wrapper.className.indexOf( 'open' );
-    //     flounder.destroy();
-
-    //     assert.ok( firstCheck === secondCheck, 'events are removed' );
-    // } );
-
-
     /*
      * ## displayMultipleTags tests
      *
@@ -93,114 +67,6 @@ let tests = function( Flounder )
                     flounder.refs.data[ 1 ].textContent, 'The correct thing is displayed' );
 
         flounder.destroy();
-    } );
-
-
-    // /*
-    //  * ## fuzzySearch tests
-    //  *
-    //  * @test exists
-    //  * @test correctly filters data elements
-    //  */
-    // QUnit.test( 'fuzzySearch', function( assert )
-    // {
-    //     let data = [
-    //         'doge',
-    //         'moon'
-    //     ];
-
-    //     let flounder    = new Flounder( document.body, { data : data, defaultIndex : 0, search : true } );
-
-    //     assert.ok( flounder.fuzzySearch, 'exists' );
-
-    //     let flounderRefs = flounder.refs;
-
-    //     flounderRefs.search.click();
-    //     flounder.fuzzySearch( { keyCode : 77,
-    //                             preventDefault : e => e,
-    //                             target  : { value : 'm  ' }
-    //                             } );
-
-    //     let hiddenOptions = flounderRefs.optionsListWrapper.querySelectorAll( '.' + classes.SEARCH_HIDDEN );
-
-    //     assert.deepEqual( hiddenOptions[ 0 ], flounderRefs.data[ 0 ], 'correctly filters data elements' );
-    //     flounder.destroy();
-    // } );
-
-
-    /*
-     * ## fuzzySearchReset tests
-     *
-     * @test exists
-     * @test correctly blanks the search input
-     * @test correctly resets search filtered elements
-     */
-    QUnit.test( 'fuzzySearchReset', function( assert )
-    {
-        // let data = [
-        //     'doge',
-        //     'moon'
-        // ];
-
-        // let flounder    = new Flounder( document.body, { data : data, defaultIndex : 0, search : true } );
-
-        // assert.ok( flounder.fuzzySearchReset, 'exists' );
-
-        // let flounderRefs = flounder.refs;
-
-        // flounderRefs.search.click();
-        // flounder.fuzzySearch( { keyCode : 77,
-        //                         preventDefault : e => e,
-        //                         target  : { value : 'm  ' }
-        //                         } );
-        // flounder.fuzzySearchReset();
-        // let hiddenOptions = flounderRefs.optionsListWrapper.querySelectorAll( '.' + classes.SEARCH_HIDDEN );
-
-        // assert.equal( flounderRefs.search.value, '', 'correctly blanks the search input' );
-        // assert.equal( hiddenOptions.length, 0, 'correctly resets search filtered elements' );
-        // flounder.destroy();
-    } );
-
-
-    /*
-     * ## initializeOptions tests
-     *
-     * @test exists
-     */
-    QUnit.test( 'initializeOptions', function( assert )
-    {
-        // let data = [
-        //     'doge',
-        //     'moon'
-        // ];
-
-        // let flounder    = new Flounder( document.body, { data : data, defaultIndex : 0, search : true } );
-        // assert.ok( flounder.initializeOptions, 'exists' );
-
-        // assert.ok( flounder.data[0].text === 'doge', 'correctly sets data' );
-        // assert.ok( flounder.search, 'correctly sets a prop' );
-        // assert.ok( flounder.defaultIndex === 0, 'correctly sets a different prop' );
-
-        // flounder.destroy();
-    } );
-
-
-    /*
-     * ## onRender tests
-     *
-     * @test exists
-     */
-    QUnit.test( 'onRender', function( assert )
-    {
-        // let data = [
-        //     'doge',
-        //     'moon'
-        // ];
-
-        // let flounder    = new Flounder( document.body, { data : data, defaultIndex : 0, search : true } );
-        // assert.ok( flounder.onRender, 'exists' );
-
-        // flounder.destroy();
     } );
 
 
@@ -322,53 +188,6 @@ let tests = function( Flounder )
         flounder.destroy();
     } );
 
-
-    /*
-     * ## sortData tests
-     *
-     * @test exists
-     */
-    QUnit.test( 'sortData', function( assert )
-    {
-        let data = [
-            'doge',
-            'moon'
-        ];
-
-        let flounder    = new Flounder( document.body, { data : data } );
-        assert.ok( flounder.sortData, 'exists' );
-
-        let sortedData  = flounder.sortData( ['doge','moon'] );
-
-        assert.equal( sortedData[0].index, 0, 'sets the index' );
-
-        sortedData      = flounder.sortData( [{text:'doge',value:'moon'},'moon'] );
-        assert.equal( sortedData[0].value, 'moon', 'sets the value' );
-
-        flounder.destroy();
-    } );
-
-
-    /*
-     * ## version tests
-     *
-     * @test exists
-     */
-    QUnit.test( 'version', function( assert )
-    {
-        let flounder    = new Flounder( document.body );
-        assert.ok( flounder.version, 'exists' );
-
-        assert.equal( Flounder.version, flounder.version, 'shows the version' );
-
-        // strict mode doesnt like this
-        // flounder.version = 'moin!';
-        // assert.equal( Flounder.version, flounder.version, 'instance version is read only' );
-        // Flounder.version = 'moin!';
-        // assert.equal( Flounder.version, flounder.version, 'constructor version is read only' );
-
-        flounder.destroy();
-    } );
 
     /*
      * ## blur Opened Dropdowns

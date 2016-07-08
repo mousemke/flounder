@@ -12,7 +12,8 @@
     "build": "npm run bash && ./node_modules/.bin/gulp && npm run test:unit:coverage:cli",
     "demo": "./node_modules/.bin/gulp demo",
     "gulp": "npm run bash && ./node_modules/.bin/gulp",
-    "test": "node_modules/.bin/babel-node node_modules/.bin/_mocha ./test/test.js -R nyan -r ./test/test-setup",
+    "test": "npm run test:unit:coverage:cli",
+    "test:unit": "node_modules/.bin/babel-node node_modules/.bin/_mocha ./test/test.js -R nyan -r ./test/test-setup",
     "test:unit:coverage": "npm run test:unit:coverage:cli && open coverage/lcov-report/index.html",
     "test:unit:coverage:cli": "node_modules/.bin/babel-node node_modules/.bin/babel-istanbul cover _mocha -- -R spec -r ./test/test-setup",
     "versionBump": "node ./scripts/version_bump.js"

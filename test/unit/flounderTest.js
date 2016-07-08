@@ -6,49 +6,6 @@ import Flounder from '/core/flounder';
 import version  from '/core/version';
 
 
-describe( 'Flounder', () =>
-{
-    let flounder;
-
-    it( 'should exist', () =>
-    {
-        assert.ok( Flounder );
-    } );
-
-
-    it( 'should make a single flounder from a single target', () =>
-    {
-        flounder = new Flounder( document.body );
-        assert.ok( flounder instanceof Flounder, 'a single target makes a flounder' );
-        flounder.destroy();
-    } );
-
-
-    it( 'should create all of it\'s refs', () =>
-    {
-        flounder = new Flounder( document.body );
-
-        let ref     = flounder.refs.flounder.flounder instanceof Flounder;
-        let oTarget = flounder.originalTarget.flounder instanceof Flounder;
-        let target  = flounder.target.flounder instanceof Flounder;
-
-        assert.ok( ref === true && oTarget === true && target === true, 'creates all refs' );
-        flounder.destroy();
-    } );
-
-
-    it( 'should detroy all it\'s refs', () =>
-    {
-        let ref     = flounder.refs.flounder.flounder instanceof Flounder;
-        let oTarget = flounder.originalTarget.flounder instanceof Flounder;
-        let target  = flounder.target.flounder instanceof Flounder;
-
-        assert.ok( ( !ref && !oTarget && !target ), 'and removes them all' );
-    } );
-});
-
-
-
 /**
  * ## componentWillUnmount
  *
@@ -58,22 +15,119 @@ describe( 'Flounder', () =>
  */
 describe( 'componentWillUnmount', () =>
 {
-        // let flounder    = ( new Flounder( document.body ) );
-        // assert.ok( flounder.componentWillUnmount, 'exists' );
+    let flounder    = new Flounder( document.body );
 
-        // let refs        = flounder.refs;
-        // refs.selected.click();
+    it( 'should exist', () =>
+    {
+        assert.ok( flounder.componentWillUnmount, 'exists' );
+    } );
 
-        // let firstCheck = refs.wrapper.className.indexOf( 'open' );
-        // flounder.componentWillUnmount();
-        // refs.selected.click();
+    flounder.originalChildren       = true;
+    let popInSelectElementsSpy      = sinon.stub( flounder, 'popInSelectElements', () => {} );
 
-        // let secondCheck = refs.wrapper.className.indexOf( 'open' );
-        // flounder.destroy();
+    flounder.componentWillUnmount();
+    flounder.originalChildren       = false;
 
-        // assert.ok( firstCheck === secondCheck, 'events are removed' );
+    it( 'should be able to pop in the original children ', () =>
+    {
+        assert.ok( popInSelectElementsSpy.callCount === 1 );
+    } );
+
+
+    it( 'should remove event listeners', () =>
+    {
+        flounder                = new Flounder( document.body );
+        let removeListenersSpy  = sinon.spy( flounder, 'removeListeners' );
+
+        let refs        = flounder.refs;
+        refs.selected.click();
+
+        let firstCheck = refs.wrapper.className.indexOf( 'open' );
+        flounder.componentWillUnmount();
+        refs.selected.click();
+
+        let secondCheck = refs.wrapper.className.indexOf( 'open' );
+
+        assert.equal( firstCheck, secondCheck, 'events are removed' );
+        assert.equal( removeListenersSpy.callCount, 1 );
+    } );
+
+
+
+    it( 'should run this.onComponentWillUnmount()', () =>
+    {
+        flounder                = new Flounder( document.body );
+        let onComponentWillUnmountSpy   = sinon.stub( flounder, 'onComponentWillUnmount', () => {} );
+
+        flounder.componentWillUnmount();
+        assert.equal( onComponentWillUnmountSpy.callCount, 1 );
+        flounder.onComponentWillUnmount.restore();
+
+        onComponentWillUnmountSpy   = sinon.stub( flounder, 'onComponentWillUnmount', () => { a + b } );
+
+        let consoleSpy = sinon.stub( console, 'warn', () => {} );
+        flounder.componentWillUnmount();
+        assert.equal( consoleSpy.callCount, 1 );
+
+        flounder.onComponentWillUnmount.restore();
+        console.warn.restore();
+    } );
 } );
 
+
+/**
+ * ## constructor
+ *
+ * filters and sets up the main init
+ *
+ * @param {DOMElement, String, Array} target flounder mount point
+ * @param {Object} props passed options
+ *
+ * @return _Object_ new flounder object
+ */
+describe( 'constructor', () =>
+{
+    let flounder;
+
+    it( 'should exist', () =>
+    {
+        assert.ok( Flounder );
+    } );
+
+
+    it( 'shouldn\'t run if there is no target', () =>
+    {
+        let consoleSpy  = sinon.stub( console, 'warn', () => {} );
+        flounder        = new Flounder();
+
+        assert.equal( consoleSpy.callCount, 1 );
+        console.warn.restore();
+
+        assert.throws( () => new Flounder( 'moon' ), 'Flounder - No target element found.' );
+    } );
+
+
+    it( 'should make a single flounder from a target(s)', () =>
+    {
+        flounder = new Flounder( 'select' );
+        assert.ok( flounder instanceof Flounder, 'a single target makes a flounder' );
+
+
+        let consoleSpy  = sinon.stub( console, 'warn', () => {} );
+        flounder        = new Flounder( 'div' );
+        console.warn.restore();
+
+        assert.equal( consoleSpy.callCount, 1 );
+    } );
+
+
+    it( 'should destroy any previously added flounder on the same element', () =>
+    {
+        let flounderBackup  = document.body.flounder;
+        let flounder        = new Flounder( 'body' );
+        assert.notDeepEqual( flounder, flounderBackup );
+    } );
+});
 
 
 /**
@@ -89,8 +143,6 @@ describe( 'filterSearchResults', () =>
 {
 
 } );
-
-
 
 
 /**
@@ -178,6 +230,17 @@ describe( 'fuzzySearchReset', () =>
 describe( 'init', () =>
 {
 
+    it( 'should create all flounder refs', () =>
+    {
+        let flounder = new Flounder( document.body );
+
+        let ref     = flounder.refs.flounder.flounder instanceof Flounder;
+        let oTarget = flounder.originalTarget.flounder instanceof Flounder;
+        let target  = flounder.target.flounder instanceof Flounder;
+
+        assert.ok( ref === true && oTarget === true && target === true, 'creates all refs' );
+        flounder.destroy();
+    } );
 } );
 
 
