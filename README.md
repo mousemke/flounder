@@ -331,7 +331,19 @@ npm scripts
 Contributing
 ============
 
-We gladly accept and review any pull-requests. Feel free! :heart:
+Flounder's **branch structure** goes as follows:
+
++ `release` - contains stavle including the dist files.  this is the branch that is used to make the npm and git releases
+
++ `master` - latest stable git repo. This is like release but without the noise of the dist files
+
++ `dev` - current development branch.  This is where feature branches should branch from
+
++ feature branches - these branches come from `dev`, are branched for a specific geature or bug, then get merged back into `dev`
+
+
+
+We gladly accept and review any pull-requests into the current `dev` branch. Feel free! :heart:
 
 Otherwise, if you just want to talk, we are very easy to get a hold of!
 
@@ -436,6 +448,7 @@ Change Log
 -----
 
 + Flounder
+    + branch structure reorganized
     + Flounder now only handles one element
     + new Flounder _always_ returns a instance of Flounder
     + Flounder will warn if it drops elements
