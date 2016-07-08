@@ -7,6 +7,7 @@ import version  from '/core/version';
 import classes  from '/core/classes';
 import keycodes from '/core/keycodes';
 import utils    from '/core/utils';
+import Sole     from '/core/search';
 
 
 /**
@@ -122,9 +123,9 @@ describe( 'constructor', () =>
 
         let consoleSpy  = sinon.stub( console, 'warn', () => {} );
         flounder        = new Flounder( 'div' );
-        console.warn.restore();
-
         assert.equal( consoleSpy.callCount, 1 );
+
+        console.warn.restore();
     } );
 
 
@@ -283,6 +284,7 @@ describe( 'fuzzySearch', () =>
     } );
 
 
+
     it( 'should totally ignore up and down', () =>
     {
         let flounderRefs    = flounder.refs;
@@ -325,6 +327,7 @@ describe( 'fuzzySearchReset', () =>
     } );
 
 
+
     it( 'should correctly reset all search elements', () =>
     {
 
@@ -358,17 +361,65 @@ describe( 'fuzzySearchReset', () =>
 describe( 'init', () =>
 {
 
-    // it( 'should create all flounder refs', () =>
-    // {
-    //     let flounder = new Flounder( document.body );
+    let flounder = new Flounder( document.body, { moon: 'doge', data: [ 1, 2, 3 ] } );
 
-    //     let ref     = flounder.refs.flounder.flounder instanceof Flounder;
-    //     let oTarget = flounder.originalTarget.flounder instanceof Flounder;
-    //     let target  = flounder.target.flounder instanceof Flounder;
+    it( 'should exist', () =>
+    {
+        assert.ok( flounder.init, 'exists' );
+    } );
 
-    //     assert.ok( ref === true && oTarget === true && target === true, 'creates all refs' );
-    //     flounder.destroy();
-    // } );
+
+
+    it( 'should not add search unless the value is set', () =>
+    {
+        assert.equal( flounder.search, false );
+
+        let searchyFlounder = new Flounder( document.querySelector( 'div' ), { search: true  } );
+
+        assert.equal( searchyFlounder.search instanceof Sole, true );
+    } );
+
+
+
+    it( 'should create flounder refs on targets', () =>
+    {
+        let oTarget = flounder.originalTarget.flounder instanceof Flounder;
+        let target  = flounder.target.flounder instanceof Flounder;
+
+        assert.ok( oTarget === true && target === true, 'creates all refs' );
+    } );
+
+
+
+    it( 'should set the inital props, target, and environment', () =>
+    {
+        assert.equal( flounder.props.moon, 'doge' );
+        assert.deepEqual( document.body, flounder.target );
+    } );
+
+
+
+    it( 'should warn when the user functions dont work', () =>
+    {
+        sinon.stub( console, 'warn', () => {} );
+
+        let func = () => { a + b };
+
+        new Flounder( document.querySelector( 'div' ), { onInit : func,
+                                                         onComponentDidMount : func
+                                                     } );
+
+        assert( console.warn.callCount, 2 );
+
+        console.warn.restore();
+    } );
+
+
+
+    it( 'should be set to ready after init', () =>
+    {
+        assert.equal( flounder.ready, true );
+    } );
 } );
 
 
@@ -383,19 +434,43 @@ describe( 'init', () =>
  */
 describe( 'initializeOptions', () =>
 {
-// let data = [
-//             'doge',
-//             'moon'
-//         ];
+    let data = [
+        'doge',
+        'moon',
+        'wow'
+    ];
 
-//         let flounder    = new Flounder( document.body, { data : data, defaultIndex : 0, search : true } );
-//         assert.ok( flounder.initializeOptions, 'exists' );
+    let flounder = new Flounder( document.body, { data: data, multiple: 'doge', classes: { flounder: 'cat' } } );
 
-//         assert.ok( flounder.data[0].text === 'doge', 'correctly sets data' );
-//         assert.ok( flounder.search, 'correctly sets a prop' );
-//         assert.ok( flounder.defaultIndex === 0, 'correctly sets a different prop' );
+    it( 'should exist', () =>
+    {
+        assert.ok( flounder.initializeOptions, 'exists' );
+    } );
 
-//         flounder.destroy();
+
+    it( 'should transfer all props to flounder (classes get a `Class` suffix)', () =>
+    {
+        assert.deepEqual( flounder.data, data );
+        assert.equal( flounder.multiple, 'doge' );
+        assert.equal( flounder.flounderClass, 'cat' );
+    } );
+
+
+    let flounder2 = new Flounder( document.body, { data: data, defaultEmpty: true, multipleTags: true } );
+
+
+    it( 'should have an empty placeholder if set empty', () =>
+    {
+        assert.equal( flounder2.placeholder, '' );
+    } );
+
+
+    it( 'should set appropriate setting if it have multiple tags', () =>
+    {
+        assert.equal( flounder2.multipleTags, true );
+        assert.equal( flounder2.search instanceof Sole, true );
+        assert.equal( flounder2.multiple, true );
+    } );
 } );
 
 
@@ -409,15 +484,42 @@ describe( 'initializeOptions', () =>
  */
 describe( 'onRender', () =>
 {
-// let data = [
-//             'doge',
-//             'moon'
-//         ];
+    let data = [
+        'doge',
+        'moon',
+        'wow'
+    ];
 
-//         let flounder    = new Flounder( document.body, { data : data, defaultIndex : 0, search : true } );
-//         assert.ok( flounder.onRender, 'exists' );
+    let flounder = new Flounder( document.body, { data: data, classes: { flounder: 'cat' } } );
+    sinon.stub( flounder, 'addListeners', () => {} );
 
-//         flounder.destroy();
+    it( 'should exist', () =>
+    {
+        assert.ok( flounder.onRender, 'exists' );
+    } );
+
+
+
+    it( 'should check if it\'s ios, and adjust classes', () =>
+    {
+        flounder.isIos = true;
+
+        flounder.onRender();
+        assert.equal( utils.hasClass( flounder.refs.select, classes.HIDDEN_IOS ), true );
+
+        let flounder2 = new Flounder( document.body, { data: data, multiple: true } );
+        assert.equal( utils.hasClass( flounder2.refs.select, classes.HIDDEN_IOS ), false );
+
+        flounder.isIos = false;
+    } );
+
+
+
+    it( 'should attach the event listeners', () =>
+    {
+        flounder.onRender();
+        assert.equal( flounder.addListeners.callCount, 2 );
+    } );
 } );
 
 
@@ -431,22 +533,35 @@ describe( 'onRender', () =>
  */
 describe( 'sortData', () =>
 {
-        // let data = [
-        //     'doge',
-        //     'moon'
-        // ];
+    let data = [
+        'doge',
+        'moon'
+    ];
 
-        // let flounder    = new Flounder( document.body, { data : data } );
-        // assert.ok( flounder.sortData, 'exists' );
+    let flounder    = new Flounder( document.body, { data : data } );
 
-        // let sortedData  = flounder.sortData( ['doge','moon'] );
 
-        // assert.equal( sortedData[0].index, 0, 'sets the index' );
+    it( 'should exist', () =>
+    {
+        assert.ok( flounder.sortData, 'exists' );
+    } );
 
-        // sortedData      = flounder.sortData( [{text:'doge',value:'moon'},'moon'] );
-        // assert.equal( sortedData[0].value, 'moon', 'sets the value' );
 
-        // flounder.destroy();
+
+    let sortedData  = flounder.sortData( [
+                                    'doge',
+                                    {
+                                        text:'moon',
+                                        value: 'moon'
+                                    },
+                                    {
+                                        header: 'moin!',
+                                        data: [ 1, 2, 3 ]
+                                    } ] );
+
+    assert.ok( sortedData[0].index === 0 && sortedData[0].text === 'doge', 'sets simple text' );
+    assert.ok( sortedData[1].index === 1 && sortedData[1].text === 'moon', 'sets data objects' );
+    assert.ok( sortedData[2].index === 2 && sortedData[2].text === 1, 'sets header info' );
 } );
 
 
@@ -466,12 +581,29 @@ describe( 'find', () =>
     } );
 
 
-    it( 'should return an arrays of flounders', () =>
+
+    it( 'should accept an array and return an arrays of flounders', () =>
     {
         let flounders = Flounder.find( [ document.body ] );
         assert.ok( Array.isArray( flounders ), 'multiple targets returns an array' );
         assert.ok( flounders[0] instanceof Flounder, 'of flounders' );
-        flounders[0].destroy();
+    } );
+
+
+
+    it( 'should accept a string and return an arrays of flounders', () =>
+    {
+        let flounders = Flounder.find( 'div' );
+        assert.ok( Array.isArray( flounders ), 'multiple targets returns an array' );
+        assert.ok( flounders[0] instanceof Flounder, 'of flounders' );
+    } );
+
+
+    it( 'should accept a DOM element and return an arrays of flounders', () =>
+    {
+        let flounders = Flounder.find( document.body );
+        assert.ok( Array.isArray( flounders ), 'multiple targets returns an array' );
+        assert.ok( flounders[0] instanceof Flounder, 'of flounders' );
     } );
 } );
 

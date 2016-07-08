@@ -235,6 +235,7 @@ class Flounder
         {
             console.warn( `something may be wrong in "onInit"`, e );
         }
+
         this.buildDom();
         let { isOsx, isIos, multiSelect } = utils.setPlatform();
         this.isOsx          = isOsx;
@@ -271,11 +272,11 @@ class Flounder
 
         for ( let opt in defaultOptions )
         {
-            if ( defaultOptions.hasOwnProperty( opt ) && opt !== `classes` )
+            if ( opt !== `classes` )
             {
                 this[ opt ] = props[ opt ] !== undefined ? props[ opt ] : defaultOptions[ opt ];
             }
-            else if ( opt === `classes` )
+            else
             {
                 let classes         = defaultOptions[ opt ];
                 let propsClasses    = props.classes;
@@ -319,7 +320,7 @@ class Flounder
         let refs    = this.refs;
         let data    = refs.data;
 
-        if ( !!this.isIos && ( !this.multipleTags || !this.multiple )  )
+        if ( !!this.isIos && !this.multiple )
         {
             let sel     = refs.select;
             utils.removeClass( sel, classes.HIDDEN );
@@ -371,9 +372,9 @@ class Flounder
 
 
 /**
- * ## arrayOfFlounders
+ * ## .find
  *
- * accepts arral-like objects and selector strings to make multiple flounders
+ * accepts array-like objects and selector strings to make multiple flounders
  *
  * @param {Array or String} flounder target(s)
  * @param {Object} props passed options
