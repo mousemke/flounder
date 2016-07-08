@@ -192,6 +192,7 @@ const events = {
     {
         let search = this.refs.search;
         search.addEventListener( `click`, this.toggleListSearchClick );
+        search.addEventListener( `focus`, this.toggleListSearchClick );
         search.addEventListener( `keyup`, this.fuzzySearch );
         search.addEventListener( `focus`, this.clearPlaceholder );
     },
@@ -783,7 +784,8 @@ const events = {
     removeSearchListeners()
     {
         let search = this.refs.search;
-        search.removeEventListener( `click`, this.toggleList );
+        search.removeEventListener( `click`, this.toggleListSearchClick );
+        search.removeEventListener( `focus`, this.toggleListSearchClick );
         search.removeEventListener( `keyup`, this.fuzzySearch );
         search.removeEventListener( `focus`, this.clearPlaceholder );
     },
@@ -1122,22 +1124,6 @@ const events = {
 
 
     /**
-     * ## toggleListSearchClick
-     *
-     * toggleList wrapper for search.  only triggered if flounder is closed
-     *
-     * @return _Void_
-     */
-    toggleListSearchClick( e )
-    {
-        if ( !utils.hasClass( this.refs.wrapper, classes.OPEN ) )
-        {
-            this.toggleList( e, `open` );
-        }
-    },
-
-
-    /**
      * ## toggleList
      *
      * on click of flounder--selected, this shows or hides the options list
@@ -1169,6 +1155,22 @@ const events = {
             }
 
             this.toggleOpen( e, optionsList, refs, wrapper );
+        }
+    },
+
+
+    /**
+     * ## toggleListSearchClick
+     *
+     * toggleList wrapper for search.  only triggered if flounder is closed
+     *
+     * @return _Void_
+     */
+    toggleListSearchClick( e )
+    {
+        if ( !utils.hasClass( this.refs.wrapper, classes.OPEN ) )
+        {
+            this.toggleList( e, `open` );
         }
     },
 

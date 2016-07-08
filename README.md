@@ -48,9 +48,9 @@ document.querySelector( '#vanilla--select' ).flounder.destroy()
 
 ###Target options
 
-Flounder's target is quite flexible, however since it will only build on the first element it finds.
+Flounder's target is quite flexible, however it will only build on the first element it finds.
 
-* if you would like to build multiple flounders from an array or selector, use `Flounder.find( <selector or array-like object>, [configOptions] )
+* if you would like to build multiple flounders from an array or selector, use `Flounder.find( <selector or array-like object>, [configOptions] )`
 
 you can give it an element:
 
@@ -460,6 +460,7 @@ Change Log
     + multiTags now support aria
     + multiTags now support keyboard navigation
     + keyboard navigation flow / tag selection optimized
+    + fixed focus toggleOpen from multipleTags to search box
 
 + build
     + multiTag construction added to build
