@@ -17,6 +17,7 @@
     "versionBump": "node ./scripts/version_bump.js"
   },
   "devDependencies": {
+    "array-uniq": "^1.0.3",
     "babelify": "^6.3.0",
     "browserify": "^11.2.0",
     "connect": "^3.4.0",

@@ -148,8 +148,13 @@ class Flounder
 
         Array.prototype.slice.call( multiTagWrapper.children, 0 ).forEach( function( el )
         {
-            el.firstChild.removeEventListener( `click`, removeMultiTag );
+            if( el.firstChild )
+            {
+                el.firstChild.removeEventListener( `click`, removeMultiTag );
+            }
         } );
+
+        this.removeSearchListeners();
 
         multiTagWrapper.innerHTML = ``;
 
@@ -180,7 +185,10 @@ class Flounder
 
             Array.prototype.slice.call( multiTagWrapper.children, 0 ).forEach( function( el )
             {
-                el.firstChild.addEventListener( `click`, removeMultiTag );
+                if( el.firstChild )
+                {
+                    el.firstChild.addEventListener( `click`, removeMultiTag );
+                }
             } );
         }
         else
@@ -188,7 +196,9 @@ class Flounder
             this.addPlaceholder();
         }
 
-        this.setTextMultiTagIndent();
+
+        this.refs.search = this.addSearch( multiTagWrapper );
+        this.addSearchListeners();
     }
 
 
@@ -464,8 +474,6 @@ class Flounder
             } );
         }
 
-        this.setTextMultiTagIndent();
-
         selected.setAttribute( `data-value`, value );
         selected.setAttribute( `data-index`, index );
 
@@ -513,31 +521,6 @@ class Flounder
         {
             this.refs.select[ i ].selected = false;
         } );
-    }
-
-
-    /**
-     * ## setTextMultiTagIndent
-     *
-     * sets the text-indent on the search field to go around selected tags
-     *
-     * @return _Void_
-     */
-    setTextMultiTagIndent()
-    {
-        let refs    = this.refs;
-        let search  = refs.search;
-        let offset  = 0;
-
-        if ( search )
-        {
-            Array.prototype.slice.call( refs.multiTagWrapper.children, 0 ).forEach( ( e, i ) =>
-            {
-                offset += utils.getElWidth( e, this.setTextMultiTagIndent, this );
-            } );
-
-            search.style.textIndent = `${offset}px`;
-        }
     }
 
 
