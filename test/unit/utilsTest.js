@@ -1,26 +1,38 @@
 
+import utils    from '/core/utils';
+
+import assert   from 'assert';
+import sinon    from 'sinon';
+
+
 /*
  * ## addClass tests
  *
  * @test exists
- * @test adds an array of classes
- * @test adds a single class
- * @test only adds a class once
+ * @test should add as many classes passed to it without adding anything twice
  */
 describe( 'addClass', () =>
 {
-    // let body = document.body;
-    // utils.removeClass( body, [ 'brains', 'moon', 'doge' ] );
-    // assert.ok( utils.addClass, 'exists' );
+    let body = document.body;
 
-    // utils.addClass( body, [ 'moon', 'doge' ] );
-    // assert.equal( body.className, 'moon  doge', 'adds an array of classes' );
+    it( 'should exist', () =>
+    {
+        utils.removeClass( body, [ 'brains', 'moon', 'doge' ] );
+        assert.ok( utils.addClass, 'exists' );
+    } );
 
-    // utils.addClass( body, 'brains' );
-    // assert.equal( body.className, 'moon  doge  brains', 'adds a single class' );
 
-    // utils.addClass( body, 'brains' );
-    // assert.equal( body.className, 'moon  doge  brains', 'only adds a class once' );
+    it( 'should add as many classes passed to it without adding anything twice', () =>
+    {
+        utils.addClass( body, [ 'moon', 'doge' ] );
+        assert.equal( body.className, 'moon  doge', 'adds an array of classes' );
+
+        utils.addClass( body, 'brains' );
+        assert.equal( body.className, 'moon  doge  brains', 'adds a single class' );
+
+        utils.addClass( body, 'brains' );
+        assert.equal( body.className, 'moon  doge  brains', 'only adds a class once' );
+    } );
 } );
 
 
@@ -28,23 +40,41 @@ describe( 'addClass', () =>
  * ## attachAttributes tests
  *
  * @test exists
- * @test adds a data-attribute
- * @test adds a property
- * @test adds multiple attributes
+ * @test should attach data attributes
+ * @test should not do anything if the object is non existant
+ * @test should attach properties
  */
 describe( 'attachAttributes', () =>
 {
-    // let body = document.body;
-    // assert.ok( utils.attachAttributes, 'exists' );
+    let body = document.body;
 
-    // utils.attachAttributes( body, { 'data-moon' : 'doge' } );
-    // assert.equal( body.getAttribute( 'data-moon' ), 'doge', 'adds a data-attribute' );
+    it( 'should exist', () =>
+    {
+        assert.ok( utils.attachAttributes, 'exists' );
+    } );
 
-    // utils.attachAttributes( body, { 'moon' : 'doge' } );
-    // assert.equal( body.moon, 'doge', 'adds a property' );
 
-    // utils.attachAttributes( body, { 'data-moon' : 'moon', moon : 'maymay' } );
-    // assert.ok( body.getAttribute( 'data-moon' ) === 'moon' && body.moon === 'maymay', 'adds multiple attributes' );
+    it( 'should attach data attributes', () =>
+    {
+        utils.attachAttributes( body, { 'data-moon' : 'doge' } );
+        assert.equal( body.getAttribute( 'data-moon' ), 'doge', 'adds a data-attribute' );
+    } );
+
+
+    it( 'should not do anything if the object is non existant', () =>
+    {
+        assert.equal( utils.attachAttributes( body ), null );
+    } );
+
+
+    it( 'should attach properties', () =>
+    {
+        utils.attachAttributes( body, { 'moon' : 'doge' } );
+        assert.equal( body.moon, 'doge', 'adds a property' );
+
+        utils.attachAttributes( body, { 'data-moon' : 'moon', moon : 'maymay' } );
+        assert.ok( body.getAttribute( 'data-moon' ) === 'moon' && body.moon === 'maymay', 'adds multiple attributes' );
+    } );
 } );
 
 
@@ -52,23 +82,33 @@ describe( 'attachAttributes', () =>
  * ## constructElement tests
  *
  * @test exists
- * @test creates an element
- * @test adds a data-attribute
- * @test adds a property
+ * @test should add return an element
+ * @test should add data attributes and properties where appropriate
  */
 describe( 'constructElement', () =>
 {
-    // let newEl;
+    let newEl;
 
-    // assert.ok( utils.constructElement, 'exists' );
+    it( 'should exist', () =>
+    {
+        assert.ok( utils.constructElement, 'exists' );
+    } );
 
-    // newEl = utils.constructElement( {} );
-    // assert.equal( newEl.nodeType, 1, 'creates an element' );
 
-    // newEl = utils.constructElement( { 'data-moon' : 'moon', moon : 'maymay' } );
+    it( 'should add return an element', () =>
+    {
+        newEl = utils.constructElement( {} );
+        assert.equal( newEl.nodeType, 1, 'creates an element' );
+    } );
 
-    // assert.equal( newEl.getAttribute( 'data-moon' ), 'moon', 'adds a data-attribute' );
-    // assert.equal( newEl.moon, 'maymay', 'adds a property' );
+
+    it( 'should add data attributes and properties where appropriate', () =>
+    {
+        newEl = utils.constructElement( { 'data-moon' : 'moon', moon : 'maymay' } );
+
+        assert.equal( newEl.getAttribute( 'data-moon' ), 'moon', 'adds a data-attribute' );
+        assert.equal( newEl.moon, 'maymay', 'adds a property' );
+    } );
 } );
 
 
@@ -76,32 +116,37 @@ describe( 'constructElement', () =>
  * ## extendClass tests
  *
  * @test exists
- * @test extends a class with a property
- * @test extends a class with a function
- * @test adds a multiple objects
+ * @test should extend as many complex objects as passed to it
  */
 describe( 'extendClass', () =>
 {
-    // class Test
-    // {
-    //     constructor( props )
-    //     {
-    //     }
-    // }
+    class Test
+    {
+        constructor( props )
+        {
+        }
+    }
 
-    // assert.ok( utils.extendClass, 'exists' );
+    it( 'should exist', () =>
+    {
+        assert.ok( utils.extendClass, 'exists' );
+    } );
 
-    // utils.extendClass( Test, { moon: 'doge' } );
 
-    // let test = new Test;
-    // assert.equal( test.moon, 'doge', 'extends a class with a property' );
-    // let func = function(){ return 'doge'; };
+    it( 'should extend as many complex objects as passed to it', () =>
+    {
+        utils.extendClass( Test, { moon: 'doge' } );
 
-    // utils.extendClass( Test, { m : func } );
-    // assert.equal( test.m, func, 'extends a class with a function' );
+        let test = new Test;
+        assert.equal( test.moon, 'doge', 'extends a class with a property' );
+        let func = function(){ return 'doge'; };
 
-    // utils.extendClass( Test, { a: 1 }, { b: 2 }, { c: 3 } );
-    // assert.ok( test.a === 1 && test.b === 2 && test.c === 3, 'adds a multiple objects' );
+        utils.extendClass( Test, { m : func } );
+        assert.equal( test.m, func, 'extends a class with a function' );
+
+        utils.extendClass( Test, { a: 1 }, { b: 2 }, { c: 3 } );
+        assert.ok( test.a === 1 && test.b === 2 && test.c === 3, 'adds a multiple objects' );
+    } );
 } );
 
 
@@ -109,16 +154,23 @@ describe( 'extendClass', () =>
  * ## escapeHTML tests
  *
  * @test exists
- * @test escapes an html string
+ * @test should properly escape html strings
  */
 describe( 'escapeHTML', () =>
 {
-    // assert.ok( utils.escapeHTML, 'exists' );
+    it( 'should exist', () =>
+    {
+        assert.ok( utils.escapeHTML, 'exists' );
+    } );
 
-    // let html = '<div id="qunit-fixture"></div>';
 
-    // let escaped = utils.escapeHTML( html );
-    // assert.equal( escaped, '&lt;div id=&quot;qunit-fixture&quot;&gt;&lt;/div&gt;', 'escapes an html string' );
+    it( 'should properly escape html strings', () =>
+    {
+        let html = '<div id="qunit-fixture"></div>';
+
+        let escaped = utils.escapeHTML( html );
+        assert.equal( escaped, '&lt;div id=&quot;qunit-fixture&quot;&gt;&lt;/div&gt;', 'escapes an html string' );
+    } );
 } );
 
 
@@ -130,16 +182,29 @@ describe( 'escapeHTML', () =>
  */
 describe( 'getElWidth', () =>
 {
-    // assert.ok( utils.getElWidth, 'exists' );
+    it( 'should exist', () =>
+    {
+        assert.ok( utils.getElWidth, 'exists' );
+    } );
 
-    // let body        = document.body;
-    // let bodyWidth   = utils.getElWidth( body );
-    // let style       = getComputedStyle( body );
 
-    // let vanillaBodyWidth = body.offsetWidth + parseInt( style[ 'margin-left' ] ) +
-    //                         parseInt( style[ 'margin-right' ] );
+    it( 'should correctly grab an element\'s width', () =>
+    {
+        let body            = document.body;
 
-    // assert.equal( bodyWidth, vanillaBodyWidth, 'correctly grabs an element\'s width' );
+        body.offsetWidth    = 0;
+        assert.throws( utils.getElWidth.bind( utils, body ), 'Flounder getElWidth error: no callback given' );
+        utils.getElWidth( body, ()=>{}, utils );
+
+        body.offsetWidth    = 1000;
+        let bodyWidth       = utils.getElWidth( body, ()=>{}, utils, 200 );
+        let style           = window.getComputedStyle( body );
+
+        let vanillaBodyWidth = body.offsetWidth + parseInt( style[ 'margin-left' ] ) +
+                                parseInt( style[ 'margin-right' ] );
+
+        assert.equal( bodyWidth, vanillaBodyWidth, 'correctly grabs an element\'s width' );
+    } );
 } );
 
 
@@ -147,21 +212,28 @@ describe( 'getElWidth', () =>
  * ## hasClass tests
  *
  * @test exists
- * @test correctly grabs an element's width
+ * @test should correctly detect classe
  */
 describe( 'hasClass', () =>
 {
-    // assert.ok( utils.hasClass, 'exists' );
+    it( 'should exist', () =>
+    {
+        assert.ok( utils.hasClass, 'exists' );
+    } );
 
-    // let body        = document.body;
 
-    // utils.addClass( body, 'mooney-moon' );
-    // let hasClassBool = utils.hasClass( body, 'mooney-moon' );
-    // assert.equal( hasClassBool, true, 'correctly detects present class' );
+    it( 'should correctly detect classes', () =>
+    {
+        let body        = document.body;
 
-    // utils.removeClass( body, 'mooney-moon' );
-    // hasClassBool = utils.hasClass( body, 'mooney-moon' );
-    // assert.equal( hasClassBool, false, 'correctly detects missing class' );
+        utils.addClass( body, 'mooney-moon' );
+        let hasClassBool = utils.hasClass( body, 'mooney-moon' );
+        assert.equal( hasClassBool, true, 'correctly detects present class' );
+
+        utils.removeClass( body, 'mooney-moon' );
+        hasClassBool = utils.hasClass( body, 'mooney-moon' );
+        assert.equal( hasClassBool, false, 'correctly detects missing class' );
+    } );
 } );
 
 
@@ -211,10 +283,29 @@ describe( 'http', () =>
  * ## iosVersion tests
  *
  * @test exists
+ * @test shouldn\'t register mocha tests as an ios device
+ * @test should register as various ios devices with the right params
  */
 describe( 'iosVersion', () =>
 {
-    // assert.ok( utils.iosVersion, 'exists' );
+    it( 'should exist', () =>
+    {
+        assert.ok( utils.iosVersion, 'exists' );
+    } );
+
+    it( 'shouldn\'t register mocha tests as an ios device', () =>
+    {
+        assert.equal( utils.iosVersion(), false );
+    } );
+
+
+    it( 'should register as various ios devices with the right params', () =>
+    {
+        assert.equal( utils.iosVersion( { navigator: { platform : 'iPad' } } ), '5-' );
+        assert.equal( utils.iosVersion( { indexedDB : true, navigator: { platform : 'iPad' } } ), '8+' );
+        assert.equal( utils.iosVersion( { SpeechSynthesisUtterance: true, navigator: { platform : 'iPad' } } ), '7' );
+        assert.equal( utils.iosVersion( { webkitAudioContext: true, navigator: { platform : 'iPad' } } ), '6' );
+    } );
 } );
 
 
@@ -222,26 +313,33 @@ describe( 'iosVersion', () =>
  * ## removeAllChildren tests
  *
  * @test exists
- * @test all children removed
+ * @test should remove all child elements from an element passed to it
  */
 describe( 'removeAllChildren', () =>
 {
-    // assert.ok( utils.removeAllChildren, 'exists' );
+    it( 'should exist', () =>
+    {
+        assert.ok( utils.removeAllChildren, 'exists' );
+    } );
 
-    // let body        = document.body;
-    // let testDiv     = document.createElement( 'DIV' );
-    // body.appendChild( testDiv );
 
-    // let div;
-    // for ( var i = 0, lenI = 10; i < lenI; i++ )
-    // {
-    //     div = document.createElement( 'DIV' );
-    //     testDiv.appendChild( div );
-    // }
+    it( 'should remove all child elements from an element passed to it', () =>
+    {
+        let body        = document.body;
+        let testDiv     = document.createElement( 'DIV' );
+        body.appendChild( testDiv );
 
-    // utils.removeAllChildren( testDiv );
-    // assert.equal( testDiv.children.length, 0, 'all children removed' );
-    // body.removeChild( testDiv );
+        let div;
+        for ( var i = 0, lenI = 10; i < lenI; i++ )
+        {
+            div = document.createElement( 'DIV' );
+            testDiv.appendChild( div );
+        }
+
+        utils.removeAllChildren( testDiv );
+        assert.equal( testDiv.children.length, 0, 'all children removed' );
+        body.removeChild( testDiv );
+    } );
 } );
 
 
@@ -249,22 +347,32 @@ describe( 'removeAllChildren', () =>
  * ## removeClass tests
  *
  * @test exists
- * @test removes an array of classes
- * @test removes a single class
+ * @test should remove the correct classes
  */
 describe( 'removeClass', () =>
 {
-    // window.utils = utils;
-    // let qunit = document.querySelector( '#qunit' );
+    it( 'should exist', () =>
+    {
+        assert.ok( utils.removeClass, 'exists' );
+    } );
 
-    // assert.ok( utils.removeClass, 'exists' );
 
-    // utils.addClass( qunit, [ 'brains', 'moon', 'doge' ] );
-    // utils.removeClass( qunit, [ 'moon', 'doge' ] );
-    // assert.ok( qunit.className.indexOf( 'moon' ) === -1 && qunit.className.indexOf( 'doge' ) === -1, 'removes an array of classes' );
+    it( 'should remove the correct classes', () =>
+    {
+        window.utils = utils;
+        let body = document.querySelector( 'body' );
 
-    // utils.removeClass( qunit, 'brains' );
-    // assert.equal( qunit.className.indexOf( 'brains' ), -1, 'removes a single class' );
+        utils.addClass( body, [ 'brains', 'moon', 'doge' ] );
+        utils.removeClass( body, [ 'moon', 'doge' ] );
+        assert.ok( body.className.indexOf( 'moon' ) === -1 && body.className.indexOf( 'doge' ) === -1, 'removes an array of classes' );
+
+        utils.removeClass( body, 'brains' );
+        assert.equal( body.className.indexOf( 'brains' ), -1, 'removes a single class' );
+
+        utils.addClass( body, [ 'brains', 'moon', 'doge' ] );
+        utils.removeClass( body, 'moon' );
+        assert.equal( body.className.indexOf( 'moon' ), -1, 'removes a middle class' );
+    } );
 } );
 
 
@@ -272,10 +380,35 @@ describe( 'removeClass', () =>
  * ## scrollTo tests
  *
  * @test exists
+ * @test should check the bounds and either scroll up or down
  */
 describe( 'scrollTo', () =>
 {
-    // assert.ok( utils.scrollTo, 'exists' );
+    it( 'should exist', () =>
+    {
+        assert.ok( utils.scrollTo, 'exists' );
+    } );
+
+
+    it( 'should check the bounds and either scroll up or down', () =>
+    {
+        let element = {
+            offsetHeight: 10,
+            offsetTop   : 150,
+            parentNode: {
+                parentNode: {
+                    scrollTop   : 0,
+                    offsetHeight: 100
+                }
+            }
+        };
+
+        utils.scrollTo( element );
+        assert.equal( element.parentNode.parentNode.scrollTop, 65 );
+
+        element.offsetTop = 10;
+        assert.equal( element.parentNode.parentNode.scrollTop, 65 );
+    } );
 } );
 
 
@@ -283,10 +416,25 @@ describe( 'scrollTo', () =>
  * ## setPlatform tests
  *
  * @test exists
+ * @test should be able to determine the platform conditions
  */
 describe( 'setPlatform', () =>
 {
-    // assert.ok( utils.setPlatform, 'exists' );
+    it( 'should exist', () =>
+    {
+        assert.ok( utils.setPlatform, 'exists' );
+    } );
+
+
+    it( 'should be able to determine the platform conditions', () =>
+    {
+        assert.equal( utils.setPlatform( { navigator : { platform: 'Mac' } } ).isOsx, true );
+        assert.equal( utils.setPlatform( { navigator : { platform: 'Linux' } } ).isOsx, false );
+        assert.equal( utils.setPlatform( { navigator : { platform: 'Linux - iPad' } } ).isIos, '5-' );
+        assert.equal( utils.setPlatform( { navigator : { platform: 'Linux - Android' } } ).isIos, false );
+        assert.equal( utils.setPlatform( { navigator : { platform: 'Mac' } } ).multiSelect, 'metaKey' );
+        assert.equal( utils.setPlatform( { navigator : { platform: 'Linux' } } ).multiSelect, 'ctrlKey' );
+    } );
 } );
 
 
@@ -294,19 +442,29 @@ describe( 'setPlatform', () =>
  * ## toggleClass tests
  *
  * @test exists
- * @test adds a class
- * @test removes a class
+ * @test should add classes when necessary
+ * @test should remove classes when necessary
  */
 describe( 'toggleClass', () =>
 {
-    // let body = document.body;
-    // utils.removeClass( body, 'doge' );
+    it( 'should exist', () =>
+    {
+        assert.ok( utils.toggleClass, 'exists' );
+    } );
 
-    // assert.ok( utils.toggleClass, 'exists' );
+    let select = document.querySelector( 'SELECT' );
+    utils.removeClass( select, 'doge' );
 
-    // utils.toggleClass( body, 'doge' );
-    // assert.equal( utils.hasClass( body, 'doge' ), true, 'adds a class' );
+    it( 'should add classes when necessary', () =>
+    {
+        utils.toggleClass( select, 'doge' );
+        assert.equal( utils.hasClass( select, 'doge' ), true, 'adds a class' );
+    } );
 
-    // utils.toggleClass( body, 'doge' );
-    // assert.equal( utils.hasClass( body, 'doge' ), false, 'removes a class' );
+
+    it( 'should remove classes when necessary', () =>
+    {
+        utils.toggleClass( select, 'doge' );
+        assert.equal( utils.hasClass( select, 'doge' ), false, 'removes a class' );
+    } );
 } );
