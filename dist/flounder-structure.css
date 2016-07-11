@@ -1,0 +1,362 @@
+
+.flounder--wrapper
+{
+    width:                          180px;
+    width:                          18rem;
+    user-select:                    none;
+    display:                        inline-block;
+    text-align:                     left;
+}
+
+
+.flounder
+{
+    border:                         1px solid;
+    cursor:                         pointer;
+    box-sizing:                     border-box;
+    position:                       relative;
+}
+
+
+.flounder__arrow--wrapper
+{
+    position:                       absolute;
+    background-color:               transparent;
+    top:                            0;
+    right:                          0;
+    width:                          30px;
+    height:                         100%;
+    pointer-events:                 none;
+}
+
+
+.flounder__arrow--inner
+{
+    width:                          0;
+    height:                         0;
+    border-left:                    4px solid transparent;
+    border-right:                   4px solid transparent;
+    border-top:                     7px solid #000;
+    margin-top:                     11px;
+    position:                       absolute;
+    right:                          10px;
+    pointer-events:                 none;
+}
+
+
+.flounder__option--selected--displayed:hover ~ .flounder__arrow--wrapper,
+.flounder__list--wrapper:hover ~ .flounder__arrow--wrapper,
+.flounder__input--search:hover ~ .flounder__arrow--wrapper,
+.flounder__option--selected--displayed:focus ~ .flounder__arrow--wrapper,
+.flounder__list--wrapper:focus ~ .flounder__arrow--wrapper,
+.flounder__input--search:focus ~ .flounder__arrow--wrapper
+{
+    background-color:               #eee;
+}
+
+
+.flounder__option--selected--displayed:active ~ .flounder__arrow--wrapper,
+.flounder__input--search:active ~ .flounder__arrow--wrapper
+{
+    background-color:               #ccc;
+}
+
+
+.flounder__list--wrapper
+{
+    display:                        block;
+    z-index:                        800;
+    position:                       absolute;
+    max-height:                     200px;
+    overflow-x:                     hidden;
+    left:                           -1px;
+    border:                         1px solid;
+    background-color:               #fff;
+    width:                          100%;
+    border-bottom-right-radius:     0;
+    border-top-right-radius:        0;
+}
+
+
+/* -------------------------------------------------------------------------- */
+/* FLOUNDER - option                                                          */
+/* -------------------------------------------------------------------------- */
+.flounder__option--selected--displayed
+{
+    box-sizing:                     border-box;
+    display:                        inline-block;
+    vertical-align:                 middle;
+    text-indent:                    0.5em;
+    padding-right:                  35px;
+    padding-left:                   3px;
+    line-height:                    2em;
+    height:                         30px;
+    -webkit-appearance:             none;
+    overflow:                       hidden;
+    white-space:                    nowrap;
+    text-overflow:                  ellipsis;
+    cursor:                         pointer;
+    width:                          100%;
+    border-bottom-right-radius:     0;
+    border-top-right-radius:        0;
+}
+
+
+.flounder__option
+{
+    padding:                        8px 10px 7px 10px;
+    color:                          #000;
+}
+
+
+.flounder__hover
+{
+    background-color:               #eee;
+}
+
+
+.flounder__option--selected
+{
+    background-color:               #ccc;
+}
+
+
+.flounder__option--selected.flounder__hover
+{
+    color:                          #ccc;
+    background-color:               #aaa;
+}
+
+
+.flounder__option--selected.flounder__hover .flounder__option--description
+{
+    color:                          #eee;
+}
+
+
+/* -------------------------------------------------------------------------- */
+/* FLOUNDER - sections                                                        */
+/* -------------------------------------------------------------------------- */
+.flounder__section, .flounder__header
+{
+    cursor:                         auto;
+    pointer-events:                 none;
+}
+
+.flounder__section
+{
+    text-indent:                    5px;
+    margin:                         5px 0 3px 2px;
+    border:                         1px solid #ddd;
+    padding-top:                    2px;
+}
+
+
+.flounder__header
+{
+    color:                          #777;
+}
+
+
+.flounder__section .flounder__option
+{
+    cursor:                         pointer;
+    pointer-events:                 auto;
+}
+
+
+
+/* -------------------------------------------------------------------------- */
+/* FLOUNDER - hover                                                           */
+/* -------------------------------------------------------------------------- */
+.flounder:hover, .flounder:hover .flounder__list--wrapper
+{
+    z-index:                        799;
+}
+
+
+
+/* -------------------------------------------------------------------------- */
+/* FLOUNDER - open                                                            */
+/* -------------------------------------------------------------------------- */
+.open .flounder
+{
+    z-index:                        800;
+}
+
+
+.open .flounder__option--selected--displayed
+{
+    background-color:               #fff;
+    border-bottom:                  none;
+    border-bottom-left-radius:      none;
+    border-bottom-right-radius:     none;
+}
+
+
+
+/* -------------------------------------------------------------------------- */
+/* FLOUNDER - search                                                          */
+/* -------------------------------------------------------------------------- */
+.flounder__input--search
+{
+    box-sizing:                     border-box;
+    display:                        block;
+    position:                       absolute;
+    top:                            1px;
+    left:                           1px;
+    height:                         26px;
+    z-index:                        1;
+    width:                          calc(100% - 6px);
+    border:                         1px solid transparent;
+    background-color:               transparent;
+}
+
+
+.flounder__input--search:focus
+{
+    outline:                        none;
+}
+
+
+
+/* -------------------------------------------------------------------------- */
+/* FLOUNDER - hidden classes select                                           */
+/* -------------------------------------------------------------------------- */
+.flounder__option--selected--hidden
+{
+    display:                        none;
+}
+
+
+.flounder--hidden--ios
+{
+    position:                       absolute;
+    top:                            0;
+    opacity:                        0;
+    width:                          1px;
+    height:                         1px;
+}
+
+
+.flounder--hidden, .flounder--search--hidden
+{
+    position:                       absolute;
+    left:                           -999999px;
+}
+
+
+.flounder__disabled, .flounder__disabled--option
+{
+    pointer-events:                 none;
+    cursor:                         auto;
+}
+
+
+.flounder__disabled
+{
+    border-color:                   #ccc;
+    color:                          #ccc;
+}
+
+
+
+/* -------------------------------------------------------------------------- */
+/* FLOUNDER - multi select                                                    */
+/* -------------------------------------------------------------------------- */
+.flounder__multiple__tag__close
+{
+    background-image:               url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2212%22%20height%3D%2213%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2013%2013%22%20enable-background%3D%22new%200%200%2013%2013%22%3E%3Ccircle%20cx%3D%226.5%22%20cy%3D%226.5%22%20r%3D%226.5%22%20fill%3D%22%23D2D7D9%22%2F%3E%3Cpath%20fill%3D%22%23fff%22%20d%3D%22M9%203H8v1H7v1H6V4H5V3H3v2h1v1h1v1H4v1H3v2h2V9h1V8h1v1h1v1h2V8H9V7H8V6h1V5h1V3z%22%2F%3E%3C%2Fsvg%3E');
+    background-repeat:              no-repeat;
+    width:                          12px;
+    height:                         13px;
+    display:                        inline-block;
+    position:                       relative;
+    left:                           -2px;
+    top:                            3px;
+    cursor:                         pointer;
+}
+
+
+.flounder__multiple__tag__close:hover
+{
+    background-image:               url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2212%22%20height%3D%2213%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2013%2013%22%20enable-background%3D%22new%200%200%2013%2013%22%3E%3Ccircle%20cx%3D%226.5%22%20cy%3D%226.5%22%20r%3D%226.5%22%20fill%3D%22%23279BC8%22%2F%3E%3Cpath%20fill%3D%22%23fff%22%20d%3D%22M9%203H8v1H7v1H6V4H5V3H3v2h1v1h1v1H4v1H3v2h2V9h1V8h1v1h1v1h2V8H9V7H8V6h1V5h1V3z%22%2F%3E%3C%2Fsvg%3E');
+}
+
+
+.flounder__multi--tag--list
+{
+    position:                       absolute;
+    top:                            0;
+    margin-top:                     6px;
+}
+
+
+.flounder__multiple--select--tag
+{
+    margin-left:                    2px;
+    padding:                        4px 5px 4px 5px;
+    margin-right:                   4px;
+    border-radius:                  3px;
+    position:                       relative;
+    z-index:                        2;
+    border:                         1px solid;
+}
+
+
+/* -------------------------------------------------------------------------- */
+/* FLOUNDER - description                                                     */
+/* -------------------------------------------------------------------------- */
+.flounder__option > span, .flounder__option > div
+{
+    pointer-events:                 none;
+}
+
+
+.flounder__option--description
+{
+    font-size:                      0.7em;
+    font-weight:                    200;
+    color:                          #aaa;
+}
+
+
+/* -------------------------------------------------------------------------- */
+/* FLOUNDER - loading                                                     */
+/* -------------------------------------------------------------------------- */
+@keyframes loading
+{
+    0% {
+        content:                    'Loading.';
+    }
+    33% {
+        content:                    'Loading..';
+    }
+    66% {
+        content:                    'Loading...';
+    }
+}
+
+
+.flounder__loading, .flounder__loading--failed
+{
+    display:                        flex;
+    min-height:                     1em;
+    pointer-events:                 none;
+    color:                          #777;
+}
+
+
+.flounder__loading:after
+{
+    display:                        block;
+    content:                        'Loading';
+    animation:                      loading 1s infinite;
+}
+
+
+.flounder__loading--failed:after
+{
+    display:                        block;
+    content:                        'Data load failed';
+}
