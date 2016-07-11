@@ -106,8 +106,8 @@ const api = {
                 {
                     originalTarget.removeChild( firstOption );
                 }
-            } 
-            else if ( tagName === `INPUT` ) 
+            }
+            else
             {
                 target = refs.flounder.parentNode;
             }

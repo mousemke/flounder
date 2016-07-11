@@ -1,15 +1,20 @@
 
-import utils    from '/core/utils';
+import utils        from '/core/utils';
+import µ            from 'microbejs/dist/microbe.http';
 
-import assert   from 'assert';
-import sinon    from 'sinon';
+import assert       from 'assert';
+import sinon        from 'sinon';
 
 
-/*
- * ## addClass tests
+/**
+ * ## addClass
  *
- * @test exists
- * @test should add as many classes passed to it without adding anything twice
+ * on the quest to nuke jquery, a wild helper function appears
+ *
+ * @param {DOMElement} _el target element
+ * @param {String} _class class to add
+ *
+ * @return _Void_
  */
 describe( 'addClass', () =>
 {
@@ -36,13 +41,15 @@ describe( 'addClass', () =>
 } );
 
 
-/*
- * ## attachAttributes tests
+/**
+ * ## attachAttributes
  *
- * @test exists
- * @test should attach data attributes
- * @test should not do anything if the object is non existant
- * @test should attach properties
+ * attached data attributes and others (seperately)
+ *
+ * @param {DOMElement} _el element to assign attributes
+ * @param {Object} _elObj contains the attributes to attach
+ *
+ * @return _Void_
  */
 describe( 'attachAttributes', () =>
 {
@@ -78,12 +85,12 @@ describe( 'attachAttributes', () =>
 } );
 
 
-/*
- * ## constructElement tests
+/**
+ * ## constructElement
  *
- * @test exists
- * @test should add return an element
- * @test should add data attributes and properties where appropriate
+ * @param {Object} _elObj object carrying properties to transfer
+ *
+ * @return _Element_
  */
 describe( 'constructElement', () =>
 {
@@ -112,11 +119,15 @@ describe( 'constructElement', () =>
 } );
 
 
-/*
- * ## extendClass tests
+/**
+ * ## extendClass
  *
- * @test exists
- * @test should extend as many complex objects as passed to it
+ * extends a class from an object.  returns the original reference
+ *
+ * @param {Class} _extend class to be extended
+ * @param {Class} objects objects to extend the class with
+ *
+ * @return {Class} modified class object
  */
 describe( 'extendClass', () =>
 {
@@ -150,11 +161,14 @@ describe( 'extendClass', () =>
 } );
 
 
-/*
- * ## escapeHTML tests
+/**
+ * ## escapeHTML
  *
- * @test exists
- * @test should properly escape html strings
+ * Escapes HTML in order to put correct elements in the DOM
+ *
+ * @param {String} string unescaped string
+ *
+ * @return _Void_
  */
 describe( 'escapeHTML', () =>
 {
@@ -174,11 +188,14 @@ describe( 'escapeHTML', () =>
 } );
 
 
-/*
- * ## getElWidth tests
+/**
+ * ## getElWidth
  *
- * @test exists
- * @test correctly grabs an element's width
+ * gets the width adjusted for margins
+ *
+ * @param {DOMElement} el target element
+ *
+ * @return _Integer_ adjusted width
  */
 describe( 'getElWidth', () =>
 {
@@ -208,11 +225,15 @@ describe( 'getElWidth', () =>
 } );
 
 
-/*
- * ## hasClass tests
+/**
+ * ## hasClass
  *
- * @test exists
- * @test should correctly detect classe
+ * on the quest to nuke jquery, a wild helper function appears
+ *
+ * @param {DOMElement} _el target element
+ * @param {String} _class class to check
+ *
+ * @return _Void_
  */
 describe( 'hasClass', () =>
 {
@@ -237,54 +258,14 @@ describe( 'hasClass', () =>
 } );
 
 
-/*
- * ## http tests
+/**
+ * ## iosVersion
  *
- * @test exists
- */
-describe( 'http', () =>
-{
-    // assert.ok( utils.http, 'exists' );
-
-    // var getTest      = assert.async();
-    // utils.http( { url: './httpTest.html', method: 'GET' } ).then( function( data )
-    // {
-    //     assert.equal( data, 'moon', 'page correctly retrieved' );
-    //     getTest();
-    // } );
-
-    // var parameterTest      = assert.async();
-    // utils.http( {
-    //             url         : './httpTest.html',
-    //             method      : 'GET',
-    //             headers     : {
-    //                 Accept      : 'text/plain'
-    //             },
-    //             async       : true
-    //         }
-    // ).then( function( data )
-    // {
-    //     assert.equal( data, 'moon', 'parameters are recieved correctly' );
-    //     parameterTest();
-    // } );
-
-    // var errorTest      = assert.async();
-    // utils.http( { url : './httpTest.hml' }
-    // ).catch( function( e )
-    // {
-    //     e = ( e instanceof Error );
-    //     assert.equal( e, true, 'errors are handled correctly' );
-    //     errorTest();
-    // } );
-} );
-
-
-/*
- * ## iosVersion tests
+ * checks and returns the ios version
  *
- * @test exists
- * @test shouldn\'t register mocha tests as an ios device
- * @test should register as various ios devices with the right params
+ * @param {Object} windowObj window, but allows for as testing override
+ *
+ * @return _Void_
  */
 describe( 'iosVersion', () =>
 {
@@ -309,11 +290,14 @@ describe( 'iosVersion', () =>
 } );
 
 
-/*
- * ## removeAllChildren tests
+/**
+ * ## removeAllChildren
  *
- * @test exists
- * @test should remove all child elements from an element passed to it
+ * removes all children from a specified target
+ *
+ * @param {DOMElement} target target element
+ *
+ * @return _Void_
  */
 describe( 'removeAllChildren', () =>
 {
@@ -343,11 +327,15 @@ describe( 'removeAllChildren', () =>
 } );
 
 
-/*
- * ## removeClass tests
+/**
+ * ## removeClass
  *
- * @test exists
- * @test should remove the correct classes
+ * on the quest to nuke jquery, a wild helper function appears
+ *
+ * @param {DOMElement} _el target element
+ * @param {String} _class class to remove
+ *
+ * @return _Void_
  */
 describe( 'removeClass', () =>
 {
@@ -376,11 +364,14 @@ describe( 'removeClass', () =>
 } );
 
 
-/*
- * ## scrollTo tests
+ /**
+ * ## scrollTo
  *
- * @test exists
- * @test should check the bounds and either scroll up or down
+ * checks if an option is visible and, if it is not, scrolls it into view
+ *
+ * @param {DOMElement} element element to check
+ *
+ * @return _Void_
  */
 describe( 'scrollTo', () =>
 {
@@ -397,7 +388,7 @@ describe( 'scrollTo', () =>
             offsetTop   : 150,
             parentNode: {
                 parentNode: {
-                    scrollTop   : 0,
+                    scrollTop   : 7,
                     offsetHeight: 100
                 }
             }
@@ -406,17 +397,22 @@ describe( 'scrollTo', () =>
         utils.scrollTo( element );
         assert.equal( element.parentNode.parentNode.scrollTop, 65 );
 
-        element.offsetTop = 10;
-        assert.equal( element.parentNode.parentNode.scrollTop, 65 );
+        element.offsetTop = 5;
+        utils.scrollTo( element );
+        assert.equal( element.parentNode.parentNode.scrollTop, 0 );
     } );
 } );
 
 
-/*
- * ## setPlatform tests
+
+/**
+ * ## setPlatform
  *
- * @test exists
- * @test should be able to determine the platform conditions
+ * sets the platform to osx or not osx for the sake of the multi select key
+ *
+ * @param {Object} windowObj window, but allows for as testing override
+ *
+ * @return _Void_
  */
 describe( 'setPlatform', () =>
 {
@@ -438,12 +434,15 @@ describe( 'setPlatform', () =>
 } );
 
 
-/*
- * ## toggleClass tests
+/**
+ * ## toggleClass
  *
- * @test exists
- * @test should add classes when necessary
- * @test should remove classes when necessary
+ * in a world moving away from jquery, a wild helper function appears
+ *
+ * @param  {DOMElement} _el target to toggle class on
+ * @param  {String} _class class to toggle on/off
+ *
+ * @return _Void_
  */
 describe( 'toggleClass', () =>
 {

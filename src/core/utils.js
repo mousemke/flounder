@@ -94,6 +94,7 @@ const utils = {
      * extends a class from an object.  returns the original reference
      *
      * @param {Class} _extend class to be extended
+     * @param {Class} objects objects to extend the class with
      *
      * @return {Class} modified class object
      */
@@ -297,7 +298,7 @@ const utils = {
         let parent      = element.parentNode.parentNode;
         let elHeight    = element.offsetHeight;
         let min         = parent.scrollTop;
-        let max         = parent.scrollTop + parent.offsetHeight - element.offsetHeight;
+        let max         = parent.scrollTop + parent.offsetHeight - elHeight;
         let pos         = element.offsetTop;
 
         if ( pos < min )

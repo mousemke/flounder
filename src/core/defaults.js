@@ -80,7 +80,7 @@ const defaults = {
          *
          * @return {Object} default settings
          */
-        let setPlaceholderDefault = function( _data )
+        let setPlaceholderDefault = function( self, _data )
         {
             let refs        = self.refs;
             let select      = refs.select;
@@ -99,7 +99,7 @@ const defaults = {
 
                 if ( !select[ 0 ] || select[ 0 ].value !== `` )
                 {
-                    let defaultOption   = self.constructElement( { tagname : `option`,
+                    let defaultOption   = utils.constructElement( { tagname : `option`,
                                                 className   : classes.OPTION_TAG,
                                                 value       :  _default.value } );
                     defaultOption.innerHTML = escapedText;
@@ -207,8 +207,8 @@ const defaults = {
         {
             let _data       = sortData( data );
 
-            if ( ( configObj.multipleTags || configObj.multiple ) 
-                    && !configObj.defaultIndex 
+            if ( ( configObj.multipleTags || configObj.multiple )
+                    && !configObj.defaultIndex
                     && !configObj.defaultValue )
             {
                 configObj.placeholder = configObj.placeholder || defaultOptions.placeholder;
