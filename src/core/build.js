@@ -318,9 +318,12 @@ const build = {
         let wrapperClass        = classes.MAIN_WRAPPER;
         let wrapper             = utils.constructElement( { className : this.wrapperClass ?
                                     `${wrapperClass}  ${this.wrapperClass}` : wrapperClass } );
-        let flounderClass       = classes.MAIN;
-        let flounder            = constructElement( { className : this.flounderClass ?
-                                    `${flounderClass}  ${this.flounderClass}` : flounderClass } );
+
+        let flounderClass       = this.flounderClass ? classes.MAIN + ' ' + this.flounderClass : classes.MAIN;
+
+        let flounderClasses     = this.multipleTags ? flounderClass + ' ' + classes.MULTIPLE_TAG_FLOUNDER : flounderClass;
+
+        let flounder            = constructElement( { className : flounderClasses } );
 
         flounder.setAttribute( `aria-hidden`, true );
         flounder.tabIndex       = 0;
