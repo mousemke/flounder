@@ -300,6 +300,15 @@ class Flounder
                     {
                         utils.removeClass( data[ e.i ], classes.SEARCH_HIDDEN );
                     } );
+
+                    if( matches.length === 0 )
+                    {
+                        this.addNoResultsMessage();
+                    }
+                    else
+                    {
+                        this.removeNoResultsMessage();
+                    }
                 }
                 else
                 {
@@ -335,7 +344,6 @@ class Flounder
     fuzzySearchReset()
     {
         let refs = this.refs;
-
         refs.data.forEach( dataObj =>
         {
             utils.removeClass( dataObj, classes.SEARCH_HIDDEN );
@@ -521,6 +529,43 @@ class Flounder
         {
             this.refs.select[ i ].selected = false;
         } );
+    }
+
+
+    /**
+     * ## addNoResultsMessage
+     *
+     * Adding 'No Results' message to the option list
+     *
+     * @return _Void_
+     */
+    addNoResultsMessage()
+    {
+        let noResultsEl = this.refs.noResultsEl || utils.constructElement( { className : classes.NO_RESULTS } );
+
+        noResultsEl.innerHTML = 'No Results';
+        this.refs.optionsList.appendChild( noResultsEl );
+
+        this.refs.noResultsEl = noResultsEl;
+    }
+
+
+    /**
+     * ## removeNoResultsMessage
+     *
+     * Removing 'No Results' message from the option list
+     *
+     * @return _Void_
+     */
+    removeNoResultsMessage()
+    {
+        let noResultsEl =  this.refs.noResultsEl;
+
+        if( this.refs.optionsList && noResultsEl )
+        {
+            this.refs.optionsList.removeChild( noResultsEl );
+            this.refs.noResultsEl = undefined;
+        }
     }
 
 
