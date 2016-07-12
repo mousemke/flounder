@@ -818,11 +818,12 @@ const events = {
      */
     removeSelectedValue( data )
     {
-        data = data || this.refs.data;
+        data            = data || this.refs.data;
+        let optionTags  = this.refs.select.children;
 
         data.forEach( ( d, i ) =>
         {
-            this.refs.select[ i ].selected = false;
+            optionTags[ i ].selected = false;
         } );
     },
 

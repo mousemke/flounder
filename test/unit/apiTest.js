@@ -140,9 +140,32 @@ describe( 'destroy', () =>
     } );
 
 
-    it( 'should detect that it has already been reemoved', () =>
+    it( 'should choose it\'s remaining element carefully', () =>
     {
-        flounder = new Flounder( document.querySelector( 'DIV' ), {} );
+        let input   = document.querySelector( 'INPUT' );
+        let select  = document.querySelector( 'SELECT' );
+
+        flounder    = new Flounder( input,  { placeholder: 'moon!', data: [ 1, 2, 3 ] } );
+        flounder.destroy();
+
+        assert.ok( input.parentNode );
+
+
+        flounder    = new Flounder( select,  { placeholder: 'moon!', data: [ 1, 2, 3 ] } );
+
+        flounder.originalTarget[0] = { className: classes.PLACEHOLDER };
+        sinon.stub( flounder.originalTarget, 'removeChild', ()=>{} );
+        flounder.destroy();
+
+        assert.equal( flounder.originalTarget.removeChild.callCount, 5 );
+        flounder.originalTarget.removeChild.restore();
+        assert.ok( select.parentNode );
+    } );
+
+
+    it( 'should detect that it has already been removed', () =>
+    {
+        flounder    = new Flounder( document.querySelector( 'INPUT' ), {} );
         let wrapper = flounder.refs.wrapper;
 
         wrapper.parentNode.removeChild( wrapper );
@@ -161,7 +184,38 @@ describe( 'destroy', () =>
  */
 describe( 'deselectAll', () =>
 {
+    let div = document.querySelector( 'div' );
 
+    it( 'should deselect all options', () =>
+    {
+        let flounder = new Flounder( div, { multiple: true, data: [ 1, 2, 3 ] } );
+
+        flounder.setByIndex( 1, true );
+        flounder.setByIndex( 2, true );
+
+        assert.equal( flounder.getSelected().length, 2 );
+
+        flounder.deselectAll();
+        assert.equal( flounder.getSelected().length, 0 );
+
+        flounder.destroy();
+    } );
+
+
+    it( 'should remove all multipleTags', () =>
+    {
+        let flounder = new Flounder( div, { multipleTags: true, data: [ 1, 2, 3 ] } );
+
+        flounder.clickByIndex( 1, true );
+        flounder.clickByIndex( 2, true );
+
+        assert.equal( flounder.getSelected().length, 2 );
+
+        flounder.deselectAll();
+        assert.equal( flounder.getSelected().length, 0 );
+
+        flounder.destroy();
+    } );
 } );
 
 
@@ -170,13 +224,33 @@ describe( 'deselectAll', () =>
  *
  * disables flounder by adjusting listeners and classes
  *
- * @param {Boolean} bool dsable or enable
+ * @param {Boolean} bool disable or enable
  *
  * @return _Void_
  */
 describe( 'disable', () =>
 {
+    let div = document.querySelector( 'div' );
 
+    let flounder    = new Flounder( div, { data: [ 1, 2, 3 ] } );
+    let refs        = flounder.refs;
+    let selected    = refs.selected;
+    let flounderEl  = refs.flounder;
+
+    it( 'should disable flounder', () =>
+    {
+        flounder.disable( true );
+        assert.ok( utils.hasClass( selected, classes.DISABLED ) );
+        assert.ok( utils.hasClass( flounderEl, classes.DISABLED ) );
+    } );
+
+
+    it( 'should enable flounder', () =>
+    {
+        flounder.disable();
+        assert.ok( !utils.hasClass( selected, classes.DISABLED ) );
+        assert.ok( !utils.hasClass( flounderEl, classes.DISABLED ) );
+    } );
 } );
 
 
@@ -192,7 +266,54 @@ describe( 'disable', () =>
  */
 describe( 'disableByIndex', () =>
 {
+    let div         = document.querySelector( 'div' );
+    let flounder    = new Flounder( div, { data: [ 1, 2, 3 ] } );
+    let arrayRes, singleRes;
 
+    it( 'should be able to handle an array of indexes to disable', () =>
+    {
+        arrayRes    = flounder.disableByIndex( [ 1, 2 ] );
+        assert.equal( flounder.refs.select.children[1].disabled, true );
+        assert.equal( utils.hasClass( flounder.refs.data[2], classes.DISABLED ), true );
+    } );
+
+
+    it( 'should be able to re-enable things as well', () =>
+    {
+        flounder.disableByIndex( 2, true );
+        assert.equal( flounder.refs.select.children[2].disabled, false );
+        assert.equal( utils.hasClass( flounder.refs.data[2], classes.DISABLED ), false );
+    } );
+
+
+    it( 'should be able to start from the other side with negative numbers', () =>
+    {
+        singleRes = flounder.disableByIndex( -1 );
+        assert.equal( flounder.refs.select.children[2].disabled, true );
+        assert.equal( utils.hasClass( flounder.refs.data[2], classes.DISABLED ), true );
+    } );
+
+
+    it( 'should skip and warn when there was no match', () =>
+    {
+        sinon.stub( console, 'warn', () => {} );
+        flounder.disableByIndex( 15 );
+
+        assert.equal( console.warn.callCount, 1 );
+        console.warn.restore();
+        assert.equal( flounder.refs.select.children[2].disabled, true );
+        assert.equal( utils.hasClass( flounder.refs.data[2], classes.DISABLED ), true );
+    } );
+
+
+    it( 'should return the affected elements', () =>
+    {
+        assert.equal( arrayRes.length, 2 );
+        assert.equal( arrayRes[ 0 ].length, 2 );
+        assert.equal( arrayRes[ 0 ][ 1 ].nodeType, 1 );
+
+        assert.equal( singleRes[ 1 ].nodeType, 1 );
+    } );
 } );
 
 
@@ -208,7 +329,45 @@ describe( 'disableByIndex', () =>
  */
 describe( 'disableByText', () =>
 {
+    let div         = document.querySelector( 'div' );
+    let flounder    = new Flounder( div, { data: [ 1, 2, 3 ] } );
+    let arrayRes, singleRes;
 
+    it( 'should be able to handle an array of text to disable', () =>
+    {
+        arrayRes = flounder.disableByText( [ '1', '2' ] );
+        assert.equal( flounder.refs.select.children[0].disabled, true );
+        assert.equal( utils.hasClass( flounder.refs.data[1], classes.DISABLED ), true );
+    } );
+
+    it( 'should be able to re-enable things as well', () =>
+    {
+        singleRes = flounder.disableByText( [ '2' ], true );
+        assert.equal( flounder.refs.select.children[2].disabled, false );
+        assert.equal( utils.hasClass( flounder.refs.data[2], classes.DISABLED ), false );
+    } );
+
+
+    it( 'should skip and warn when there was no match', () =>
+    {
+        sinon.stub( console, 'warn', () => {} );
+        flounder.disableByText( '15' );
+
+        assert.equal( console.warn.callCount, 1 );
+        console.warn.restore();
+        assert.equal( flounder.refs.select.children[2].disabled, false );
+        assert.equal( utils.hasClass( flounder.refs.data[2], classes.DISABLED ), false );
+    } );
+
+
+    it( 'should return the affected elements', () =>
+    {
+        assert.equal( arrayRes.length, 2 );
+        assert.equal( arrayRes[ 0 ].length, 2 );
+        assert.equal( arrayRes[ 0 ][ 1 ].nodeType, 1 );
+
+        assert.equal( singleRes[ 0 ].nodeType, 1 );
+    } );
 } );
 
 
@@ -224,7 +383,46 @@ describe( 'disableByText', () =>
  */
 describe( 'disableByValue', () =>
 {
+    let div         = document.querySelector( 'div' );
+    let flounder    = new Flounder( div, { data: [ 1, 2, 3 ] } );
+    let arrayRes, singleRes;
 
+    it( 'should be able to handle an array of values to disable', () =>
+    {
+        arrayRes = flounder.disableByValue( [ '1', 2 ] );
+        assert.equal( flounder.refs.select.children[ 0 ].disabled, true );
+        assert.equal( utils.hasClass( flounder.refs.data[ 1 ], classes.DISABLED ), true );
+    } );
+
+
+    it( 'should be able to re-enable things as well', () =>
+    {
+        singleRes = flounder.disableByValue( [ '2' ], true );
+        assert.equal( flounder.refs.select.children[2].disabled, false );
+        assert.equal( utils.hasClass( flounder.refs.data[2], classes.DISABLED ), false );
+    } );
+
+
+    it( 'should skip and warn when there was no match', () =>
+    {
+        sinon.stub( console, 'warn', () => {} );
+        flounder.disableByValue( '15' );
+
+        assert.equal( console.warn.callCount, 1 );
+        console.warn.restore();
+        assert.equal( flounder.refs.select.children[2].disabled, false );
+        assert.equal( utils.hasClass( flounder.refs.data[2], classes.DISABLED ), false );
+    } );
+
+
+    it( 'should return the affected elements', () =>
+    {
+        assert.equal( arrayRes.length, 2 );
+        assert.equal( arrayRes[ 0 ].length, 2 );
+        assert.equal( arrayRes[ 0 ][ 1 ].nodeType, 1 );
+
+        assert.equal( singleRes[ 0 ].nodeType, 1 );
+    } );
 } );
 
 
@@ -236,11 +434,22 @@ describe( 'disableByValue', () =>
  *
  * @param {Mixed} index index of the option to enable
  *
- * @return {Object} flounder(s)
+ * @return _Object_ affected DOMElements
  */
 describe( 'enableByIndex', () =>
 {
+    it( 'should be a shortcut to disableByIndex served with true', () =>
+    {
+        let div         = document.querySelector( 'div' );
+        let flounder    = new Flounder( div, { data: [ 1, 2, 3 ] } );
 
+        sinon.stub( flounder, 'disableByIndex', ( a, b ) => assert.ok( b ) );
+
+        flounder.enableByIndex( 1 );
+
+        assert.equal( flounder.disableByIndex.callCount, 1 );
+        flounder.disableByIndex.restore();
+    } );
 } );
 
 
@@ -251,11 +460,22 @@ describe( 'enableByIndex', () =>
  *
  * @param {Mixed} text text of the option to enable
  *
- * @return {Object} flounder(s)
+ * @return _Object_ affected DOMElements
  */
 describe( 'enableByText', () =>
 {
+    it( 'should be a shortcut to disableByText served with true', () =>
+    {
+        let div         = document.querySelector( 'div' );
+        let flounder    = new Flounder( div, { data: [ 1, 2, 3 ] } );
 
+        sinon.stub( flounder, 'disableByText', ( a, b ) => assert.ok( b ) );
+
+        flounder.enableByText( '1' );
+
+        assert.equal( flounder.disableByText.callCount, 1 );
+        flounder.disableByText.restore();
+    } );
 } );
 
 
@@ -266,11 +486,22 @@ describe( 'enableByText', () =>
  *
  * @param {Mixed} value value of the option to enable
  *
- * @return {Object} flounder(s)
+ * @return _Object_ affected DOMElements
  */
 describe( 'enableByValue', () =>
 {
+    it( 'should be a shortcut to disableByValue served with true', () =>
+    {
+        let div         = document.querySelector( 'div' );
+        let flounder    = new Flounder( div, { data: [ 1, 2, 3 ] } );
 
+        sinon.stub( flounder, 'disableByValue', ( a, b ) => assert.ok( b ) );
+
+        flounder.enableByValue( '1' );
+
+        assert.equal( flounder.disableByValue.callCount, 1 );
+        flounder.disableByValue.restore();
+    } );
 } );
 
 
@@ -281,11 +512,47 @@ describe( 'enableByValue', () =>
  *
  * @param {Number} _i index to return
  *
- * @return _Object_ option and div tage
+ * @return _Object_ option and div tag
  */
 describe( 'getData', () =>
 {
+    let div         = document.querySelector( 'div' );
+    let flounder    = new Flounder( div, { data: [ 1, 2, 3 ] } );
+    let refs        = flounder.refs;
 
+    it( 'should serve simple numbers', () =>
+    {
+        let res = flounder.getData( 1 );
+        assert.deepEqual( res.option, refs.selectOptions[ 1 ] );
+        assert.deepEqual( res.div, refs.data[ 1 ] );
+    } );
+
+
+    it( 'should serve arrays of numbers', () =>
+    {
+        let res = flounder.getData( [ 1, 2 ] );
+        assert.deepEqual( res[ 0 ].option, refs.selectOptions[ 1 ] );
+        assert.deepEqual( res[ 1 ].div, refs.data[ 2 ] );
+        assert.equal( res.length, 2 );
+    } );
+
+
+    it( 'should serve all data if no params are passed', () =>
+    {
+        let res = flounder.getData();
+        assert.deepEqual( res[ 0 ].option, refs.selectOptions[ 1 ] );
+        assert.deepEqual( res[ 1 ].div, refs.data[ 1 ] );
+        assert.equal( res.length, 3 );
+    } );
+
+
+    it( 'should warn if an illegal parameter is added', () =>
+    {
+        sinon.stub( console, 'warn', () => {} );
+        flounder.getData( 'khxjhvac' );
+        assert.equal( console.warn.callCount, 1 );
+        console.warn.restore();
+    } );
 } );
 
 

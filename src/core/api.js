@@ -102,7 +102,7 @@ const api = {
             {
                 let firstOption = originalTarget[0];
 
-                if ( firstOption && firstOption.textContent === this.props.placeholder )
+                if ( firstOption && utils.hasClass( firstOption, classes.PLACEHOLDER ) )
                 {
                     originalTarget.removeChild( firstOption );
                 }
@@ -169,7 +169,7 @@ const api = {
      *
      * disables flounder by adjusting listeners and classes
      *
-     * @param {Boolean} bool dsable or enable
+     * @param {Boolean} bool disable or enable
      *
      * @return _Void_
      */
@@ -245,6 +245,10 @@ const api = {
 
                 return [ el, opt ];
             }
+            else
+            {
+                console.warn( 'Flounder - No element to disable.' );
+            }
         }
     },
 
@@ -264,7 +268,9 @@ const api = {
         if ( typeof text !== `string` && text.length )
         {
             let disableByText = this.disableByText.bind( this );
-            return text.map( _t => disableByText( _t, reenable ) );
+            let res = text.map( _v => disableByText( _v, reenable ) );
+
+            return res.length === 1 ? res[0] : res;
         }
         else
         {
@@ -280,7 +286,9 @@ const api = {
                 }
             } );
 
-            return res.length ? this.disableByIndex( res, reenable ) : null;
+            res = res.length === 1 ? res[0] : res;
+
+            return this.disableByIndex( res, reenable );
         }
     },
 
@@ -300,16 +308,20 @@ const api = {
         if ( typeof value !== `string` && value.length )
         {
             let disableByValue = this.disableByValue.bind( this );
-            return value.map( _v => disableByValue( _v, reenable ) );
+            let res = value.map( _v => disableByValue( _v, reenable ) );
+
+            return res.length === 1 ? res[ 0 ] : res;
         }
         else
         {
-            let values = this.refs.selectOptions.map( function( el, i )
+            let res = this.refs.selectOptions.map( function( el, i )
             {
-                return el.value === `${value}` ? i : null;
-            } ).filter( a => !!a );
+                return `${el.value}` === `${value}` ? i : null;
+            } ).filter( a => !!a || a === 0 ? true : false );
 
-            return value ? this.disableByIndex( values, reenable ) : null;
+            res = res.length === 1 ? res[0] : res;
+
+            return this.disableByIndex( res, reenable );
         }
     },
 
@@ -376,12 +388,23 @@ const api = {
         {
             return { option : refs.selectOptions[ _i ], div : refs.data[ _i ] };
         }
-        else
+        else if ( _i && _i.length && typeof _i !== `string` )
+        {
+            return _i.map( i =>
+            {
+                return this.getData( i );
+            } );
+        }
+        else if ( !_i )
         {
             return refs.selectOptions.map( ( el, i ) =>
             {
                 return this.getData( i );
             } );
+        }
+        else
+        {
+            console.warn( 'Flounder - Illegal parameter type.' );
         }
     },
 
