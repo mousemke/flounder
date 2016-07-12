@@ -6,7 +6,7 @@
  * Released under the MIT license
  * https://github.com/sociomantic-tsunami/flounder/license
  *
- * Date: Mon Jul 11 2016
+ * Date: Tue Jul 12 2016
  * "This, so far, is the best Flounder ever"
  */
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
@@ -2007,8 +2007,12 @@ var build = {
 
         var wrapperClass = _classes2['default'].MAIN_WRAPPER;
         var wrapper = _utils2['default'].constructElement({ className: this.wrapperClass ? wrapperClass + '  ' + this.wrapperClass : wrapperClass });
-        var flounderClass = _classes2['default'].MAIN;
-        var flounder = constructElement({ className: this.flounderClass ? flounderClass + '  ' + this.flounderClass : flounderClass });
+
+        var flounderClass = this.flounderClass ? _classes2['default'].MAIN + ' ' + this.flounderClass : _classes2['default'].MAIN;
+
+        var flounderClasses = this.multipleTags ? flounderClass + ' ' + _classes2['default'].MULTIPLE_TAG_FLOUNDER : flounderClass;
+
+        var flounder = constructElement({ className: flounderClasses });
 
         flounder.setAttribute('aria-hidden', true);
         flounder.tabIndex = 0;
@@ -2250,10 +2254,12 @@ var classes = {
     LOADING_FAILED: "flounder__loading--failed",
     MAIN: "flounder",
     MAIN_WRAPPER: "flounder--wrapper  flounder__input--select",
+    MULTIPLE_TAG_FLOUNDER: "flounder--multiple",
     MULTI_TAG_LIST: "flounder__multi--tag--list",
     MULTIPLE_SELECT_TAG: "flounder__multiple--select--tag",
     MULTIPLE_SELECTED: "flounder__multiple--selected",
     MULTIPLE_TAG_CLOSE: "flounder__multiple__tag__close",
+    NO_RESULTS: "flounder__no-results",
     OPTION: "flounder__option",
     OPTION_TAG: "flounder--option--tag",
     OPTIONS_WRAPPER: "flounder__list--wrapper",
@@ -2660,6 +2666,12 @@ var events = {
      */
     addSearchListeners: function addSearchListeners() {
         var search = this.refs.search;
+        var multiTagWrapper = this.refs.multiTagWrapper;
+
+        if (multiTagWrapper) {
+            multiTagWrapper.addEventListener('click', this.toggleListSearchClick);
+        }
+
         search.addEventListener('click', this.toggleListSearchClick);
         search.addEventListener('keyup', this.fuzzySearch);
         search.addEventListener('focus', this.clearPlaceholder);
@@ -2797,7 +2809,7 @@ var events = {
      * ## divertTarget
      *
      * @param {Object} e event object
-     * 
+     *
      * on interaction with the raw select box, the target will be diverted to
      * the corresponding flounder list element
      *
@@ -3563,6 +3575,12 @@ var Flounder = (function () {
                             matches.forEach(function (e) {
                                 _utils2['default'].removeClass(data[e.i], _classes3['default'].SEARCH_HIDDEN);
                             });
+
+                            if (matches.length === 0) {
+                                _this2.addNoResultsMessage();
+                            } else {
+                                _this2.removeNoResultsMessage();
+                            }
                         })();
                     } else {
                         this.fuzzySearchReset();
@@ -3591,7 +3609,6 @@ var Flounder = (function () {
         key: 'fuzzySearchReset',
         value: function fuzzySearchReset() {
             var refs = this.refs;
-
             refs.data.forEach(function (dataObj) {
                 _utils2['default'].removeClass(dataObj, _classes3['default'].SEARCH_HIDDEN);
             });
@@ -3759,6 +3776,42 @@ var Flounder = (function () {
             data.forEach(function (d, i) {
                 _this4.refs.select[i].selected = false;
             });
+        }
+
+        /**
+         * ## addNoResultsMessage
+         *
+         * Adding 'No Results' message to the option list
+         *
+         * @return _Void_
+         */
+    }, {
+        key: 'addNoResultsMessage',
+        value: function addNoResultsMessage() {
+            var noResultsEl = this.refs.noResultsEl || _utils2['default'].constructElement({ className: _classes3['default'].NO_RESULTS });
+
+            noResultsEl.innerHTML = 'No Results';
+            this.refs.optionsList.appendChild(noResultsEl);
+
+            this.refs.noResultsEl = noResultsEl;
+        }
+
+        /**
+         * ## removeNoResultsMessage
+         *
+         * Removing 'No Results' message from the option list
+         *
+         * @return _Void_
+         */
+    }, {
+        key: 'removeNoResultsMessage',
+        value: function removeNoResultsMessage() {
+            var noResultsEl = this.refs.noResultsEl;
+
+            if (this.refs.optionsList && noResultsEl) {
+                this.refs.optionsList.removeChild(noResultsEl);
+                this.refs.noResultsEl = undefined;
+            }
         }
 
         /**

@@ -156,7 +156,14 @@ const events = {
      */
     addSearchListeners()
     {
-        let search = this.refs.search;
+        let search                  = this.refs.search;
+        let multiTagWrapper         = this.refs.multiTagWrapper;
+
+        if( multiTagWrapper )
+        {
+            multiTagWrapper.addEventListener( `click`, this.toggleListSearchClick );
+        }
+
         search.addEventListener( `click`, this.toggleListSearchClick );
         search.addEventListener( `keyup`, this.fuzzySearch );
         search.addEventListener( `focus`, this.clearPlaceholder );
@@ -320,7 +327,7 @@ const events = {
      * ## divertTarget
      *
      * @param {Object} e event object
-     * 
+     *
      * on interaction with the raw select box, the target will be diverted to
      * the corresponding flounder list element
      *
@@ -408,7 +415,7 @@ const events = {
         utils.removeClass( this, classes.HOVER );
     },
 
-    
+
     /**
      * ## removeListeners
      *
