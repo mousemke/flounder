@@ -47,7 +47,7 @@ const defaults = {
      *
      * @return _Void_
      */
-    setDefaultOption( self, configObj, data = [], rebuild = false )
+    setDefaultOption( self, configObj = {}, data, rebuild = false )
     {
         /**
          * ## setIndexDefault
@@ -246,6 +246,9 @@ const defaults = {
 
             return def;
         };
+
+
+        data    = data || configObj.data || [];
 
         return checkDefaultPriority();
     }
