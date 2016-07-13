@@ -3,6 +3,8 @@ import classes              from './classes';
 import utils                from './utils';
 import { setDefaultOption } from './defaults';
 
+const nativeSlice = Array.prototype.slice;
+
 const api = {
 
     /**
@@ -158,7 +160,7 @@ const api = {
 
         if ( multiTagWrapper )
         {
-            let tags = Array.prototype.slice.call( multiTagWrapper.children );
+            let tags = nativeSlice.call( multiTagWrapper.children );
             tags.forEach( el => el.children[0].click() );
         }
     },
@@ -422,15 +424,13 @@ const api = {
         let opts        = [], opt;
         let _data       = _el.options;
 
-        for ( let i = 0, len = _data.length; i < len; i++ )
+        nativeSlice.call( _data ).forEach( ( el ) =>
         {
-            opt = _data[ i ];
-
-            if ( opt.selected && !utils.hasClass( opt, classes.PLACEHOLDER ) )
+            if ( el.selected && !utils.hasClass( el, classes.PLACEHOLDER ) )
             {
-                opts.push( opt );
+                opts.push( el );
             }
-        }
+        } );
 
         return opts;
     },
@@ -445,7 +445,7 @@ const api = {
      */
     getSelectedValues()
     {
-        return this.getSelected().map( ( _v ) => _v.value )
+        return this.getSelected().map( _v => _v.value )
     },
 
 
@@ -461,37 +461,31 @@ const api = {
      */
     loadDataFromUrl( url, callback )
     {
-        try
+        utils.http.get( url ).then( data =>
         {
-            utils.http.get( url ).then( data =>
+            if ( data )
             {
-                if ( data )
+                this.data = JSON.parse( data );
+
+                if ( callback )
                 {
-                    this.data = JSON.parse( data );
-                    if ( callback )
-                    {
-                        callback( this.data );
-                    }
+                    callback( this.data );
                 }
-                else
-                {
-                    console.warn( `no data recieved` );
-                }
-            } ).catch( e =>
+            }
+            else
             {
-                console.warn( `something happened: `, e );
-                this.rebuild( [ {
-                            text        : ``,
-                            value       : ``,
-                            index       : 0,
-                            extraClass  : classes.LOADING_FAILED
-                        } ] );
-            } );
-        }
-        catch ( e )
+                console.warn( `no data recieved` );
+            }
+        } ).catch( e =>
         {
-            console.warn( `something happened.  check your loadDataFromUrl callback `, e );
-        }
+            console.warn( `something happened: `, e );
+            this.rebuild( [ {
+                        text        : ``,
+                        value       : ``,
+                        index       : 0,
+                        extraClass  : classes.LOADING_FAILED
+                    } ] );
+        } );
 
         return [ {
             text        : ``,
@@ -579,7 +573,7 @@ const api = {
             {
                 let isOpen = utils.hasClass( refs.wrapper, classes.OPEN );
                 this.toggleList( isOpen ? `close` : `open` );
-                this.___forceMultiple       = multiple;
+                this.___forceMultiple       = multiple && this.multiple;
                 this.___programmaticClick   = programmatic;
                 el.click();
 
@@ -610,7 +604,8 @@ const api = {
         }
         else
         {
-            let res     = [];
+            let res = [];
+            text    = `${text}`;
 
             this.refs.data.forEach( function( el, i )
             {
@@ -622,7 +617,7 @@ const api = {
                 }
             } );
 
-            return res.length ? this.setByIndex( res, multiple, programmatic ) : null;
+            return this.setByIndex( res, multiple, programmatic );
         }
     },
 
@@ -651,7 +646,7 @@ const api = {
                 return el.value === `${value}` ? i : null;
             } ).filter( a => a === 0 || !!a );
 
-            return values.length !== 0 ? this.setByIndex( values, multiple, programmatic ) : null;
+            return this.setByIndex( values, multiple, programmatic );
         }
     }
 };

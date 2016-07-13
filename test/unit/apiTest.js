@@ -565,7 +565,24 @@ describe( 'getData', () =>
  */
 describe( 'getSelected', () =>
 {
+    let div         = document.querySelector( 'div' );
+    let flounder    = new Flounder( div, { multiple: true, placeholder: 'moon', data: [ 1, 2, 3 ] } );
+    let dataEls     = flounder.refs.data;
 
+    it( 'should return the selected elements excluding placeholders', () =>
+    {
+        let _el         = flounder.refs.select;
+        let _data       = _el.options;
+
+        _data[ 0 ].selected = true;
+        _data[ 1 ].selected = true;
+        _data[ 2 ].selected = true;
+
+        let selected = flounder.getSelected();
+
+        assert.equal( selected.length, 2 );
+        assert.equal( selected[ 0 ].nodeType, 1 );
+    } );
 } );
 
 
@@ -578,7 +595,24 @@ describe( 'getSelected', () =>
  */
 describe( 'getSelectedValues', () =>
 {
+    let div         = document.querySelector( 'div' );
+    let flounder    = new Flounder( div, { multiple: true, placeholder: 'moon', data: [ 1, 2, 3 ] } );
+    let dataEls     = flounder.refs.data;
 
+    it( 'should return the selected values excluding placeholders', () =>
+    {
+        let _el         = flounder.refs.select;
+        let _data       = _el.options;
+
+        _data[ 0 ].selected = true;
+        _data[ 1 ].selected = true;
+        _data[ 2 ].selected = true;
+
+        let selected = flounder.getSelectedValues();
+
+        assert.equal( selected.length, 2 );
+        assert.equal( selected[ 0 ], 1 );
+    } );
 } );
 
 
@@ -594,7 +628,64 @@ describe( 'getSelectedValues', () =>
  */
 describe( 'loadDataFromUrl', () =>
 {
+    let div         = document.querySelector( 'div' );
+    let flounder    = new Flounder( div, { placeholder: 'moon', data: [] } );
 
+    let getStub = res =>
+    {
+        return {
+            then    : _func =>
+            {
+                try
+                {
+                    res = _func( res );
+                    return { catch: () => res };
+                }
+                catch( e )
+                {
+                    return { catch: _func => _func( e ) };
+                }
+            },
+            catch   : () => {}
+        };
+    };
+
+    sinon.stub( utils.http, 'get', getStub );
+
+
+
+    it( 'should return a loading value while loading', () =>
+    {
+        let _cb = sinon.spy();
+        let res = flounder.loadDataFromUrl( '["1" ,"3"]', _cb );
+
+        assert.equal( res[ 0 ].extraClass, 'flounder__loading' );
+        assert.equal( _cb.callCount, 1 );
+
+        flounder.loadDataFromUrl( '["1" ,"moon"]' );
+
+        assert.equal( flounder.data[1], 'moon' );
+    } );
+
+
+    it( 'should give a warning when it recieves no data', () =>
+    {
+        sinon.stub( console, 'warn', () => {} );
+        let res = flounder.loadDataFromUrl( false );
+
+        assert.equal( console.warn.callCount, 1 );
+        console.warn.restore();
+    } );
+
+
+    it( 'should report a warning when something in the callback goes wrong', () =>
+    {
+        sinon.stub( console, 'warn', () => {} );
+        let res = flounder.loadDataFromUrl( '["1","2","3"]', () => { a + b } );
+
+        assert.equal( console.warn.callCount, 1 );
+        console.warn.restore();
+    } );
 } );
 
 
@@ -609,7 +700,38 @@ describe( 'loadDataFromUrl', () =>
  */
 describe( 'rebuild', () =>
 {
+    let div         = document.querySelector( 'div' );
+    let flounder    = new Flounder( div, { data: [ 1, 2, 3 ] } );
 
+    it( 'should dump to reconfigure if only props are passed', () =>
+    {
+        sinon.stub( flounder, 'reconfigure', () => {} );
+
+        flounder.rebuild( [1, 2 ,3 ], {} );
+        flounder.rebuild( {} );
+        flounder.rebuild( 'moon' );
+
+        assert.equal( flounder.reconfigure.callCount, 3 );
+        flounder.reconfigure.restore();
+    } );
+
+
+    it( 'should use this.data if no data is passed', () =>
+    {
+        flounder.data   = [{ text: 1, value: 2 }];
+        let data        = flounder.data[0].value;
+        flounder.rebuild();
+
+        assert.equal( flounder.data[0].value, data );
+    } );
+
+
+    it( 'should rebuild flounder with new data', () =>
+    {
+        flounder.rebuild( [ 4, 5, 6 ] );
+
+        assert.equal( flounder.data[0].value, 4 );
+    } );
 } );
 
 
@@ -625,7 +747,47 @@ describe( 'rebuild', () =>
  */
 describe( 'setByIndex', () =>
 {
+    let div         = document.querySelector( 'div' );
+    let flounder    = new Flounder( div, { multiple: true, data: [ 1, 2, 3 ] } );
+    let refs        = flounder.refs;
+    let res;
 
+    it( 'should set a selection by either index or array of indexes', () =>
+    {
+        sinon.stub( refs.data[ 2 ], 'click', () => {} );
+        res = flounder.setByIndex( 2 );
+        assert.equal( refs.data[ 2 ].click.callCount, 1 );
+        assert.equal( res.nodeType, 1 );
+
+        flounder.setByIndex( [ 1, 2, 3 ], true, true );
+        assert.equal( refs.data[ 2 ].click.callCount, 2 );
+
+        refs.data[ 2 ].click.restore();
+    } );
+
+
+    it( 'should set a selection starting from the back with a negative index', () =>
+    {
+        sinon.stub( refs.data[ 2 ], 'click', () => {} );
+        res = flounder.setByIndex( -2 );
+        assert.equal( refs.data[ 2 ].click.callCount, 1 );
+        assert.equal( res.nodeType, 1 );
+
+        flounder.setByIndex( [ 1, -2, 3 ], true, true );
+        assert.equal( refs.data[ 2 ].click.callCount, 2 );
+
+        refs.data[ 2 ].click.restore();
+    } );
+
+
+    it( 'should return null if there is no element on that index', () =>
+    {
+        res = flounder.setByIndex( -200 );
+        assert.equal( res, null );
+
+        res = flounder.setByIndex( 200 );
+        assert.equal( res, null );
+    } );
 } );
 
 
@@ -641,7 +803,22 @@ describe( 'setByIndex', () =>
  */
 describe( 'setByText', () =>
 {
+    let div         = document.querySelector( 'div' );
+    let flounder    = new Flounder( div, { multiple: true, data: [ 1, 2, 3 ] } );
+    let refs        = flounder.refs;
 
+    it( 'should set a selection by either text or array of text values', () =>
+    {
+        sinon.stub( refs.data[ 2 ], 'click', () => {} );
+        flounder.setByText( '2' );
+        assert.equal( refs.data[ 2 ].click.callCount, 1 );
+
+        flounder.setByText( [ '1', 2, '3' ], true, true );
+        assert.equal( refs.data[ 2 ].click.callCount, 2 );
+
+        refs.data[ 2 ].click.restore();
+        flounder.deselectAll();
+    } );
 } );
 
 
@@ -657,5 +834,20 @@ describe( 'setByText', () =>
  */
 describe( 'setByValue', () =>
 {
+    let div         = document.querySelector( 'div' );
+    let flounder    = new Flounder( div, { multiple: true, data: [ 1, 2, 3 ] } );
+    let refs        = flounder.refs;
 
+    it( 'should set a selection by either value or array of values', () =>
+    {
+        sinon.stub( refs.data[ 2 ], 'click', () => {} );
+        flounder.setByValue( '2' );
+        assert.equal( refs.data[ 2 ].click.callCount, 1 );
+
+        flounder.setByValue( [ '1', 2, '3' ], true, true );
+        assert.equal( refs.data[ 2 ].click.callCount, 2 );
+
+        refs.data[ 2 ].click.restore();
+        flounder.deselectAll();
+    } );
 } );
