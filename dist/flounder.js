@@ -6,7 +6,7 @@
  * Released under the MIT license
  * https://github.com/sociomantic-tsunami/flounder/license
  *
- * Date: Tue Jul 12 2016
+ * Date: Wed Jul 13 2016
  * "This, so far, is the best Flounder ever"
  */
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
@@ -2340,8 +2340,6 @@ var setDefaultOption = function setDefaultOption(self, configObj) {
     var data = arguments.length <= 2 || arguments[2] === undefined ? [] : arguments[2];
     var rebuild = arguments.length <= 3 || arguments[3] === undefined ? false : arguments[3];
 
-    var _configObj = Object.assign({}, configObj);
-
     /**
      * ## setIndexDefault
      *
@@ -2351,7 +2349,7 @@ var setDefaultOption = function setDefaultOption(self, configObj) {
      * @return {Object} default settings
      */
     var setIndexDefault = function setIndexDefault(_data, index) {
-        var defaultIndex = index || index === 0 ? index : _configObj.defaultIndex;
+        var defaultIndex = index || index === 0 ? index : configObj.defaultIndex;
         var defaultOption = _data[defaultIndex];
 
         if (defaultOption) {
@@ -2373,7 +2371,7 @@ var setDefaultOption = function setDefaultOption(self, configObj) {
     var setPlaceholderDefault = function setPlaceholderDefault(_data) {
         var refs = self.refs;
         var select = refs.select;
-        var placeholder = _configObj.placeholder;
+        var placeholder = configObj.placeholder;
 
         var _default = {
             text: placeholder || placeholder === '' ? placeholder : defaultOptions.placeholder,
@@ -2413,7 +2411,7 @@ var setDefaultOption = function setDefaultOption(self, configObj) {
      * @return {Object} default settings
      */
     var setValueDefault = function setValueDefault(_data, _val) {
-        var defaultProp = _val || '' + _configObj.defaultValue;
+        var defaultProp = _val || '' + configObj.defaultValue;
         var index = undefined;
 
         _data.forEach(function (dataObj, i) {
@@ -2477,15 +2475,15 @@ var setDefaultOption = function setDefaultOption(self, configObj) {
     var checkDefaultPriority = function checkDefaultPriority() {
         var _data = sortData(data);
 
-        if ((_configObj.multipleTags || _configObj.multiple) && !_configObj.defaultIndex && !_configObj.defaultValue) {
-            _configObj.placeholder = _configObj.placeholder || defaultOptions.placeholder;
+        if ((configObj.multipleTags || configObj.multiple) && !configObj.defaultIndex && !configObj.defaultValue) {
+            configObj.placeholder = configObj.placeholder || defaultOptions.placeholder;
         }
 
-        if (_configObj.defaultEmpty) {
-            _configObj.placeholder = '';
+        if (configObj.defaultEmpty) {
+            configObj.placeholder = '';
         }
 
-        var placeholder = _configObj.placeholder;
+        var placeholder = configObj.placeholder;
 
         if (placeholder || placeholder === '' || _data.length === 0) {
             return setPlaceholderDefault(self, _data);
@@ -2503,8 +2501,8 @@ var setDefaultOption = function setDefaultOption(self, configObj) {
         }
 
         // default prio
-        def = _configObj.defaultIndex ? setIndexDefault(_data) : null;
-        def = !def && _configObj.defaultValue ? setValueDefault(_data) : def;
+        def = configObj.defaultIndex ? setIndexDefault(_data) : null;
+        def = !def && configObj.defaultValue ? setValueDefault(_data) : def;
         def = !def ? setIndexDefault(_data, 0) : def;
 
         return def;
