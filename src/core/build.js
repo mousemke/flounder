@@ -318,11 +318,9 @@ const build = {
 
         let constructElement    = utils.constructElement;
 
-        let wrapperClass        = classes.MAIN_WRAPPER;
-        let wrapper             = utils.constructElement( { className : this.wrapperClass ?
-                                    `${wrapperClass}  ${this.wrapperClass}` : wrapperClass } );
+        let wrapper             = utils.constructElement( { className : classes.MAIN_WRAPPER } );
 
-        let flounderClass       = this.flounderClass ? classes.MAIN + ' ' + this.flounderClass : classes.MAIN;
+        let flounderClass       = classes.MAIN;
 
         let flounderClasses     = this.multipleTags ? flounderClass + ' ' + classes.MULTIPLE_TAG_FLOUNDER : flounderClass;
 

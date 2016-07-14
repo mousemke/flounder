@@ -95,10 +95,39 @@ If flounder is fed an element that already has a flounder, it will destroy it an
 {
     allowHTML               : false,
     classes                 : {
-        flounder    : 'class--to--give--the--main--flounder--element',
-        hidden      : 'class--to--denote--hidden',
-        selected    : 'class--to--denote--selected--option',
-        wrapper     : 'additional--class--to--give--the--wrapper'
+        ARROW                 : `class-for-arrow-wrapper`,
+        ARROW_INNER           : `class-for-arrow-inner`,
+        DESCRIPTION           : `class-for-option-description`,
+        DISABLED              : `class-for-disabled`,
+        DISABLED_OPTION       : `class-for-disabled-option`,
+        HEADER                : `class-for-header`,
+        HIDDEN                : `class-for-hidden`,
+        HIDDEN_IOS            : `class-for-hidden-ios`,
+        HOVER                 : `class-for-hover`,
+        LIST                  : `class-for-list`,
+        LOADING               : `class-for-loading`,
+        LOADING_FAILED        : `class-for-loading-failed`,
+        MAIN                  : `class-for-flounder`,
+        MAIN_WRAPPER          : `class-for-wrapper`,
+        MULTIPLE_TAG_FLOUNDER : `class-for-multiple`,
+        MULTI_TAG_LIST        : `class-for-multi-tag-list`,
+        MULTIPLE_SELECT_TAG   : `class-for-multiple-select-tag`,
+        MULTIPLE_SELECTED     : `class-for-multiple-selected`,
+        MULTIPLE_TAG_CLOSE    : `class-for-multiple-tag-close`,
+        NO_RESULTS            : `class-for-no-results`,
+        OPEN                  : `class-for-open`,
+        OPTION                : `class-for-option`,
+        OPTION_TAG            : `class-for-option-tag`,
+        OPTIONS_WRAPPER       : `class-for-list-wrapper`,
+        PLACEHOLDER           : `class-for-placeholder`,
+        PLUG                  : `class-for-ios-plug`,
+        SECTION               : `class-for-section`,
+        SELECTED              : `class-for-option-selected`,
+        SELECTED_HIDDEN       : `class-for-option-selected-hidden`,
+        SELECTED_DISPLAYED    : `class-for-option-selected-displayed`,
+        SEARCH                : `class-for-input-search`,
+        SEARCH_HIDDEN         : `class-for-search-hidden`,
+        SELECT_TAG            : `class-for-select-tag`
     },
     data                    : dataObject,
     defaultEmpty            : true,
@@ -126,7 +155,7 @@ If flounder is fed an element that already has a flounder, it will destroy it an
 
 + `allowHTML`- (boolean) Renders the data text as HTML.  With this option enabled, any api call that must compare text will need the exact html in order to be a match
 
-+ `classes`- (object) Contains configurable classes for various elements.  The are additional classes, not replacement classes.
++ `classes`- (object) Custom CSS classes for Flounder DOM elements (overrides defaults; only the classes specified will be overridden).
 
 + `data` - (array) select box options to build in the select box.  Can be organized various ways
 
