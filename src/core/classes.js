@@ -20,6 +20,7 @@ const classes =
     MULTIPLE_SELECTED     : `flounder__multiple--selected`,
     MULTIPLE_TAG_CLOSE    : `flounder__multiple__tag__close`,
     NO_RESULTS            : `flounder__no-results`,
+    OPEN                  : `open`,
     OPTION                : `flounder__option`,
     OPTION_TAG            : `flounder--option--tag`,
     OPTIONS_WRAPPER       : `flounder__list--wrapper`,

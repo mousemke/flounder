@@ -724,7 +724,7 @@ const events = {
     {
         utils.addClass( optionsList, classes.HIDDEN );
         this.removeSelectKeyListener();
-        utils.removeClass( wrapper, `open` );
+        utils.removeClass( wrapper, classes.OPEN );
 
         let qsHTML = document.querySelector( `html` );
         qsHTML.removeEventListener( `click`, this.catchBodyClick );
@@ -760,7 +760,7 @@ const events = {
      */
     toggleListSearchClick( e )
     {
-        if ( !utils.hasClass( this.refs.wrapper, `open` ) )
+        if ( !utils.hasClass( this.refs.wrapper, classes.OPEN ) )
         {
             this.toggleList( e, `open` );
         }
@@ -822,7 +822,7 @@ const events = {
         if ( !this.isIos || this.search || ( this.multipleTags === true && this.multiple === true ) )
         {
             utils.removeClass( optionsList, classes.HIDDEN );
-            utils.addClass( wrapper, `open` );
+            utils.addClass( wrapper, classes.OPEN );
 
             let qsHTML = document.querySelector( `html` );
 

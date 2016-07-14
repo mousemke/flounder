@@ -562,7 +562,7 @@ const api = {
 
             if ( el )
             {
-                let isOpen = utils.hasClass( refs.wrapper, `open` );
+                let isOpen = utils.hasClass( refs.wrapper, classes.OPEN );
                 this.toggleList( {}, isOpen ? `close` : `open` );
                 this.___forceMultiple       = multiple;
                 this.___programmaticClick   = programmatic;
