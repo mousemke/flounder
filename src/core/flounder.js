@@ -1,10 +1,10 @@
 
 import { defaultOptions }   from './defaults';
+import defaultClasses       from './classes';
 import utils                from './utils';
 import api                  from './api';
 import build                from './build';
 import events               from './events';
-import classes              from './classes';
 import Search               from './search';
 import version              from './version';
 
@@ -89,9 +89,9 @@ class Flounder
                 }
 
                 this.props = props;
-                this.setTarget( target );
                 this.bindThis();
                 this.initializeOptions();
+                this.setTarget( target );
 
                 if ( this.search )
                 {
@@ -160,6 +160,8 @@ class Flounder
 
         if ( selectedOptions.length > 0 )
         {
+            let classes = this.classes;
+
             selectedOptions.forEach( function( option )
             {
                 if ( option.value !== `` )
@@ -290,6 +292,7 @@ class Flounder
                 if ( matches )
                 {
                     let data    = this.refs.data;
+                    let classes = this.classes;
 
                     data.forEach( ( el, i ) =>
                     {
@@ -343,7 +346,9 @@ class Flounder
      */
     fuzzySearchReset()
     {
-        let refs = this.refs;
+        let refs    = this.refs;
+        let classes = this.classes;
+
         refs.data.forEach( dataObj =>
         {
             utils.removeClass( dataObj, classes.SEARCH_HIDDEN );
@@ -365,24 +370,40 @@ class Flounder
     {
         let props = this.props = this.props || {};
 
+        this.classes = defaultClasses;
+
         for ( let opt in defaultOptions )
         {
-            if ( defaultOptions.hasOwnProperty( opt ) && opt !== `classes` )
+            if ( defaultOptions.hasOwnProperty( opt ) )
             {
-                this[ opt ] = props[ opt ] !== undefined ? props[ opt ] : defaultOptions[ opt ];
-            }
-            else if ( opt === `classes` )
-            {
-                let classes         = defaultOptions[ opt ];
-                let propsClasses    = props.classes;
-
-                for ( let clss in classes )
+                if ( opt === `classes` )
                 {
-                    this[ `${clss}Class` ] = propsClasses && propsClasses[ clss ] !== undefined ?
-                                                propsClasses[ clss ] :
-                                                classes[ clss ];
+                    let classes = defaultOptions[ opt ];
+
+                    for ( let clss in classes )
+                    {
+                        this.classes[ clss ] = classes[ clss ]; 
+                    }
+                }
+                else
+                {
+                    this[ opt ] = props[ opt ] !== undefined ? props[ opt ] : defaultOptions[ opt ];
                 }
             }
+
+            this.selectedClass = this.classes.SELECTED;
+            // else if ( opt === `classes` )
+            // {
+            //     let classes         = defaultOptions[ opt ];
+            //     let propsClasses    = props.classes;
+
+            //     for ( let clss in classes )
+            //     {
+            //         this[ `${clss}Class` ] = propsClasses && propsClasses[ clss ] !== undefined ?
+            //                                     propsClasses[ clss ] :
+            //                                     classes[ clss ];
+            //     }
+            // }
         }
 
         if ( props.defaultEmpty )
@@ -394,7 +415,7 @@ class Flounder
         {
             this.search         = true;
             this.multiple       = true;
-            this.selectedClass  += `  ${classes.SELECTED_HIDDEN}`;
+            this.selectedClass  += `  ${this.classes.SELECTED_HIDDEN}`;
 
             if ( !this.placeholder )
             {
@@ -420,8 +441,9 @@ class Flounder
         if ( !!this.isIos && ( !this.multipleTags || !this.multiple )  )
         {
             let sel     = refs.select;
+            let classes = this.classes;
             utils.removeClass( sel, classes.HIDDEN );
-            utils.addClass( sel, classes.HIDDEN_IOS );
+            utils.addClass( sel, classes.HIDDsEN_IOS );
         }
 
         this.addListeners( refs, props );
@@ -444,6 +466,7 @@ class Flounder
 
         let value;
         let index;
+        let classes         = this.classes;
         let refs            = this.refs;
         let select          = refs.select;
         let selected        = refs.selected;
@@ -541,6 +564,7 @@ class Flounder
      */
     addNoResultsMessage()
     {
+        let classes     = this.classes;
         let noResultsEl = this.refs.noResultsEl || utils.constructElement( { className : classes.NO_RESULTS } );
 
         noResultsEl.innerHTML = 'No Results';

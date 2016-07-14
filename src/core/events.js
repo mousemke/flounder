@@ -1,5 +1,4 @@
 
-import classes          from './classes';
 import search           from './search';
 import utils            from './utils';
 
@@ -22,19 +21,6 @@ const events = {
         {
             refs.wrapper.addEventListener( `mouseenter`, this.firstTouchController );
         }
-    },
-
-
-    /**
-     * ## addHoverClass
-     *
-     * adds a hover class to an element
-     *
-     * @return Void_
-     */
-    addHoverClass()
-    {
-        utils.addClass( this, classes.HOVER );
     },
 
 
@@ -85,12 +71,14 @@ const events = {
      */
     addOptionsListeners()
     {
+        let classes = this.classes;
+
         this.refs.data.forEach( ( dataObj, i ) =>
         {
             if ( dataObj.tagName === `DIV` )
             {
-                dataObj.addEventListener( `mouseenter`, this.addHoverClass );
-                dataObj.addEventListener( `mouseleave`, this.removeHoverClass );
+                dataObj.addEventListener( `mouseenter`, utils.addClass( dataObj, classes.HOVER ) );
+                dataObj.addEventListener( `mouseleave`, utils.removeClass( dataObj, classes.HOVER ) );
 
                 dataObj.addEventListener( `click`, this.clickSet );
             }
@@ -190,6 +178,7 @@ const events = {
         // http://stackoverflow.com/questions/34660500/mobile-safari-multi-select-bug
         if ( this.isIos )
         {
+            let classes     = this.classes;
             let firstOption = select[0];
             let plug        = document.createElement( `OPTION` );
             plug.disabled   = true;
@@ -340,6 +329,7 @@ const events = {
         if ( this.isIos )
         {
             let select  = this.refs.select;
+            let classes = this.classes;
             let plug    = select.querySelector( `.${classes.PLUG}` );
 
             if ( plug )
@@ -400,19 +390,6 @@ const events = {
         {
             refs.wrapper.removeEventListener( `mouseenter`, this.firstTouchController );
         }
-    },
-
-
-    /**
-     * ## addHoverClass
-     *
-     * adds a hover class to an element
-     *
-     * @return Void_
-     */
-    removeHoverClass()
-    {
-        utils.removeClass( this, classes.HOVER );
     },
 
 
@@ -560,6 +537,7 @@ const events = {
 
             selectTag.selectedIndex = index;
 
+            let classes             = this.classes;
             let hasClass            = utils.hasClass;
             let dataAtIndex         = data[ index ];
 
@@ -722,6 +700,8 @@ const events = {
      */
     toggleClosed( e, optionsList, refs, wrapper )
     {
+        let classes = this.classes;
+
         utils.addClass( optionsList, classes.HIDDEN );
         this.removeSelectKeyListener();
         utils.removeClass( wrapper, classes.OPEN );
@@ -760,6 +740,8 @@ const events = {
      */
     toggleListSearchClick( e )
     {
+        let classes = this.classes;
+
         if ( !utils.hasClass( this.refs.wrapper, classes.OPEN ) )
         {
             this.toggleList( e, `open` );
@@ -778,6 +760,7 @@ const events = {
      */
     toggleList( e, force )
     {
+        let classes     = this.classes;
         let refs        = this.refs;
         let optionsList = refs.optionsListWrapper;
         let wrapper     = refs.wrapper;
@@ -821,6 +804,8 @@ const events = {
 
         if ( !this.isIos || this.search || ( this.multipleTags === true && this.multiple === true ) )
         {
+            let classes = this.classes;
+
             utils.removeClass( optionsList, classes.HIDDEN );
             utils.addClass( wrapper, classes.OPEN );
 

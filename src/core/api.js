@@ -1,5 +1,4 @@
 
-import classes              from './classes';
 import utils                from './utils';
 import { setDefaultOption } from './defaults';
 
@@ -112,6 +111,7 @@ const api = {
 
             try
             {
+                let classes = this.classes;
                 target.parentNode.removeChild( target );
                 originalTarget.tabIndex = 0;
                 utils.removeClass( originalTarget, classes.HIDDEN );
@@ -182,6 +182,7 @@ const api = {
     disable( bool )
     {
         let refs        = this.refs;
+        let classes     = this.classes;
         let flounder    = refs.flounder;
         let selected    = refs.selected;
 
@@ -236,7 +237,8 @@ const api = {
 
             if ( el )
             {
-                let opt = refs.selectOptions[ index ];
+                let opt     = refs.selectOptions[ index ];
+                let classes = this.classes;
 
                 if ( reenable )
                 {
@@ -406,6 +408,7 @@ const api = {
         let _el         = this.refs.select;
         let opts        = [], opt;
         let _data       = _el.options;
+        let classes     = this.classes;
 
         for ( let i = 0, len = _data.length; i < len; i++ )
         {
@@ -446,6 +449,7 @@ const api = {
      */
     loadDataFromUrl( url, callback )
     {
+        let classes = this.classes;
         try
         {
             utils.http.get( url ).then( data =>
@@ -562,7 +566,8 @@ const api = {
 
             if ( el )
             {
-                let isOpen = utils.hasClass( refs.wrapper, classes.OPEN );
+                let classes = this.classes;
+                let isOpen  = utils.hasClass( refs.wrapper, classes.OPEN );
                 this.toggleList( {}, isOpen ? `close` : `open` );
                 this.___forceMultiple       = multiple;
                 this.___programmaticClick   = programmatic;

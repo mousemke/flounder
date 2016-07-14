@@ -1,5 +1,4 @@
 
-import classes                  from './classes';
 import { setDefaultOption }     from './defaults';
 import utils                    from './utils';
 
@@ -10,16 +9,16 @@ const build = {
      *
      * adds a description to the option
      *
-     * @param {DOMElement} el option leement to add description to
+     * @param {DOMElement} el option element to add description to
      * @param {String} text description
-     *
+     * @param {String} CSS class to apply
      * @return _Void_
      */
-    addOptionDescription( el, text )
+    addOptionDescription( el, text, className )
     {
         let div         = document.createElement( `div` );
         div.innerHTML   = text;
-        div.className   = classes.DESCRIPTION;
+        div.className   = className;
         el.appendChild( div );
     },
 
@@ -37,7 +36,8 @@ const build = {
     {
         if ( this.search )
         {
-            let search = utils.constructElement( {
+            let classes = this.classes;
+            let search  = utils.constructElement( {
                                     tagname     : `input`,
                                     type        : `text`,
                                     className   : classes.SEARCH
@@ -100,6 +100,7 @@ const build = {
         }
         else
         {
+            let classes     = this.classes;
             let arrow       = constructElement( { className : classes.ARROW } );
             let arrowInner  = constructElement( { className : classes.ARROW_INNER } );
             arrow.appendChild( arrowInner )
@@ -136,6 +137,7 @@ const build = {
         let refs                    = this.refs;
         let selectRef               = refs.select;
         let allowHTML               = this.allowHTML;
+        let classes                 = this.classes;
 
 
         /**
@@ -158,7 +160,7 @@ const build = {
                 };
             }
             dataObj.index   = i;
-
+            
             let extraClass  = i === defaultValue.index ? `  ${selectedClass}` : ``;
 
             let res = {
@@ -179,7 +181,7 @@ const build = {
 
             if ( dataObj.description )
             {
-                addOptionDescription( data, dataObj.description );
+                addOptionDescription( data, dataObj.description, classes.DESCRIPTION );
             }
 
             data.className += dataObj.extraClass ? `  ${dataObj.extraClass}` : ``;
@@ -264,7 +266,7 @@ const build = {
             {
                 let section = constructElement( { tagname   : `div`,
                                                 className   : classes.SECTION } );
-                let header = constructElement( { tagname    : `div`,
+                let header  = constructElement( { tagname    : `div`,
                                                 className   : classes.HEADER } );
                 header.textContent = dataObj.header;
                 section.appendChild( header );
@@ -311,6 +313,7 @@ const build = {
     buildDom()
     {
         let props               = this.props;
+        let classes             = this.classes;
         this.refs               = {};
 
         let constructElement    = utils.constructElement;
@@ -411,6 +414,7 @@ const build = {
         let target  = this.target;
         let refs    = this.refs;
         let select  = refs.select;
+        let classes = this.classes;
 
         if ( target.tagName === `SELECT` )
         {
@@ -558,6 +562,7 @@ const build = {
 
         if ( target.tagName === `INPUT` )
         {
+            let classes = this.classes;
             utils.addClass( target, classes.HIDDEN );
             target.setAttribute( `aria-hidden`, true );
             target.tabIndex = -1;

@@ -1,14 +1,7 @@
-import classes              from './classes';
 import utils                from './utils';
 
 export const defaultOptions = {
     allowHTML               : false,
-    classes                 : {
-        flounder    : ``,
-        hidden      : `flounder--hidden`,
-        selected    : `flounder__option--selected`,
-        wrapper     : ``
-    },
     data                    : [],
     defaultEmpty            : false,
     defaultIndex            : false,
@@ -79,6 +72,7 @@ export const setDefaultOption = ( self, configObj, data = [], rebuild = false ) 
     let setPlaceholderDefault = function( _data )
     {
         let refs        = self.refs;
+        let classes     = self.classes;
         let select      = refs.select;
         let placeholder = configObj.placeholder;
 
