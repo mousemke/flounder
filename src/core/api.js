@@ -158,7 +158,14 @@ const api = {
         if ( multiTagWrapper )
         {
             let tags = Array.prototype.slice.call( multiTagWrapper.children );
-            tags.forEach( el => el.children[0].click() );
+            tags.forEach( el =>
+            {
+                if( el.children.length )
+                {
+                    return el.children[0].click();
+                }
+            } );
+
         }
     },
 
