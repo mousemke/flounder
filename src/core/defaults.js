@@ -2,6 +2,7 @@ import utils                from './utils';
 
 export const defaultOptions = {
     allowHTML               : false,
+    classes                 : {},
     data                    : [],
     defaultEmpty            : false,
     defaultIndex            : false,
@@ -41,7 +42,7 @@ export const setDefaultOption = ( self, configObj, data = [], rebuild = false ) 
     /**
      * ## setIndexDefault
      *
-     * sets a specified indexas the default option. This only works correctly
+     * sets a specified index as the default option. This only works correctly
      * if it is a valid index, otherwise it returns null
      *
      * @return {Object} default settings

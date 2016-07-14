@@ -370,7 +370,8 @@ class Flounder
     {
         let props = this.props = this.props || {};
 
-        this.classes = defaultClasses;
+        this.classes        = defaultClasses;
+        this.selectedClass  = this.classes.SELECTED;
 
         for ( let opt in defaultOptions )
         {
@@ -390,21 +391,8 @@ class Flounder
                     this[ opt ] = props[ opt ] !== undefined ? props[ opt ] : defaultOptions[ opt ];
                 }
             }
-
-            this.selectedClass = this.classes.SELECTED;
-            // else if ( opt === `classes` )
-            // {
-            //     let classes         = defaultOptions[ opt ];
-            //     let propsClasses    = props.classes;
-
-            //     for ( let clss in classes )
-            //     {
-            //         this[ `${clss}Class` ] = propsClasses && propsClasses[ clss ] !== undefined ?
-            //                                     propsClasses[ clss ] :
-            //                                     classes[ clss ];
-            //     }
-            // }
         }
+
 
         if ( props.defaultEmpty )
         {
@@ -443,7 +431,7 @@ class Flounder
             let sel     = refs.select;
             let classes = this.classes;
             utils.removeClass( sel, classes.HIDDEN );
-            utils.addClass( sel, classes.HIDDsEN_IOS );
+            utils.addClass( sel, classes.HIDDEN_IOS );
         }
 
         this.addListeners( refs, props );
