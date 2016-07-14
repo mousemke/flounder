@@ -8,4 +8,4 @@ import apiTest          from './unit/apiTest';
 import defaultsTest     from './unit/defaultsTest';
 import eventsTest       from './unit/eventsTest';
 import buildTest        from './unit/buildTest';
-// import searchTest       from './unit/searchTest';
+import searchTest       from './unit/searchTest';

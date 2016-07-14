@@ -9,7 +9,7 @@ export const defaults = {
      *
      * _Number_
      */
-    minimumValueLength  : 0,
+    minimumValueLength  : 1,
 
     /*
      * minimum score to display
@@ -75,11 +75,11 @@ export class Sole
      */
     compareScoreCards( a, b )
     {
-        a = a.score;
-        b = b.score;
-
-        if ( a && b )
+        if ( a && a.score && b && b.score )
         {
+            a = a.score;
+            b = b.score;
+
             if ( a > b )
             {
                 return 1;
@@ -91,6 +91,8 @@ export class Sole
 
             return 0;
         }
+
+        return null;
     }
 
 
@@ -105,9 +107,13 @@ export class Sole
      */
     constructor( flounder )
     {
-        this.flounder           = flounder;
-        this.getResultWeights   = this.getResultWeights.bind( this );
-        this.scoreThis          = this.scoreThis.bind( this );
+        this.flounder               = flounder;
+
+        this.getResultWeights       = this.getResultWeights.bind( this );
+        this.getResultWeights.bound = true;
+
+        this.scoreThis              = this.scoreThis.bind( this );
+        this.scoreThis.bound        = true;
 
         return this;
     }
@@ -140,7 +146,7 @@ export class Sole
      */
     getResultWeights( d, i )
     {
-        let score   = 0 ;
+        let score   = 0;
         let res     = { i : i, d : d };
         let search  = d.search  = d.search || {};
         let weights = defaults.weights;
@@ -158,6 +164,7 @@ export class Sole
         search.description      = d.description ? d.description.toLowerCase() : null;
         search.descriptionSplit = d.description ? search.description.split( ` ` ) : null;
 
+
         defaults.scoreProperties.forEach( param =>
         {
             score += this.scoreThis( search[ param ], weights[ param ] );
@@ -171,6 +178,19 @@ export class Sole
         res.score = score;
 
         return res;
+    }
+
+
+    /**
+     * ## isItemAboveMinimum
+     *
+     * removes the items that have recieved a score lower than the set minimum
+     *
+     * @return _Boolean_ under the minimum or not
+     */
+    isItemAboveMinimum( d )
+    {
+        return d.score >= defaults.minimumScore ? true : false;
     }
 
 
@@ -193,10 +213,10 @@ export class Sole
 
         if ( query.length >= defaults.minimumValueLength )
         {
-            this.query          = query.toLowerCase().split( ` ` );
+            this.query      = query.toLowerCase().split( ` ` );
 
-            let data            = this.flounder.data;
-                data            = this.flounder.sortData( data );
+            let data        = this.flounder.data;
+                data        = this.flounder.sortData( data );
 
             ratedResults    = this.ratedResults = data.map( this.getResultWeights );
         }
@@ -206,7 +226,7 @@ export class Sole
         }
 
         ratedResults.sort( this.compareScoreCards );
-        ratedResults = ratedResults.filter( this.removeItemsUnderMinimum );
+        ratedResults = ratedResults.filter( this.isItemAboveMinimum );
 
         return ( this.ratedResults = ratedResults );
     }
@@ -230,7 +250,7 @@ export class Sole
 
         if ( queryLength <= valLength )
         {
-            let valStr = value.toLowerCase().slice( 0, valLength );
+            let valStr = value.toLowerCase().slice( 0, queryLength );
 
             if ( valStr === query )
             {
@@ -239,19 +259,6 @@ export class Sole
         }
 
         return 0;
-    }
-
-
-    /**
-     * ## removeItemsUnderMinimum
-     *
-     * removes the items that have recieved a score lower than the set minimum
-     *
-     * @return _Boolean_ under the minimum or not
-     */
-    removeItemsUnderMinimum( d )
-    {
-        return d.score >= defaults.minimumScore ? true : false;
     }
 
 
