@@ -370,20 +370,18 @@ class Flounder
     {
         let props = this.props = this.props || {};
 
-        this.classes        = defaultClasses;
-        this.selectedClass  = this.classes.SELECTED;
-
         for ( let opt in defaultOptions )
         {
             if ( defaultOptions.hasOwnProperty( opt ) )
             {
                 if ( opt === `classes` )
                 {
-                    let classes = defaultOptions[ opt ];
+                    this.classes    = {};
+                    let propClasses = props.classes ? props.classes : {};
 
-                    for ( let clss in classes )
+                    for ( let clss in defaultClasses )
                     {
-                        this.classes[ clss ] = classes[ clss ]; 
+                        this.classes[ clss ] = propClasses[ clss ] ? propClasses[ clss ] : defaultClasses[ clss ]; 
                     }
                 }
                 else
@@ -393,6 +391,7 @@ class Flounder
             }
         }
 
+        this.selectedClass = this.classes.SELECTED;
 
         if ( props.defaultEmpty )
         {
