@@ -6,6 +6,6 @@ import keycodesTest     from './unit/keycodesTest';
 import classesTest      from './unit/classesTest';
 import apiTest          from './unit/apiTest';
 import defaultsTest     from './unit/defaultsTest';
-// import buildTest        from './unit/buildTest';
-// import eventsTest       from './unit/eventsTest';
+import eventsTest       from './unit/eventsTest';
+import buildTest        from './unit/buildTest';
 // import searchTest       from './unit/searchTest';

@@ -10,7 +10,7 @@ const build = {
      *
      * adds a description to the option
      *
-     * @param {DOMElement} el option leement to add description to
+     * @param {DOMElement} el option element to add description to
      * @param {String} text description
      *
      * @return _Void_
@@ -397,7 +397,7 @@ const build = {
      * builds and returns a single multiTag
      *
      * @param {String} optionText text to add to the tag and role
-     * 
+     *
      * @return _DOMElement_ option tag
      */
     buildMultiTag( option )
@@ -486,7 +486,7 @@ const build = {
 
 
     /**
-     * popInSelectElements
+     * ## popInSelectElements
      *
      * pops the previously saves elements back into a select tag, restoring the
      * original state
@@ -507,7 +507,7 @@ const build = {
 
 
     /**
-     * popOutSelectElements
+     * ## popOutSelectElements
      *
      * pops out all the options of a select box, clones them, then appends the
      * clones.  This gives us the ability to restore the original tag
@@ -565,7 +565,7 @@ const build = {
 
 
     /**
-     * ## Set Target
+     * ## setTarget
      *
      * sets the target related
      *

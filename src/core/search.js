@@ -1,4 +1,9 @@
-let defaults = {
+/**
+ * search defaults
+ *
+ * @type {Object}
+ */
+export const defaults = {
     /*
      * minimum value length to search
      *
@@ -127,10 +132,10 @@ export class Sole
      * ## getResultWeights
      *
      * after the data is prepared this is mapped through the data to get weighted results
-     * 
+     *
      * @param  {Object} data object
      * @param  {Number} i index
-     * 
+     *
      * @return _Object_ res weighted results
      */
     getResultWeights( d, i )
@@ -141,7 +146,7 @@ export class Sole
         let weights = defaults.weights;
         let dText   = `${d.text}`;
         let dValue  = `${d.value}`;
-        
+
         search.text             = dText;
         search.textFlat         = dText.toLowerCase();
         search.textSplit        = search.textFlat.split( ` ` );

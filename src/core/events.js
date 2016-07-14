@@ -83,6 +83,11 @@ const events = {
      * ## addMultipleTags
      *
      * adds a tag for each selected option and attaches the correct events to it
+     *
+     * @param {Array} selectedOptions currently selected options
+     * @param {DOMElement} multiTagWrapper parent element of the tags
+     *
+     * @return _Void_
      */
     addMultipleTags( selectedOptions, multiTagWrapper )
     {
@@ -642,9 +647,9 @@ const events = {
 
 
     /**
-     * ## addHoverClass
+     * ## removeHoverClass
      *
-     * adds a hover class to an element
+     * removes a hover class from an element
      *
      * @return Void_
      */
