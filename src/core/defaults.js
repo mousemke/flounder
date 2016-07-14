@@ -97,26 +97,16 @@ const defaults = {
             {
                 let escapedText     = self.allowHTML ? _default.text : utils.escapeHTML( _default.text );
 
-                if ( !select[ 0 ] || select[ 0 ].value !== `` )
-                {
-                    let defaultOption   = utils.constructElement( { tagname : `option`,
-                                                className   : classes.OPTION_TAG,
-                                                value       :  _default.value } );
-                    defaultOption.innerHTML = escapedText;
+                let defaultOption   = utils.constructElement( { tagname : `option`,
+                                            className   : classes.OPTION_TAG,
+                                            value       :  _default.value } );
+                defaultOption.innerHTML = escapedText;
 
-                    select.insertBefore( defaultOption, select[ 0 ] );
-                    self.refs.selectOptions.unshift( defaultOption );
-                    data.unshift( _default );
-                }
-                else
-                {
-                    data[ 0 ] = _default;
-                }
+                select.insertBefore( defaultOption, select[ 0 ] );
+                self.refs.selectOptions.unshift( defaultOption );
             }
-            else
-            {
-                data.unshift( _default );
-            }
+
+            data.unshift( _default );
 
             return _default;
         };
@@ -158,45 +148,6 @@ const defaults = {
 
 
         /**
-         * ## sortData
-         *
-         * checks the data object for header options, and sorts it accordingly
-         *
-         * @return _Boolean_ hasHeaders
-         */
-        let sortData = function( data, res = [], i = 0 )
-        {
-            data.forEach( function( d )
-            {
-                if ( d.header )
-                {
-                    res = sortData( d.data, res, i );
-                }
-                else
-                {
-                    if ( typeof d !== `object` )
-                    {
-                        d = {
-                            text    : d,
-                            value   : d,
-                            index   : i
-                        };
-                    }
-                    else
-                    {
-                        d.index = i;
-                    }
-
-                    res.push( d );
-                    i++;
-                }
-            } );
-
-            return res;
-        };
-
-
-        /**
          * ## checkDefaultPriority
          *
          * sorts out which default should be gotten by priority
@@ -205,7 +156,7 @@ const defaults = {
          */
         let checkDefaultPriority = function()
         {
-            let _data       = sortData( data );
+            let _data       = self.sortData( data );
 
             if ( ( configObj.multipleTags || configObj.multiple )
                     && !configObj.defaultIndex
@@ -251,6 +202,47 @@ const defaults = {
         data    = data || configObj.data || [];
 
         return checkDefaultPriority();
+    },
+
+
+    /**
+     * ## sortData
+     *
+     * checks the data object for header options, and sorts it accordingly
+     *
+     * @return _Boolean_ hasHeaders
+     */
+    sortData( data, res = [], i = 0 )
+    {
+        let self = this;
+
+        data.forEach( d =>
+        {
+            if ( d.header )
+            {
+                res = this.sortData( d.data, res, i );
+            }
+            else
+            {
+                if ( typeof d !== `object` )
+                {
+                    d = {
+                        text    : d,
+                        value   : d,
+                        index   : i
+                    };
+                }
+                else
+                {
+                    d.index = i;
+                }
+
+                res.push( d );
+                i++;
+            }
+        } );
+
+        return res;
     }
 };
 

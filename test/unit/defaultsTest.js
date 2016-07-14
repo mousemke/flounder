@@ -112,53 +112,122 @@ describe( 'setDefaultOption', () =>
     {
         it( 'should set a placeholder as the default if passed', () =>
         {
-            let configObj       = { placeholder : 'moon!', data: [ 1, 2, 3 ] };
+            let _data           = [ 1, 2, 3 ];
+            let configObj       = { placeholder : 'moon!', data: _data };
             flounder.allowHTML  = true;
             let _default        = defaults.setDefaultOption( flounder, configObj );
 
             assert.equal( _default.index, 0 );
             assert.notEqual( _default.extraClass.indexOf( classes.PLACEHOLDER ), -1 );
             assert.equal( _default.value, '' );
+            assert.equal( _data.length, 4 );
         } );
-
-
-        // it( 'should fall back if the given index doesnt exist', () =>
-        // {
-        //     let configObj   = { defaultIndex : 200, data: [ 1, 2, 3 ] };
-
-        //     let _default    = defaults.setDefaultOption( flounder, configObj );
-
-        //     assert.equal( _default.index, 0 );
-        //     assert.ok( !_default.extraClass );
-        //     assert.equal( _default.value, 1 );
-        // } );
     } );
 
 
     describe( 'setValueDefault', () =>
     {
-        it( 'should', () =>
+        it( 'should set a value as the default if passed', () =>
         {
+            let configObj   = { defaultValue : 2, data: [ 1, 2, 3 ] };
 
+            let _default    = defaults.setDefaultOption( flounder, configObj );
+
+            assert.equal( _default.index, 1 );
+            assert.ok( !_default.extraClass || _default.extraClass.indexOf( classes.PLACEHOLDER ) === -1 );
+            assert.equal( _default.value, 2 );
+        } );
+
+
+        it( 'should fall back if the given index doesnt exist', () =>
+        {
+            let configObj   = { defaultValue: 200, data: [ 1, 2, 3 ] };
+
+            let _default    = defaults.setDefaultOption( flounder, configObj );
+
+            assert.equal( _default.index, 0 );
+            assert.ok( !_default.extraClass );
+            assert.equal( _default.value, 1 );
         } );
     } );
 
-
-    describe( 'sortData', () =>
-    {
-        it( 'should', () =>
-        {
-
-        } );
-    } );
 
 
     describe( 'checkDefaultPriority', () =>
     {
-        it( 'should', () =>
+        it( 'sort out the priority options and choose what should be gotten', () =>
         {
+            let configObj   = { defaultValue : 2, defaultIndex: 0, placeholder: 'moon', data: [ 1, 2, 3 ] };
 
+            let _default    = defaults.setDefaultOption( flounder, configObj );
+
+            assert.notEqual( _default.extraClass.indexOf( classes.PLACEHOLDER ), -1 );
         } );
+
+
+        it( 'should try to add the previous value in the case of a rebuild', () =>
+        {
+            let div         = document.querySelector( 'div' );
+            let configObj   = { defaultIndex: 2, data: [ 1, 2, 3 ] };
+
+            let flounder    = new Flounder( div, configObj );
+
+            let _default    = defaults.setDefaultOption( flounder, configObj, flounder.data, true );
+
+            assert.equal( _default.value, 3 );
+        } );
+    } );
+} );
+
+
+/**
+ * ## sortData
+ *
+ * checks the data object for header options, and sorts it accordingly
+ *
+ * @return _Boolean_ hasHeaders
+ */
+describe( 'sortData', () =>
+{
+    it( 'should build objects out of simple data sets', () =>
+    {
+        let data = defaults.sortData( [ 1, 2, 3 ] );
+
+        assert.equal( data[0].text, 1 );
+        assert.equal( data[1].value, 2 );
+        assert.equal( data[2].index, 2 );
+    } );
+
+
+    it( 'should add indexes to object data items', () =>
+    {
+        let data = defaults.sortData( [ {
+            text    : 1,
+            value   : 2
+        } ], [], 0 );
+
+        assert.equal( data[0].text, 1 );
+        assert.equal( data[0].value, 2 );
+        assert.equal( data[0].index, 0 );
+    } );
+
+
+    it( 'should recursively process headers', () =>
+    {
+        let data = defaults.sortData( [
+            {
+                header : 'top',
+                data    : [ 1, 2, 3 ]
+            },
+            {
+                header : 'bottom',
+                data    : [ 4, 5, 6 ]
+            }
+        ] );
+
+        assert.equal( data[0].text, 1 );
+        assert.equal( data[2].value, 3 );
+        assert.equal( data[5].value, 6 );
     } );
 } );
 
