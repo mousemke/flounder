@@ -1,8 +1,9 @@
 import utils                from './utils';
+import defaultClasses       from './classes';
 
 export const defaultOptions = {
     allowHTML               : false,
-    classes                 : {},
+    classes                 : defaultClasses,
     data                    : [],
     defaultEmpty            : false,
     defaultIndex            : false,

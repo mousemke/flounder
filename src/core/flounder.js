@@ -1,6 +1,5 @@
 
 import { defaultOptions }   from './defaults';
-import defaultClasses       from './classes';
 import utils                from './utils';
 import api                  from './api';
 import build                from './build';
@@ -376,8 +375,9 @@ class Flounder
             {
                 if ( opt === `classes` )
                 {
-                    this.classes    = {};
-                    let propClasses = props.classes ? props.classes : {};
+                    this.classes       = {};
+                    let defaultClasses = defaultOptions[ opt ];
+                    let propClasses    = typeof props[ opt ] === `object` ? props[ opt ] : {};
 
                     for ( let clss in defaultClasses )
                     {
