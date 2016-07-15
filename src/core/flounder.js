@@ -11,6 +11,44 @@ import version              from './version';
 class Flounder
 {
     /**
+     * ## addNoMoreOptionsMessage
+     *
+     * Adding 'No More Options' message to the option list
+     *
+     * @return _Void_
+     */
+    addNoMoreOptionsMessage( )
+    {
+        let classes     = this.classes;
+        let noMoreOptionsEl = this.refs.noMoreOptionsEl || utils.constructElement( { className : classes.NO_RESULTS } );
+
+        noMoreOptionsEl.innerHTML = 'No more recipients to add.';
+        this.refs.optionsList.appendChild( noMoreOptionsEl );
+
+        this.refs.noMoreOptionsEl = noMoreOptionsEl;
+    }
+
+
+    /**
+     * ## addNoResultsMessage
+     *
+     * Adding 'No Results' message to the option list
+     *
+     * @return _Void_
+     */
+    addNoResultsMessage( )
+    {
+        let classes     = this.classes;
+        let noResultsEl = this.refs.noResultsEl || utils.constructElement( { className : classes.NO_RESULTS } );
+
+        noResultsEl.innerHTML = 'No matches found';
+        this.refs.optionsList.appendChild( noResultsEl );
+
+        this.refs.noResultsEl = noResultsEl;
+    }
+
+
+    /**
      * ## arrayOfFlounders
      *
      * called when a jquery object, microbe, or array is fed into flounder
@@ -267,6 +305,8 @@ class Flounder
      */
     fuzzySearch( e )
     {
+        this.lastSearchEvent = e;
+
         try
         {
             this.onInputChange( e );
@@ -303,13 +343,16 @@ class Flounder
                         utils.removeClass( data[ e.i ], classes.SEARCH_HIDDEN );
                     } );
 
-                    if( matches.length === 0 )
+                    if( !this.refs.noMoreOptionsEl )
                     {
-                        this.addNoResultsMessage();
-                    }
-                    else
-                    {
-                        this.removeNoResultsMessage();
+                        if( matches.length === 0 )
+                        {
+                            this.addNoResultsMessage();
+                        }
+                        else
+                        {
+                            this.removeNoResultsMessage();
+                        }
                     }
                 }
                 else
@@ -381,7 +424,7 @@ class Flounder
 
                     for ( let clss in defaultClasses )
                     {
-                        this.classes[ clss ] = propClasses[ clss ] ? propClasses[ clss ] : defaultClasses[ clss ]; 
+                        this.classes[ clss ] = propClasses[ clss ] ? propClasses[ clss ] : defaultClasses[ clss ];
                     }
                 }
                 else
@@ -492,6 +535,14 @@ class Flounder
             } );
         }
 
+        this.removeNoMoreOptionsMessage();
+        this.removeNoResultsMessage();
+
+        if( this.lastSearchEvent  )
+        {
+            this.fuzzySearch( this.lastSearchEvent );
+        }
+
         selected.setAttribute( `data-value`, value );
         selected.setAttribute( `data-index`, index );
 
@@ -502,6 +553,43 @@ class Flounder
         catch( e )
         {
             console.warn( `something may be wrong in "onSelect"`, e );
+        }
+    }
+
+
+    /**
+     * ## removeNoResultsMessage
+     *
+     * Removing 'No Results' message from the option list
+     *
+     * @return _Void_
+     */
+    removeNoResultsMessage()
+    {
+        let noResultsEl =  this.refs.noResultsEl;
+
+        if( this.refs.optionsList && noResultsEl )
+        {
+            this.refs.optionsList.removeChild( noResultsEl );
+            this.refs.noResultsEl = undefined;
+        }
+    }
+
+    /**
+     * ## removeNoMoreOptionsMessage
+     *
+     * Removing 'No More options' message from the option list
+     *
+     * @return _Void_
+     */
+    removeNoMoreOptionsMessage()
+    {
+        let noMoreOptionsEl =  this.refs.noMoreOptionsEl;
+
+        if( this.refs.optionsList && noMoreOptionsEl )
+        {
+            this.refs.optionsList.removeChild( noMoreOptionsEl );
+            this.refs.noMoreOptionsEl = undefined;
         }
     }
 
@@ -539,44 +627,6 @@ class Flounder
         {
             this.refs.select[ i ].selected = false;
         } );
-    }
-
-
-    /**
-     * ## addNoResultsMessage
-     *
-     * Adding 'No Results' message to the option list
-     *
-     * @return _Void_
-     */
-    addNoResultsMessage()
-    {
-        let classes     = this.classes;
-        let noResultsEl = this.refs.noResultsEl || utils.constructElement( { className : classes.NO_RESULTS } );
-
-        noResultsEl.innerHTML = 'No Results';
-        this.refs.optionsList.appendChild( noResultsEl );
-
-        this.refs.noResultsEl = noResultsEl;
-    }
-
-
-    /**
-     * ## removeNoResultsMessage
-     *
-     * Removing 'No Results' message from the option list
-     *
-     * @return _Void_
-     */
-    removeNoResultsMessage()
-    {
-        let noResultsEl =  this.refs.noResultsEl;
-
-        if( this.refs.optionsList && noResultsEl )
-        {
-            this.refs.optionsList.removeChild( noResultsEl );
-            this.refs.noResultsEl = undefined;
-        }
     }
 
 

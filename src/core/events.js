@@ -692,19 +692,19 @@ const events = {
      * post toggleList, this runs it the list should be closed
      *
      * @param {Object} e event object
-     * @param {DOMElement} optionsList the options list
+     * @param {DOMElement} optionsListWrapper the options list
      * @param {Object} refs contains the references of the elements in flounder
      * @param {DOMElement} wrapper wrapper of flounder
      *
      * @return _Void_
      */
-    toggleClosed( e, optionsList, refs, wrapper )
+    toggleClosed( e, refs )
     {
         let classes = this.classes;
 
-        utils.addClass( optionsList, classes.HIDDEN );
+        utils.addClass( refs.optionsListWrapper, classes.HIDDEN );
         this.removeSelectKeyListener();
-        utils.removeClass( wrapper, classes.OPEN );
+        utils.removeClass( refs.wrapper, classes.OPEN );
 
         let qsHTML = document.querySelector( `html` );
         qsHTML.removeEventListener( `click`, this.catchBodyClick );
@@ -760,28 +760,26 @@ const events = {
      */
     toggleList( e, force )
     {
-        let classes     = this.classes;
-        let refs        = this.refs;
-        let optionsList = refs.optionsListWrapper;
-        let wrapper     = refs.wrapper;
-        let hasClass    = utils.hasClass;
-        let type        = e.type;
+        let classes            = this.classes;
+        let refs               = this.refs;
+        let hasClass           = utils.hasClass;
+        let type               = e.type;
 
         if ( type === `mouseleave` || force === `close` ||
-            !hasClass( optionsList, classes.HIDDEN ) )
+            !hasClass( refs.optionsListWrapper, classes.HIDDEN ) )
         {
             this.toggleList.justOpened = false;
-            this.toggleClosed( e, optionsList, refs, wrapper );
+            this.toggleClosed( e, refs );
         }
         else if ( type === `mouseenter` || force === `open` ||
-            force !== `close` && utils.hasClass( optionsList, classes.HIDDEN ) )
+            force !== `close` && utils.hasClass( refs.optionsListWrapper, classes.HIDDEN ) )
         {
             if ( type === `keydown` )
             {
                 this.toggleList.justOpened = true;
             }
 
-            this.toggleOpen( e, optionsList, refs, wrapper );
+            this.toggleOpen( e, refs );
         }
     },
 
@@ -792,13 +790,13 @@ const events = {
      * post toggleList, this runs it the list should be opened
      *
      * @param {Object} e event object
-     * @param {DOMElement} optionsList the options list
+     * @param {DOMElement} optionsListWrapper the options list
      * @param {Object} refs contains the references of the elements in flounder
      * @param {DOMElement} wrapper wrapper of flounder
      *
      * @return _Void_
      */
-    toggleOpen( e, optionsList, refs, wrapper )
+    toggleOpen( e, refs )
     {
         this.addSelectKeyListener();
 
@@ -806,8 +804,8 @@ const events = {
         {
             let classes = this.classes;
 
-            utils.removeClass( optionsList, classes.HIDDEN );
-            utils.addClass( wrapper, classes.OPEN );
+            utils.removeClass( refs.optionsListWrapper, classes.HIDDEN );
+            utils.addClass( refs.wrapper, classes.OPEN );
 
             let qsHTML = document.querySelector( `html` );
 
@@ -832,6 +830,12 @@ const events = {
             refs.search.focus();
         }
 
+        if( refs.multiTagWrapper && refs.multiTagWrapper.childNodes.length === refs.optionsList.childNodes.length )
+        {
+            this.removeNoResultsMessage();
+            this.addNoMoreOptionsMessage();
+        }
+
         if ( this.ready )
         {
             try
@@ -843,6 +847,7 @@ const events = {
                 console.warn( `something may be wrong in "onOpen"`, e );
             }
         }
+
     }
 };
 
