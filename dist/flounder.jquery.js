@@ -6,7 +6,7 @@
  * Released under the MIT license
  * https://github.com/sociomantic-tsunami/flounder/license
  *
- * Date: Thu Jul 14 2016
+ * Date: Fri Jul 15 2016
  * "This, so far, is the best Flounder ever"
  */
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
@@ -1086,10 +1086,6 @@ var _slicedToArray = (function () { function sliceIterator(arr, i) { var _arr = 
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _classes = require('./classes');
-
-var _classes2 = _interopRequireDefault(_classes);
-
 var _utils = require('./utils');
 
 var _utils2 = _interopRequireDefault(_utils);
@@ -1192,9 +1188,10 @@ var api = {
             }
 
             try {
+                var classes = this.classes;
                 target.parentNode.removeChild(target);
                 originalTarget.tabIndex = 0;
-                _utils2['default'].removeClass(originalTarget, _classes2['default'].HIDDEN);
+                _utils2['default'].removeClass(originalTarget, classes.HIDDEN);
             } catch (e) {
                 throw ' : this flounder may have already been removed';
             }
@@ -1245,19 +1242,20 @@ var api = {
      */
     disable: function disable(bool) {
         var refs = this.refs;
+        var classes = this.classes;
         var flounder = refs.flounder;
         var selected = refs.selected;
 
         if (bool) {
             refs.flounder.removeEventListener('keydown', this.checkFlounderKeypress);
             refs.selected.removeEventListener('click', this.toggleList);
-            _utils2['default'].addClass(selected, _classes2['default'].DISABLED);
-            _utils2['default'].addClass(flounder, _classes2['default'].DISABLED);
+            _utils2['default'].addClass(selected, classes.DISABLED);
+            _utils2['default'].addClass(flounder, classes.DISABLED);
         } else {
             refs.flounder.addEventListener('keydown', this.checkFlounderKeypress);
             refs.selected.addEventListener('click', this.toggleList);
-            _utils2['default'].removeClass(selected, _classes2['default'].DISABLED);
-            _utils2['default'].removeClass(flounder, _classes2['default'].DISABLED);
+            _utils2['default'].removeClass(selected, classes.DISABLED);
+            _utils2['default'].removeClass(flounder, classes.DISABLED);
         }
     },
 
@@ -1300,13 +1298,14 @@ var api = {
 
             if (el) {
                 var opt = refs.selectOptions[index];
+                var classes = this.classes;
 
                 if (reenable) {
                     opt.disabled = false;
-                    _utils2['default'].removeClass(el, _classes2['default'].DISABLED);
+                    _utils2['default'].removeClass(el, classes.DISABLED);
                 } else {
                     opt.disabled = true;
-                    _utils2['default'].addClass(el, _classes2['default'].DISABLED);
+                    _utils2['default'].addClass(el, classes.DISABLED);
                 }
 
                 return [el, opt];
@@ -1470,11 +1469,12 @@ var api = {
         var opts = [],
             opt = undefined;
         var _data = _el.options;
+        var classes = this.classes;
 
         for (var i = 0, len = _data.length; i < len; i++) {
             opt = _data[i];
 
-            if (opt.selected && !_utils2['default'].hasClass(opt, _classes2['default'].PLACEHOLDER)) {
+            if (opt.selected && !_utils2['default'].hasClass(opt, classes.PLACEHOLDER)) {
                 opts.push(opt);
             }
         }
@@ -1508,6 +1508,7 @@ var api = {
     loadDataFromUrl: function loadDataFromUrl(url, callback) {
         var _this6 = this;
 
+        var classes = this.classes;
         try {
             _utils2['default'].http.get(url).then(function (data) {
                 if (data) {
@@ -1524,7 +1525,7 @@ var api = {
                     text: '',
                     value: '',
                     index: 0,
-                    extraClass: _classes2['default'].LOADING_FAILED
+                    extraClass: classes.LOADING_FAILED
                 }]);
             });
         } catch (e) {
@@ -1535,7 +1536,7 @@ var api = {
             text: '',
             value: '',
             index: 0,
-            extraClass: _classes2['default'].LOADING
+            extraClass: classes.LOADING
         }];
     },
 
@@ -1622,7 +1623,8 @@ var api = {
             var el = refs.data[index];
 
             if (el) {
-                var isOpen = _utils2['default'].hasClass(refs.wrapper, 'open');
+                var classes = this.classes;
+                var isOpen = _utils2['default'].hasClass(refs.wrapper, classes.OPEN);
                 this.toggleList({}, isOpen ? 'close' : 'open');
                 this.___forceMultiple = multiple;
                 this.___programmaticClick = programmatic;
@@ -1725,7 +1727,7 @@ var api = {
 exports['default'] = api;
 module.exports = exports['default'];
 
-},{"./classes":14,"./defaults":15,"./utils":19}],13:[function(require,module,exports){
+},{"./defaults":15,"./utils":19}],13:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -1735,10 +1737,6 @@ Object.defineProperty(exports, '__esModule', {
 var _slicedToArray = (function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i['return']) _i['return'](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError('Invalid attempt to destructure non-iterable instance'); } }; })();
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-var _classes = require('./classes');
-
-var _classes2 = _interopRequireDefault(_classes);
 
 var _defaults = require('./defaults');
 
@@ -1753,15 +1751,15 @@ var build = {
      *
      * adds a description to the option
      *
-     * @param {DOMElement} el option leement to add description to
+     * @param {DOMElement} el option element to add description to
      * @param {String} text description
-     *
+     * @param {String} CSS class to apply
      * @return _Void_
      */
-    addOptionDescription: function addOptionDescription(el, text) {
+    addOptionDescription: function addOptionDescription(el, text, className) {
         var div = document.createElement('div');
         div.innerHTML = text;
-        div.className = _classes2['default'].DESCRIPTION;
+        div.className = className;
         el.appendChild(div);
     },
 
@@ -1776,10 +1774,11 @@ var build = {
      */
     addSearch: function addSearch(flounder) {
         if (this.search) {
+            var classes = this.classes;
             var search = _utils2['default'].constructElement({
                 tagname: 'input',
                 type: 'text',
-                className: _classes2['default'].SEARCH
+                className: classes.SEARCH
             });
             flounder.appendChild(search);
 
@@ -1820,8 +1819,9 @@ var build = {
         if (props.disableArrow) {
             return null;
         } else {
-            var arrow = constructElement({ className: _classes2['default'].ARROW });
-            var arrowInner = constructElement({ className: _classes2['default'].ARROW_INNER });
+            var classes = this.classes;
+            var arrow = constructElement({ className: classes.ARROW });
+            var arrowInner = constructElement({ className: classes.ARROW_INNER });
             arrow.appendChild(arrowInner);
 
             return arrow;
@@ -1854,6 +1854,7 @@ var build = {
         var refs = this.refs;
         var selectRef = refs.select;
         var allowHTML = this.allowHTML;
+        var classes = this.classes;
 
         /**
          * ## buildDiv
@@ -1877,7 +1878,7 @@ var build = {
             var extraClass = i === defaultValue.index ? '  ' + selectedClass : '';
 
             var res = {
-                className: _classes2['default'].OPTION + extraClass,
+                className: classes.OPTION + extraClass,
                 'data-index': i
             };
 
@@ -1891,7 +1892,7 @@ var build = {
             data.innerHTML = allowHTML ? dataObj.text : escapeHTML(dataObj.text);
 
             if (dataObj.description) {
-                addOptionDescription(data, dataObj.description);
+                addOptionDescription(data, dataObj.description, classes.DESCRIPTION);
             }
 
             data.className += dataObj.extraClass ? '  ' + dataObj.extraClass : '';
@@ -1915,7 +1916,7 @@ var build = {
 
             if (!selectRef) {
                 selectOption = constructElement({ tagname: 'option',
-                    className: _classes2['default'].OPTION_TAG + '  ' + dataObj.extraClass,
+                    className: classes.OPTION_TAG + '  ' + dataObj.extraClass,
                     value: dataObj.value });
                 var escapedText = escapeHTML(dataObj.text);
                 selectOption.innerHTML = escapedText;
@@ -1932,9 +1933,9 @@ var build = {
                 selectChild.setAttribute('value', selectChild.value);
 
                 if (selectChild.disabled === true && data[i]) {
-                    addClass(data[i], _classes2['default'].DISABLED);
+                    addClass(data[i], classes.DISABLED);
                 }
-                addClass(selectChild, _classes2['default'].OPTION_TAG);
+                addClass(selectChild, classes.OPTION_TAG);
             }
 
             if (i === defaultValue.index) {
@@ -1942,7 +1943,7 @@ var build = {
             }
 
             if (selectOption.getAttribute('disabled')) {
-                addClass(data[i], _classes2['default'].DISABLED);
+                addClass(data[i], classes.DISABLED);
             }
 
             return selectOption;
@@ -1961,9 +1962,9 @@ var build = {
             if (dataObj.header) {
                 (function () {
                     var section = constructElement({ tagname: 'div',
-                        className: _classes2['default'].SECTION });
+                        className: classes.SECTION });
                     var header = constructElement({ tagname: 'div',
-                        className: _classes2['default'].HEADER });
+                        className: classes.HEADER });
                     header.textContent = dataObj.header;
                     section.appendChild(header);
                     optionsList.appendChild(section);
@@ -2003,16 +2004,16 @@ var build = {
      */
     buildDom: function buildDom() {
         var props = this.props;
+        var classes = this.classes;
         this.refs = {};
 
         var constructElement = _utils2['default'].constructElement;
 
-        var wrapperClass = _classes2['default'].MAIN_WRAPPER;
-        var wrapper = _utils2['default'].constructElement({ className: this.wrapperClass ? wrapperClass + '  ' + this.wrapperClass : wrapperClass });
+        var wrapper = _utils2['default'].constructElement({ className: classes.MAIN_WRAPPER });
 
-        var flounderClass = this.flounderClass ? _classes2['default'].MAIN + ' ' + this.flounderClass : _classes2['default'].MAIN;
+        var flounderClass = classes.MAIN;
 
-        var flounderClasses = this.multipleTags ? flounderClass + ' ' + _classes2['default'].MULTIPLE_TAG_FLOUNDER : flounderClass;
+        var flounderClasses = this.multipleTags ? flounderClass + ' ' + classes.MULTIPLE_TAG_FLOUNDER : flounderClass;
 
         var flounder = constructElement({ className: flounderClasses });
 
@@ -2031,19 +2032,19 @@ var build = {
         var defaultValue = this._default = (0, _defaults.setDefaultOption)(this, this.props, data);
         defaultValue.index = defaultValue.index || defaultValue.index === 0 ? defaultValue.index : -1;
 
-        var selectedDisplayedClasses = this.multipleTags ? _classes2['default'].SELECTED_DISPLAYED + ' ' + _classes2['default'].MULTIPLE_SELECTED : _classes2['default'].SELECTED_DISPLAYED;
+        var selectedDisplayedClasses = this.multipleTags ? classes.SELECTED_DISPLAYED + ' ' + classes.MULTIPLE_SELECTED : classes.SELECTED_DISPLAYED;
 
         var selected = constructElement({ className: selectedDisplayedClasses,
             'data-value': defaultValue.value, 'data-index': defaultValue.index });
 
-        var multiTagWrapper = this.multipleTags ? constructElement({ className: _classes2['default'].MULTI_TAG_LIST }) : null;
+        var multiTagWrapper = this.multipleTags ? constructElement({ className: classes.MULTI_TAG_LIST }) : null;
 
         var searchLocation = multiTagWrapper || flounder;
 
         var search = this.addSearch(searchLocation);
 
-        var optionsListWrapper = constructElement({ className: _classes2['default'].OPTIONS_WRAPPER + '  ' + _classes2['default'].HIDDEN });
-        var optionsList = constructElement({ className: _classes2['default'].LIST });
+        var optionsListWrapper = constructElement({ className: classes.OPTIONS_WRAPPER + '  ' + classes.HIDDEN });
+        var optionsList = constructElement({ className: classes.LIST });
         optionsList.setAttribute('role', 'listbox');
         optionsListWrapper.appendChild(optionsList);
 
@@ -2098,10 +2099,11 @@ var build = {
         var target = this.target;
         var refs = this.refs;
         var select = refs.select;
+        var classes = this.classes;
 
         if (target.tagName === 'SELECT') {
-            _utils2['default'].addClass(target, _classes2['default'].SELECT_TAG);
-            _utils2['default'].addClass(target, _classes2['default'].HIDDEN);
+            _utils2['default'].addClass(target, classes.SELECT_TAG);
+            _utils2['default'].addClass(target, classes.HIDDEN);
 
             select = target;
 
@@ -2132,9 +2134,9 @@ var build = {
             }
 
             this.target = target.parentNode;
-            _utils2['default'].addClass(select || target, _classes2['default'].HIDDEN);
+            _utils2['default'].addClass(select || target, classes.HIDDEN);
         } else {
-            select = _utils2['default'].constructElement({ tagname: 'SELECT', className: _classes2['default'].SELECT_TAG + '  ' + _classes2['default'].HIDDEN });
+            select = _utils2['default'].constructElement({ tagname: 'SELECT', className: classes.SELECT_TAG + '  ' + classes.HIDDEN });
             wrapper.appendChild(select);
         }
 
@@ -2222,7 +2224,8 @@ var build = {
         target.flounder = this;
 
         if (target.tagName === 'INPUT') {
-            _utils2['default'].addClass(target, _classes2['default'].HIDDEN);
+            var classes = this.classes;
+            _utils2['default'].addClass(target, classes.HIDDEN);
             target.setAttribute('aria-hidden', true);
             target.tabIndex = -1;
             target = target.parentNode;
@@ -2235,7 +2238,7 @@ var build = {
 exports['default'] = build;
 module.exports = exports['default'];
 
-},{"./classes":14,"./defaults":15,"./utils":19}],14:[function(require,module,exports){
+},{"./defaults":15,"./utils":19}],14:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -2262,6 +2265,7 @@ var classes = {
     MULTIPLE_SELECTED: "flounder__multiple--selected",
     MULTIPLE_TAG_CLOSE: "flounder__multiple__tag__close",
     NO_RESULTS: "flounder__no-results",
+    OPEN: "open",
     OPTION: "flounder__option",
     OPTION_TAG: "flounder--option--tag",
     OPTIONS_WRAPPER: "flounder__list--wrapper",
@@ -2288,22 +2292,17 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _classes = require('./classes');
-
-var _classes2 = _interopRequireDefault(_classes);
-
 var _utils = require('./utils');
 
 var _utils2 = _interopRequireDefault(_utils);
 
+var _classes = require('./classes');
+
+var _classes2 = _interopRequireDefault(_classes);
+
 var defaultOptions = {
     allowHTML: false,
-    classes: {
-        flounder: '',
-        hidden: 'flounder--hidden',
-        selected: 'flounder__option--selected',
-        wrapper: ''
-    },
+    classes: _classes2['default'],
     data: [],
     defaultEmpty: false,
     defaultIndex: false,
@@ -2345,7 +2344,7 @@ var setDefaultOption = function setDefaultOption(self, configObj) {
     /**
      * ## setIndexDefault
      *
-     * sets a specified indexas the default option. This only works correctly
+     * sets a specified index as the default option. This only works correctly
      * if it is a valid index, otherwise it returns null
      *
      * @return {Object} default settings
@@ -2372,6 +2371,7 @@ var setDefaultOption = function setDefaultOption(self, configObj) {
      */
     var setPlaceholderDefault = function setPlaceholderDefault(_data) {
         var refs = self.refs;
+        var classes = self.classes;
         var select = refs.select;
         var placeholder = configObj.placeholder;
 
@@ -2379,7 +2379,7 @@ var setDefaultOption = function setDefaultOption(self, configObj) {
             text: placeholder || placeholder === '' ? placeholder : defaultOptions.placeholder,
             value: '',
             index: 0,
-            extraClass: _classes2['default'].HIDDEN + '  ' + _classes2['default'].PLACEHOLDER
+            extraClass: classes.HIDDEN + '  ' + classes.PLACEHOLDER
         };
 
         if (select) {
@@ -2387,7 +2387,7 @@ var setDefaultOption = function setDefaultOption(self, configObj) {
 
             if (!select[0] || select[0].value !== '') {
                 var defaultOption = self.constructElement({ tagname: 'option',
-                    className: _classes2['default'].OPTION_TAG,
+                    className: classes.OPTION_TAG,
                     value: _default.value });
                 defaultOption.innerHTML = escapedText;
 
@@ -2523,10 +2523,6 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _classes = require('./classes');
-
-var _classes2 = _interopRequireDefault(_classes);
-
 var _search2 = require('./search');
 
 var _search3 = _interopRequireDefault(_search2);
@@ -2552,17 +2548,6 @@ var events = {
         if (this.props.openOnHover) {
             refs.wrapper.addEventListener('mouseenter', this.firstTouchController);
         }
-    },
-
-    /**
-     * ## addHoverClass
-     *
-     * adds a hover class to an element
-     *
-     * @return Void_
-     */
-    addHoverClass: function addHoverClass() {
-        _utils2['default'].addClass(this, _classes2['default'].HOVER);
     },
 
     /**
@@ -2606,10 +2591,12 @@ var events = {
     addOptionsListeners: function addOptionsListeners() {
         var _this = this;
 
+        var classes = this.classes;
+
         this.refs.data.forEach(function (dataObj, i) {
             if (dataObj.tagName === 'DIV') {
-                dataObj.addEventListener('mouseenter', _this.addHoverClass);
-                dataObj.addEventListener('mouseleave', _this.removeHoverClass);
+                dataObj.addEventListener('mouseenter', _utils2['default'].addClass(dataObj, classes.HOVER));
+                dataObj.addEventListener('mouseleave', _utils2['default'].removeClass(dataObj, classes.HOVER));
 
                 dataObj.addEventListener('click', _this.clickSet);
             }
@@ -2695,10 +2682,11 @@ var events = {
         // weird shit
         // http://stackoverflow.com/questions/34660500/mobile-safari-multi-select-bug
         if (this.isIos) {
+            var classes = this.classes;
             var firstOption = select[0];
             var plug = document.createElement('OPTION');
             plug.disabled = true;
-            plug.className = _classes2['default'].PLUG;
+            plug.className = classes.PLUG;
             select.insertBefore(plug, firstOption);
         }
 
@@ -2820,7 +2808,8 @@ var events = {
         // http://stackoverflow.com/questions/34660500/mobile-safari-multi-select-bug
         if (this.isIos) {
             var select = this.refs.select;
-            var plug = select.querySelector('.' + _classes2['default'].PLUG);
+            var classes = this.classes;
+            var plug = select.querySelector('.' + classes.PLUG);
 
             if (plug) {
                 select.removeChild(plug);
@@ -2871,17 +2860,6 @@ var events = {
         if (this.props.openOnHover) {
             refs.wrapper.removeEventListener('mouseenter', this.firstTouchController);
         }
-    },
-
-    /**
-     * ## addHoverClass
-     *
-     * adds a hover class to an element
-     *
-     * @return Void_
-     */
-    removeHoverClass: function removeHoverClass() {
-        _utils2['default'].removeClass(this, _classes2['default'].HOVER);
     },
 
     /**
@@ -3009,10 +2987,11 @@ var events = {
 
             selectTag.selectedIndex = index;
 
+            var classes = this.classes;
             var hasClass = _utils2['default'].hasClass;
             var dataAtIndex = data[index];
 
-            if (hasClass(dataAtIndex, _classes2['default'].HIDDEN) || hasClass(dataAtIndex, _classes2['default'].SELECTED_HIDDEN) || hasClass(dataAtIndex, _classes2['default'].SEARCH_HIDDEN) || hasClass(dataAtIndex, _classes2['default'].DISABLED)) {
+            if (hasClass(dataAtIndex, classes.HIDDEN) || hasClass(dataAtIndex, classes.SELECTED_HIDDEN) || hasClass(dataAtIndex, classes.SEARCH_HIDDEN) || hasClass(dataAtIndex, classes.DISABLED)) {
                 this.setKeypress(e);
             }
         }
@@ -3139,16 +3118,18 @@ var events = {
      * post toggleList, this runs it the list should be closed
      *
      * @param {Object} e event object
-     * @param {DOMElement} optionsList the options list
+     * @param {DOMElement} optionsListWrapper the options list
      * @param {Object} refs contains the references of the elements in flounder
      * @param {DOMElement} wrapper wrapper of flounder
      *
      * @return _Void_
      */
-    toggleClosed: function toggleClosed(e, optionsList, refs, wrapper) {
-        _utils2['default'].addClass(optionsList, _classes2['default'].HIDDEN);
+    toggleClosed: function toggleClosed(e, refs) {
+        var classes = this.classes;
+
+        _utils2['default'].addClass(refs.optionsListWrapper, classes.HIDDEN);
         this.removeSelectKeyListener();
-        _utils2['default'].removeClass(wrapper, 'open');
+        _utils2['default'].removeClass(refs.wrapper, classes.OPEN);
 
         var qsHTML = document.querySelector('html');
         qsHTML.removeEventListener('click', this.catchBodyClick);
@@ -3177,7 +3158,9 @@ var events = {
      * @return _Void_
      */
     toggleListSearchClick: function toggleListSearchClick(e) {
-        if (!_utils2['default'].hasClass(this.refs.wrapper, 'open')) {
+        var classes = this.classes;
+
+        if (!_utils2['default'].hasClass(this.refs.wrapper, classes.OPEN)) {
             this.toggleList(e, 'open');
         }
     },
@@ -3192,21 +3175,20 @@ var events = {
      * @return _Void_
      */
     toggleList: function toggleList(e, force) {
+        var classes = this.classes;
         var refs = this.refs;
-        var optionsList = refs.optionsListWrapper;
-        var wrapper = refs.wrapper;
         var hasClass = _utils2['default'].hasClass;
         var type = e.type;
 
-        if (type === 'mouseleave' || force === 'close' || !hasClass(optionsList, _classes2['default'].HIDDEN)) {
+        if (type === 'mouseleave' || force === 'close' || !hasClass(refs.optionsListWrapper, classes.HIDDEN)) {
             this.toggleList.justOpened = false;
-            this.toggleClosed(e, optionsList, refs, wrapper);
-        } else if (type === 'mouseenter' || force === 'open' || force !== 'close' && _utils2['default'].hasClass(optionsList, _classes2['default'].HIDDEN)) {
+            this.toggleClosed(e, refs);
+        } else if (type === 'mouseenter' || force === 'open' || force !== 'close' && _utils2['default'].hasClass(refs.optionsListWrapper, classes.HIDDEN)) {
             if (type === 'keydown') {
                 this.toggleList.justOpened = true;
             }
 
-            this.toggleOpen(e, optionsList, refs, wrapper);
+            this.toggleOpen(e, refs);
         }
     },
 
@@ -3216,18 +3198,20 @@ var events = {
      * post toggleList, this runs it the list should be opened
      *
      * @param {Object} e event object
-     * @param {DOMElement} optionsList the options list
+     * @param {DOMElement} optionsListWrapper the options list
      * @param {Object} refs contains the references of the elements in flounder
      * @param {DOMElement} wrapper wrapper of flounder
      *
      * @return _Void_
      */
-    toggleOpen: function toggleOpen(e, optionsList, refs, wrapper) {
+    toggleOpen: function toggleOpen(e, refs) {
         this.addSelectKeyListener();
 
         if (!this.isIos || this.search || this.multipleTags === true && this.multiple === true) {
-            _utils2['default'].removeClass(optionsList, _classes2['default'].HIDDEN);
-            _utils2['default'].addClass(wrapper, 'open');
+            var classes = this.classes;
+
+            _utils2['default'].removeClass(refs.optionsListWrapper, classes.HIDDEN);
+            _utils2['default'].addClass(refs.wrapper, classes.OPEN);
 
             var qsHTML = document.querySelector('html');
 
@@ -3248,6 +3232,11 @@ var events = {
             refs.search.focus();
         }
 
+        if (refs.multiTagWrapper && refs.multiTagWrapper.childNodes.length === refs.optionsList.childNodes.length) {
+            this.removeNoResultsMessage();
+            this.addNoMoreOptionsMessage();
+        }
+
         if (this.ready) {
             try {
                 this.onOpen(e, this.getSelectedValues());
@@ -3261,7 +3250,7 @@ var events = {
 exports['default'] = events;
 module.exports = exports['default'];
 
-},{"./classes":14,"./search":18,"./utils":19}],17:[function(require,module,exports){
+},{"./search":18,"./utils":19}],17:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -3292,10 +3281,6 @@ var _events = require('./events');
 
 var _events2 = _interopRequireDefault(_events);
 
-var _classes2 = require('./classes');
-
-var _classes3 = _interopRequireDefault(_classes2);
-
 var _search = require('./search');
 
 var _search2 = _interopRequireDefault(_search);
@@ -3306,7 +3291,43 @@ var _version2 = _interopRequireDefault(_version);
 
 var Flounder = (function () {
     _createClass(Flounder, [{
-        key: 'arrayOfFlounders',
+        key: 'addNoMoreOptionsMessage',
+
+        /**
+         * ## addNoMoreOptionsMessage
+         *
+         * Adding 'No More Options' message to the option list
+         *
+         * @return _Void_
+         */
+        value: function addNoMoreOptionsMessage() {
+            var classes = this.classes;
+            var noMoreOptionsEl = this.refs.noMoreOptionsEl || _utils2['default'].constructElement({ className: classes.NO_RESULTS });
+
+            noMoreOptionsEl.innerHTML = 'No more recipients to add.';
+            this.refs.optionsList.appendChild(noMoreOptionsEl);
+
+            this.refs.noMoreOptionsEl = noMoreOptionsEl;
+        }
+
+        /**
+         * ## addNoResultsMessage
+         *
+         * Adding 'No Results' message to the option list
+         *
+         * @return _Void_
+         */
+    }, {
+        key: 'addNoResultsMessage',
+        value: function addNoResultsMessage() {
+            var classes = this.classes;
+            var noResultsEl = this.refs.noResultsEl || _utils2['default'].constructElement({ className: classes.NO_RESULTS });
+
+            noResultsEl.innerHTML = 'No matches found';
+            this.refs.optionsList.appendChild(noResultsEl);
+
+            this.refs.noResultsEl = noResultsEl;
+        }
 
         /**
          * ## arrayOfFlounders
@@ -3319,6 +3340,8 @@ var Flounder = (function () {
          *
          * @return {Array} array of flounders
          */
+    }, {
+        key: 'arrayOfFlounders',
         value: function arrayOfFlounders(targets, props) {
             var _this = this;
 
@@ -3379,9 +3402,9 @@ var Flounder = (function () {
                 }
 
                 this.props = props;
-                this.setTarget(target);
                 this.bindThis();
                 this.initializeOptions();
+                this.setTarget(target);
 
                 if (this.search) {
                     this.search = new _search2['default'](this);
@@ -3438,6 +3461,8 @@ var Flounder = (function () {
     _createClass(Flounder, [{
         key: 'displayMultipleTags',
         value: function displayMultipleTags(selectedOptions, multiTagWrapper) {
+            var _this2 = this;
+
             var span = undefined,
                 a = undefined;
 
@@ -3454,30 +3479,34 @@ var Flounder = (function () {
             multiTagWrapper.innerHTML = '';
 
             if (selectedOptions.length > 0) {
-                selectedOptions.forEach(function (option) {
-                    if (option.value !== '') {
-                        var _span = document.createElement('span');
-                        _span.className = _classes3['default'].MULTIPLE_SELECT_TAG;
+                (function () {
+                    var classes = _this2.classes;
 
-                        var _a = document.createElement('a');
-                        _a.className = _classes3['default'].MULTIPLE_TAG_CLOSE;
-                        _a.setAttribute('data-index', option.index);
+                    selectedOptions.forEach(function (option) {
+                        if (option.value !== '') {
+                            var _span = document.createElement('span');
+                            _span.className = classes.MULTIPLE_SELECT_TAG;
 
-                        _span.appendChild(_a);
+                            var _a = document.createElement('a');
+                            _a.className = classes.MULTIPLE_TAG_CLOSE;
+                            _a.setAttribute('data-index', option.index);
 
-                        _span.innerHTML += option.innerHTML;
+                            _span.appendChild(_a);
 
-                        multiTagWrapper.appendChild(_span);
-                    } else {
-                        option.selected = false;
-                    }
-                });
+                            _span.innerHTML += option.innerHTML;
 
-                Array.prototype.slice.call(multiTagWrapper.children, 0).forEach(function (el) {
-                    if (el.firstChild) {
-                        el.firstChild.addEventListener('click', removeMultiTag);
-                    }
-                });
+                            multiTagWrapper.appendChild(_span);
+                        } else {
+                            option.selected = false;
+                        }
+                    });
+
+                    Array.prototype.slice.call(multiTagWrapper.children, 0).forEach(function (el) {
+                        if (el.firstChild) {
+                            el.firstChild.addEventListener('click', removeMultiTag);
+                        }
+                    });
+                })();
             } else {
                 this.addPlaceholder();
             }
@@ -3547,7 +3576,9 @@ var Flounder = (function () {
     }, {
         key: 'fuzzySearch',
         value: function fuzzySearch(e) {
-            var _this2 = this;
+            var _this3 = this;
+
+            this.lastSearchEvent = e;
 
             try {
                 this.onInputChange(e);
@@ -3566,20 +3597,23 @@ var Flounder = (function () {
 
                     if (matches) {
                         (function () {
-                            var data = _this2.refs.data;
+                            var data = _this3.refs.data;
+                            var classes = _this3.classes;
 
                             data.forEach(function (el, i) {
-                                _utils2['default'].addClass(el, _classes3['default'].SEARCH_HIDDEN);
+                                _utils2['default'].addClass(el, classes.SEARCH_HIDDEN);
                             });
 
                             matches.forEach(function (e) {
-                                _utils2['default'].removeClass(data[e.i], _classes3['default'].SEARCH_HIDDEN);
+                                _utils2['default'].removeClass(data[e.i], classes.SEARCH_HIDDEN);
                             });
 
-                            if (matches.length === 0) {
-                                _this2.addNoResultsMessage();
-                            } else {
-                                _this2.removeNoResultsMessage();
+                            if (!_this3.refs.noMoreOptionsEl) {
+                                if (matches.length === 0) {
+                                    _this3.addNoResultsMessage();
+                                } else {
+                                    _this3.removeNoResultsMessage();
+                                }
                             }
                         })();
                     } else {
@@ -3609,8 +3643,10 @@ var Flounder = (function () {
         key: 'fuzzySearchReset',
         value: function fuzzySearchReset() {
             var refs = this.refs;
+            var classes = this.classes;
+
             refs.data.forEach(function (dataObj) {
-                _utils2['default'].removeClass(dataObj, _classes3['default'].SEARCH_HIDDEN);
+                _utils2['default'].removeClass(dataObj, classes.SEARCH_HIDDEN);
             });
 
             refs.search.value = '';
@@ -3630,17 +3666,22 @@ var Flounder = (function () {
             var props = this.props = this.props || {};
 
             for (var opt in _defaults.defaultOptions) {
-                if (_defaults.defaultOptions.hasOwnProperty(opt) && opt !== 'classes') {
-                    this[opt] = props[opt] !== undefined ? props[opt] : _defaults.defaultOptions[opt];
-                } else if (opt === 'classes') {
-                    var _classes = _defaults.defaultOptions[opt];
-                    var propsClasses = props.classes;
+                if (_defaults.defaultOptions.hasOwnProperty(opt)) {
+                    if (opt === 'classes') {
+                        this.classes = {};
+                        var defaultClasses = _defaults.defaultOptions[opt];
+                        var propClasses = typeof props[opt] === 'object' ? props[opt] : {};
 
-                    for (var clss in _classes) {
-                        this[clss + 'Class'] = propsClasses && propsClasses[clss] !== undefined ? propsClasses[clss] : _classes[clss];
+                        for (var clss in defaultClasses) {
+                            this.classes[clss] = propClasses[clss] ? propClasses[clss] : defaultClasses[clss];
+                        }
+                    } else {
+                        this[opt] = props[opt] !== undefined ? props[opt] : _defaults.defaultOptions[opt];
                     }
                 }
             }
+
+            this.selectedClass = this.classes.SELECTED;
 
             if (props.defaultEmpty) {
                 this.placeholder = '';
@@ -3649,7 +3690,7 @@ var Flounder = (function () {
             if (this.multipleTags) {
                 this.search = true;
                 this.multiple = true;
-                this.selectedClass += '  ' + _classes3['default'].SELECTED_HIDDEN;
+                this.selectedClass += '  ' + this.classes.SELECTED_HIDDEN;
 
                 if (!this.placeholder) {
                     this.placeholder = _defaults.defaultOptions.placeholder;
@@ -3673,8 +3714,9 @@ var Flounder = (function () {
 
             if (!!this.isIos && (!this.multipleTags || !this.multiple)) {
                 var sel = refs.select;
-                _utils2['default'].removeClass(sel, _classes3['default'].HIDDEN);
-                _utils2['default'].addClass(sel, _classes3['default'].HIDDEN_IOS);
+                var classes = this.classes;
+                _utils2['default'].removeClass(sel, classes.HIDDEN);
+                _utils2['default'].addClass(sel, classes.HIDDEN_IOS);
             }
 
             this.addListeners(refs, props);
@@ -3697,6 +3739,7 @@ var Flounder = (function () {
 
             var value = undefined;
             var index = undefined;
+            var classes = this.classes;
             var refs = this.refs;
             var select = refs.select;
             var selected = refs.selected;
@@ -3708,8 +3751,8 @@ var Flounder = (function () {
 
             var selectedOptions = this.getSelected();
 
-            _utils2['default'].removeClass(data[targetIndex], _classes3['default'].SELECTED_HIDDEN);
-            _utils2['default'].removeClass(data[targetIndex], _classes3['default'].SELECTED);
+            _utils2['default'].removeClass(data[targetIndex], classes.SELECTED_HIDDEN);
+            _utils2['default'].removeClass(data[targetIndex], classes.SELECTED);
 
             target.removeEventListener('click', this.removeMultiTag);
 
@@ -3730,6 +3773,13 @@ var Flounder = (function () {
                 });
             }
 
+            this.removeNoMoreOptionsMessage();
+            this.removeNoResultsMessage();
+
+            if (this.lastSearchEvent) {
+                this.fuzzySearch(this.lastSearchEvent);
+            }
+
             selected.setAttribute('data-value', value);
             selected.setAttribute('data-index', index);
 
@@ -3738,62 +3788,6 @@ var Flounder = (function () {
             } catch (e) {
                 console.warn('something may be wrong in "onSelect"', e);
             }
-        }
-
-        /**
-         * ## removeSelectedClass
-         *
-         * removes the [[this.selectedClass]] from all data
-         *
-         * @return _Void_
-         */
-    }, {
-        key: 'removeSelectedClass',
-        value: function removeSelectedClass(data) {
-            var _this3 = this;
-
-            data = data || this.refs.data;
-
-            data.forEach(function (dataObj, i) {
-                _utils2['default'].removeClass(dataObj, _this3.selectedClass);
-            });
-        }
-
-        /**
-         * ## removeSelectedValue
-         *
-         * sets the selected property to false for all data
-         *
-         * @return _Void_
-         */
-    }, {
-        key: 'removeSelectedValue',
-        value: function removeSelectedValue(data) {
-            var _this4 = this;
-
-            data = data || this.refs.data;
-
-            data.forEach(function (d, i) {
-                _this4.refs.select[i].selected = false;
-            });
-        }
-
-        /**
-         * ## addNoResultsMessage
-         *
-         * Adding 'No Results' message to the option list
-         *
-         * @return _Void_
-         */
-    }, {
-        key: 'addNoResultsMessage',
-        value: function addNoResultsMessage() {
-            var noResultsEl = this.refs.noResultsEl || _utils2['default'].constructElement({ className: _classes3['default'].NO_RESULTS });
-
-            noResultsEl.innerHTML = 'No Results';
-            this.refs.optionsList.appendChild(noResultsEl);
-
-            this.refs.noResultsEl = noResultsEl;
         }
 
         /**
@@ -3815,6 +3809,62 @@ var Flounder = (function () {
         }
 
         /**
+         * ## removeNoMoreOptionsMessage
+         *
+         * Removing 'No More options' message from the option list
+         *
+         * @return _Void_
+         */
+    }, {
+        key: 'removeNoMoreOptionsMessage',
+        value: function removeNoMoreOptionsMessage() {
+            var noMoreOptionsEl = this.refs.noMoreOptionsEl;
+
+            if (this.refs.optionsList && noMoreOptionsEl) {
+                this.refs.optionsList.removeChild(noMoreOptionsEl);
+                this.refs.noMoreOptionsEl = undefined;
+            }
+        }
+
+        /**
+         * ## removeSelectedClass
+         *
+         * removes the [[this.selectedClass]] from all data
+         *
+         * @return _Void_
+         */
+    }, {
+        key: 'removeSelectedClass',
+        value: function removeSelectedClass(data) {
+            var _this4 = this;
+
+            data = data || this.refs.data;
+
+            data.forEach(function (dataObj, i) {
+                _utils2['default'].removeClass(dataObj, _this4.selectedClass);
+            });
+        }
+
+        /**
+         * ## removeSelectedValue
+         *
+         * sets the selected property to false for all data
+         *
+         * @return _Void_
+         */
+    }, {
+        key: 'removeSelectedValue',
+        value: function removeSelectedValue(data) {
+            var _this5 = this;
+
+            data = data || this.refs.data;
+
+            data.forEach(function (d, i) {
+                _this5.refs.select[i].selected = false;
+            });
+        }
+
+        /**
          * ## sortData
          *
          * checks the data object for header options, and sorts it accordingly
@@ -3824,14 +3874,14 @@ var Flounder = (function () {
     }, {
         key: 'sortData',
         value: function sortData(data) {
-            var _this5 = this;
+            var _this6 = this;
 
             var res = arguments.length <= 1 || arguments[1] === undefined ? [] : arguments[1];
             var i = arguments.length <= 2 || arguments[2] === undefined ? 0 : arguments[2];
 
             data.forEach(function (d) {
                 if (d.header) {
-                    res = _this5.sortData(d.data, res, i);
+                    res = _this6.sortData(d.data, res, i);
                 } else {
                     if (typeof d !== 'object') {
                         d = {
@@ -3872,7 +3922,7 @@ _utils2['default'].extendClass(Flounder, _api2['default'], _build2['default'], _
 exports['default'] = Flounder;
 module.exports = exports['default'];
 
-},{"./api":12,"./build":13,"./classes":14,"./defaults":15,"./events":16,"./search":18,"./utils":19,"./version":20}],18:[function(require,module,exports){
+},{"./api":12,"./build":13,"./defaults":15,"./events":16,"./search":18,"./utils":19,"./version":20}],18:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -4176,10 +4226,6 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _classes = require('./classes');
-
-var _classes2 = _interopRequireDefault(_classes);
-
 var _microbejsSrcModulesHttp = require('microbejs/src/modules/http');
 
 var _microbejsSrcModulesHttp2 = _interopRequireDefault(_microbejsSrcModulesHttp);
@@ -4480,7 +4526,7 @@ var utils = {
 exports['default'] = utils;
 module.exports = exports['default'];
 
-},{"./classes":14,"microbejs/src/modules/http":3}],20:[function(require,module,exports){
+},{"microbejs/src/modules/http":3}],20:[function(require,module,exports){
 'use strict';
 
 module.exports = '0.8.5';
