@@ -620,7 +620,7 @@ const events = {
      *
      * @return _Void_
      */
-    setSelectValueButton()
+    setSelectValueButton( e )
     {
         let refs            = this.refs;
         let data            = refs.data;
@@ -628,6 +628,9 @@ const events = {
         let selectedClass   = this.selectedClass;
 
         let selectedOption;
+
+        if( this.multipleTags )
+            return;
 
         this.removeSelectedClass( data );
 
