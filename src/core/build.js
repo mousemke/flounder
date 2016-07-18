@@ -61,7 +61,7 @@ const build = {
      */
     bindThis()
     {
-            [ 
+        [ 
             `catchBodyClick`,
             `checkClickTarget`,
             `checkFlounderKeypress`,
@@ -76,11 +76,12 @@ const build = {
             `setKeypress`,
             `setSelectValue`,
             `toggleList`,
-            `toggleListSearchClick` ].forEach( func =>
-            {
-                this[ func ] = this[ func ].bind( this );
-                this[ func ].___isBound = true;
-            } );
+            `toggleListSearchClick`
+        ].forEach( func =>
+        {
+            this[ func ] = this[ func ].bind( this );
+            this[ func ].___isBound = true;
+        } );
     },
 
     /**
@@ -97,7 +98,7 @@ const build = {
     {
         if (  props.disableArrow )
         {
-            return null;
+            return false;
         }
         else
         {
@@ -396,19 +397,19 @@ const build = {
      *
      * builds and returns a single multiTag
      *
-     * @param {String} optionText text to add to the tag and role
+     * @param {String} option tag to grab text to add to the tag and role
      *
      * @return _DOMElement_ option tag
      */
     buildMultiTag( option )
     {
         let optionText  = option.innerHTML;
-        let span        = document.createElement( `span` )
+        let span        = document.createElement( `SPAN` )
         span.className  = classes.MULTIPLE_SELECT_TAG;
-        span.setAttribute( `aria-label`, `Deselect ${optionText}` );
+        span.setAttribute( `aria-label`, `Close` );
         span.setAttribute( `tabindex`, 0 );
 
-        let a           = document.createElement( `a` )
+        let a           = document.createElement( `A` )
         a.className     = classes.MULTIPLE_TAG_CLOSE;
         a.setAttribute( `data-index`, option.index );
 
@@ -545,7 +546,7 @@ const build = {
      */
     reconfigure( data, props )
     {
-        if ( typeof data !== `string` && typeof data.length === `number` )
+        if ( data && typeof data !== `string` && typeof data.length === `number` )
         {
             props       = props       = props || this.props;
             props.data  = data;
@@ -557,7 +558,7 @@ const build = {
         }
         else
         {
-            props.data  = data || props.data || this.data;
+            props.data  = props.data || this.data;
         }
 
         return this.constructor( this.originalTarget, props );

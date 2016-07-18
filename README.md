@@ -156,7 +156,7 @@ If flounder is fed an element that already has a flounder, it will destroy it an
 
 + `onOpen` - (function) Triggered when the selectbox is opened
 
-+ `onSelect` - (function) Triggered when an option selectbox is closed
++ `onSelect` - (function) Triggered when an option is selected
 
 + `openOnHover` - (boolean) replaces click to open action with hover
 
