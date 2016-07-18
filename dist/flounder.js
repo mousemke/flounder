@@ -6,7 +6,7 @@
  * Released under the MIT license
  * https://github.com/sociomantic-tsunami/flounder/license
  *
- * Date: Fri Jul 15 2016
+ * Date: Mon Jul 18 2016
  * "This, so far, is the best Flounder ever"
  */
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
@@ -3052,13 +3052,15 @@ var events = {
      *
      * @return _Void_
      */
-    setSelectValueButton: function setSelectValueButton() {
+    setSelectValueButton: function setSelectValueButton(e) {
         var refs = this.refs;
         var data = refs.data;
         var select = refs.select;
         var selectedClass = this.selectedClass;
 
         var selectedOption = undefined;
+
+        if (this.multipleTags) return;
 
         this.removeSelectedClass(data);
 
