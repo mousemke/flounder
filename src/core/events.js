@@ -48,17 +48,17 @@ const events = {
      *
      * @return _Void_
      */
-    addListeners( refs, props )
+    addListeners( refs )
     {
         let ios         = this.isIos;
         let changeEvent = ios ? `blur` : `change`;
 
 
         refs.select.addEventListener( changeEvent, this.divertTarget );
-
         refs.flounder.addEventListener( `keydown`, this.checkFlounderKeypress );
 
-        if ( props.openOnHover )
+
+        if ( this.props.openOnHover )
         {
             let wrapper = refs.wrapper;
             wrapper.addEventListener( `mouseenter`, this.toggleList );
@@ -160,7 +160,7 @@ const events = {
                 this.setByIndex( 0 );
                 break;
             case 1:
-                selected.innerHTML = val === `` ? this.placeholder : selectedText;
+                selected.innerHTML = selectedText;
                 break;
             default:
                 selected.innerHTML = this.multipleMessage;
@@ -223,7 +223,8 @@ const events = {
         // http://stackoverflow.com/questions/34660500/mobile-safari-multi-select-bug
         if ( this.isIos )
         {
-            let firstOption = select[0];
+            let firstOption = select.children[0];
+
             let plug        = document.createElement( `OPTION` );
             plug.disabled   = true;
             plug.className  = classes.PLUG;
@@ -282,6 +283,8 @@ const events = {
         {
             return this.checkClickTarget( e, target );
         }
+
+        return false;
     },
 
 
@@ -324,6 +327,12 @@ const events = {
                 refs.data[ el.index ].click();
                 refs.search.focus();
             }
+
+            return res;
+        }
+        else
+        {
+            return false;
         }
     },
 
@@ -440,15 +449,15 @@ const events = {
 
 
     /**
-     * ## checkPlaceholder
+     * ## clearPlaceholder
      *
-     * clears or re-adds the placeholder
+     * clears the placeholder
      *
      * @param {Object} e event object
      *
      * @return _Void_
      */
-     clearPlaceholder( e )
+     clearPlaceholder()
      {
         let selected    = this.refs.selected;
         selected.innerHTML = ``;
@@ -774,6 +783,9 @@ const events = {
             if ( dataObj.tagName === `DIV` )
             {
                 dataObj.removeEventListener( `click`, this.clickSet );
+
+                dataObj.removeEventListener( `mouseenter`, this.addHoverClass );
+                dataObj.removeEventListener( `mouseleave`, this.removeHoverClass );
             }
         } );
     },

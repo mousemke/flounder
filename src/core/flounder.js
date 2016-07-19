@@ -327,7 +327,7 @@ class Flounder
             utils.addClass( sel, classes.HIDDEN_IOS );
         }
 
-        this.addListeners( refs, props );
+        this.addListeners( refs );
     }
 
 

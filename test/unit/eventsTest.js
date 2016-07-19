@@ -1,14 +1,14 @@
 
 import Flounder     from '/core/flounder';
-import defaults     from '/core/defaults';
+import events       from '/core/events';
 
 import classes      from '/core/classes';
-import search       from '/core/search';
 import utils        from '/core/utils';
 import keycodes     from '/core/keycodes';
 
 import assert       from 'assert';
 import sinon        from 'sinon';
+import simulant     from 'simulant';
 
 
 
@@ -21,9 +21,43 @@ import sinon        from 'sinon';
  */
 describe( 'addFirstTouchListeners', () =>
 {
-    it( 'should', () =>
-    {
+    let flounder    = new Flounder( document.body, {} );
+    flounder.firstTouchController( {} );
 
+    let refs        = flounder.refs;
+
+    sinon.stub( flounder, 'firstTouchController', () => {} );
+
+    flounder.addFirstTouchListeners();
+
+    it( 'should react on click and focus events', () =>
+    {
+        refs.selected.click();
+        refs.select.focus();
+
+        assert.equal( flounder.firstTouchController.callCount, 2 );
+        flounder.firstTouchController.restore();
+    } );
+
+
+    it( 'should bind mouseenter to the wrapper if openOnHover is set', () =>
+    {
+        document.body.flounder = null;
+        let flounder    = new Flounder( document.body, { openOnHover: true } );
+
+        flounder.firstTouchController( {} );
+
+        sinon.stub( flounder, 'firstTouchController', e => e );
+
+        flounder.addFirstTouchListeners();
+
+        assert.equal( flounder.firstTouchController.callCount, 0 );
+
+        simulant.fire( flounder.refs.wrapper, 'mouseenter' );
+
+        // there's some weird focus event too
+        assert.equal( flounder.firstTouchController.callCount, 2 );
+        flounder.firstTouchController.restore();
     } );
 } );
 
@@ -38,9 +72,11 @@ describe( 'addFirstTouchListeners', () =>
  */
 describe( 'addHoverClass', () =>
 {
-    it( 'should', () =>
+    it( 'should add a hover class to it\'s triggered element', () =>
     {
-
+        let el = document.createElement( 'DIV' );
+        events.addHoverClass.call( el );
+        assert.equal( utils.hasClass( el, classes.HOVER ), true );
     } );
 } );
 
@@ -55,9 +91,69 @@ describe( 'addHoverClass', () =>
  */
 describe( 'addListeners', () =>
 {
-    it( 'should', () =>
-    {
+    let flounder;
 
+    beforeEach( () =>
+    {
+        document.body.flounder = null;
+
+        flounder    = new Flounder( document.body, {} );
+        flounder.removeListeners( {} );
+
+        sinon.stub( flounder, 'divertTarget', () => {} );
+        sinon.stub( flounder, 'toggleList', () => {} );
+        sinon.stub( flounder, 'checkFlounderKeypress', () => {} );
+        sinon.stub( flounder, 'addFirstTouchListeners', () => {} );
+        sinon.stub( flounder, 'addOptionsListeners', () => {} );
+        sinon.stub( flounder, 'addSearchListeners', () => {} );
+    } );
+
+
+    afterEach( () =>
+    {
+        flounder.divertTarget.restore();
+        flounder.toggleList.restore();
+        flounder.checkFlounderKeypress.restore();
+        flounder.addFirstTouchListeners.restore();
+        flounder.addOptionsListeners.restore();
+        flounder.addSearchListeners.restore();
+    } );
+
+
+    it( 'should react on change, click, and keydown events', () =>
+    {
+        let refs        = flounder.refs;
+        flounder.isIos  = false;
+
+        flounder.addListeners( refs );
+
+        simulant.fire( refs.select, 'change' );
+        simulant.fire( refs.selected, 'click' );
+        simulant.fire( refs.flounder, 'keydown' );
+
+        assert.equal( flounder.divertTarget.callCount, 1 );
+        assert.equal( flounder.checkFlounderKeypress.callCount, 1 );
+        assert.equal( flounder.toggleList.callCount, 1 );
+    } );
+
+
+
+
+    it( 'should bind mouseenter to the wrapper if openOnHover is set', () =>
+    {
+        let refs        = flounder.refs;
+
+        flounder.isIos  = true;
+        flounder.props.openOnHover = true;
+        flounder.search = true;
+
+        flounder.addListeners( refs );
+
+        simulant.fire( refs.wrapper, 'mouseenter' );
+        simulant.fire( refs.wrapper, 'mouseleave' );
+
+        assert.equal( flounder.addSearchListeners.callCount, 1 );
+        assert.equal( flounder.toggleList.callCount, 2 );
     } );
 } );
 
@@ -75,9 +171,47 @@ describe( 'addListeners', () =>
  */
 describe( 'addMultipleTags', () =>
 {
-    it( 'should', () =>
-    {
+    let flounder    = new Flounder( document.body, {} );
 
+    sinon.stub( flounder, 'removeMultiTag', () => {} );
+    sinon.stub( flounder, 'checkMultiTagKeydown', () => {} );
+
+    let select          = document.createElement( 'SELECT' );
+    let multiTagWrapper = document.createElement( 'DIV' );
+
+    it( 'should add a tag with event listeners for each selected value', () =>
+    {
+        let options = [ {}, {}, {} ].map( ( el, i ) =>
+        {
+            el = document.createElement( 'OPTION' );
+            el.selected = true;
+
+            el.value    = i === 0 ? '' : 'moon';
+
+            select.appendChild( el );
+
+            return el;
+        } );
+
+        flounder.addMultipleTags( options, multiTagWrapper );
+
+        assert.equal( options[0].selected, false );
+        assert.equal( multiTagWrapper.children.length, 2 );
+    } );
+
+
+    it( 'should have the proper events bound to it', () =>
+    {
+        let firstChild = multiTagWrapper.children[0];
+
+        simulant.fire( firstChild, 'keydown' );
+        simulant.fire( firstChild.firstChild, 'click' );
+
+        assert.equal( flounder.removeMultiTag.callCount, 1 );
+        assert.equal( flounder.checkMultiTagKeydown.callCount, 1 );
+
+        flounder.removeMultiTag.restore();
+        flounder.checkMultiTagKeydown.restore();
     } );
 } );
 
@@ -92,9 +226,47 @@ describe( 'addMultipleTags', () =>
  */
 describe( 'addOptionsListeners', () =>
 {
-    it( 'should', () =>
-    {
+    let flounder;
 
+    beforeEach( () =>
+    {
+        document.body.flounder = null;
+        flounder = new Flounder( document.body, { data: [ 1, 2, 3 ] } );
+
+        flounder.removeOptionsListeners();
+
+        flounder.refs.data[1] = document.createElement( 'NOTADIV' );
+
+        sinon.stub( flounder, 'addHoverClass', () => {} );
+        sinon.stub( flounder, 'removeHoverClass', () => {} );
+        sinon.stub( flounder, 'clickSet', () => {} );
+    } );
+
+
+    afterEach( () =>
+    {
+        flounder.addHoverClass.restore();
+        flounder.removeHoverClass.restore();
+        flounder.clickSet.restore();
+    } );
+
+
+    it( 'should add hover and click listeners on each data div (and only divs)', () =>
+    {
+        flounder.addOptionsListeners();
+
+        let firstData = flounder.refs.data[0];
+
+        simulant.fire( firstData, 'mouseenter' );
+        simulant.fire( firstData, 'mouseleave' );
+        simulant.fire( firstData, 'click' );
+
+        simulant.fire( flounder.refs.data[1], 'click' );
+
+
+        assert.equal( flounder.addHoverClass.callCount, 1 );
+        assert.equal( flounder.removeHoverClass.callCount, 1 );
+        assert.equal( flounder.clickSet.callCount, 1 );
     } );
 } );
 
@@ -110,9 +282,66 @@ describe( 'addOptionsListeners', () =>
  */
 describe( 'addPlaceholder', () =>
 {
-    it( 'should', () =>
-    {
+    let flounder;
 
+    beforeEach( () =>
+    {
+        document.body.flounder = null;
+        flounder = new Flounder( document.body, {
+                                                    data: [ 1, 2, 3 ],
+                                                    multiple: true,
+                                                    placeholder: 'moon'
+                                                } );
+    } );
+
+    it( 'should add the placeholder if there is nothing selected', () =>
+    {
+        flounder.deselectAll();
+        flounder.addPlaceholder();
+
+        assert.equal( flounder.refs.selected.innerHTML, flounder.placeholder );
+    } );
+
+
+    it( 'should remove the placeholder if there is anything selected', () =>
+    {
+        flounder.setByIndex( 2 );
+        flounder.addPlaceholder();
+
+        assert.equal( flounder.refs.selected.innerHTML, 2 );
+    } );
+
+
+    it( 'should set the placeholder text if the placeholder is selected', () =>
+    {
+        flounder.setByIndex( 0 );
+        flounder.addPlaceholder();
+
+        assert.equal( flounder.refs.selected.innerHTML, flounder.placeholder );
+    } );
+
+
+    it( 'should set the multi text if there is more than one selected', () =>
+    {
+        flounder.setByIndex( 2 );
+        flounder.setByIndex( 3, true );
+        flounder.addPlaceholder();
+
+        assert.equal( flounder.refs.selected.innerHTML, flounder.multipleMessage );
+    } );
+
+
+    it( 'should handle multipleTags placeholders', () =>
+    {
+        document.body.flounder = null;
+        flounder = new Flounder( document.body, {
+                                                    data: [ 1, 2, 3 ],
+                                                    multipleTags: true,
+                                                    placeholder: 'moon'
+                                                } );
+        flounder.setByIndex( 2 );
+        flounder.addPlaceholder();
+        assert.equal( flounder.refs.selected.innerHTML, '' );
     } );
 } );
 
@@ -127,9 +356,42 @@ describe( 'addPlaceholder', () =>
  */
 describe( 'addSearchListeners', () =>
 {
-    it( 'should', () =>
-    {
+    let flounder;
 
+    beforeEach( () =>
+    {
+        document.body.flounder = null;
+        flounder = new Flounder( document.body, { data: [ 1, 2, 3 ], search: true } );
+
+        flounder.removeSearchListeners();
+
+
+        sinon.stub( flounder, 'toggleListSearchClick', () => {} );
+        sinon.stub( flounder, 'fuzzySearch', () => {} );
+        sinon.stub( flounder, 'clearPlaceholder', () => {} );
+    } );
+
+
+    afterEach( () =>
+    {
+        flounder.toggleListSearchClick.restore();
+        flounder.fuzzySearch.restore();
+        flounder.clearPlaceholder.restore();
+    } );
+
+
+    it( 'should add the correct events and functions', () =>
+    {
+        flounder.addSearchListeners();
+        let search = flounder.refs.search;
+
+        simulant.fire( search, 'click' );
+        simulant.fire( search, 'keyup' );
+        search.focus();
+
+        assert.equal( flounder.toggleListSearchClick.callCount, 2 );
+        assert.equal( flounder.fuzzySearch.callCount, 1 );
+        assert.equal( flounder.clearPlaceholder.callCount, 1 );
     } );
 } );
 
@@ -145,9 +407,55 @@ describe( 'addSearchListeners', () =>
  */
 describe( 'addSelectKeyListener', () =>
 {
-    it( 'should', () =>
-    {
+    let flounder;
 
+    beforeEach( () =>
+    {
+        document.body.flounder = null;
+        flounder = new Flounder( document.body, { data: [ 1, 2, 3 ], search: true } );
+
+        flounder.removeSelectKeyListener();
+
+
+        sinon.stub( flounder, 'setSelectValue', () => {} );
+        sinon.stub( flounder, 'setKeypress', () => {} );
+    } );
+
+
+    afterEach( () =>
+    {
+        flounder.setSelectValue.restore();
+        flounder.setKeypress.restore();
+    } );
+
+
+    it( 'should add the correct events and functions', () =>
+    {
+        flounder.addSelectKeyListener();
+        let select = flounder.refs.select;
+
+        simulant.fire( select, 'keydown' );
+        simulant.fire( select, 'keyup' );
+
+
+        assert.equal( flounder.setSelectValue.callCount, 1 );
+        assert.equal( flounder.setKeypress.callCount, 1 );
+    } );
+
+
+    it( 'should insert a plug option element into the select box for ios weirdness', () =>
+    {
+        flounder.isIos = true;
+
+        flounder.addSelectKeyListener();
+
+        let select  = flounder.refs.select;
+        let plug    = select.children[0];
+
+        assert.equal( plug.tagName, 'OPTION' );
+        assert.equal( plug.disabled, true );
+        assert.equal( plug.className, classes.PLUG );
+        assert.deepEqual( plug.parentNode, select );
     } );
 } );
 
@@ -164,9 +472,35 @@ describe( 'addSelectKeyListener', () =>
  */
 describe( 'catchBodyClick', () =>
 {
-    it( 'should', () =>
-    {
+    document.body.flounder = null;
+    let flounder = new Flounder( document.body, { data: [ 1, 2, 3 ] } );
 
+    sinon.stub( flounder, 'toggleList', () => {} );
+    sinon.stub( flounder, 'addPlaceholder', () => {} );
+
+    it( 'should run toggleList and addPlaceholder if clicked off flounder', () =>
+    {
+        sinon.stub( flounder, 'checkClickTarget', () => false );
+
+        flounder.catchBodyClick( {} );
+
+        assert.equal( flounder.toggleList.callCount, 1 );
+        assert.equal( flounder.addPlaceholder.callCount, 1 );
+
+        flounder.checkClickTarget.restore();
+    } );
+
+
+    it( 'should skip them if the click is inside flounder', () =>
+    {
+        sinon.stub( flounder, 'checkClickTarget', () => true );
+
+        flounder.catchBodyClick( {} );
+
+        assert.equal( flounder.toggleList.callCount, 1 );
+        assert.equal( flounder.addPlaceholder.callCount, 1 );
+
+        flounder.checkClickTarget.restore();
     } );
 } );
 
@@ -184,9 +518,28 @@ describe( 'catchBodyClick', () =>
  */
 describe( 'checkClickTarget', () =>
 {
-    it( 'should', () =>
-    {
+    document.body.flounder = null;
+    let flounder = new Flounder( document.body, { data: [ 1, 2, 3 ] } );
 
+    it( 'should return true if the click is inside flounder', () =>
+    {
+        let el = flounder.refs.data[1];
+
+        assert.equal( flounder.checkClickTarget( { target: el } ), true );
+    } );
+
+
+    it( 'should return false if the click is not inside flounder', () =>
+    {
+        assert.equal( flounder.checkClickTarget( { target: document.body } ), false );
+    } );
+
+
+    it( 'should return false if the element is not in the DOM', () =>
+    {
+        let el = document.createElement( 'DIV' );
+
+        assert.equal( flounder.checkClickTarget( { target: el } ), false );
     } );
 } );
 
@@ -205,8 +558,59 @@ describe( 'checkClickTarget', () =>
  */
 describe( 'checkEnterOnSearch', () =>
 {
-    it( 'should', () =>
+    document.body.flounder = null;
+    let flounder    = new Flounder( document.body, { data: [ 1, 2, 3 ], search: true } );
+    let refs        = flounder.refs;
+
+    it( 'should skip the whole thing if there is no value', () =>
     {
+        let e = { target: { value: '' } };
+
+        assert.equal( flounder.checkEnterOnSearch( e, refs ), false );
+    } );
+
+
+    it( 'should select the option if there is only one entry', () =>
+    {
+        sinon.stub( refs.search, 'focus', () => {} );
+
+        let e = { target: { value: '2' } };
+
+        let res = flounder.checkEnterOnSearch( e, refs );
+
+        assert.equal( res.length, 1 );
+        assert.equal( refs.search.focus.callCount, 1 );
+
+        refs.search.focus.restore();
+    } );
+
+
+    it( 'should only select the option if there is only one left', () =>
+    {
+        sinon.stub( refs.search, 'focus', () => {} );
+
+        let e = { target: { value: '4' } };
+
+        let res = flounder.checkEnterOnSearch( e, refs );
+
+        assert.equal( res.length, 0 );
+        assert.equal( refs.search.focus.callCount, 0 );
+
+        refs.search.focus.restore();
+    } );
+
+
+    it( 'should exclude items that are already selected', () =>
+    {
+        document.body.flounder = null;
+        let flounder    = new Flounder( document.body, { data: [ 1, 2, 3 ], search: true } );
+        let refs        = flounder.refs;
+
+        flounder.setByValue( '2' );
+        let e = { target: { value: '2' } };
+        let res = flounder.checkEnterOnSearch( e, refs );
+
+        assert.equal( res.length, 0 );
 
     } );
 } );
@@ -222,9 +626,55 @@ describe( 'checkEnterOnSearch', () =>
  */
 describe( 'checkFlounderKeypress', () =>
 {
-    it( 'should', () =>
-    {
+    document.body.flounder = null;
+    let flounder    = new Flounder( document.body, { data: [ 1, 2, 3 ], search: true } );
+    let refs        = flounder.refs;
 
+
+    it( 'should check enter if search is enabled', () =>
+    {
+        let e = { keyCode: keycodes.ENTER, target: { value: 2 } };
+
+        let res = flounder.checkFlounderKeypress( e );
+
+        assert.equal( res[0].value, '2' );
+        assert.equal( res.length, 1 );
+    } );
+
+
+    it( 'should toggle the list open with space', () =>
+    {
+        let e = { keyCode: keycodes.SPACE, target: { tagName: 'MOON' }, preventDefault: () => {} };
+
+        flounder.checkFlounderKeypress( e );
+
+        assert.equal( utils.hasClass( refs.wrapper, classes.OPEN ), true );
+    } );
+
+
+    it( 'should pass normal letters through', () =>
+    {
+        let e = { keyCode: 49, target: { tagName: 'INPUT' } };
+        flounder.checkFlounderKeypress( e );
+
+        assert.equal( refs.selected.innerHTML, '' );
+
+        e = { keyCode: 70, target: { tagName: 'INPUT' } };
+        flounder.checkFlounderKeypress( e );
+    } );
+
+
+    it( 'should no nothing if it doesnt hit the above conditions', () =>
+    {
+        refs.selected.innerHTML = 'moon';
+
+        let e = { keyCode: 49, target: {} };
+        flounder.checkFlounderKeypress( e );
+
+        e = { keyCode: 0 };
+        flounder.checkFlounderKeypress( e );
+
+        assert.equal( refs.selected.innerHTML, 'moon' );
     } );
 } );
 
@@ -251,19 +701,22 @@ describe( 'checkMultiTagKeydown', () =>
 
 
 /**
- * ## checkPlaceholder
+ * ## clearPlaceholder
  *
- * clears or re-adds the placeholder
+ * clears the placeholder
  *
  * @param {Object} e event object
  *
  * @return _Void_
  */
-describe( 'checkPlaceholder', () =>
+describe( 'clearPlaceholder', () =>
 {
+    let flounder = new Flounder( document.body, {} );
+
     it( 'should', () =>
     {
-
+        flounder.clearPlaceholder();
+        assert.equal( flounder.refs.selected.innerHTML, `` );
     } );
 } );
 
@@ -280,9 +733,41 @@ describe( 'checkPlaceholder', () =>
  */
 describe( 'clickSet', () =>
 {
-    it( 'should', () =>
+    it( 'should set the clicked div\'s option as selected' , () =>
     {
+        let flounder    = new Flounder( document.body, {} );
+        flounder.multiple = true;
+        let e           = { preventDefault: sinon.spy(), stopPropagation: sinon.spy() };
+        e[ flounder.multiSelect ] = true;
 
+        sinon.stub( flounder, 'setSelectValue', () => {} );
+        sinon.stub( flounder, 'toggleList', () => {} );
+
+        flounder.clickSet( e );
+
+        assert.equal( flounder.setSelectValue.callCount, 1 );
+        assert.equal( flounder.toggleList.callCount, 0 );
+
+        flounder.setSelectValue.restore();
+        flounder.toggleList.restore();
+    } );
+
+
+    it( 'should set the clicked div\'s option as selected and toggle the list if it\'s not a multiple select', () =>
+    {
+        let flounder    = new Flounder( document.body, {} );
+        let e           = { preventDefault: sinon.spy(), stopPropagation: sinon.spy() };
+
+        sinon.stub( flounder, 'setSelectValue', () => {} );
+        sinon.stub( flounder, 'toggleList', () => {} );
+
+        flounder.clickSet( e );
+
+        assert.equal( flounder.setSelectValue.callCount, 1 );
+        assert.equal( flounder.toggleList.callCount, 1 );
+
+        flounder.setSelectValue.restore();
+        flounder.toggleList.restore();
     } );
 } );
 
@@ -430,9 +915,13 @@ describe( 'firstTouchController', () =>
  */
 describe( 'removeHoverClass', () =>
 {
-    it( 'should', () =>
+    it( 'should remove a hover class to it\'s triggered element', () =>
     {
+        let el = document.createElement( 'DIV' );
+        el.className = classes.HOVER;
 
+        events.removeHoverClass.call( el );
+        assert.equal( utils.hasClass( el, classes.HOVER ), false );
     } );
 } );
 
@@ -447,9 +936,70 @@ describe( 'removeHoverClass', () =>
  */
 describe( 'removeListeners', () =>
 {
-    it( 'should', () =>
-    {
+    let flounder;
 
+    beforeEach( () =>
+    {
+        document.body.flounder = null;
+
+        flounder    = new Flounder( document.body, {} );
+        flounder.removeListeners( {} );
+
+        sinon.stub( flounder, 'divertTarget', () => {} );
+        sinon.stub( flounder, 'toggleList', () => {} );
+        sinon.stub( flounder, 'checkFlounderKeypress', () => {} );
+        sinon.stub( flounder, 'removeOptionsListeners', () => {} );
+        sinon.stub( flounder, 'removeSearchListeners', () => {} );
+
+        flounder.addListeners( flounder.refs );
+    } );
+
+
+    afterEach( () =>
+    {
+        flounder.divertTarget.restore();
+        flounder.toggleList.restore();
+        flounder.checkFlounderKeypress.restore();
+        flounder.removeOptionsListeners.restore();
+        flounder.removeSearchListeners.restore();
+    } );
+
+
+    it( 'should react on change, click, and keydown events', () =>
+    {
+        let refs        = flounder.refs;
+        flounder.isIos  = false;
+
+        flounder.removeListeners( refs );
+
+        simulant.fire( refs.select, 'change' );
+        simulant.fire( refs.selected, 'click' );
+        simulant.fire( refs.flounder, 'keydown' );
+
+        assert.equal( flounder.divertTarget.callCount, 0 );
+        assert.equal( flounder.removeOptionsListeners.callCount, 1 );
+        assert.equal( flounder.checkFlounderKeypress.callCount, 0 );
+        assert.equal( flounder.toggleList.callCount, 0 );
+    } );
+
+
+
+
+    it( 'should bind mouseenter to the wrapper if openOnHover is set', () =>
+    {
+        let refs        = flounder.refs;
+
+        flounder.isIos  = true;
+        flounder.props.openOnHover = true;
+        flounder.search = true;
+
+        flounder.removeListeners( refs );
+
+        simulant.fire( refs.wrapper, 'mouseenter' );
+        simulant.fire( refs.wrapper, 'mouseleave' );
+
+        assert.equal( flounder.removeSearchListeners.callCount, 1 );
+        assert.equal( flounder.toggleList.callCount, 0 );
     } );
 } );
 
@@ -512,9 +1062,49 @@ describe( 'removeMultiTag', () =>
  */
 describe( 'removeOptionsListeners', () =>
 {
-    it( 'should', () =>
-    {
+    let flounder;
 
+    beforeEach( () =>
+    {
+        document.body.flounder = null;
+        flounder = new Flounder( document.body, { data: [ 1, 2, 3 ] } );
+
+        flounder.removeOptionsListeners();
+
+        flounder.refs.data[1] = document.createElement( 'NOTADIV' );
+
+        sinon.stub( flounder, 'addHoverClass', () => {} );
+        sinon.stub( flounder, 'removeHoverClass', () => {} );
+        sinon.stub( flounder, 'clickSet', () => {} );
+
+        flounder.addOptionsListeners();
+    } );
+
+
+    afterEach( () =>
+    {
+        flounder.addHoverClass.restore();
+        flounder.removeHoverClass.restore();
+        flounder.clickSet.restore();
+    } );
+
+
+    it( 'should remove hover and click listeners on each data div (and only divs)', () =>
+    {
+        flounder.removeOptionsListeners();
+
+        let firstData = flounder.refs.data[0];
+
+        simulant.fire( firstData, 'mouseenter' );
+        simulant.fire( firstData, 'mouseleave' );
+        simulant.fire( firstData, 'click' );
+
+        simulant.fire( flounder.refs.data[1], 'click' );
+
+
+        assert.equal( flounder.addHoverClass.callCount, 0 );
+        assert.equal( flounder.removeHoverClass.callCount, 0 );
+        assert.equal( flounder.clickSet.callCount, 0 );
     } );
 } );
 
@@ -529,9 +1119,39 @@ describe( 'removeOptionsListeners', () =>
  */
 describe( 'removeSearchListeners', () =>
 {
-    it( 'should', () =>
-    {
+    let flounder;
 
+    beforeEach( () =>
+    {
+        document.body.flounder = null;
+        flounder = new Flounder( document.body, { data: [ 1, 2, 3 ], search: true } );
+
+        sinon.stub( flounder, 'toggleListSearchClick', () => {} );
+        sinon.stub( flounder, 'fuzzySearch', () => {} );
+        sinon.stub( flounder, 'clearPlaceholder', () => {} );
+    } );
+
+
+    afterEach( () =>
+    {
+        flounder.toggleListSearchClick.restore();
+        flounder.fuzzySearch.restore();
+        flounder.clearPlaceholder.restore();
+    } );
+
+
+    it( 'should remove the correct events and functions', () =>
+    {
+        flounder.removeSearchListeners();
+        let search = flounder.refs.search;
+
+        simulant.fire( search, 'click' );
+        simulant.fire( search, 'keyup' );
+        search.focus();
+
+        assert.equal( flounder.toggleListSearchClick.callCount, 0 );
+        assert.equal( flounder.fuzzySearch.callCount, 0 );
+        assert.equal( flounder.clearPlaceholder.callCount, 0 );
     } );
 } );
 
@@ -634,9 +1254,35 @@ describe( 'removeSelectedValue', () =>
  */
 describe( 'removeSelectKeyListener', () =>
 {
-    it( 'should', () =>
-    {
+    let flounder;
 
+    beforeEach( () =>
+    {
+        document.body.flounder = null;
+        flounder = new Flounder( document.body, { data: [ 1, 2, 3 ], search: true } );
+
+        flounder.removeSelectKeyListener();
+
+        sinon.stub( flounder, 'setSelectValue', () => {} );
+
+        flounder.addSelectKeyListener();
+    } );
+
+
+    afterEach( () =>
+    {
+        flounder.setSelectValue.restore();
+    } );
+
+
+    it( 'should remove the keyup function', () =>
+    {
+        flounder.removeSelectKeyListener();
+        let select = flounder.refs.select;
+
+        simulant.fire( select, 'keyup' );
+
+        assert.equal( flounder.setSelectValue.callCount, 0 );
     } );
 } );
 

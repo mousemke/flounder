@@ -643,7 +643,7 @@ const api = {
         {
             let values = this.refs.selectOptions.map( function( el, i )
             {
-                return el.value === `${value}` ? i : null;
+                return `${el.value}` === `${value}` ? i : null;
             } ).filter( a => a === 0 || !!a );
 
             return this.setByIndex( values, multiple, programmatic );
