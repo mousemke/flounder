@@ -718,6 +718,8 @@ const events = {
             this.fuzzySearchReset();
         }
 
+        refs.flounder.focus();
+
         if ( this.ready )
         {
             try
