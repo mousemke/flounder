@@ -6,7 +6,7 @@
  * Released under the MIT license
  * https://github.com/sociomantic-tsunami/flounder/license
  *
- * Date: Mon Jul 18 2016
+ * Date: Wed Jul 20 2016
  * "This, so far, is the best Flounder ever"
  */
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
@@ -1623,9 +1623,6 @@ var api = {
             var el = refs.data[index];
 
             if (el) {
-                var classes = this.classes;
-                var isOpen = _utils2['default'].hasClass(refs.wrapper, classes.OPEN);
-                this.toggleList({}, isOpen ? 'close' : 'open');
                 this.___forceMultiple = multiple;
                 this.___programmaticClick = programmatic;
                 el.click();
@@ -2788,9 +2785,11 @@ var events = {
 
         this.setSelectValue({}, e);
 
-        if (!this.multiple || !e[this.multiSelect]) {
+        if (!this.___programmaticClick) {
             this.toggleList(e);
         }
+
+        this.___programmaticClick = false;
     },
 
     /**
@@ -3041,8 +3040,6 @@ var events = {
                 }
             }
         }
-
-        this.___programmaticClick = false;
     },
 
     /**
