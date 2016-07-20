@@ -305,10 +305,12 @@ const events = {
 
         this.setSelectValue( {}, e );
 
-        if ( !this.multiple || !e[ this.multiSelect ] )
+        if ( !this.___programmaticClick )
         {
             this.toggleList( e );
         }
+
+        this.___programmaticClick = false;
     },
 
 
@@ -608,8 +610,6 @@ const events = {
                 }
             }
         }
-
-        this.___programmaticClick = false;
     },
 
 
@@ -717,8 +717,6 @@ const events = {
         {
             this.fuzzySearchReset();
         }
-
-        refs.flounder.focus();
 
         if ( this.ready )
         {
