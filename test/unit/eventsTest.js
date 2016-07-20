@@ -11,6 +11,8 @@ import sinon        from 'sinon';
 import simulant     from 'simulant';
 
 
+const nativeSlice = Array.prototype.slice;
+
 
 /**
  * ## addFirstTouchListeners
@@ -785,42 +787,38 @@ describe( 'clickSet', () =>
  */
 describe( 'displayMultipleTags', () =>
 {
-    it( 'should', () =>
+    let data = [
+            'doge',
+            'moon',
+            'mon',
+            'moin',
+            'main'
+        ];
+
+    document.body.flounder = null;
+    let flounder    = new Flounder( document.body,
+                            { multipleTags : true, data : data } );
+
+    let refs            = flounder.refs;
+    let refsData        = refs.data;
+    let multiTagWrapper = refs.multiTagWrapper;
+
+
+    it( 'should create a tag for each selection', () =>
     {
+        flounder.displayMultipleTags( [ refsData[ 1 ], refsData[ 2 ] ], multiTagWrapper );
+        assert.equal( refs.multiTagWrapper.children.length, 2 );
+    } );
 
 
-    // QUnit.test( 'displayMultipleTags', function( assert )
-    // {
-    //     let data = [
-    //         'doge',
-    //         'moon'
-    //     ];
+    it( 'should re-add the placeholder if there are no tags', () =>
+    {
+        flounder.deselectAll();
+        flounder.refs.selected.innerHTML = ``;
 
-    //     let flounder    = new Flounder( document.body,
-    //                             { multiple : true, multipleTags : true, data : data } );
+        flounder.displayMultipleTags( [], multiTagWrapper );
 
-    //     assert.ok( flounder.displayMultipleTags, 'exists' );
-
-    //     let refsData       = flounder.refs.data;
-    //     refsData[ 1 ].click();
-    //     refsData[ 2 ].click();
-
-    //     assert.equal( document.querySelectorAll( '.flounder__multiple--select--tag' ).length,
-    //                                     2, 'tags are created for all clicks' );
-
-    //     var closeDivs = document.querySelectorAll( '.flounder__multiple__tag__close' );
-    //     closeDivs = Array.prototype.slice.call( closeDivs );
-    //     closeDivs.forEach( function( el )
-    //     {
-    //         el.click();
-    //     } );
-    //     assert.equal( document.querySelectorAll( '.flounder__multiple--select--tag' ).length,
-    //                                     0, 'close events are properly bound' );
-
-    //     flounder.destroy();
-    // } );
-
-
+        assert.equal( refs.selected.innerHTML, flounder.placeholder );
     } );
 } );
 
@@ -838,29 +836,20 @@ describe( 'displayMultipleTags', () =>
  */
 describe( 'displaySelected', () =>
 {
-    it( 'should', () =>
+    it( 'should display the selected option in refs.selected', () =>
     {
+        let data = [
+            'doge',
+            'moon'
+        ];
 
+        let flounder    = new Flounder( document.body, { data : data, defaultIndex : 0 } );
 
-    // QUnit.test( 'displaySelected', function( assert )
-    // {
-    //     let data = [
-    //         'doge',
-    //         'moon'
-    //     ];
+        flounder.setByIndex( 1 );
 
-    //     let flounder    = new Flounder( document.body, { data : data, defaultIndex : 0 } );
+        let refs = flounder.refs;
 
-    //     assert.ok( flounder.displaySelected, 'exists' );
-    //     flounder.setByIndex( 1 );
-
-    //     assert.equal( flounder.refs.selected.textContent,
-    //                 flounder.refs.data[ 1 ].textContent, 'The correct thing is displayed' );
-
-    //     flounder.destroy();
-    // } );
-
-
+        assert.equal( refs.selected.textContent, refs.data[ 1 ].textContent );
     } );
 } );
 
