@@ -1,7 +1,7 @@
 
 import version  from '/core/version';
 import assert   from 'assert';
-import _package from '../../package.json';
+import _package from '../../../package.json';
 
 
 describe( 'version.js', () =>
