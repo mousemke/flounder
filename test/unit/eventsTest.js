@@ -701,6 +701,48 @@ describe( 'checkMultiTagKeydown', () =>
 } );
 
 
+/**
+ * ## checkMultiTagKeydownNavigate
+ *
+ * after left or right is hit while a multitag is focused, this focus' on
+ * the next tag in that direction or the the search field
+ *
+ * @param {Function} focusSearch function to focus on the search field
+ * @param {HTMLCollection} children array of multitags
+ * @param {Number} keyCode keyclode from te keypress event
+ * @param {Number} index index of currently focused tag
+ *
+ * @return _Void_
+ */
+describe( 'checkMultiTagKeydownNavigate', () =>
+{
+    it( 'should', () =>
+    {
+
+    } );
+} );
+
+
+/**
+ * ## checkMultiTagKeydownRemove
+ *
+ * after a backspece while a multitag is focused, this removes the tag and
+ * focus' on the next
+ *
+ * @param {DOMElement} focused multitag
+ * @param {Function} focusSearch function to focus on the search field
+ * @param {HTMLCollection} children array of multitags
+ *
+ * @return _Void_
+ */
+describe( 'checkMultiTagKeydownRemove', () =>
+{
+    it( 'should', () =>
+    {
+
+    } );
+} );
+
 
 /**
  * ## clearPlaceholder
@@ -715,7 +757,7 @@ describe( 'clearPlaceholder', () =>
 {
     let flounder = new Flounder( document.body, {} );
 
-    it( 'should', () =>
+    it( 'should clear the placeholder', () =>
     {
         flounder.clearPlaceholder();
         assert.equal( flounder.refs.selected.innerHTML, `` );

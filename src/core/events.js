@@ -384,9 +384,7 @@ const events = {
     checkMultiTagKeydown( e )
     {
         let keyCode                 = e.keyCode;
-        let refs                    = this.refs;
-        let clearPlaceholder        = this.clearPlaceholder;
-        let toggleListSearchClick   = this.toggleListSearchClick;
+        let self                    = this;
         let target                  = e.target;
         let parent                  = target.parentNode;
         let children                = nativeSlice.call( parent.children, 0 );
@@ -395,9 +393,9 @@ const events = {
 
         function focusSearch()
         {
-            refs.search.focus();
-            clearPlaceholder();
-            toggleListSearchClick( e );
+            self.refs.search.focus();
+            self.clearPlaceholder();
+            self.toggleListSearchClick( e );
         }
 
         if ( keyCode === keycodes.LEFT || keyCode === keycodes.RIGHT ||
@@ -409,39 +407,77 @@ const events = {
 
             if ( keyCode === keycodes.BACKSPACE )
             {
-                target.firstChild.click();
-
-                if ( siblings > 0 )
-                {
-                    children = nativeSlice.call( parent.children, 0 );
-                    children[ index === 0 ? 0 : index - 1 ].focus();
-                }
-                else
-                {
-                    focusSearch();
-                }
+                self.checkMultiTagKeydownRemove( target, focusSearch, children );
             }
             else if ( keyCode === keycodes.LEFT || keyCode === keycodes.RIGHT )
             {
-                let adjustment  = keyCode - 38;
-                let newIndex    = index + adjustment;
-                let length      = children.length - 1;
-
-                if ( newIndex < 0 )
-                {
-                    newIndex = 0;
-                }
-                else if ( newIndex > length )
-                {
-                    focusSearch();
-                }
-                else
-                {
-                    children[ newIndex ].focus();
-                }
+                self.checkMultiTagKeydownNavigate( focusSearch, children, keyCode, index );
             }
         }
         else if ( e.key.length < 2 )
+        {
+            focusSearch();
+        }
+    },
+
+
+    /**
+     * ## checkMultiTagKeydownNavigate
+     *
+     * after left or right is hit while a multitag is focused, this focus' on
+     * the next tag in that direction or the the search field
+     *
+     * @param {Function} focusSearch function to focus on the search field
+     * @param {HTMLCollection} children array of multitags
+     * @param {Number} keyCode keyclode from te keypress event
+     * @param {Number} index index of currently focused tag
+     *
+     * @return _Void_
+     */
+    checkMultiTagKeydownNavigate( focusSearch, children, keyCode, index )
+    {
+        let adjustment  = keyCode - 38;
+        let newIndex    = index + adjustment;
+        let length      = children.length - 1;
+
+        if ( newIndex < 0 )
+        {
+            newIndex = 0;
+        }
+        else if ( newIndex > length )
+        {
+            focusSearch();
+        }
+        else
+        {
+            children[ newIndex ].focus();
+        }
+    },
+
+
+    /**
+     * ## checkMultiTagKeydownRemove
+     *
+     * after a backspece while a multitag is focused, this removes the tag and
+     * focus' on the next
+     *
+     * @param {DOMElement} target focused multitag
+     * @param {Function} focusSearch function to focus on the search field
+     * @param {HTMLCollection} children array of multitags
+     * @param {HTMLCollection} siblings array of non-focused multitags
+     *
+     * @return _Void_
+     */
+    checkMultiTagKeydownRemove( target, focusSearch, children, siblings )
+    {
+        target.firstChild.click();
+
+        if ( siblings > 0 )
+        {
+            children = nativeSlice.call( parent.children, 0 );
+            children[ index === 0 ? 0 : index - 1 ].focus();
+        }
+        else
         {
             focusSearch();
         }
