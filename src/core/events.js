@@ -755,6 +755,7 @@ const events = {
         let defaultValue    = this._default;
         let data            = this.refs.data;
         let targetIndex     = target.getAttribute( `data-index` );
+
         select[ targetIndex ].selected = false;
 
         let selectedOptions = this.getSelected();

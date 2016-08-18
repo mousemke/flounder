@@ -101,9 +101,9 @@ class Flounder
 
         this.fuzzySearch.__previousValue = val;
 
-        let matches = this.search.isThereAnythingRelatedTo( val );
+        let matches = this.search.isThereAnythingRelatedTo( val ) || [];
 
-        if ( matches && matches.length !== 0 )
+        if ( val !== '' )
         {
             let data    = this.refs.data;
 

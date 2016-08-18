@@ -869,6 +869,7 @@ describe( 'checkMultiTagKeydownNavigate', () =>
         assert.equal( target.focus.callCount, 0 );
     } );
 
+
     it( 'should focus on next right tag when right is pressed', () =>
     {
         document.body.flounder = null;
@@ -1164,9 +1165,85 @@ describe( 'displaySelected', () =>
  */
 describe( 'divertTarget', () =>
 {
-    it( 'should', () =>
+    it( 'should remove the plug if in ios', () =>
     {
+        document.body.flounder = null;
 
+        let flounder    = new Flounder( document.body, { data: [ 1, 2, 3 ], multiple : true } );
+        let refs        = flounder.refs;
+        let select      = refs.select;
+        flounder.isIos  = true;
+
+        let plug        = document.createElement( 'OPTION' );
+        plug.className  = `${classes.PLUG}`;
+        select.appendChild( plug );
+
+        sinon.spy( select, 'removeChild' );
+        sinon.stub( flounder, 'setSelectValue', () => {} );
+
+        flounder.divertTarget( { type: 'moon', target: select } );
+
+        assert.equal( select.removeChild.callCount, 1 );
+        assert.equal( flounder.setSelectValue.callCount, 1 );
+
+        flounder.divertTarget( { type: 'moon', target: select } );
+
+        assert.equal( select.removeChild.callCount, 1 );
+        assert.equal( flounder.setSelectValue.callCount, 2 );
+    } );
+
+
+    it( 'should close the list if not multiple select', () =>
+    {
+        document.body.flounder = null;
+
+        let flounder    = new Flounder( document.body, { data: [ 1, 2, 3 ] } );
+        let refs        = flounder.refs;
+        let select      = refs.select;
+
+        let plug        = document.createElement( 'OPTION' );
+        plug.className  = `${classes.PLUG}`;
+        select.appendChild( plug );
+
+        sinon.stub( select, 'removeChild', () => {} );
+        sinon.stub( flounder, 'setSelectValue', () => {} );
+        sinon.stub( flounder, 'toggleList', () => {} );
+
+        flounder.divertTarget( { type: 'moon', target: select } );
+
+        assert.equal( select.removeChild.callCount, 0 );
+        assert.equal( flounder.setSelectValue.callCount, 1 );
+        assert.equal( flounder.toggleList.callCount, 1 );
+    } );
+
+
+    it( 'should prevent default if multiple tags', () =>
+    {
+        document.body.flounder = null;
+
+        let flounder    = new Flounder( document.body, { data: [ 1, 2, 3 ], multipleTags : true } );
+        let refs        = flounder.refs;
+        let select      = refs.select;
+
+        let plug        = document.createElement( 'OPTION' );
+        plug.className  = `${classes.PLUG}`;
+        select.appendChild( plug );
+
+        sinon.stub( select, 'removeChild', () => {} );
+        sinon.stub( flounder, 'setSelectValue', () => {} );
+        sinon.stub( flounder, 'toggleList', () => {} );
+
+        let _preventDefault     = sinon.spy();
+        let _stopPropagation    = sinon.spy();
+
+        flounder.divertTarget( {    type            : 'moon',
+                                    target          : select,
+                                    preventDefault  : _preventDefault,
+                                    stopPropagation : _stopPropagation
+                                } );
+
+        assert.equal( _preventDefault.callCount, 1 );
+        assert.equal( _stopPropagation.callCount, 1 );
     } );
 } );
 
@@ -1184,9 +1261,21 @@ describe( 'divertTarget', () =>
  */
 describe( 'firstTouchController', () =>
 {
-    it( 'should', () =>
+    it( 'should fail properly', () =>
     {
+        document.body.flounder = null;
 
+        let flounder    = new Flounder( document.body, { data: [ 1, 2, 3 ], multipleTags : true } );
+
+        flounder.onFirstTouch = () => a + b;
+
+        sinon.stub( console, 'warn', () => {} );
+
+        flounder.firstTouchController( {} );
+
+        assert.equal( console.warn.callCount, 1 );
+
+        console.warn.restore();
     } );
 } );
 
@@ -1302,41 +1391,101 @@ describe( 'removeListeners', () =>
  */
 describe( 'removeMultiTag', () =>
 {
-    it( 'should', () =>
+    it( 'should remove a tag and deselect the option', () =>
     {
+        document.body.flounder = null;
+
+        let flounder        = new Flounder( document.body, { data: [ 1, 2, 3 ], multipleTags : true } );
+        let refs            = flounder.refs;
+        let multiTagWrapper = refs.multiTagWrapper;
+
+        flounder.setByIndex( 1 );
+        flounder.setByIndex( 2 );
+
+        let _preventDefault     = sinon.spy();
+        let _stopPropagation    = sinon.spy();
+
+        let target      = multiTagWrapper.children[ 0 ].children[ 0 ];
+        let targetIndex = target.getAttribute( `data-index` );
+
+        refs.select[ targetIndex ] = target;
+
+        flounder.removeMultiTag( {  target          : target,
+                                    preventDefault  : _preventDefault,
+                                    stopPropagation : _stopPropagation
+                                } );
+
+        assert.equal( multiTagWrapper.children.length, 1 );
+        assert.equal( _preventDefault.callCount, 1 );
+        assert.equal( _stopPropagation.callCount, 1 );
+    } );
 
 
+    it( 'should add the placeholder if there is nothing more selected', () =>
+    {
+        document.body.flounder = null;
+
+        let flounder        = new Flounder( document.body, { data: [ 1, 2, 3 ], multipleTags : true } );
+        let refs            = flounder.refs;
+        let multiTagWrapper = refs.multiTagWrapper;
+
+        flounder.setByIndex( 1 );
+
+        let _preventDefault     = sinon.spy();
+        let _stopPropagation    = sinon.spy();
+
+        sinon.stub( flounder, 'addPlaceholder', () => {} );
+
+        let target      = multiTagWrapper.children[ 0 ].children[ 0 ];
+        let targetIndex = target.getAttribute( `data-index` );
+
+        refs.select[ targetIndex ] = refs.select.options[ targetIndex ];
+
+        flounder.removeMultiTag( {  target          : target,
+                                    preventDefault  : _preventDefault,
+                                    stopPropagation : _stopPropagation
+                                } );
+
+        assert.equal( multiTagWrapper.children.length, 0 );
+        assert.equal( _preventDefault.callCount, 1 );
+        assert.equal( _stopPropagation.callCount, 1 );
+        assert.equal( flounder.addPlaceholder.callCount, 1 );
+    } );
 
 
-    //         QUnit.test( 'removeMultiTag', function( assert )
-    // {
-    //     let data = [
-    //         'doge',
-    //         'moon'
-    //     ];
+    it( 'should catch onSelect failures', () =>
+    {
+        document.body.flounder = null;
 
-    //     let flounder    = new Flounder( document.body, { data : data, placeholder : 'placeholders!', multipleTags : true } );
-    //     assert.ok( flounder.removeMultiTag, 'exists' );
+        let flounder        = new Flounder( document.body, { data: [ 1, 2, 3 ], multipleTags : true } );
+        let refs            = flounder.refs;
+        let multiTagWrapper = refs.multiTagWrapper;
 
-    //     let refs = document.body.flounder.refs;
-    //     let doge = refs.data[1];
+        flounder.onSelect   =  () => a + b;
 
-    //     doge.click();
+        flounder.setByIndex( 1 );
 
-    //     let multiTagWrapper = refs.multiTagWrapper;
-    //     multiTagWrapper.children[0].children[0].click();
+        let _preventDefault     = sinon.spy();
+        let _stopPropagation    = sinon.spy();
+        sinon.stub( console, 'warn', () => {} );
 
-    //     assert.equal( multiTagWrapper.children.length, 0, 'tag is removed' );
+        let target      = multiTagWrapper.children[ 0 ].children[ 0 ];
+        let targetIndex = target.getAttribute( `data-index` );
 
-    //     flounder.destroy();
-    // } );
+        refs.select[ targetIndex ] = refs.select.options[ targetIndex ];
 
+        flounder.removeMultiTag( {  target          : target,
+                                    preventDefault  : _preventDefault,
+                                    stopPropagation : _stopPropagation
+                                } );
 
+        assert.equal( _preventDefault.callCount, 1 );
+        assert.equal( _stopPropagation.callCount, 1 );
+        assert.equal( console.warn.callCount, 1 );
 
-
+        console.warn.restore();
     } );
 } );
-
 
 
 /**
@@ -1452,38 +1601,22 @@ describe( 'removeSearchListeners', () =>
  */
 describe( 'removeSelectedClass', () =>
 {
-    it( 'should', () =>
+    it( 'should remove the selected class', () =>
     {
 
+        document.body.flounder = null;
 
+        let flounder        = new Flounder( document.body, { data: [ 1, 2, 3 ], multipleTags : true } );
+        let refs            = flounder.refs;
+        let multiTagWrapper = refs.multiTagWrapper;
 
+        flounder.setByIndex( 1 );
+        flounder.setByIndex( 2 );
 
-    //         QUnit.test( 'removeSelectedClass', function( assert )
-    // {
-    //     let data = [
-    //         'doge',
-    //         'moon'
-    //     ];
+        flounder.removeSelectedClass();
+        let selected = refs.optionsList.querySelectorAll( '.flounder__option--selected' );
 
-    //     let flounder    = new Flounder( document.body, { data : data, placeholder:'moon', multipleTags : true } );
-    //     assert.ok( flounder.removeSelectedClass, 'exists' );
-
-    //     let refs = document.body.flounder.refs;
-
-    //     refs.data[1].click();
-    //     refs.data[2].click();
-
-    //     flounder.removeSelectedClass();
-    //     let selected = refs.optionsList.querySelectorAll( '.flounder__option--selected' );
-
-    //     assert.equal( selected.length, 0, 'selected class is removed from divs' );
-
-    //     flounder.destroy();
-    // } );
-
-
-
-
+        assert.equal( selected.length, 0, 'selected class is removed from divs' );
     } );
 } );
 
@@ -1498,34 +1631,21 @@ describe( 'removeSelectedClass', () =>
  */
 describe( 'removeSelectedValue', () =>
 {
-    it( 'should', () =>
+    it( 'should remove the selected value', () =>
     {
 
+        document.body.flounder = null;
 
+        let flounder        = new Flounder( document.body, { data: [ 1, 2, 3 ], multipleTags : true } );
+        let refs            = flounder.refs;
+        let multiTagWrapper = refs.multiTagWrapper;
 
-    // QUnit.test( 'removeSelectedValue', function( assert )
-    // {
-    //     let data = [
-    //         'doge',
-    //         'moon'
-    //     ];
+        flounder.setByIndex( 1 );
+        flounder.setByIndex( 2 );
 
-    //     let flounder    = new Flounder( document.body, { data : data, defaultIndex : 0, multipleTags : true } );
-    //     assert.ok( flounder.removeSelectedValue, 'exists' );
+        flounder.removeSelectedValue();
 
-    //     let refs = flounder.refs;
-    //     refs.data[0].click();
-    //     refs.data[1].click();
-
-    //     flounder.removeSelectedValue();
-
-    //     assert.equal( refs.select.selectedOptions.length, 0, 'selected is set to false for options' );
-
-    //     flounder.destroy();
-    // } );
-
-
-
+        assert.equal( flounder.getSelected().length, 0, 'selected is set to false for options' );
     } );
 } );
 

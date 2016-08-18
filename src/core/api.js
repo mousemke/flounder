@@ -424,7 +424,7 @@ const api = {
         let opts        = [], opt;
         let _data       = _el.options;
 
-        nativeSlice.call( _data ).forEach( ( el ) =>
+        nativeSlice.call( _data ).forEach( el =>
         {
             if ( el.selected && !utils.hasClass( el, classes.PLACEHOLDER ) )
             {

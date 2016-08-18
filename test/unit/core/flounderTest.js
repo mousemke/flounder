@@ -162,9 +162,9 @@ describe( 'filterSearchResults', () =>
 
 
 
-    it( 'should reset the field is there are no matches', () =>
+    it( 'should reset the field if there in nothing in the input', () =>
     {
-        let e               = { target: { value: 'd  ' } };
+        let e               = { target: { value: '' } };
         let searchResetSpy  = sinon.stub( flounder, 'fuzzySearchReset', () => {} );
 
         flounder.filterSearchResults( e );
