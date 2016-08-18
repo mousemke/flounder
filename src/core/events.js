@@ -324,8 +324,8 @@ const events = {
             if ( res.length === 1 )
             {
                 let el = res[ 0 ];
-                refs.data[ el.index ].click();
-                refs.search.focus();
+                this.setByIndex( el.index );
+                setTimeout( () => refs.search.focus(), 200 );
             }
 
             return res;
@@ -908,7 +908,7 @@ const events = {
         let increment   = 0;
         let keyCode     = e.keyCode;
 
-        let nonCharacterKeys = [ 16, 17, 18, 20, 91, 93 ]
+        let nonCharacterKeys = keycodes.NON_CHARACTER_KEYS;
 
         if ( nonCharacterKeys.indexOf( keyCode ) === -1 )
         {
