@@ -613,7 +613,6 @@ describe( 'checkEnterOnSearch', () =>
         let res = flounder.checkEnterOnSearch( e, refs );
 
         assert.equal( res.length, 0 );
-
     } );
 } );
 
@@ -633,9 +632,19 @@ describe( 'checkFlounderKeypress', () =>
     let refs        = flounder.refs;
 
 
-    it( 'should check enter if search is enabled', () =>
+    it( 'should toggle open on enter', () =>
     {
-        let e = { keyCode: keycodes.ENTER, target: { value: 2 } };
+        let e = { keyCode: keycodes.ENTER, target: { value: 2 }, preventDefault: () => {} };
+
+        let res = flounder.checkFlounderKeypress( e );
+
+        assert.equal( utils.hasClass( refs.wrapper, classes.OPEN ), true );
+    } );
+
+
+    it( 'should toggle enter if search is enabled', () =>
+    {
+        let e = { keyCode: keycodes.ENTER, target: { value: 2 }, preventDefault: () => {} };
 
         let res = flounder.checkFlounderKeypress( e );
 
@@ -666,7 +675,7 @@ describe( 'checkFlounderKeypress', () =>
     } );
 
 
-    it( 'should no nothing if it doesnt hit the above conditions', () =>
+    it( 'should do nothing if it doesnt hit the above conditions', () =>
     {
         refs.selected.innerHTML = 'moon';
 
@@ -1697,13 +1706,31 @@ describe( 'removeSelectKeyListener', () =>
 /**
  * ## setKeypress
  *
- * handles arrow key selection
+ * handles arrow key and enter selection
  *
  * @param {Object} e event object
  *
  * @return _Void_
  */
 describe( 'setKeypress', () =>
+{
+    it( 'should', () =>
+    {
+
+    } );
+} );
+
+
+
+/**
+ * ## setKeypressElement
+ *
+ * sets the element after the keypress.  if the element is hidden for some
+ * reason, it passes the event back to setKeypress to process the next element
+ *
+ * @return _Void_
+ */
+describe( 'setKeypressElement', () =>
 {
     it( 'should', () =>
     {

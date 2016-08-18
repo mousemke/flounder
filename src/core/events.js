@@ -140,17 +140,17 @@ const events = {
     /**
      * ## addPlaceholder
      *
-     * called on body click, this determines what (if anything) should be
-     * refilled into the the placeholder position
+     * determines what (if anything) should be refilled into the the
+     * placeholder position
      *
      * @return _Void_
      */
     addPlaceholder()
     {
         let selectedValues  = this.getSelectedValues();
-        let val             = selectedValues[0];
+        let val             = selectedValues[ 0 ];
         let selectedItems   = this.getSelected();
-        let selectedText    = selectedItems.length ? selectedItems[0].innerHTML : ``;
+        let selectedText    = selectedItems.length ? selectedItems[ 0 ].innerHTML : ``;
         let selectedCount   = selectedValues.length;
         let selected        = this.refs.selected;
 
@@ -349,10 +349,20 @@ const events = {
         let keyCode = e.keyCode;
         let refs    = this.refs;
 
-        if ( keyCode === keycodes.ENTER ||
+        if ( keyCode === keycodes.TAB )
+        {
+            let refs        = this.refs;
+            let optionsList = refs.optionsListWrapper;
+            let wrapper     = refs.wrapper;
+
+            this.addPlaceholder();
+            this.toggleClosed( e, optionsList, refs, wrapper, true );
+        }
+        else if ( keyCode === keycodes.ENTER ||
             ( keyCode === keycodes.SPACE && e.target.tagName !== `INPUT` ) )
         {
-            if ( keyCode === keycodes.ENTER && this.search )
+            if ( keyCode === keycodes.ENTER && this.search &&
+                    utils.hasClass( refs.wrapper, classes.OPEN ) )
             {
                 return this.checkEnterOnSearch( e, refs );
             }
@@ -896,7 +906,7 @@ const events = {
     /**
      * ## setKeypress
      *
-     * handles arrow key selection
+     * handles arrow key and enter selection
      *
      * @param {Object} e event object
      *
@@ -912,63 +922,77 @@ const events = {
 
         if ( nonCharacterKeys.indexOf( keyCode ) === -1 )
         {
-            if ( this.multipleTags )
-            {
-                e.preventDefault();
-                return false;
-            }
-
             if ( keyCode === keycodes.ENTER || keyCode === keycodes.ESCAPE ||
                     keyCode === keycodes.SPACE )
             {
                 this.toggleList( e );
                 return false;
             }
-            else if ( !window.sidebar && ( keyCode === keycodes.UP || 
-                            keyCode === keycodes.DOWN ) )
-            {
-                e.preventDefault();
-                let search = refs.search;
 
-                if ( search )
-                {
-                    search.value = ``;
-                }
-
-                increment = keyCode - 39;
-            }
-            else if ( ( keyCode >= 48 && keyCode <= 57 ) ||
+            if ( ( keyCode >= 48 && keyCode <= 57 ) ||
                     ( keyCode >= 65 && keyCode <= 90 ) ) // letters - allows native behavior
             {
                 return true;
             }
 
-            let selectTag           = refs.select;
-            let data                = refs.data;
-            let dataMaxIndex        = data.length - 1;
-            let index               = selectTag.selectedIndex + increment;
-
-            if ( index > dataMaxIndex )
+            if ( keyCode === keycodes.UP || keyCode === keycodes.DOWN )
             {
-                index = 0;
-            }
-            else if ( index < 0 )
-            {
-                index = dataMaxIndex;
-            }
+                if ( !window.sidebar )
+                {
+                    e.preventDefault();
+                    let search = refs.search;
 
-            selectTag.selectedIndex = index;
+                    if ( search )
+                    {
+                        search.value = ``;
+                    }
 
-            let hasClass            = utils.hasClass;
-            let dataAtIndex         = data[ index ];
+                    increment = keyCode - 39;
+                }
 
-            if ( hasClass( dataAtIndex, classes.HIDDEN ) ||
-                 hasClass( dataAtIndex, classes.SELECTED_HIDDEN ) ||
-                 hasClass( dataAtIndex, classes.SEARCH_HIDDEN ) ||
-                 hasClass( dataAtIndex, classes.DISABLED ) )
-            {
-                this.setKeypress( e );
+                this.setKeypressElement( e, increment );
             }
+        }
+    },
+
+
+    /**
+     * ## setKeypressElement
+     *
+     * sets the element after the keypress.  if the element is hidden or
+     * disabled, it passes the event back to setKeypress to process the next
+     * element
+     *
+     * @return _Void_
+     */
+    setKeypressElement( e, increment )
+    {
+        let refs                = this.refs;
+        let selectTag           = refs.select;
+        let data                = refs.data;
+        let dataMaxIndex        = data.length - 1;
+        let index               = selectTag.selectedIndex + increment;
+
+        if ( index > dataMaxIndex )
+        {
+            index = 0;
+        }
+        else if ( index < 0 )
+        {
+            index = dataMaxIndex;
+        }
+
+        selectTag.selectedIndex = index;
+
+        let hasClass            = utils.hasClass;
+        let dataAtIndex         = data[ index ];
+
+        if ( hasClass( dataAtIndex, classes.HIDDEN ) ||
+             hasClass( dataAtIndex, classes.SELECTED_HIDDEN ) ||
+             hasClass( dataAtIndex, classes.SEARCH_HIDDEN ) ||
+             hasClass( dataAtIndex, classes.DISABLED ) )
+        {
+            this.setKeypress( e );
         }
     },
 
@@ -1141,10 +1165,11 @@ const events = {
      * @param {DOMElement} optionsList the options list
      * @param {Object} refs contains the references of the elements in flounder
      * @param {DOMElement} wrapper wrapper of flounder
+     * @param {Boolean} exit prevents refocus. used while tabbing away
      *
      * @return _Void_
      */
-    toggleClosed( e, optionsList, refs, wrapper )
+    toggleClosed( e, optionsList, refs, wrapper, exit = false )
     {
         utils.addClass( optionsList, classes.HIDDEN );
         this.removeSelectKeyListener();
@@ -1159,7 +1184,10 @@ const events = {
             this.fuzzySearchReset();
         }
 
-        refs.flounder.focus();
+        if ( !exit )
+        {
+            refs.flounder.focus();
+        }
 
         if ( this.ready )
         {

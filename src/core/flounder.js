@@ -151,7 +151,6 @@ class Flounder
             e.preventDefault();
 
             let keyCode = e.keyCode;
-            let val     = e.target.value.trim();
 
             if ( keyCode !== keycodes.UP && keyCode !== keycodes.DOWN &&
                     keyCode !== keycodes.ENTER && keyCode !== keycodes.ESCAPE )
