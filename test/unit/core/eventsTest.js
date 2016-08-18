@@ -694,9 +694,119 @@ describe( 'checkFlounderKeypress', () =>
  */
 describe( 'checkMultiTagKeydown', () =>
 {
-    it( 'should', () =>
+    it( 'should navigate tags on left or right', () =>
     {
+        document.body.flounder = null;
 
+        let flounder    = new Flounder( document.body, { data: [ 1, 2, 3 ], multipleTags : true } );
+        let refs        = flounder.refs;
+
+        flounder.setByIndex( 1 );
+        flounder.setByIndex( 2 );
+
+        sinon.stub( flounder, 'checkMultiTagKeydownNavigate', () => {} );
+        sinon.stub( flounder, 'checkMultiTagKeydownRemove', () => {} );
+
+        let children    = refs.multiTagWrapper.children;
+        let target      = children[ 0 ];
+
+        flounder.checkMultiTagKeydown( {    keyCode         : 39,
+                                            target          : target,
+                                            preventDefault  : () => {},
+                                            stopPropagation : () => {}
+                                        } );
+
+        flounder.checkMultiTagKeydown( {    keyCode         : 37,
+                                            target          : target,
+                                            preventDefault  : () => {},
+                                            stopPropagation : () => {}
+                                        } );
+
+        assert.equal( flounder.checkMultiTagKeydownNavigate.callCount, 2 );
+        assert.equal( flounder.checkMultiTagKeydownRemove.callCount, 0 );
+    } );
+
+
+    it( 'should remove tags on backspace', () =>
+    {
+        document.body.flounder = null;
+
+        let flounder    = new Flounder( document.body, { data: [ 1, 2, 3 ], multipleTags : true } );
+        let refs        = flounder.refs;
+
+        flounder.setByIndex( 1 );
+        flounder.setByIndex( 2 );
+
+        sinon.stub( flounder, 'checkMultiTagKeydownNavigate', () => {} );
+        sinon.stub( flounder, 'checkMultiTagKeydownRemove', () => {} );
+
+        let children    = refs.multiTagWrapper.children;
+        let target      = children[ 0 ];
+
+        flounder.checkMultiTagKeydown( {    keyCode         : 8,
+                                            target          : target,
+                                            preventDefault  : () => {},
+                                            stopPropagation : () => {}
+                                        } );
+
+        assert.equal( flounder.checkMultiTagKeydownNavigate.callCount, 0 );
+        assert.equal( flounder.checkMultiTagKeydownRemove.callCount, 1 );
+    } );
+
+
+    it( 'should focus on the search blank to type on letters', () =>
+    {
+        document.body.flounder = null;
+
+        let flounder    = new Flounder( document.body, { data: [ 1, 2, 3 ], multipleTags : true } );
+        let refs        = flounder.refs;
+
+        flounder.setByIndex( 1 );
+        flounder.setByIndex( 2 );
+
+        sinon.stub( flounder, 'clearPlaceholder', () => {} );
+        sinon.stub( flounder, 'toggleListSearchClick', () => {} );
+
+        let children    = refs.multiTagWrapper.children;
+        let target      = children[ 0 ];
+
+        flounder.checkMultiTagKeydown( {    keyCode         : 888,
+                                            key             : 'm',
+                                            target          : target,
+                                            preventDefault  : () => {},
+                                            stopPropagation : () => {}
+                                        } );
+
+        assert.equal( flounder.clearPlaceholder.callCount, 1 );
+        assert.equal( flounder.toggleListSearchClick.callCount, 1 );
+    } );
+
+
+    it( 'should do nothing on other keys', () =>
+    {
+        document.body.flounder = null;
+
+        let flounder    = new Flounder( document.body, { data: [ 1, 2, 3 ], multipleTags : true } );
+        let refs        = flounder.refs;
+
+        flounder.setByIndex( 1 );
+        flounder.setByIndex( 2 );
+
+        sinon.stub( flounder, 'clearPlaceholder', () => {} );
+        sinon.stub( flounder, 'toggleListSearchClick', () => {} );
+
+        let children    = refs.multiTagWrapper.children;
+        let target      = children[ 0 ];
+
+        flounder.checkMultiTagKeydown( {    keyCode         : 888,
+                                            key             : 'mkjbkhj',
+                                            target          : target,
+                                            preventDefault  : () => {},
+                                            stopPropagation : () => {}
+                                        } );
+
+        assert.equal( flounder.clearPlaceholder.callCount, 0 );
+        assert.equal( flounder.toggleListSearchClick.callCount, 0 );
     } );
 } );
 
@@ -708,7 +818,6 @@ describe( 'checkMultiTagKeydown', () =>
  * the next tag in that direction or the the search field
  *
  * @param {Function} focusSearch function to focus on the search field
- * @param {HTMLCollection} children array of multitags
  * @param {Number} keyCode keyclode from te keypress event
  * @param {Number} index index of currently focused tag
  *
@@ -716,9 +825,92 @@ describe( 'checkMultiTagKeydown', () =>
  */
 describe( 'checkMultiTagKeydownNavigate', () =>
 {
-    it( 'should', () =>
+    it( 'should focus on next left tag when left is pressed', () =>
     {
+        document.body.flounder = null;
 
+        let flounder    = new Flounder( document.body, { data: [ 1, 2, 3 ], multipleTags : true } );
+        let refs        = flounder.refs;
+
+        flounder.setByIndex( 1 );
+        flounder.setByIndex( 2 );
+
+        let children    = refs.multiTagWrapper.children;
+        let target      = children[ 0 ];
+
+        sinon.stub( target, 'focus', () => {} );
+        let focusSearch = sinon.spy();
+
+        flounder.checkMultiTagKeydownNavigate( focusSearch, 37, 1 );
+
+        assert.equal( focusSearch.callCount, 0 );
+        assert.equal( target.focus.callCount, 1 );
+    } );
+
+
+    it( 'should remain focused on left when already on the leftest tag', () =>
+    {
+        document.body.flounder = null;
+
+        let flounder    = new Flounder( document.body, { data: [ 1, 2, 3 ], multipleTags : true } );
+        let refs        = flounder.refs;
+
+        flounder.setByIndex( 1 );
+
+        let children    = refs.multiTagWrapper.children;
+        let target      = children[ 0 ];
+
+        sinon.stub( target, 'focus', () => {} );
+        let focusSearch = sinon.spy();
+
+        flounder.checkMultiTagKeydownNavigate( focusSearch, 37, 0 );
+
+        assert.equal( focusSearch.callCount, 0 );
+        assert.equal( target.focus.callCount, 0 );
+    } );
+
+    it( 'should focus on next right tag when right is pressed', () =>
+    {
+        document.body.flounder = null;
+
+        let flounder    = new Flounder( document.body, { data: [ 1, 2, 3 ], multipleTags : true } );
+        let refs        = flounder.refs;
+
+        flounder.setByIndex( 1 );
+        flounder.setByIndex( 2 );
+
+        let children    = refs.multiTagWrapper.children;
+        let target      = children[ 1 ];
+
+        sinon.stub( target, 'focus', () => {} );
+        let focusSearch = sinon.spy();
+
+        flounder.checkMultiTagKeydownNavigate( focusSearch, 39, 0 );
+
+        assert.equal( focusSearch.callCount, 0 );
+        assert.equal( target.focus.callCount, 1 );
+    } );
+
+
+    it( 'should focus on search when already on the right most tag', () =>
+    {
+        document.body.flounder = null;
+
+        let flounder    = new Flounder( document.body, { data: [ 1, 2, 3 ], multipleTags : true } );
+        let refs        = flounder.refs;
+
+        flounder.setByIndex( 1 );
+
+        let children    = refs.multiTagWrapper.children;
+        let target      = children[ 0 ];
+
+        sinon.stub( target, 'focus', () => {} );
+        let focusSearch = sinon.spy();
+
+        flounder.checkMultiTagKeydownNavigate( focusSearch, 39, 0 );
+
+        assert.equal( focusSearch.callCount, 1 );
+        assert.equal( target.focus.callCount, 0 );
     } );
 } );
 
@@ -731,15 +923,78 @@ describe( 'checkMultiTagKeydownNavigate', () =>
  *
  * @param {DOMElement} focused multitag
  * @param {Function} focusSearch function to focus on the search field
- * @param {HTMLCollection} children array of multitags
+ * @param {Number} index index of currently focused tag
  *
  * @return _Void_
  */
 describe( 'checkMultiTagKeydownRemove', () =>
 {
-    it( 'should', () =>
+    it( 'should focus on the search field if there are no siblings', () =>
     {
+        document.body.flounder = null;
 
+        let flounder    = new Flounder( document.body, { data: [ 1, 2, 3 ], multipleTags : true } );
+        let refs        = flounder.refs;
+
+        flounder.setByIndex( 1 );
+
+        let children    = refs.multiTagWrapper.children;
+        let target      = children[ 0 ];
+        let focusSearch = sinon.spy();
+
+        flounder.checkMultiTagKeydownRemove( target, focusSearch, [ target ], 1 );
+
+        assert.equal( focusSearch.callCount, 1 );
+    } );
+
+
+    it( 'should remove the focused target and focus on the previous tag when there are more then 2', () =>
+    {
+        document.body.flounder = null;
+
+        let flounder    = new Flounder( document.body, { data: [ 1, 2, 3 ], multipleTags : true } );
+        let refs        = flounder.refs;
+
+        flounder.setByIndex( 1 );
+        flounder.setByIndex( 2 );
+        flounder.setByIndex( 3 );
+
+        let target      = refs.multiTagWrapper.children[ 1 ];
+        let focusSearch = sinon.spy();
+
+        sinon.stub( refs.multiTagWrapper.children[ 0 ], 'focus', () => {} );
+        flounder.checkMultiTagKeydownRemove( target, focusSearch, 1 );
+
+        let children    = refs.multiTagWrapper.children;
+        assert.equal( focusSearch.callCount, 0 );
+        assert.equal( children[ 0 ].focus.callCount, 1 );
+
+        children[ 0 ].focus.restore();
+    } );
+
+
+    /*
+            maybe not a complete test? it runs the code so should break if it
+            doesnt work, but there were some weird things going on with
+            the assertions
+     */
+    it( 'should remove the focused target and focus on the new first tag when the first one was removed', () =>
+    {
+        document.body.flounder = null;
+
+        let flounder    = new Flounder( document.body, { data: [ 1, 2, 3 ], multipleTags : true } );
+        let refs        = flounder.refs;
+
+        flounder.setByIndex( 1 );
+        flounder.setByIndex( 2 );
+        flounder.setByIndex( 3 );
+
+        let target      = refs.multiTagWrapper.children[ 0 ];
+        let focusSearch = sinon.spy();
+
+        flounder.checkMultiTagKeydownRemove( target, focusSearch, 0 );
+
+        assert.equal( focusSearch.callCount, 0 );
     } );
 } );
 

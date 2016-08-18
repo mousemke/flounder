@@ -385,15 +385,14 @@ const events = {
     {
         let keyCode                 = e.keyCode;
         let self                    = this;
+        let refs                    = this.refs;
+        let children                = refs.multiTagWrapper.children;
         let target                  = e.target;
-        let parent                  = target.parentNode;
-        let children                = nativeSlice.call( parent.children, 0 );
-        let siblings                = children.length - 1;
-        let index                   = children.indexOf( target );
+        let index                   = nativeSlice.call( children, 0 ).indexOf( target );
 
         function focusSearch()
         {
-            self.refs.search.focus();
+            refs.search.focus();
             self.clearPlaceholder();
             self.toggleListSearchClick( e );
         }
@@ -407,11 +406,11 @@ const events = {
 
             if ( keyCode === keycodes.BACKSPACE )
             {
-                self.checkMultiTagKeydownRemove( target, focusSearch, children );
+                self.checkMultiTagKeydownRemove( target, focusSearch, index );
             }
-            else if ( keyCode === keycodes.LEFT || keyCode === keycodes.RIGHT )
+            else
             {
-                self.checkMultiTagKeydownNavigate( focusSearch, children, keyCode, index );
+                self.checkMultiTagKeydownNavigate( focusSearch, keyCode, index );
             }
         }
         else if ( e.key.length < 2 )
@@ -428,27 +427,24 @@ const events = {
      * the next tag in that direction or the the search field
      *
      * @param {Function} focusSearch function to focus on the search field
-     * @param {HTMLCollection} children array of multitags
      * @param {Number} keyCode keyclode from te keypress event
      * @param {Number} index index of currently focused tag
      *
      * @return _Void_
      */
-    checkMultiTagKeydownNavigate( focusSearch, children, keyCode, index )
+    checkMultiTagKeydownNavigate( focusSearch, keyCode, index )
     {
+        let children    = this.refs.multiTagWrapper.children;
+
         let adjustment  = keyCode - 38;
         let newIndex    = index + adjustment;
         let length      = children.length - 1;
 
-        if ( newIndex < 0 )
-        {
-            newIndex = 0;
-        }
-        else if ( newIndex > length )
+        if ( newIndex > length )
         {
             focusSearch();
         }
-        else
+        else if ( newIndex >= 0 )
         {
             children[ newIndex ].focus();
         }
@@ -463,18 +459,19 @@ const events = {
      *
      * @param {DOMElement} target focused multitag
      * @param {Function} focusSearch function to focus on the search field
-     * @param {HTMLCollection} children array of multitags
-     * @param {HTMLCollection} siblings array of non-focused multitags
+     * @param {Number} index index of currently focused tag
      *
      * @return _Void_
      */
-    checkMultiTagKeydownRemove( target, focusSearch, children, siblings )
+    checkMultiTagKeydownRemove( target, focusSearch, index )
     {
+        let children    = this.refs.multiTagWrapper.children;
+        let siblings    = children.length - 1;
+
         target.firstChild.click();
 
         if ( siblings > 0 )
         {
-            children = nativeSlice.call( parent.children, 0 );
             children[ index === 0 ? 0 : index - 1 ].focus();
         }
         else
