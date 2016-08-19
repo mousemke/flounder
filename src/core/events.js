@@ -921,6 +921,16 @@ const events = {
 
         if ( nonCharacterKeys.indexOf( keyCode ) === -1 )
         {
+            if ( keyCode === keycodes.TAB )
+            {
+                let optionsList = refs.optionsListWrapper;
+                let wrapper     = refs.wrapper;
+
+                this.addPlaceholder();
+                this.toggleClosed( e, optionsList, refs, wrapper, true );
+                return false;
+            }
+
             if ( keyCode === keycodes.ENTER || keyCode === keycodes.ESCAPE ||
                     keyCode === keycodes.SPACE )
             {
