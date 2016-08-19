@@ -324,8 +324,12 @@ const events = {
             if ( res.length === 1 )
             {
                 let el = res[ 0 ];
-                this.setByIndex( el.index );
-                setTimeout( () => refs.search.focus(), 200 );
+                this.setByIndex( el.index, this.multiple );
+
+                if ( this.multipleTags )
+                {
+                    setTimeout( () => refs.search.focus(), 200 );
+                }
             }
 
             return res;
@@ -1159,7 +1163,9 @@ const events = {
             offset += utils.getElWidth( e, this.setTextMultiTagIndent, this );
         } );
 
-        search.style.textIndent = `${offset}px`;
+
+        /* istanbul ignore next */
+        search.style.textIndent = offset > 0 ? `${offset}px` : ``;
     },
 
 

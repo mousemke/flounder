@@ -206,6 +206,7 @@
     top:                            1px;
     left:                           1px;
     height:                         26px;
+    text-indent:                    8px;
     z-index:                        1;
     width:                          calc(100% - 6px);
     border:                         1px solid transparent;

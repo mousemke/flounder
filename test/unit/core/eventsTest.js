@@ -560,12 +560,12 @@ describe( 'checkClickTarget', () =>
  */
 describe( 'checkEnterOnSearch', () =>
 {
-    document.body.flounder = null;
-    let flounder    = new Flounder( document.body, { data: [ 1, 2, 3 ], search: true } );
-    let refs        = flounder.refs;
-
     it( 'should skip the whole thing if there is no value', () =>
     {
+        document.body.flounder = null;
+        let flounder    = new Flounder( document.body, { data: [ 1, 2, 3 ], search: true } );
+        let refs        = flounder.refs;
+
         let e = { target: { value: '' } };
 
         assert.equal( flounder.checkEnterOnSearch( e, refs ), false );
@@ -574,6 +574,10 @@ describe( 'checkEnterOnSearch', () =>
 
     it( 'should select the option if there is only one entry', () =>
     {
+        document.body.flounder = null;
+        let flounder    = new Flounder( document.body, { data: [ 1, 2, 3 ], search: true } );
+        let refs        = flounder.refs;
+
         sinon.stub( refs.search, 'focus', () => {} );
 
         let e = { target: { value: '2' } };
@@ -589,6 +593,10 @@ describe( 'checkEnterOnSearch', () =>
 
     it( 'should only select the option if there is only one left', () =>
     {
+        document.body.flounder = null;
+        let flounder    = new Flounder( document.body, { data: [ 1, 2, 3 ], search: true } );
+        let refs        = flounder.refs;
+
         sinon.stub( refs.search, 'focus', () => {} );
 
         let e = { target: { value: '4' } };
@@ -599,6 +607,29 @@ describe( 'checkEnterOnSearch', () =>
         assert.equal( refs.search.focus.callCount, 0 );
 
         refs.search.focus.restore();
+    } );
+
+
+    it( 'should only refocus on search if multipleTags is active', done =>
+    {
+        document.body.flounder = null;
+        let flounder    = new Flounder( document.body, { data: [ 1, 2, 3 ], multipleTags: true } );
+        let refs        = flounder.refs;
+
+        sinon.stub( refs.search, 'focus', () => {} );
+
+        let e = { target: { value: '2' } };
+
+        let res = flounder.checkEnterOnSearch( e, refs );
+
+        assert.equal( res.length, 1 );
+
+        setTimeout( function()
+        {
+            assert.equal( refs.search.focus.callCount, 2 );
+            refs.search.focus.restore();
+            done();
+        }, 300 );
     } );
 
 
@@ -1736,6 +1767,26 @@ describe( 'removeSelectKeyListener', () =>
  */
 describe( 'setKeypress', () =>
 {
+    it( 'should close the menu and add the placeholder on tab', () =>
+    {
+        document.body.flounder = null;
+        let flounder = new Flounder( document.body, { data: [ 1, 2, 3 ], search: true } );
+
+        let e = { keyCode: keycodes.TAB };
+
+        sinon.stub( flounder, 'addPlaceholder', () => {} );
+        sinon.stub( flounder, 'toggleClosed', () => {} );
+
+        let res = flounder.setKeypress( e );
+
+        assert.equal( flounder.addPlaceholder.callCount, 1 );
+        assert.equal( flounder.toggleClosed.callCount, 1 );
+
+        flounder.addPlaceholder.restore();
+        flounder.toggleClosed.restore();
+    } );
+
+
     it( 'should ignore the keypress if it is a non character key', () =>
     {
         document.body.flounder = null;
@@ -2038,9 +2089,10 @@ describe( 'setTextMultiTagIndent', () =>
         flounder.setTextMultiTagIndent();
 
         let style       = window.getComputedStyle( span );
+
         let spanOffset  = span.offsetWidth + parseInt( style[ 'margin-left' ] ) + parseInt( style[ 'margin-right' ] );
 
-        assert.equal( refs.search.style.textIndent, `${spanOffset}px` );
+        assert.equal( refs.search.style.textIndent, spanOffset > 0 ? `${spanOffset}px` : `` );
     } );
 } );
 

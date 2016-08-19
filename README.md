@@ -477,6 +477,7 @@ Change Log
     + multiTag construction added to build
     + changed build order of DOM elements to fix multiTag tab order
     + fixed a selectOption class bug
+    + adjusted default search indent settings
 
 + search
     + improved imteraction between tags and search box
