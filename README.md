@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 Flounder.js 1.0.0
-=======
-Flounder.js 0.8.5
->>>>>>> master
 =================
 
 *** Flounder 1.0.0 is being built right now, so there is a feature freeze on earlier versions, but feel free to open issues for 0.X.X and feature issues for 1.0.0 should anything come up ***
