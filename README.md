@@ -337,6 +337,8 @@ npm scripts
 Contributing
 ============
 
+Development of Flounder requires node '4.3.1' or higher.
+
 Flounder's **branch structure** goes as follows:
 
 + `release` - contains stavle including the dist files.  this is the branch that is used to make the npm and git releases
@@ -461,6 +463,7 @@ Change Log
     + some methods moved to events.js because that's obviously where they live
     + Flounder now gets Flounder.find() to apply build multiples.  This accepts anything array-like, elements, and selector strings
     + internal refactoring
+    + dropped support for node 4.1
 
 + events
     + multiTags now support aria
