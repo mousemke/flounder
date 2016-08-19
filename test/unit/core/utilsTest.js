@@ -375,12 +375,6 @@ describe( 'removeClass', () =>
  */
 describe( 'scrollTo', () =>
 {
-    it( 'should exist', () =>
-    {
-        assert.ok( utils.scrollTo, 'exists' );
-    } );
-
-
     it( 'should check the bounds and either scroll up or down', () =>
     {
         let element = {
@@ -400,6 +394,15 @@ describe( 'scrollTo', () =>
         element.offsetTop = 5;
         utils.scrollTo( element );
         assert.equal( element.parentNode.parentNode.scrollTop, 0 );
+    } );
+
+
+    it( 'should ignore everything if the element doesnt exist', () =>
+    {
+        let element = null;
+
+        let res = utils.scrollTo( element );
+        assert.equal( res, false );
     } );
 } );
 

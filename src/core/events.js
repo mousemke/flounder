@@ -351,7 +351,6 @@ const events = {
 
         if ( keyCode === keycodes.TAB )
         {
-            let refs        = this.refs;
             let optionsList = refs.optionsListWrapper;
             let wrapper     = refs.wrapper;
 
@@ -929,12 +928,6 @@ const events = {
                 return false;
             }
 
-            if ( ( keyCode >= 48 && keyCode <= 57 ) ||
-                    ( keyCode >= 65 && keyCode <= 90 ) ) // letters - allows native behavior
-            {
-                return true;
-            }
-
             if ( keyCode === keycodes.UP || keyCode === keycodes.DOWN )
             {
                 if ( !window.sidebar )
@@ -952,6 +945,8 @@ const events = {
 
                 this.setKeypressElement( e, increment );
             }
+
+            return true;
         }
     },
 
@@ -962,6 +957,9 @@ const events = {
      * sets the element after the keypress.  if the element is hidden or
      * disabled, it passes the event back to setKeypress to process the next
      * element
+     *
+     * @param {Object} e event object
+     * @param {Number} increment amount to change the index by
      *
      * @return _Void_
      */
@@ -994,6 +992,7 @@ const events = {
         {
             this.setKeypress( e );
         }
+
     },
 
 
@@ -1142,17 +1141,15 @@ const events = {
     {
         let refs    = this.refs;
         let search  = refs.search;
+
         let offset  = 0;
 
-        if ( search )
+        nativeSlice.call( refs.multiTagWrapper.children, 0 ).forEach( ( e, i ) =>
         {
-            nativeSlice.call( refs.multiTagWrapper.children, 0 ).forEach( ( e, i ) =>
-            {
-                offset += utils.getElWidth( e, this.setTextMultiTagIndent, this );
-            } );
+            offset += utils.getElWidth( e, this.setTextMultiTagIndent, this );
+        } );
 
-            search.style.textIndent = `${offset}px`;
-        }
+        search.style.textIndent = `${offset}px`;
     },
 
 
@@ -1217,17 +1214,15 @@ const events = {
         let refs        = this.refs;
         let optionsList = refs.optionsListWrapper;
         let wrapper     = refs.wrapper;
-        let hasClass    = utils.hasClass;
+        let isHidden    = utils.hasClass( optionsList, classes.HIDDEN );
         let type        = e.type;
 
-        if ( type === `mouseleave` || force === `close` ||
-            !hasClass( optionsList, classes.HIDDEN ) )
+        if ( type === `mouseleave` || force === `close` || !isHidden )
         {
             this.toggleList.justOpened = false;
             this.toggleClosed( e, optionsList, refs, wrapper );
         }
-        else if ( type === `mouseenter` || force === `open` ||
-            force !== `close` && utils.hasClass( optionsList, classes.HIDDEN ) )
+        else
         {
             if ( type === `keydown` )
             {
@@ -1271,7 +1266,7 @@ const events = {
     {
         this.addSelectKeyListener();
 
-        if ( !this.isIos || this.search || ( this.multipleTags === true && this.multiple === true ) )
+        if ( !this.isIos || this.search || this.multipleTags === true )
         {
             utils.removeClass( optionsList, classes.HIDDEN );
             utils.addClass( wrapper, classes.OPEN );
@@ -1288,10 +1283,7 @@ const events = {
             let index       = refs.select.selectedIndex;
             let selectedDiv = refs.data[ index ];
 
-            if ( selectedDiv )
-            {
-                utils.scrollTo( selectedDiv  );
-            }
+            utils.scrollTo( selectedDiv  );
         }
 
         if ( this.search )

@@ -461,6 +461,9 @@ Change Log
     + multiTags now support keyboard navigation
     + keyboard navigation flow / tag selection optimized
     + fixed focus toggleOpen from multipleTags to search box
+    + tabbing away now closes the menu
+    + fixed multitag focus
+    + fixed multitag search with empty results
 
 + build
     + multiTag construction added to build

@@ -295,19 +295,26 @@ const utils = {
      */
     scrollTo( element )
     {
-        let parent      = element.parentNode.parentNode;
-        let elHeight    = element.offsetHeight;
-        let min         = parent.scrollTop;
-        let max         = parent.scrollTop + parent.offsetHeight - elHeight;
-        let pos         = element.offsetTop;
+        if ( element )
+        {
+            let parent      = element.parentNode.parentNode;
+            let elHeight    = element.offsetHeight;
+            let min         = parent.scrollTop;
+            let max         = parent.scrollTop + parent.offsetHeight - elHeight;
+            let pos         = element.offsetTop;
 
-        if ( pos < min )
-        {
-            parent.scrollTop = pos  - ( elHeight * 0.5 );
+            if ( pos < min )
+            {
+                parent.scrollTop = pos  - ( elHeight * 0.5 );
+            }
+            else if ( pos > max )
+            {
+                parent.scrollTop = pos - parent.offsetHeight + ( elHeight * 1.5 );
+            }
         }
-        else if ( pos > max )
+        else
         {
-            parent.scrollTop = pos - parent.offsetHeight + ( elHeight * 1.5 );
+            return false;
         }
     },
 

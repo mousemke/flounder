@@ -632,6 +632,23 @@ describe( 'checkFlounderKeypress', () =>
     let refs        = flounder.refs;
 
 
+    it( 'should close the menu and add the placeholder on tab', () =>
+    {
+        let e = { keyCode: keycodes.TAB, target: { value: 2 }, preventDefault: () => {} };
+
+        sinon.stub( flounder, 'addPlaceholder', () => {} );
+        sinon.stub( flounder, 'toggleClosed', () => {} );
+
+        let res = flounder.checkFlounderKeypress( e );
+
+        assert.equal( flounder.addPlaceholder.callCount, 1 );
+        assert.equal( flounder.toggleClosed.callCount, 1 );
+
+        flounder.addPlaceholder.restore();
+        flounder.toggleClosed.restore();
+    } );
+
+
     it( 'should toggle open on enter', () =>
     {
         let e = { keyCode: keycodes.ENTER, target: { value: 2 }, preventDefault: () => {} };
@@ -1714,9 +1731,82 @@ describe( 'removeSelectKeyListener', () =>
  */
 describe( 'setKeypress', () =>
 {
-    it( 'should', () =>
+    it( 'should ignore the keypress if it is a non character key', () =>
     {
+        document.body.flounder = null;
+        let flounder = new Flounder( document.body, { data: [ 1, 2, 3 ], search: true } );
 
+        sinon.stub( flounder, 'setKeypressElement', () => {} );
+        sinon.stub( flounder, 'toggleList', () => {} );
+
+        let res = flounder.setKeypress( { keyCode: 16 } );
+
+        assert.equal( flounder.setKeypressElement.callCount, 0 );
+        assert.equal( flounder.toggleList.callCount, 0 );
+
+        assert.equal( res, undefined );
+    } );
+
+
+    it( 'should toggle the list on enter, escape, and space', () =>
+    {
+        let res;
+
+        document.body.flounder = null;
+        let flounder = new Flounder( document.body, { data: [ 1, 2, 3 ] } );
+
+        sinon.stub( flounder, 'toggleList', () => {} );
+
+        res = flounder.setKeypress( { keyCode: keycodes.ENTER } );
+        assert.equal( res, false );
+
+        res = flounder.setKeypress( { keyCode: keycodes.SPACE } );
+        assert.equal( res, false );
+
+        res = flounder.setKeypress( { keyCode: keycodes.ESCAPE } );
+        assert.equal( res, false );
+
+        assert.equal( flounder.toggleList.callCount, 3 );
+    } );
+
+
+    it( 'should change the selected element on up and down', () =>
+    {
+        document.body.flounder = null;
+        let flounder = new Flounder( document.body, { data: [ 1, 2, 3 ] } );
+
+        sinon.stub( flounder, 'setKeypressElement', () => {} );
+        let _preventDefault = sinon.spy();
+
+        flounder.setKeypress( { keyCode: keycodes.UP, preventDefault: _preventDefault } );
+
+        window.sidebar = true;
+        flounder.setKeypress( { keyCode: keycodes.DOWN, preventDefault: _preventDefault } );
+
+        assert.equal( _preventDefault.callCount, 1 );
+        assert.equal( flounder.setKeypressElement.callCount, 2 );
+
+        document.body.flounder = null;
+        flounder = new Flounder( document.body, { data: [ 1, 2, 3 ], search: true } );
+
+        window.sidebar = false;
+        sinon.stub( flounder, 'setKeypressElement', () => {} );
+        flounder.setKeypress( { keyCode: keycodes.DOWN, preventDefault: _preventDefault } );
+    } );
+
+
+    it( 'should pass anything else through unaffected', () =>
+    {
+        document.body.flounder = null;
+        let flounder = new Flounder( document.body, { data: [ 1, 2, 3 ] } );
+
+        sinon.stub( flounder, 'setKeypressElement', () => {} );
+        let _preventDefault = sinon.spy();
+
+        flounder.setKeypress( { keyCode: 999, preventDefault: _preventDefault } );
+
+        assert.equal( _preventDefault.callCount, 0 );
+        assert.equal( flounder.setKeypressElement.callCount, 0 );
     } );
 } );
 
@@ -1732,9 +1822,32 @@ describe( 'setKeypress', () =>
  */
 describe( 'setKeypressElement', () =>
 {
-    it( 'should', () =>
+    it( 'should rotate from top to bottom and bottom to top when min and max are reached', () =>
     {
+        document.body.flounder = null;
+        let flounder = new Flounder( document.body, { data: [ 1, 2, 3 ], search: true } );
 
+        sinon.stub( flounder, 'setKeypress', () => {} );
+
+        flounder.setKeypressElement( {}, 9 );
+        flounder.setKeypressElement( {}, -9 );
+
+        assert.equal( flounder.setKeypress.callCount, 0 );
+    } );
+
+
+    it( 'should skip disabled and hidden items', () =>
+    {
+        document.body.flounder = null;
+        let flounder = new Flounder( document.body, { data: [ 1, 2, 3 ], search: true } );
+
+        sinon.stub( flounder, 'setKeypress', () => {} );
+
+        flounder.disableByIndex( 1 );
+        flounder.setByIndex( 0 );
+        flounder.setKeypressElement( {}, 1 );
+
+        assert.equal( flounder.setKeypress.callCount, 1 );
     } );
 } );
 
@@ -1755,9 +1868,73 @@ describe( 'setKeypressElement', () =>
  */
 describe( 'setSelectValue', () =>
 {
-    it( 'should', () =>
+    it( 'should decide whether or not it\'s a click or keypress by where the event object is' , () =>
     {
+        document.body.flounder = null;
+        let flounder = new Flounder( document.body, { data: [ 1, 2, 3 ] } );
 
+        sinon.stub( flounder, 'setSelectValueClick', () => {} );
+        sinon.stub( flounder, 'setSelectValueButton', () => {} );
+
+        flounder.setSelectValue( null, {} );
+        flounder.setSelectValue( {} );
+
+        assert.equal( flounder.setSelectValueClick.callCount, 1 );
+        assert.equal( flounder.setSelectValueButton.callCount, 1 );
+    } );
+
+
+    it( 'should only run onSelect if it is not a programatic click' , () =>
+    {
+        document.body.flounder = null;
+        let flounder = new Flounder( document.body, { data: [ 1, 2, 3 ] } );
+
+        sinon.stub( flounder, 'setSelectValueClick', () => {} );
+
+        flounder.___programmaticClick = true;
+        flounder.setSelectValue( null, {} );
+
+        assert.equal( flounder.___programmaticClick, false );
+        assert.equal( flounder.setSelectValueClick.callCount, 1 );
+
+        sinon.stub( flounder, 'onSelect', () => {} );
+        flounder.setSelectValue( null, {} );
+
+        assert.equal( flounder.onSelect.callCount, 1 );
+    } );
+
+
+    it( 'should warn when onSelect fails' , () =>
+    {
+        document.body.flounder = null;
+        let flounder = new Flounder( document.body, { data: [ 1, 2, 3 ] } );
+
+        sinon.stub( flounder, 'setSelectValueButton', () => {} );
+        sinon.stub( flounder, 'onSelect', () => a + b );
+        sinon.stub( console, 'warn', () => {} );
+
+        flounder.setSelectValue( { keyCode: 99 } );
+
+        assert.equal( console.warn.callCount, 1 );
+        assert.equal( flounder.onSelect.callCount, 1 );
+
+        console.warn.restore();
+    } );
+
+
+    it( 'should ignore the keypress if the list was just opened' , () =>
+    {
+        document.body.flounder = null;
+        let flounder = new Flounder( document.body, { data: [ 1, 2, 3 ] } );
+
+        sinon.stub( flounder, 'setSelectValueButton', () => {} );
+        sinon.stub( flounder, 'onSelect', () => {} );
+
+        flounder.toggleList.justOpened = true;
+        flounder.setSelectValue( { keyCode: 99 } );
+
+        assert.equal( flounder.toggleList.justOpened, false );
+        assert.equal( flounder.onSelect.callCount, 0 );
     } );
 } );
 
@@ -1772,9 +1949,23 @@ describe( 'setSelectValue', () =>
  */
 describe( 'setSelectValueButton', () =>
 {
-    it( 'should', () =>
+    it( 'should remove the selected class and scroll to the selected option' , () =>
     {
+        document.body.flounder = null;
+        let flounder = new Flounder( document.body, { data: [ 1, 2, 3 ], defaultIndex: 1 } );
 
+        sinon.spy( flounder, 'removeSelectedClass' );
+        sinon.stub( utils, 'scrollTo', () => {} );
+
+        flounder.setSelectValueButton();
+        assert.equal( flounder.removeSelectedClass.callCount, 1 );
+
+        sinon.stub( flounder, 'getSelected', () => { return []; } );
+        flounder.setSelectValueButton();
+
+        assert.equal( flounder.removeSelectedClass.callCount, 2 );
+        assert.equal( utils.scrollTo.callCount, 1 );
+        utils.scrollTo.restore();
     } );
 } );
 
@@ -1791,9 +1982,22 @@ describe( 'setSelectValueButton', () =>
  */
 describe( 'setSelectValueClick', () =>
 {
-    it( 'should', () =>
+    it( 'should toggle the selected value', () =>
     {
+        document.body.flounder = null;
+        let flounder    = new Flounder( document.body, { data: [ 1, 2, 3 ] } );
+        let refs        = flounder.refs;
 
+        sinon.stub( flounder, 'deselectAll', () => {} );
+
+        let res1 = utils.hasClass( refs.data[ 0 ], flounder.selectedClass );
+
+        flounder.setSelectValueClick( { target: refs.data[ 0 ] } );
+
+        let res2 = utils.hasClass( refs.data[ 0 ], flounder.selectedClass );
+
+        assert.equal( res1, !res2 );
+        assert.equal( flounder.deselectAll.callCount, 1 );
     } );
 } );
 
@@ -1808,41 +2012,30 @@ describe( 'setSelectValueClick', () =>
  */
 describe( 'setTextMultiTagIndent', () =>
 {
-    it( 'should', () =>
+    it( 'should set the search box text indent correctly', () =>
     {
+        document.body.flounder = null;
 
+        let data = [
+            'doge',
+            'moon'
+        ];
 
+        let flounder    = new Flounder( document.body, { data : data, defaultIndex : 0, multipleTags : true } );
+        let refs = flounder.refs;
 
-    //         QUnit.test( 'setTextMultiTagIndent', function( assert )
-    // {
-    //     let data = [
-    //         'doge',
-    //         'moon'
-    //     ];
+        let span = document.createElement( 'SPAN' );
+        span.className = 'flounder__multiple--select--tag';
+        span.innerHTML = '<a class="flounder__multiple__tag__close" data-index="1"></a>doge';
 
-    //     let flounder    = new Flounder( document.body, { data : data, defaultIndex : 0, multipleTags : true } );
-    //     assert.ok( flounder.setTextMultiTagIndent, 'exists' );
+        refs.multiTagWrapper.appendChild( span );
 
-    //     let refs = flounder.refs;
+        flounder.setTextMultiTagIndent();
 
-    //     let span = document.createElement( 'SPAN' );
-    //     span.className = 'flounder__multiple--select--tag';
-    //     span.innerHTML = '<a class="flounder__multiple__tag__close" data-index="1"></a>doge';
+        let style       = window.getComputedStyle( span );
+        let spanOffset  = span.offsetWidth + parseInt( style[ 'margin-left' ] ) + parseInt( style[ 'margin-right' ] );
 
-    //     refs.multiTagWrapper.appendChild( span );
-
-    //     flounder.setTextMultiTagIndent();
-
-    //     let style = getComputedStyle( span );
-
-    //     let spanOffset = span.offsetWidth + parseInt( style[ 'margin-left' ] ) + parseInt( style[ 'margin-right' ] );
-    //     assert.equal( refs.search.style.textIndent, spanOffset + 'px', 'search box text indent is correctly set' );
-
-    //     flounder.destroy();
-    // } );
-
-
-
+        assert.equal( refs.search.style.textIndent, `${spanOffset}px` );
     } );
 } );
 
@@ -1863,9 +2056,95 @@ describe( 'setTextMultiTagIndent', () =>
 
 describe( 'toggleClosed', () =>
 {
-    it( 'should', () =>
+    it( 'should close the options list and remove necessary listeners', () =>
     {
+        document.body.flounder  = null;
+        let flounder            = new Flounder( document.body, { data: [ 1, 2, 3 ], search: true } );
+        let refs                = flounder.refs;
 
+        sinon.stub( utils, 'addClass', () => {} );
+        sinon.stub( utils, 'removeClass', () => {} );
+
+        sinon.stub( flounder, 'removeSelectKeyListener', () => {} );
+        sinon.stub( flounder, 'fuzzySearchReset', () => {} );
+        sinon.stub( refs.flounder, 'focus', () => {} );
+        sinon.stub( flounder, 'onClose', () => {} );
+
+        flounder.toggleClosed( {}, {}, refs, refs.wrapper );
+
+        assert.equal( flounder.fuzzySearchReset.callCount, 1 );
+        assert.equal( refs.flounder.focus.callCount, 1 );
+        assert.equal( flounder.onClose.callCount, 1 );
+
+        assert.equal( utils.addClass.callCount, 1 );
+        assert.equal( utils.removeClass.callCount, 1 );
+
+        utils.addClass.restore();
+        utils.removeClass.restore();
+    } );
+
+
+    it( 'should correctly handle onClose failures', () =>
+    {
+        document.body.flounder  = null;
+        let flounder            = new Flounder( document.body, { data: [ 1, 2, 3 ] } );
+        let refs                = flounder.refs;
+
+        sinon.stub( utils, 'addClass', () => {} );
+        sinon.stub( utils, 'removeClass', () => {} );
+
+        sinon.stub( console, 'warn', () => {} );
+        sinon.stub( flounder, 'onClose', () => a + b );
+
+        flounder.toggleClosed( {}, {}, refs, refs.wrapper );
+
+        assert.equal( console.warn.callCount, 1 );
+
+        console.warn.restore();
+        utils.addClass.restore();
+        utils.removeClass.restore();
+    } );
+
+
+    it( 'should skip focus on exit bool', () =>
+    {
+        document.body.flounder  = null;
+        let flounder            = new Flounder( document.body, { data: [ 1, 2, 3 ] } );
+        let refs                = flounder.refs;
+
+        sinon.stub( utils, 'addClass', () => {} );
+        sinon.stub( utils, 'removeClass', () => {} );
+
+        sinon.stub( refs.flounder, 'focus', () => {} );
+
+        flounder.toggleClosed( {}, {}, refs, refs.wrapper, true );
+
+        assert.equal( refs.flounder.focus.callCount, 0 );
+
+        utils.addClass.restore();
+        utils.removeClass.restore();
+    } );
+
+
+
+    it( 'should skip everything if not ready', () =>
+    {
+        document.body.flounder  = null;
+        let flounder            = new Flounder( document.body, { data: [ 1, 2, 3 ] } );
+        flounder.ready          = false;
+        let refs                = flounder.refs;
+
+        sinon.stub( utils, 'addClass', () => {} );
+        sinon.stub( utils, 'removeClass', () => {} );
+
+        sinon.stub( flounder, 'onClose', () => {} );
+
+        flounder.toggleClosed( {}, {}, refs, refs.wrapper, true );
+
+        assert.equal( flounder.onClose.callCount, 0 );
+
+        utils.addClass.restore();
+        utils.removeClass.restore();
     } );
 } );
 
@@ -1882,9 +2161,24 @@ describe( 'toggleClosed', () =>
  */
 describe( 'toggleList', () =>
 {
-    it( 'should', () =>
+    it( 'should open and close the list', () =>
     {
+        document.body.flounder  = null;
+        let flounder            = new Flounder( document.body, { data: [ 1, 2, 3 ] } );
+        let refs                = flounder.refs;
 
+        sinon.stub( flounder, 'toggleOpen', () => {} );
+        sinon.stub( flounder, 'toggleClosed', () => {} );
+
+        flounder.toggleList( { type: 'mouseleave' } );
+        flounder.toggleList( {}, 'close' );
+
+        flounder.toggleList( { type: 'mouseenter' } );
+        flounder.toggleList( { type: 'keydown' } );
+        flounder.toggleList( {}, 'open' );
+
+        assert.equal( flounder.toggleClosed.callCount, 2 );
+        assert.equal( flounder.toggleOpen.callCount, 3 );
     } );
 } );
 
@@ -1899,9 +2193,24 @@ describe( 'toggleList', () =>
  */
 describe( 'toggleListSearchClick', () =>
 {
-    it( 'should', () =>
+    it( 'should trigger toggleList only if flounder is closed', () =>
     {
+        document.body.flounder  = null;
+        let flounder            = new Flounder( document.body, { data: [ 1, 2, 3 ] } );
+        let refs                = flounder.refs;
+        let wrapper             = refs.wrapper;
 
+        sinon.stub( flounder, 'toggleList', () => {} );
+
+        utils.addClass( wrapper, classes.OPEN );
+        flounder.toggleListSearchClick( {} );
+        assert.equal( utils.hasClass( wrapper, classes.OPEN ), true );
+
+
+        utils.removeClass( wrapper, classes.OPEN );
+        flounder.toggleListSearchClick( {} );
+
+        assert.equal( flounder.toggleList.callCount, 1 );
     } );
 } );
 
@@ -1921,8 +2230,82 @@ describe( 'toggleListSearchClick', () =>
  */
 describe( 'toggleOpen', () =>
 {
-    it( 'should', () =>
+    it( 'should open the options list and add necessary listeners', () =>
     {
+        document.body.flounder  = null;
+        let flounder            = new Flounder( document.body, { data: [ 1, 2, 3 ], search: true } );
+        let refs                = flounder.refs;
 
+        sinon.stub( utils, 'addClass', () => {} );
+        sinon.stub( utils, 'removeClass', () => {} );
+
+        sinon.stub( refs.search, 'focus', () => {} );
+        sinon.stub( flounder, 'onOpen', () => {} );
+        sinon.stub( flounder, 'addSelectKeyListener', () => {} );
+
+        flounder.toggleOpen( {}, refs.optionList, refs, refs.wrapper );
+
+        assert.equal( refs.search.focus.callCount, 1 );
+        assert.equal( flounder.onOpen.callCount, 1 );
+        assert.equal( flounder.addSelectKeyListener.callCount, 1 );
+
+        assert.equal( utils.addClass.callCount, 1 );
+        assert.equal( utils.removeClass.callCount, 1 );
+
+        flounder            = new Flounder( document.body, { data: [ 1, 2, 3 ] } );
+        flounder.isIos      = true;
+        refs                = flounder.refs;
+
+        sinon.stub( flounder, 'onOpen', () => {} );
+        sinon.stub( flounder, 'addSelectKeyListener', () => {} );
+
+        flounder.toggleOpen( {}, refs.optionList, refs, refs.wrapper );
+
+        utils.addClass.restore();
+        utils.removeClass.restore();
+    } );
+
+
+    it( 'should correctly handle onOpen failures', () =>
+    {
+        document.body.flounder  = null;
+        let flounder            = new Flounder( document.body, { data: [ 1, 2, 3 ], multiple: true } );
+        let refs                = flounder.refs;
+
+        sinon.stub( utils, 'addClass', () => {} );
+        sinon.stub( utils, 'removeClass', () => {} );
+
+        sinon.stub( console, 'warn', () => {} );
+        sinon.stub( flounder, 'onOpen', () => a + b );
+
+        flounder.toggleOpen( {}, {}, refs, refs.wrapper );
+
+        assert.equal( console.warn.callCount, 1 );
+
+        console.warn.restore();
+        utils.addClass.restore();
+        utils.removeClass.restore();
+    } );
+
+
+
+    it( 'should skip everything if not ready', () =>
+    {
+        document.body.flounder  = null;
+        let flounder            = new Flounder( document.body, { data: [ 1, 2, 3 ] } );
+        flounder.ready          = false;
+        let refs                = flounder.refs;
+
+        sinon.stub( utils, 'addClass', () => {} );
+        sinon.stub( utils, 'removeClass', () => {} );
+
+        sinon.stub( flounder, 'onClose', () => {} );
+
+        flounder.toggleOpen( {}, {}, refs, refs.wrapper );
+
+        assert.equal( flounder.onClose.callCount, 0 );
+
+        utils.addClass.restore();
+        utils.removeClass.restore();
     } );
 } );
