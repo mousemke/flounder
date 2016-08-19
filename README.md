@@ -1,5 +1,11 @@
+<<<<<<< HEAD
 Flounder.js 1.0.0
+=======
+Flounder.js 0.8.5
+>>>>>>> master
 =================
+
+*** Flounder 1.0.0 is being built right now, so there is a feature freeze on earlier versions, but feel free to open issues for 0.X.X and feature issues for 1.0.0 should anything come up ***
 
 [![Flounder build status](https://travis-ci.org/sociomantic-tsunami/flounder.svg)](https://travis-ci.org)
 
@@ -500,6 +506,13 @@ Change Log
 
 + api
     + fixed a bug in deselectAll where tags would remain
+
+
+0.8.3
+-----
+
++ search
+    + fixed a bug where search would break when only numbers were entered
 
 
 0.8.3
