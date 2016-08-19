@@ -338,7 +338,6 @@ describe( 'reconfigure', () =>
     document.body.flounder = null;
     let flounder = new Flounder( document.body, { data: [ 1, 2, 34 ] } );
     let _f;
-    flounder.constuctor = () => {};
 
     let flounderSpy = sinon.stub( flounder, 'constructor', ( el, props ) => props );
 
@@ -349,6 +348,7 @@ describe( 'reconfigure', () =>
         let _p3 = flounder.reconfigure( { data: [ 1, 2, 5 ] } );
         let _p4 = flounder.reconfigure( { search: true } );
         let _p5 = flounder.reconfigure( null, { data: [ 1, 2, 6 ] } );
+        let _p6 = flounder.reconfigure();
 
         assert.deepEqual( _p1.data, [ 1, 2, 3 ] );
 
@@ -367,6 +367,23 @@ describe( 'reconfigure', () =>
         assert.equal( _p4.search, true );
 
         assert.deepEqual( _p5.data , [ 1, 2, 6 ] );
+        assert.deepEqual( _p6.data , [
+            {
+                'index' : 0,
+                'text'  : 1,
+                'value' : 1
+            },
+            {
+                'index' : 1,
+                'text'  : 2,
+                'value' : 2
+            },
+            {
+                'index' : 2,
+                'text'  : 34,
+                'value' : 34
+            }
+        ] );
     } );
 } );
 

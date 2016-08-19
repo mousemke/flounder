@@ -126,7 +126,6 @@ const build = {
      */
     buildData( defaultValue, originalData, optionsList, select )
     {
-        originalData                = originalData || [];
         let index                   = 0;
         let data                    = [];
         let selectOptions           = [];
@@ -138,7 +137,6 @@ const build = {
         let refs                    = this.refs;
         let selectRef               = refs.select;
         let allowHTML               = this.allowHTML;
-
 
         /**
          * ## buildDiv
@@ -152,13 +150,6 @@ const build = {
          */
         let buildDiv = function( dataObj, i )
         {
-            if ( typeof dataObj !== `object` )
-            {
-                dataObj = {
-                    text    : dataObj,
-                    value   : dataObj
-                };
-            }
             dataObj.index   = i;
 
             let extraClass  = i === defaultValue.index ? `  ${selectedClass}` : ``;
@@ -214,7 +205,8 @@ const build = {
                 let escapedText         = escapeHTML( dataObj.text );
                 selectOption.innerHTML  = escapedText;
 
-                let disabled = dataObj.disabled;
+                let disabled            = dataObj.disabled;
+
                 if ( disabled )
                 {
                     selectOption.setAttribute( `disabled`, disabled );
@@ -232,6 +224,7 @@ const build = {
                 {
                     addClass( data[ i ], classes.DISABLED );
                 }
+
                 addClass( selectChild, classes.OPTION_TAG );
             }
 
@@ -253,6 +246,7 @@ const build = {
 
         originalData.forEach( ( dataObj, i ) =>
         {
+            /* istanbul ignore next */
             let dataObjType = typeof dataObj;
 
             if ( dataObjType !== `object` )
@@ -474,7 +468,7 @@ const build = {
             }
 
             this.target             = target.parentNode;
-            utils.addClass( select || target, classes.HIDDEN );
+            utils.addClass( target, classes.HIDDEN );
         }
         else
         {
@@ -558,7 +552,8 @@ const build = {
         }
         else
         {
-            props.data  = props.data || this.data;
+            props       = props         || {};
+            props.data  = props.data    || this.data;
         }
 
         return this.constructor( this.originalTarget, props );

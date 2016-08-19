@@ -30,6 +30,8 @@ const api = {
 
             this.rebuild( this.data );
         } );
+
+        return [];
     },
 
 

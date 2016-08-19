@@ -1221,11 +1221,16 @@ describe( 'divertTarget', () =>
 
     it( 'should close the list if not multiple select', () =>
     {
-        document.body.flounder = null;
+        let select      = document.querySelector( 'SELECT' );
+        select.flounder = null;
 
-        let flounder    = new Flounder( document.body, { data: [ 1, 2, 3 ] } );
+        let flounder    = new Flounder( select, {
+                                                    data: [ 1, 2, 3 ],
+                                                    keepChangesOnDestroy: true,
+                                                    selectDataOverride: true
+                                                } );
         let refs        = flounder.refs;
-        let select      = refs.select;
+        select          = refs.select;
 
         let plug        = document.createElement( 'OPTION' );
         plug.className  = `${classes.PLUG}`;
@@ -1528,7 +1533,7 @@ describe( 'removeOptionsListeners', () =>
     beforeEach( () =>
     {
         document.body.flounder = null;
-        flounder = new Flounder( document.body, { data: [ 1, 2, 3 ] } );
+        flounder = new Flounder( document.body, { data: [ 1, 2, 3 ], multipleTags: true, defaultValue: 1 } );
 
         flounder.removeOptionsListeners();
 
@@ -2130,7 +2135,11 @@ describe( 'toggleClosed', () =>
     it( 'should skip everything if not ready', () =>
     {
         document.body.flounder  = null;
-        let flounder            = new Flounder( document.body, { data: [ 1, 2, 3 ] } );
+        let flounder            = new Flounder( document.body, { data: [
+                                                            { text: 1, value: 1, disabled: true },
+                                                            2,
+                                                            3
+                                                        ] } );
         flounder.ready          = false;
         let refs                = flounder.refs;
 
@@ -2269,7 +2278,20 @@ describe( 'toggleOpen', () =>
     it( 'should correctly handle onOpen failures', () =>
     {
         document.body.flounder  = null;
-        let flounder            = new Flounder( document.body, { data: [ 1, 2, 3 ], multiple: true } );
+        let flounder            = new Flounder( document.body, {
+                    classes     : {
+                        wrapper: 'maymay'
+                    },
+                    data        : [
+                        {
+                            header : 'header test',
+                            data : [ { text: 1, value: 1 }, 2 ]
+                        },
+                        3
+                    ],
+                    allowHTML   : true,
+                    multiple    : true
+                } );
         let refs                = flounder.refs;
 
         sinon.stub( utils, 'addClass', () => {} );
@@ -2291,10 +2313,12 @@ describe( 'toggleOpen', () =>
 
     it( 'should skip everything if not ready', () =>
     {
-        document.body.flounder  = null;
-        let flounder            = new Flounder( document.body, { data: [ 1, 2, 3 ] } );
-        flounder.ready          = false;
-        let refs                = flounder.refs;
+        let select      = document.querySelector( 'SELECT' );
+        select.innerHTML = '<option value="2">2</option><option value="3" disabled>3</option>';
+        select.flounder = null;
+        let flounder    = new Flounder( select );
+        flounder.ready  = false;
+        let refs        = flounder.refs;
 
         sinon.stub( utils, 'addClass', () => {} );
         sinon.stub( utils, 'removeClass', () => {} );
@@ -2307,5 +2331,6 @@ describe( 'toggleOpen', () =>
 
         utils.addClass.restore();
         utils.removeClass.restore();
+        select.innerHTML = '';
     } );
 } );

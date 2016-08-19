@@ -157,7 +157,7 @@ new Flounder( document.getElementById( 'vanilla--select' ), {
  * Vanilla from Div (multiple, tags, placeholder, built from element)
  */
 new Flounder( document.getElementById( 'vanilla--multiple--tags' ), {
-    
+
     defaultIndex        : 2,
 
     multipleTags        : true,
@@ -288,7 +288,6 @@ requirejs( [ 'flounder' ], function( Flounder )
          * jQuery plugin from Div (search, placeholder, jquery wrapper, loadData onInit)
          */
          $( '#jquery--div' ).flounder( {
-
             onInit               : function()
             {
                 var self = this;

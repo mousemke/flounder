@@ -465,6 +465,9 @@ Change Log
     + fixed multitag focus
     + fixed multitag search with empty results
 
++ api
+    + buildFromUrl now returns a placeholder array
+
 + build
     + multiTag construction added to build
     + changed build order of DOM elements to fix multiTag tab order
