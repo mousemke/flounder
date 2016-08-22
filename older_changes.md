@@ -3,6 +3,76 @@ Older changes
 
 This is truncated from the readme file to keep down the size
 
+0.8.5
+-----
+
++ events
+    + fixed a bubbling bug in clickSet
+
++ api
+    + fixed a bug in ie where setByValue wouldn't work as the DOM was still building
+
+
+0.8.4
+-----
+
++ api
+    + fixed a bug in deselectAll where tags would remain
+
+
+0.8.3
+-----
+
++ search
+    + fixed a bug where search would break when only numbers were entered
+
+
+0.8.3
+-----
+
++ search
+    + fixed a bug where search would break when only numbers were entered
+
+
+0.8.2
+-----
+
++ general
+    rolled back the switch from slice to spread
+
+
+0.8.1
+-----
+
++ release issues...
+
+
+0.8.0
+-----
+
++ general
+    + altered the gitignore to a release branch structure
+    + changed node test versions
+    + changed packages to better accomodate travis builds
+    + moving things to a more es6 sytax
+
++ build
+    + placeholders now have their own class
+
++ default
+    + changed how multipleTags handle defaults
+
++ css
+    + css is now copied to `./dist` from `./src` directory
+
++ events
+    + added onInputChange
+    + changed removeMultipleTags action
+
++ api
+    + console.log is now console.warn
+
+
 0.7.8
 -----
 
