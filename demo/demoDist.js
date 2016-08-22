@@ -1,19 +1,20 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 'use strict';
 
-Object.defineProperty(exports, '__esModule', {
+Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+var _flounder = require('/Library/WebServer/Documents/flounder/src/core/flounder');
 
-var _srcCoreFlounder = require('../src/core/flounder');
+var _flounder2 = _interopRequireDefault(_flounder);
 
-var _srcCoreFlounder2 = _interopRequireDefault(_srcCoreFlounder);
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-window.Flounder = _srcCoreFlounder2['default'];
+window.Flounder = _flounder2.default;
 
 var _slice = Array.prototype.slice;
+
 /**
  * example data object
  *
@@ -57,7 +58,7 @@ var buildData = function buildData() {
 /**
  * Vanilla from Input (sections, multiple tags, built from selector string)
  */
-new _srcCoreFlounder2['default']('.vanilla--input--tags', {
+new _flounder2.default('.vanilla--input--tags', {
 
     multipleTags: true,
 
@@ -101,7 +102,7 @@ new _srcCoreFlounder2['default']('.vanilla--input--tags', {
 /**
  * Vanilla from Input (multiple, no tags, dynamic options, default index, built from element)
  */
-new _srcCoreFlounder2['default'](document.getElementById('vanilla--input'), {
+new _flounder2.default(document.getElementById('vanilla--input'), {
     defaultIndex: 2,
 
     data: data,
@@ -134,7 +135,7 @@ new _srcCoreFlounder2['default'](document.getElementById('vanilla--input'), {
 /**
  * Vanilla from Select (default value, custom classes, built from element)
  */
-new _srcCoreFlounder2['default'](document.getElementById('vanilla--select'), {
+new _flounder2.default(document.getElementById('vanilla--select'), {
     defaultValue: '2',
 
     onSelect: function onSelect() {
@@ -152,7 +153,7 @@ new _srcCoreFlounder2['default'](document.getElementById('vanilla--select'), {
 /**
  * Vanilla from Div (multiple, tags, placeholder, built from element)
  */
-new _srcCoreFlounder2['default'](document.getElementById('vanilla--multiple--tags'), {
+new _flounder2.default(document.getElementById('vanilla--multiple--tags'), {
 
     defaultIndex: 2,
 
@@ -167,7 +168,7 @@ new _srcCoreFlounder2['default'](document.getElementById('vanilla--multiple--tag
 /**
  * Vanilla from Span (default value, built from element)
  */
-new _srcCoreFlounder2['default'](document.getElementById('vanilla--span'), {
+new _flounder2.default(document.getElementById('vanilla--span'), {
 
     disableArrow: true,
 
@@ -184,7 +185,7 @@ new _srcCoreFlounder2['default'](document.getElementById('vanilla--span'), {
 /**
  * Vanilla from Div (multiple, description, default index, elements disabled, built from element)
  */
-new _srcCoreFlounder2['default'](document.getElementById('vanilla--multiple--desc'), {
+new _flounder2.default(document.getElementById('vanilla--multiple--desc'), {
     defaultIndex: 3,
 
     multiple: true,
@@ -195,7 +196,7 @@ new _srcCoreFlounder2['default'](document.getElementById('vanilla--multiple--des
             res.push({
                 text: dataObj.text,
                 value: dataObj.id,
-                description: dataObj.id + ' - ' + dataObj.text,
+                description: dataObj.id + ' could be described as "' + dataObj.text + '"',
                 disabled: i === 1 ? true : false
             });
         });
@@ -275,7 +276,6 @@ requirejs(['flounder'], function (Flounder) {
      * jQuery plugin from Div (search, placeholder, jquery wrapper, loadData onInit)
      */
     $('#jquery--div').flounder({
-
         onInit: function onInit() {
             var self = this;
 
@@ -301,10 +301,9 @@ requirejs(['flounder'], function (Flounder) {
     });
 });
 
-exports['default'] = _srcCoreFlounder2['default'];
-module.exports = exports['default'];
+exports.default = _flounder2.default;
 
-},{"../src/core/flounder":18}],2:[function(require,module,exports){
+},{"/Library/WebServer/Documents/flounder/src/core/flounder":18}],2:[function(require,module,exports){
 "use strict";
 
 // rawAsap provides everything we need except exception management.
@@ -1373,13 +1372,13 @@ Promise.disableSynchronous = function() {
 },{"./core.js":6}],13:[function(require,module,exports){
 'use strict';
 
-Object.defineProperty(exports, '__esModule', {
+Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _slicedToArray = (function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i['return']) _i['return'](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError('Invalid attempt to destructure non-iterable instance'); } }; })();
+var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
 var _classes = require('./classes');
 
@@ -1390,6 +1389,10 @@ var _utils = require('./utils');
 var _utils2 = _interopRequireDefault(_utils);
 
 var _defaults = require('./defaults');
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var nativeSlice = Array.prototype.slice;
 
 var api = {
 
@@ -1403,6 +1406,7 @@ var api = {
      *
      * @return _Void_
      */
+
     buildFromUrl: function buildFromUrl(url, callback) {
         var _this = this;
 
@@ -1415,7 +1419,10 @@ var api = {
 
             _this.rebuild(_this.data);
         });
+
+        return [];
     },
+
 
     /**
      * ## clickByIndex
@@ -1431,6 +1438,7 @@ var api = {
         return this.setByIndex(index, multiple, false);
     },
 
+
     /**
      * ## clickByText
      *
@@ -1445,6 +1453,7 @@ var api = {
         return this.setByText(text, multiple, false);
     },
 
+
     /**
      * ## clickByValue
      *
@@ -1458,6 +1467,7 @@ var api = {
     clickByValue: function clickByValue(value, multiple) {
         return this.setByValue(value, multiple, false);
     },
+
 
     /**
      * ## destroy
@@ -1479,25 +1489,25 @@ var api = {
             if (tagName === 'SELECT') {
                 var firstOption = originalTarget[0];
 
-                if (firstOption && firstOption.textContent === this.props.placeholder) {
+                if (firstOption && _utils2.default.hasClass(firstOption, _classes2.default.PLACEHOLDER)) {
                     originalTarget.removeChild(firstOption);
                 }
-            } else if (tagName === 'INPUT') {
+            } else {
                 target = refs.flounder.parentNode;
             }
 
             try {
                 target.parentNode.removeChild(target);
                 originalTarget.tabIndex = 0;
-                _utils2['default'].removeClass(originalTarget, _classes2['default'].HIDDEN);
+                _utils2.default.removeClass(originalTarget, _classes2.default.HIDDEN);
             } catch (e) {
                 throw ' : this flounder may have already been removed';
             }
         } else {
             try {
                 var wrapper = refs.wrapper;
-                var _parent = wrapper.parentNode;
-                _parent.removeChild(wrapper);
+                var parent = wrapper.parentNode;
+                parent.removeChild(wrapper);
             } catch (e) {
                 throw ' : this flounder may have already been removed';
             }
@@ -1505,6 +1515,7 @@ var api = {
 
         refs.flounder.flounder = originalTarget.flounder = this.target.flounder = null;
     },
+
 
     /**
      * ## deselectAll
@@ -1520,19 +1531,20 @@ var api = {
         var multiTagWrapper = this.refs.multiTagWrapper;
 
         if (multiTagWrapper) {
-            var tags = Array.prototype.slice.call(multiTagWrapper.children);
+            var tags = nativeSlice.call(multiTagWrapper.children);
             tags.forEach(function (el) {
                 return el.children[0].click();
             });
         }
     },
 
+
     /**
      * ## disable
      *
      * disables flounder by adjusting listeners and classes
      *
-     * @param {Boolean} bool dsable or enable
+     * @param {Boolean} bool disable or enable
      *
      * @return _Void_
      */
@@ -1544,15 +1556,16 @@ var api = {
         if (bool) {
             refs.flounder.removeEventListener('keydown', this.checkFlounderKeypress);
             refs.selected.removeEventListener('click', this.toggleList);
-            _utils2['default'].addClass(selected, _classes2['default'].DISABLED);
-            _utils2['default'].addClass(flounder, _classes2['default'].DISABLED);
+            _utils2.default.addClass(selected, _classes2.default.DISABLED);
+            _utils2.default.addClass(flounder, _classes2.default.DISABLED);
         } else {
             refs.flounder.addEventListener('keydown', this.checkFlounderKeypress);
             refs.selected.addEventListener('click', this.toggleList);
-            _utils2['default'].removeClass(selected, _classes2['default'].DISABLED);
-            _utils2['default'].removeClass(flounder, _classes2['default'].DISABLED);
+            _utils2.default.removeClass(selected, _classes2.default.DISABLED);
+            _utils2.default.removeClass(flounder, _classes2.default.DISABLED);
         }
     },
+
 
     /**
      * ## disableByIndex
@@ -1570,23 +1583,23 @@ var api = {
         var refs = this.refs;
 
         if (typeof index !== 'string' && index.length) {
-            var _ret = (function () {
+            var _ret = function () {
                 var disableByIndex = _this2.disableByIndex.bind(_this2);
                 return {
                     v: index.map(function (_i) {
                         return disableByIndex(_i, reenable);
                     })
                 };
-            })();
+            }();
 
-            if (typeof _ret === 'object') return _ret.v;
+            if ((typeof _ret === 'undefined' ? 'undefined' : _typeof(_ret)) === "object") return _ret.v;
         } else {
             var data = refs.data;
-            var _length = data.length;
+            var length = data.length;
 
             if (index < 0) {
-                var _length2 = data.length;
-                index = _length2 + index;
+                var _length = data.length;
+                index = _length + index;
             }
 
             var el = data[index];
@@ -1596,18 +1609,19 @@ var api = {
 
                 if (reenable) {
                     opt.disabled = false;
-                    _utils2['default'].removeClass(el, _classes2['default'].DISABLED);
+                    _utils2.default.removeClass(el, _classes2.default.DISABLED);
                 } else {
                     opt.disabled = true;
-                    _utils2['default'].addClass(el, _classes2['default'].DISABLED);
+                    _utils2.default.addClass(el, _classes2.default.DISABLED);
                 }
 
                 return [el, opt];
+            } else {
+                console.warn('Flounder - No element to disable.');
             }
-
-            return null;
         }
     },
+
 
     /**
      * ## disableByText
@@ -1623,18 +1637,20 @@ var api = {
         var _this3 = this;
 
         if (typeof text !== 'string' && text.length) {
-            var _ret2 = (function () {
+            var _ret2 = function () {
                 var disableByText = _this3.disableByText.bind(_this3);
-                return {
-                    v: text.map(function (_t) {
-                        return disableByText(_t, reenable);
-                    })
-                };
-            })();
+                var res = text.map(function (_v) {
+                    return disableByText(_v, reenable);
+                });
 
-            if (typeof _ret2 === 'object') return _ret2.v;
+                return {
+                    v: res.length === 1 ? res[0] : res
+                };
+            }();
+
+            if ((typeof _ret2 === 'undefined' ? 'undefined' : _typeof(_ret2)) === "object") return _ret2.v;
         } else {
-            var _ret3 = (function () {
+            var _ret3 = function () {
                 var res = [];
 
                 _this3.refs.data.forEach(function (el, i) {
@@ -1645,14 +1661,17 @@ var api = {
                     }
                 });
 
-                return {
-                    v: res.length ? _this3.disableByIndex(res, reenable) : null
-                };
-            })();
+                res = res.length === 1 ? res[0] : res;
 
-            if (typeof _ret3 === 'object') return _ret3.v;
+                return {
+                    v: _this3.disableByIndex(res, reenable)
+                };
+            }();
+
+            if ((typeof _ret3 === 'undefined' ? 'undefined' : _typeof(_ret3)) === "object") return _ret3.v;
         }
     },
+
 
     /**
      * ## disableByValue
@@ -1668,26 +1687,31 @@ var api = {
         var _this4 = this;
 
         if (typeof value !== 'string' && value.length) {
-            var _ret4 = (function () {
+            var _ret4 = function () {
                 var disableByValue = _this4.disableByValue.bind(_this4);
-                return {
-                    v: value.map(function (_v) {
-                        return disableByValue(_v, reenable);
-                    })
-                };
-            })();
+                var res = value.map(function (_v) {
+                    return disableByValue(_v, reenable);
+                });
 
-            if (typeof _ret4 === 'object') return _ret4.v;
+                return {
+                    v: res.length === 1 ? res[0] : res
+                };
+            }();
+
+            if ((typeof _ret4 === 'undefined' ? 'undefined' : _typeof(_ret4)) === "object") return _ret4.v;
         } else {
-            var values = this.refs.selectOptions.map(function (el, i) {
-                return el.value === '' + value ? i : null;
+            var _res = this.refs.selectOptions.map(function (el, i) {
+                return '' + el.value === '' + value ? i : null;
             }).filter(function (a) {
-                return !!a;
+                return !!a || a === 0 ? true : false;
             });
 
-            return value ? this.disableByIndex(values, reenable) : null;
+            _res = _res.length === 1 ? _res[0] : _res;
+
+            return this.disableByIndex(_res, reenable);
         }
     },
+
 
     /**
      * ## enableByIndex
@@ -1702,6 +1726,7 @@ var api = {
         return this.disableByIndex(index, true);
     },
 
+
     /**
      * ## enableByText
      *
@@ -1715,6 +1740,7 @@ var api = {
         return this.disableByText(text, true);
     },
 
+
     /**
      * ## enableByValue
      *
@@ -1727,6 +1753,7 @@ var api = {
     enableByValue: function enableByValue(value) {
         this.disableByValue(value, true);
     },
+
 
     /**
      * ## getData
@@ -1744,12 +1771,19 @@ var api = {
 
         if (typeof _i === 'number') {
             return { option: refs.selectOptions[_i], div: refs.data[_i] };
-        } else {
+        } else if (_i && _i.length && typeof _i !== 'string') {
+            return _i.map(function (i) {
+                return _this5.getData(i);
+            });
+        } else if (!_i) {
             return refs.selectOptions.map(function (el, i) {
                 return _this5.getData(i);
             });
+        } else {
+            console.warn('Flounder - Illegal parameter type.');
         }
     },
+
 
     /**
      * ## getSelected
@@ -1761,19 +1795,18 @@ var api = {
     getSelected: function getSelected() {
         var _el = this.refs.select;
         var opts = [],
-            opt = undefined;
+            opt = void 0;
         var _data = _el.options;
 
-        for (var i = 0, len = _data.length; i < len; i++) {
-            opt = _data[i];
-
-            if (opt.selected && !_utils2['default'].hasClass(opt, _classes2['default'].PLACEHOLDER)) {
-                opts.push(opt);
+        nativeSlice.call(_data).forEach(function (el) {
+            if (el.selected && !_utils2.default.hasClass(el, _classes2.default.PLACEHOLDER)) {
+                opts.push(el);
             }
-        }
+        });
 
         return opts;
     },
+
 
     /**
      * ## getSelectedValues
@@ -1788,6 +1821,7 @@ var api = {
         });
     },
 
+
     /**
      * ## loadDataFromUrl
      *
@@ -1801,36 +1835,34 @@ var api = {
     loadDataFromUrl: function loadDataFromUrl(url, callback) {
         var _this6 = this;
 
-        try {
-            _utils2['default'].http.get(url).then(function (data) {
-                if (data) {
-                    _this6.data = JSON.parse(data);
-                    if (callback) {
-                        callback(_this6.data);
-                    }
-                } else {
-                    console.warn('no data recieved');
+        _utils2.default.http.get(url).then(function (data) {
+            if (data) {
+                _this6.data = JSON.parse(data);
+
+                if (callback) {
+                    callback(_this6.data);
                 }
-            })['catch'](function (e) {
-                console.warn('something happened: ', e);
-                _this6.rebuild([{
-                    text: '',
-                    value: '',
-                    index: 0,
-                    extraClass: _classes2['default'].LOADING_FAILED
-                }]);
-            });
-        } catch (e) {
-            console.warn('something happened.  check your loadDataFromUrl callback ', e);
-        }
+            } else {
+                console.warn('no data recieved');
+            }
+        }).catch(function (e) {
+            console.warn('something happened: ', e);
+            _this6.rebuild([{
+                text: '',
+                value: '',
+                index: 0,
+                extraClass: _classes2.default.LOADING_FAILED
+            }]);
+        });
 
         return [{
             text: '',
             value: '',
             index: 0,
-            extraClass: _classes2['default'].LOADING
+            extraClass: _classes2.default.LOADING
         }];
     },
+
 
     /**
      * ## rebuild
@@ -1875,6 +1907,7 @@ var api = {
         return this;
     },
 
+
     /**
      * ## setByIndex
      *
@@ -1893,31 +1926,32 @@ var api = {
         var refs = this.refs;
 
         if (typeof index !== 'string' && index.length) {
-            var _ret5 = (function () {
+            var _ret5 = function () {
                 var setByIndex = _this7.setByIndex.bind(_this7);
                 return {
                     v: index.map(function (_i) {
                         return setByIndex(_i, multiple, programmatic);
                     })
                 };
-            })();
+            }();
 
-            if (typeof _ret5 === 'object') return _ret5.v;
+            if ((typeof _ret5 === 'undefined' ? 'undefined' : _typeof(_ret5)) === "object") return _ret5.v;
         } else {
             var data = this.data;
-            var _length3 = data.length;
+            var length = data.length;
 
             if (index < 0) {
-                var _length4 = data.length;
-                index = _length4 + index;
+                var _length2 = data.length;
+                index = _length2 + index;
             }
 
             var el = refs.data[index];
 
             if (el) {
-                var isOpen = _utils2['default'].hasClass(refs.wrapper, 'open');
-                this.toggleList({}, isOpen ? 'close' : 'open');
-                this.___forceMultiple = multiple;
+                var isOpen = _utils2.default.hasClass(refs.wrapper, _classes2.default.OPEN);
+                this.toggleList(isOpen ? 'close' : 'open');
+                this.___forceMultiple = multiple && this.multiple;
+
                 this.___programmaticClick = programmatic;
                 el.click();
 
@@ -1927,6 +1961,7 @@ var api = {
             return null;
         }
     },
+
 
     /**
      * ## setByText
@@ -1944,19 +1979,20 @@ var api = {
         var programmatic = arguments.length <= 2 || arguments[2] === undefined ? true : arguments[2];
 
         if (typeof text !== 'string' && text.length) {
-            var _ret6 = (function () {
+            var _ret6 = function () {
                 var setByText = _this8.setByText.bind(_this8);
                 return {
                     v: text.map(function (_i) {
                         return setByText(_i, multiple, programmatic);
                     })
                 };
-            })();
+            }();
 
-            if (typeof _ret6 === 'object') return _ret6.v;
+            if ((typeof _ret6 === 'undefined' ? 'undefined' : _typeof(_ret6)) === "object") return _ret6.v;
         } else {
-            var _ret7 = (function () {
+            var _ret7 = function () {
                 var res = [];
+                text = '' + text;
 
                 _this8.refs.data.forEach(function (el, i) {
                     var _elText = el.innerHTML;
@@ -1967,13 +2003,14 @@ var api = {
                 });
 
                 return {
-                    v: res.length ? _this8.setByIndex(res, multiple, programmatic) : null
+                    v: _this8.setByIndex(res, multiple, programmatic)
                 };
-            })();
+            }();
 
-            if (typeof _ret7 === 'object') return _ret7.v;
+            if ((typeof _ret7 === 'undefined' ? 'undefined' : _typeof(_ret7)) === "object") return _ret7.v;
         }
     },
+
 
     /**
      * ## setByValue
@@ -1991,43 +2028,40 @@ var api = {
         var programmatic = arguments.length <= 2 || arguments[2] === undefined ? true : arguments[2];
 
         if (typeof value !== 'string' && value.length) {
-            var _ret8 = (function () {
+            var _ret8 = function () {
                 var setByValue = _this9.setByValue.bind(_this9);
                 return {
                     v: value.map(function (_i) {
                         return setByValue(_i, multiple, programmatic);
                     })
                 };
-            })();
+            }();
 
-            if (typeof _ret8 === 'object') return _ret8.v;
+            if ((typeof _ret8 === 'undefined' ? 'undefined' : _typeof(_ret8)) === "object") return _ret8.v;
         } else {
             var values = this.refs.selectOptions.map(function (el, i) {
-                return el.value === '' + value ? i : null;
-            });
-
-            values = values.filter(function (a) {
+                return '' + el.value === '' + value ? i : null;
+            }).filter(function (a) {
                 return a === 0 || !!a;
             });
 
-            return values.length !== 0 ? this.setByIndex(values, multiple, programmatic) : null;
+            return this.setByIndex(values, multiple, programmatic);
         }
     }
 };
 
-exports['default'] = api;
-module.exports = exports['default'];
+exports.default = api;
 
-},{"./classes":15,"./defaults":16,"./utils":20}],14:[function(require,module,exports){
+},{"./classes":15,"./defaults":16,"./utils":21}],14:[function(require,module,exports){
 'use strict';
 
-Object.defineProperty(exports, '__esModule', {
+Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _slicedToArray = (function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i['return']) _i['return'](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError('Invalid attempt to destructure non-iterable instance'); } }; })();
+var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
 var _classes = require('./classes');
 
@@ -2039,6 +2073,8 @@ var _utils = require('./utils');
 
 var _utils2 = _interopRequireDefault(_utils);
 
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 var build = {
 
     /**
@@ -2046,17 +2082,19 @@ var build = {
      *
      * adds a description to the option
      *
-     * @param {DOMElement} el option leement to add description to
+     * @param {DOMElement} el option element to add description to
      * @param {String} text description
      *
      * @return _Void_
      */
+
     addOptionDescription: function addOptionDescription(el, text) {
         var div = document.createElement('div');
         div.innerHTML = text;
-        div.className = _classes2['default'].DESCRIPTION;
+        div.className = _classes2.default.DESCRIPTION;
         el.appendChild(div);
     },
+
 
     /**
      * ## addSearch
@@ -2069,10 +2107,10 @@ var build = {
      */
     addSearch: function addSearch(flounder) {
         if (this.search) {
-            var search = _utils2['default'].constructElement({
+            var search = _utils2.default.constructElement({
                 tagname: 'input',
                 type: 'text',
-                className: _classes2['default'].SEARCH
+                className: _classes2.default.SEARCH
             });
             flounder.appendChild(search);
 
@@ -2081,6 +2119,7 @@ var build = {
 
         return false;
     },
+
 
     /**
      * ## bindThis
@@ -2093,11 +2132,12 @@ var build = {
     bindThis: function bindThis() {
         var _this = this;
 
-        ['catchBodyClick', 'checkClickTarget', 'checkFlounderKeypress', 'clearPlaceholder', 'clickSet', 'divertTarget', 'displayMultipleTags', 'firstTouchController', 'fuzzySearch', 'removeMultiTag', 'setKeypress', 'setSelectValue', 'toggleList', 'toggleListSearchClick'].forEach(function (func) {
+        ['catchBodyClick', 'checkClickTarget', 'checkFlounderKeypress', 'checkMultiTagKeydown', 'clearPlaceholder', 'clickSet', 'divertTarget', 'displayMultipleTags', 'firstTouchController', 'fuzzySearch', 'removeMultiTag', 'setKeypress', 'setSelectValue', 'toggleList', 'toggleListSearchClick'].forEach(function (func) {
             _this[func] = _this[func].bind(_this);
             _this[func].___isBound = true;
         });
     },
+
 
     /**
      * ## buildArrow
@@ -2111,15 +2151,16 @@ var build = {
      */
     buildArrow: function buildArrow(props, constructElement) {
         if (props.disableArrow) {
-            return null;
+            return false;
         } else {
-            var arrow = constructElement({ className: _classes2['default'].ARROW });
-            var arrowInner = constructElement({ className: _classes2['default'].ARROW_INNER });
+            var arrow = constructElement({ className: _classes2.default.ARROW });
+            var arrowInner = constructElement({ className: _classes2.default.ARROW_INNER });
             arrow.appendChild(arrowInner);
 
             return arrow;
         }
     },
+
 
     /**
      * ## buildData
@@ -2135,15 +2176,14 @@ var build = {
      * @return _Array_ refs to both container elements
      */
     buildData: function buildData(defaultValue, originalData, optionsList, select) {
-        originalData = originalData || [];
         var index = 0;
         var data = [];
         var selectOptions = [];
-        var constructElement = _utils2['default'].constructElement;
+        var constructElement = _utils2.default.constructElement;
         var addOptionDescription = this.addOptionDescription;
         var selectedClass = this.selectedClass;
-        var escapeHTML = _utils2['default'].escapeHTML;
-        var addClass = _utils2['default'].addClass;
+        var escapeHTML = _utils2.default.escapeHTML;
+        var addClass = _utils2.default.addClass;
         var refs = this.refs;
         var selectRef = refs.select;
         var allowHTML = this.allowHTML;
@@ -2159,18 +2199,12 @@ var build = {
          * @return _DOMElement_
          */
         var buildDiv = function buildDiv(dataObj, i) {
-            if (typeof dataObj !== 'object') {
-                dataObj = {
-                    text: dataObj,
-                    value: dataObj
-                };
-            }
             dataObj.index = i;
 
             var extraClass = i === defaultValue.index ? '  ' + selectedClass : '';
 
             var res = {
-                className: _classes2['default'].OPTION + extraClass,
+                className: _classes2.default.OPTION + extraClass,
                 'data-index': i
             };
 
@@ -2204,16 +2238,18 @@ var build = {
          * @return _DOMElement_
          */
         var buildOption = function buildOption(dataObj, i) {
-            var selectOption = undefined;
+            var selectOption = void 0;
 
             if (!selectRef) {
+                var selectOptionClass = _classes2.default.OPTION_TAG + '  ' + (dataObj.extraClass || '');
                 selectOption = constructElement({ tagname: 'option',
-                    className: _classes2['default'].OPTION_TAG + '  ' + dataObj.extraClass,
+                    className: selectOptionClass.trim(),
                     value: dataObj.value });
                 var escapedText = escapeHTML(dataObj.text);
                 selectOption.innerHTML = escapedText;
 
                 var disabled = dataObj.disabled;
+
                 if (disabled) {
                     selectOption.setAttribute('disabled', disabled);
                 }
@@ -2225,9 +2261,10 @@ var build = {
                 selectChild.setAttribute('value', selectChild.value);
 
                 if (selectChild.disabled === true && data[i]) {
-                    addClass(data[i], _classes2['default'].DISABLED);
+                    addClass(data[i], _classes2.default.DISABLED);
                 }
-                addClass(selectChild, _classes2['default'].OPTION_TAG);
+
+                addClass(selectChild, _classes2.default.OPTION_TAG);
             }
 
             if (i === defaultValue.index) {
@@ -2235,14 +2272,15 @@ var build = {
             }
 
             if (selectOption.getAttribute('disabled')) {
-                addClass(data[i], _classes2['default'].DISABLED);
+                addClass(data[i], _classes2.default.DISABLED);
             }
 
             return selectOption;
         };
 
         originalData.forEach(function (dataObj, i) {
-            var dataObjType = typeof dataObj;
+            /* istanbul ignore next */
+            var dataObjType = typeof dataObj === 'undefined' ? 'undefined' : _typeof(dataObj);
 
             if (dataObjType !== 'object') {
                 dataObj = originalData[i] = {
@@ -2254,9 +2292,9 @@ var build = {
             if (dataObj.header) {
                 (function () {
                     var section = constructElement({ tagname: 'div',
-                        className: _classes2['default'].SECTION });
+                        className: _classes2.default.SECTION });
                     var header = constructElement({ tagname: 'div',
-                        className: _classes2['default'].HEADER });
+                        className: _classes2.default.HEADER });
                     header.textContent = dataObj.header;
                     section.appendChild(header);
                     optionsList.appendChild(section);
@@ -2287,6 +2325,7 @@ var build = {
         return [data, selectOptions];
     },
 
+
     /**
      * ## buildDom
      *
@@ -2298,11 +2337,11 @@ var build = {
         var props = this.props;
         this.refs = {};
 
-        var constructElement = _utils2['default'].constructElement;
+        var constructElement = _utils2.default.constructElement;
 
-        var wrapperClass = _classes2['default'].MAIN_WRAPPER;
-        var wrapper = _utils2['default'].constructElement({ className: this.wrapperClass ? wrapperClass + '  ' + this.wrapperClass : wrapperClass });
-        var flounderClass = _classes2['default'].MAIN;
+        var wrapperClass = _classes2.default.MAIN_WRAPPER;
+        var wrapper = _utils2.default.constructElement({ className: this.wrapperClass ? wrapperClass + '  ' + this.wrapperClass : wrapperClass });
+        var flounderClass = _classes2.default.MAIN;
         var flounder = constructElement({ className: this.flounderClass ? flounderClass + '  ' + this.flounderClass : flounderClass });
 
         flounder.setAttribute('aria-hidden', true);
@@ -2312,25 +2351,23 @@ var build = {
         var select = this.initSelectBox(wrapper);
         select.tabIndex = -1;
 
-        if (this.multiple === true) {
-            select.setAttribute('multiple', '');
-        }
-
         var data = this.data;
         var defaultValue = this._default = (0, _defaults.setDefaultOption)(this, this.props, data);
-        defaultValue.index = defaultValue.index || defaultValue.index === 0 ? defaultValue.index : -1;
 
-        var selected = constructElement({ className: _classes2['default'].SELECTED_DISPLAYED,
-            'data-value': defaultValue.value, 'data-index': defaultValue.index });
+        var selected = constructElement({ className: _classes2.default.SELECTED_DISPLAYED,
+            'data-value': defaultValue.value, 'data-index': defaultValue.index || -1 });
 
-        var multiTagWrapper = this.multipleTags ? constructElement({ className: _classes2['default'].MULTI_TAG_LIST }) : null;
+        var multiTagWrapper = this.multipleTags ? constructElement({ className: _classes2.default.MULTI_TAG_LIST }) : null;
 
-        var search = this.addSearch(flounder);
-
-        var optionsListWrapper = constructElement({ className: _classes2['default'].OPTIONS_WRAPPER + '  ' + _classes2['default'].HIDDEN });
-        var optionsList = constructElement({ className: _classes2['default'].LIST });
+        var optionsListWrapper = constructElement({ className: _classes2.default.OPTIONS_WRAPPER + '  ' + _classes2.default.HIDDEN });
+        var optionsList = constructElement({ className: _classes2.default.LIST });
         optionsList.setAttribute('role', 'listbox');
         optionsListWrapper.appendChild(optionsList);
+
+        if (this.multiple === true) {
+            select.setAttribute('multiple', '');
+            optionsList.setAttribute('aria-multiselectable', 'true');
+        }
 
         var arrow = this.buildArrow(props, constructElement);
 
@@ -2340,7 +2377,9 @@ var build = {
             }
         });
 
-        var selectOptions = undefined;
+        var search = this.addSearch(flounder);
+
+        var selectOptions = void 0;
 
         var _buildData = this.buildData(defaultValue, data, optionsList, select);
 
@@ -2348,6 +2387,7 @@ var build = {
 
         data = _buildData2[0];
         selectOptions = _buildData2[1];
+
 
         this.target.appendChild(wrapper);
 
@@ -2367,6 +2407,35 @@ var build = {
         }
     },
 
+
+    /**
+     * ## buildMultiTag
+     *
+     * builds and returns a single multiTag
+     *
+     * @param {String} option tag to grab text to add to the tag and role
+     *
+     * @return _DOMElement_ option tag
+     */
+    buildMultiTag: function buildMultiTag(option) {
+        var optionText = option.innerHTML;
+        var span = document.createElement('SPAN');
+        span.className = _classes2.default.MULTIPLE_SELECT_TAG;
+        span.setAttribute('aria-label', 'Close');
+        span.setAttribute('tabindex', 0);
+
+        var a = document.createElement('A');
+        a.className = _classes2.default.MULTIPLE_TAG_CLOSE;
+        a.setAttribute('data-index', option.index);
+
+        span.appendChild(a);
+
+        span.innerHTML += optionText;
+
+        return span;
+    },
+
+
     /**
      * ## initSelectBox
      *
@@ -2385,8 +2454,8 @@ var build = {
         var select = refs.select;
 
         if (target.tagName === 'SELECT') {
-            _utils2['default'].addClass(target, _classes2['default'].SELECT_TAG);
-            _utils2['default'].addClass(target, _classes2['default'].HIDDEN);
+            _utils2.default.addClass(target, _classes2.default.SELECT_TAG);
+            _utils2.default.addClass(target, _classes2.default.HIDDEN);
 
             select = target;
 
@@ -2413,21 +2482,22 @@ var build = {
                     _this2.data = data;
                 })();
             } else if (this.selectDataOverride) {
-                _utils2['default'].removeAllChildren(target);
+                _utils2.default.removeAllChildren(target);
             }
 
             this.target = target.parentNode;
-            _utils2['default'].addClass(select || target, _classes2['default'].HIDDEN);
+            _utils2.default.addClass(target, _classes2.default.HIDDEN);
         } else {
-            select = _utils2['default'].constructElement({ tagname: 'SELECT', className: _classes2['default'].SELECT_TAG + '  ' + _classes2['default'].HIDDEN });
+            select = _utils2.default.constructElement({ tagname: 'SELECT', className: _classes2.default.SELECT_TAG + '  ' + _classes2.default.HIDDEN });
             wrapper.appendChild(select);
         }
 
         return select;
     },
 
+
     /**
-     * popInSelectElements
+     * ## popInSelectElements
      *
      * pops the previously saves elements back into a select tag, restoring the
      * original state
@@ -2437,15 +2507,16 @@ var build = {
      * @return _Void_
      */
     popInSelectElements: function popInSelectElements(select) {
-        _utils2['default'].removeAllChildren(select);
+        _utils2.default.removeAllChildren(select);
 
         this.originalChildren.forEach(function (_el, i) {
             select.appendChild(_el);
         });
     },
 
+
     /**
-     * popOutSelectElements
+     * ## popOutSelectElements
      *
      * pops out all the options of a select box, clones them, then appends the
      * clones.  This gives us the ability to restore the original tag
@@ -2468,6 +2539,7 @@ var build = {
         });
     },
 
+
     /**
      * ## reconfigure
      *
@@ -2478,21 +2550,23 @@ var build = {
      * @return _Object_ rebuilt flounder object
      */
     reconfigure: function reconfigure(data, props) {
-        if (typeof data !== 'string' && typeof data.length === 'number') {
+        if (data && typeof data !== 'string' && typeof data.length === 'number') {
             props = props = props || this.props;
             props.data = data;
         } else if (!props && typeof data === 'object') {
             props = data;
             props.data = props.data || this.data;
         } else {
-            props.data = data || props.data || this.data;
+            props = props || {};
+            props.data = props.data || this.data;
         }
 
         return this.constructor(this.originalTarget, props);
     },
 
+
     /**
-     * ## Set Target
+     * ## setTarget
      *
      * sets the target related
      *
@@ -2507,7 +2581,7 @@ var build = {
         target.flounder = this;
 
         if (target.tagName === 'INPUT') {
-            _utils2['default'].addClass(target, _classes2['default'].HIDDEN);
+            _utils2.default.addClass(target, _classes2.default.HIDDEN);
             target.setAttribute('aria-hidden', true);
             target.tabIndex = -1;
             target = target.parentNode;
@@ -2517,10 +2591,9 @@ var build = {
     }
 };
 
-exports['default'] = build;
-module.exports = exports['default'];
+exports.default = build;
 
-},{"./classes":15,"./defaults":16,"./utils":20}],15:[function(require,module,exports){
+},{"./classes":15,"./defaults":16,"./utils":21}],15:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -2544,6 +2617,7 @@ var classes = {
     MULTI_TAG_LIST: "flounder__multi--tag--list",
     MULTIPLE_SELECT_TAG: "flounder__multiple--select--tag",
     MULTIPLE_TAG_CLOSE: "flounder__multiple__tag__close",
+    OPEN: "open",
     OPTION: "flounder__option",
     OPTION_TAG: "flounder--option--tag",
     OPTIONS_WRAPPER: "flounder__list--wrapper",
@@ -2558,17 +2632,15 @@ var classes = {
     SELECT_TAG: "flounder--select--tag"
 };
 
-exports["default"] = classes;
-module.exports = exports["default"];
+exports.default = classes;
 
 },{}],16:[function(require,module,exports){
 'use strict';
 
-Object.defineProperty(exports, '__esModule', {
+Object.defineProperty(exports, "__esModule", {
     value: true
 });
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+exports.setDefaultOption = exports.defaultOptions = undefined;
 
 var _classes = require('./classes');
 
@@ -2578,7 +2650,9 @@ var _utils = require('./utils');
 
 var _utils2 = _interopRequireDefault(_utils);
 
-var defaultOptions = {
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var defaultOptions = exports.defaultOptions = {
     allowHTML: false,
     classes: {
         flounder: '',
@@ -2623,8 +2697,9 @@ var defaults = {
      *
      * @return _Void_
      */
-    setDefaultOption: function setDefaultOption(self, configObj) {
-        var data = arguments.length <= 2 || arguments[2] === undefined ? [] : arguments[2];
+    setDefaultOption: function setDefaultOption(self) {
+        var configObj = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+        var data = arguments[2];
         var rebuild = arguments.length <= 3 || arguments[3] === undefined ? false : arguments[3];
 
         /**
@@ -2655,7 +2730,7 @@ var defaults = {
          *
          * @return {Object} default settings
          */
-        var setPlaceholderDefault = function setPlaceholderDefault(_data) {
+        var setPlaceholderDefault = function setPlaceholderDefault(self, _data) {
             var refs = self.refs;
             var select = refs.select;
             var placeholder = configObj.placeholder;
@@ -2664,27 +2739,22 @@ var defaults = {
                 text: placeholder || placeholder === '' ? placeholder : defaultOptions.placeholder,
                 value: '',
                 index: 0,
-                extraClass: _classes2['default'].HIDDEN + '  ' + _classes2['default'].PLACEHOLDER
+                extraClass: _classes2.default.HIDDEN + '  ' + _classes2.default.PLACEHOLDER
             };
 
             if (select) {
-                var escapedText = self.allowHTML ? _default.text : _utils2['default'].escapeHTML(_default.text);
+                var escapedText = self.allowHTML ? _default.text : _utils2.default.escapeHTML(_default.text);
 
-                if (!select[0] || select[0].value !== '') {
-                    var defaultOption = self.constructElement({ tagname: 'option',
-                        className: _classes2['default'].OPTION_TAG,
-                        value: _default.value });
-                    defaultOption.innerHTML = escapedText;
+                var defaultOption = _utils2.default.constructElement({ tagname: 'option',
+                    className: _classes2.default.OPTION_TAG,
+                    value: _default.value });
+                defaultOption.innerHTML = escapedText;
 
-                    select.insertBefore(defaultOption, select[0]);
-                    self.refs.selectOptions.unshift(defaultOption);
-                    data.unshift(_default);
-                } else {
-                    data[0] = _default;
-                }
-            } else {
-                data.unshift(_default);
+                select.insertBefore(defaultOption, select[0]);
+                self.refs.selectOptions.unshift(defaultOption);
             }
+
+            data.unshift(_default);
 
             return _default;
         };
@@ -2699,7 +2769,7 @@ var defaults = {
          */
         var setValueDefault = function setValueDefault(_data, _val) {
             var defaultProp = _val || '' + configObj.defaultValue;
-            var index = undefined;
+            var index = void 0;
 
             _data.forEach(function (dataObj, i) {
                 var dataObjValue = '' + dataObj.value;
@@ -2720,39 +2790,6 @@ var defaults = {
         };
 
         /**
-         * ## sortData
-         *
-         * checks the data object for header options, and sorts it accordingly
-         *
-         * @return _Boolean_ hasHeaders
-         */
-        var sortData = function sortData(data) {
-            var res = arguments.length <= 1 || arguments[1] === undefined ? [] : arguments[1];
-            var i = arguments.length <= 2 || arguments[2] === undefined ? 0 : arguments[2];
-
-            data.forEach(function (d) {
-                if (d.header) {
-                    res = sortData(d.data, res, i);
-                } else {
-                    if (typeof d !== 'object') {
-                        d = {
-                            text: d,
-                            value: d,
-                            index: i
-                        };
-                    } else {
-                        d.index = i;
-                    }
-
-                    res.push(d);
-                    i++;
-                }
-            });
-
-            return res;
-        };
-
-        /**
          * ## checkDefaultPriority
          *
          * sorts out which default should be gotten by priority
@@ -2760,7 +2797,7 @@ var defaults = {
          * @return {Object} default data object
          */
         var checkDefaultPriority = function checkDefaultPriority() {
-            var _data = sortData(data);
+            var _data = self.sortData(data);
 
             if ((configObj.multipleTags || configObj.multiple) && !configObj.defaultIndex && !configObj.defaultValue) {
                 configObj.placeholder = configObj.placeholder || defaultOptions.placeholder;
@@ -2776,7 +2813,7 @@ var defaults = {
                 return setPlaceholderDefault(self, _data);
             }
 
-            var def = undefined;
+            var def = void 0;
 
             if (rebuild) {
                 var val = self.refs.selected.getAttribute('data-value');
@@ -2795,21 +2832,62 @@ var defaults = {
             return def;
         };
 
+        data = data || configObj.data || [];
+
         return checkDefaultPriority();
+    },
+
+
+    /**
+     * ## sortData
+     *
+     * checks the data object for header options, and sorts it accordingly
+     *
+     * @return _Boolean_ hasHeaders
+     */
+    sortData: function sortData(data) {
+        var _this = this;
+
+        var res = arguments.length <= 1 || arguments[1] === undefined ? [] : arguments[1];
+        var i = arguments.length <= 2 || arguments[2] === undefined ? 0 : arguments[2];
+
+        var self = this;
+
+        data.forEach(function (d) {
+            if (d.header) {
+                res = _this.sortData(d.data, res, i);
+            } else {
+                if (typeof d !== 'object') {
+                    d = {
+                        text: d,
+                        value: d,
+                        index: i
+                    };
+                } else {
+                    d.index = i;
+                }
+
+                res.push(d);
+                i++;
+            }
+        });
+
+        return res;
     }
 };
 
-exports['default'] = defaults;
-module.exports = exports['default'];
+var setDefaultOption = exports.setDefaultOption = defaults.setDefaultOption;
 
-},{"./classes":15,"./utils":20}],17:[function(require,module,exports){
+exports.default = defaults;
+
+},{"./classes":15,"./utils":21}],17:[function(require,module,exports){
 'use strict';
 
-Object.defineProperty(exports, '__esModule', {
+Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
 var _classes = require('./classes');
 
@@ -2823,6 +2901,14 @@ var _utils = require('./utils');
 
 var _utils2 = _interopRequireDefault(_utils);
 
+var _keycodes = require('./keycodes');
+
+var _keycodes2 = _interopRequireDefault(_keycodes);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var nativeSlice = Array.prototype.slice;
+
 var events = {
 
     /**
@@ -2832,6 +2918,7 @@ var events = {
      *
      * @return _Void_
      */
+
     addFirstTouchListeners: function addFirstTouchListeners() {
         var refs = this.refs;
         refs.selected.addEventListener('click', this.firstTouchController);
@@ -2842,6 +2929,7 @@ var events = {
         }
     },
 
+
     /**
      * ## addHoverClass
      *
@@ -2850,8 +2938,9 @@ var events = {
      * @return Void_
      */
     addHoverClass: function addHoverClass() {
-        _utils2['default'].addClass(this, _classes2['default'].HOVER);
+        _utils2.default.addClass(this, _classes2.default.HOVER);
     },
+
 
     /**
      * ## addListeners
@@ -2860,15 +2949,14 @@ var events = {
      *
      * @return _Void_
      */
-    addListeners: function addListeners(refs, props) {
+    addListeners: function addListeners(refs) {
         var ios = this.isIos;
         var changeEvent = ios ? 'blur' : 'change';
 
         refs.select.addEventListener(changeEvent, this.divertTarget);
-
         refs.flounder.addEventListener('keydown', this.checkFlounderKeypress);
 
-        if (props.openOnHover) {
+        if (this.props.openOnHover) {
             var wrapper = refs.wrapper;
             wrapper.addEventListener('mouseenter', this.toggleList);
             wrapper.addEventListener('mouseleave', this.toggleList);
@@ -2884,6 +2972,39 @@ var events = {
         }
     },
 
+
+    /**
+     * ## addMultipleTags
+     *
+     * adds a tag for each selected option and attaches the correct events to it
+     *
+     * @param {Array} selectedOptions currently selected options
+     * @param {DOMElement} multiTagWrapper parent element of the tags
+     *
+     * @return _Void_
+     */
+    addMultipleTags: function addMultipleTags(selectedOptions, multiTagWrapper) {
+        var _this = this;
+
+        selectedOptions.forEach(function (option) {
+            if (option.value !== '') {
+                var tag = _this.buildMultiTag(option);
+
+                multiTagWrapper.appendChild(tag);
+            } else {
+                option.selected = false;
+            }
+        });
+
+        nativeSlice.call(multiTagWrapper.children, 0).forEach(function (el) {
+            var firstChild = el.firstChild;
+
+            firstChild.addEventListener('click', _this.removeMultiTag);
+            el.addEventListener('keydown', _this.checkMultiTagKeydown);
+        });
+    },
+
+
     /**
      * ## addOptionsListeners
      *
@@ -2892,23 +3013,24 @@ var events = {
      * @return _Void_
      */
     addOptionsListeners: function addOptionsListeners() {
-        var _this = this;
+        var _this2 = this;
 
         this.refs.data.forEach(function (dataObj, i) {
             if (dataObj.tagName === 'DIV') {
-                dataObj.addEventListener('mouseenter', _this.addHoverClass);
-                dataObj.addEventListener('mouseleave', _this.removeHoverClass);
+                dataObj.addEventListener('mouseenter', _this2.addHoverClass);
+                dataObj.addEventListener('mouseleave', _this2.removeHoverClass);
 
-                dataObj.addEventListener('click', _this.clickSet);
+                dataObj.addEventListener('click', _this2.clickSet);
             }
         });
     },
 
+
     /**
      * ## addPlaceholder
      *
-     * called on body click, this determines what (if anything) should be
-     * refilled into the the placeholder position
+     * determines what (if anything) should be refilled into the the
+     * placeholder position
      *
      * @return _Void_
      */
@@ -2925,7 +3047,7 @@ var events = {
                 this.setByIndex(0);
                 break;
             case 1:
-                selected.innerHTML = val === '' ? this.placeholder : selectedText;
+                selected.innerHTML = selectedText;
                 break;
             default:
                 selected.innerHTML = this.multipleMessage;
@@ -2945,6 +3067,7 @@ var events = {
         }
     },
 
+
     /**
      * ## addSearchListeners
      *
@@ -2955,9 +3078,11 @@ var events = {
     addSearchListeners: function addSearchListeners() {
         var search = this.refs.search;
         search.addEventListener('click', this.toggleListSearchClick);
+        search.addEventListener('focus', this.toggleListSearchClick);
         search.addEventListener('keyup', this.fuzzySearch);
         search.addEventListener('focus', this.clearPlaceholder);
     },
+
 
     /**
      * ## addSelectKeyListener
@@ -2977,15 +3102,17 @@ var events = {
         // weird shit
         // http://stackoverflow.com/questions/34660500/mobile-safari-multi-select-bug
         if (this.isIos) {
-            var firstOption = select[0];
+            var firstOption = select.children[0];
+
             var plug = document.createElement('OPTION');
             plug.disabled = true;
-            plug.className = _classes2['default'].PLUG;
+            plug.className = _classes2.default.PLUG;
             select.insertBefore(plug, firstOption);
         }
 
         select.focus();
     },
+
 
     /**
      * ## catchBodyClick
@@ -3003,6 +3130,7 @@ var events = {
         }
     },
 
+
     /**
      * ## checkClickTarget
      *
@@ -3015,6 +3143,7 @@ var events = {
      */
     checkClickTarget: function checkClickTarget(e, target) {
         target = target || e.target;
+
         if (target === document) {
             return false;
         } else if (target === this.refs.flounder) {
@@ -3025,10 +3154,66 @@ var events = {
 
         if (target) {
             return this.checkClickTarget(e, target);
+        }
+
+        return false;
+    },
+
+
+    /**
+     * ## checkEnterOnSearch
+     *
+     * if enter is pressed in the searchox, if there is only one option matching,
+     * this selects it
+     *
+     * @param {Object} e event object
+     * @param {Object} refs element references
+     *
+     * @return _Void_
+     */
+    checkEnterOnSearch: function checkEnterOnSearch(e, refs) {
+        var _this3 = this;
+
+        var val = e.target.value;
+
+        if (val && val !== '') {
+            var _ret = function () {
+                var res = [];
+                var options = refs.data.length;
+                var selected = _this3.getSelected();
+                var matches = _this3.search.isThereAnythingRelatedTo(val);
+
+                matches.forEach(function (el) {
+                    var index = el.i;
+                    el = refs.selectOptions[index];
+
+                    if (selected.indexOf(el) === -1) {
+                        res.push(el);
+                    }
+                });
+
+                if (res.length === 1) {
+                    var el = res[0];
+                    _this3.setByIndex(el.index, _this3.multiple);
+
+                    if (_this3.multipleTags) {
+                        setTimeout(function () {
+                            return refs.search.focus();
+                        }, 200);
+                    }
+                }
+
+                return {
+                    v: res
+                };
+            }();
+
+            if ((typeof _ret === 'undefined' ? 'undefined' : _typeof(_ret)) === "object") return _ret.v;
         } else {
             return false;
         }
     },
+
 
     /**
      * ## checkFlounderKeypress
@@ -3039,33 +3224,136 @@ var events = {
      */
     checkFlounderKeypress: function checkFlounderKeypress(e) {
         var keyCode = e.keyCode;
+        var refs = this.refs;
 
-        if (keyCode === 13 || keyCode === 32 && e.target.tagName !== 'INPUT') {
+        if (keyCode === _keycodes2.default.TAB) {
+            var optionsList = refs.optionsListWrapper;
+            var wrapper = refs.wrapper;
+
+            this.addPlaceholder();
+            this.toggleClosed(e, optionsList, refs, wrapper, true);
+        } else if (keyCode === _keycodes2.default.ENTER || keyCode === _keycodes2.default.SPACE && e.target.tagName !== 'INPUT') {
+            if (keyCode === _keycodes2.default.ENTER && this.search && _utils2.default.hasClass(refs.wrapper, _classes2.default.OPEN)) {
+                return this.checkEnterOnSearch(e, refs);
+            }
+
             e.preventDefault();
             this.toggleList(e);
         } else if (keyCode >= 48 && keyCode <= 57 || keyCode >= 65 && keyCode <= 90) // letters - allows native behavior
             {
-                var refs = this.refs;
-
                 if (refs.search && e.target.tagName === 'INPUT') {
                     refs.selected.innerHTML = '';
                 }
             }
     },
 
+
     /**
-     * ## checkPlaceholder
+     * ## checkMultiTagKeydown
      *
-     * clears or re-adds the placeholder
+     * when a tag is selected, this decided how to handle it by either
+     * passing the event on, or handling tag removal
      *
      * @param {Object} e event object
      *
      * @return _Void_
      */
-    clearPlaceholder: function clearPlaceholder(e) {
+    checkMultiTagKeydown: function checkMultiTagKeydown(e) {
+        var keyCode = e.keyCode;
+        var self = this;
+        var refs = this.refs;
+        var children = refs.multiTagWrapper.children;
+        var target = e.target;
+        var index = nativeSlice.call(children, 0).indexOf(target);
+
+        function focusSearch() {
+            refs.search.focus();
+            self.clearPlaceholder();
+            self.toggleListSearchClick(e);
+        }
+
+        if (keyCode === _keycodes2.default.LEFT || keyCode === _keycodes2.default.RIGHT || keyCode === _keycodes2.default.BACKSPACE) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            if (keyCode === _keycodes2.default.BACKSPACE) {
+                self.checkMultiTagKeydownRemove(target, focusSearch, index);
+            } else {
+                self.checkMultiTagKeydownNavigate(focusSearch, keyCode, index);
+            }
+        } else if (e.key.length < 2) {
+            focusSearch();
+        }
+    },
+
+
+    /**
+     * ## checkMultiTagKeydownNavigate
+     *
+     * after left or right is hit while a multitag is focused, this focus' on
+     * the next tag in that direction or the the search field
+     *
+     * @param {Function} focusSearch function to focus on the search field
+     * @param {Number} keyCode keyclode from te keypress event
+     * @param {Number} index index of currently focused tag
+     *
+     * @return _Void_
+     */
+    checkMultiTagKeydownNavigate: function checkMultiTagKeydownNavigate(focusSearch, keyCode, index) {
+        var children = this.refs.multiTagWrapper.children;
+
+        var adjustment = keyCode - 38;
+        var newIndex = index + adjustment;
+        var length = children.length - 1;
+
+        if (newIndex > length) {
+            focusSearch();
+        } else if (newIndex >= 0) {
+            children[newIndex].focus();
+        }
+    },
+
+
+    /**
+     * ## checkMultiTagKeydownRemove
+     *
+     * after a backspece while a multitag is focused, this removes the tag and
+     * focus' on the next
+     *
+     * @param {DOMElement} target focused multitag
+     * @param {Function} focusSearch function to focus on the search field
+     * @param {Number} index index of currently focused tag
+     *
+     * @return _Void_
+     */
+    checkMultiTagKeydownRemove: function checkMultiTagKeydownRemove(target, focusSearch, index) {
+        var children = this.refs.multiTagWrapper.children;
+        var siblings = children.length - 1;
+
+        target.firstChild.click();
+
+        if (siblings > 0) {
+            children[index === 0 ? 0 : index - 1].focus();
+        } else {
+            focusSearch();
+        }
+    },
+
+
+    /**
+     * ## clearPlaceholder
+     *
+     * clears the placeholder
+     *
+     * @param {Object} e event object
+     *
+     * @return _Void_
+     */
+    clearPlaceholder: function clearPlaceholder() {
         var selected = this.refs.selected;
         selected.innerHTML = '';
     },
+
 
     /**
      * ## clickSet
@@ -3087,11 +3375,92 @@ var events = {
         }
     },
 
+
+    /**
+     * ## displayMultipleTags
+     *
+     * handles the display and management of tags
+     *
+     * @param  {Array} selectedOptions currently selected options
+     * @param  {DOMElement} selected div to display currently selected options
+     *
+     * @return _Void_
+     */
+    displayMultipleTags: function displayMultipleTags(selectedOptions, multiTagWrapper) {
+        var _this4 = this;
+
+        nativeSlice.call(multiTagWrapper.children, 0).forEach(function (el) {
+            var firstChild = el.firstChild;
+
+            firstChild.removeEventListener('click', _this4.removeMultiTag);
+            el.removeEventListener('keydown', _this4.checkMultiTagKeydown);
+        });
+
+        multiTagWrapper.innerHTML = '';
+
+        if (selectedOptions.length > 0) {
+            this.addMultipleTags(selectedOptions, multiTagWrapper);
+        } else {
+            this.addPlaceholder();
+        }
+
+        this.setTextMultiTagIndent();
+    },
+
+
+    /**
+     * ## displaySelected
+     *
+     * formats and displays the chosen options
+     *
+     * @param {DOMElement} selected display area for the selected option(s)
+     * @param {Object} refs element references
+     *
+     * @return _Void_
+     */
+    displaySelected: function displaySelected(selected, refs) {
+        var value = [];
+        var index = -1;
+
+        var selectedOption = this.getSelected();
+        var selectedLength = selectedOption.length;
+        var multipleTags = this.multipleTags;
+
+        if (!multipleTags && selectedLength === 1) {
+            index = selectedOption[0].index;
+            value = selectedOption[0].value;
+            selected.innerHTML = refs.data[index].innerHTML;
+        } else if (!multipleTags && selectedLength === 0) {
+            var defaultValue = this._default;
+            index = defaultValue.index;
+            value = defaultValue.value;
+            selected.innerHTML = defaultValue.text;
+        } else {
+            if (multipleTags) {
+                selected.innerHTML = '';
+                this.displayMultipleTags(selectedOption, refs.multiTagWrapper);
+            } else {
+                selected.innerHTML = this.multipleMessage;
+            }
+
+            index = selectedOption.map(function (option) {
+                return option.index;
+            });
+            value = selectedOption.map(function (option) {
+                return option.value;
+            });
+        }
+
+        selected.setAttribute('data-value', value);
+        selected.setAttribute('data-index', index);
+    },
+
+
     /**
      * ## divertTarget
      *
      * @param {Object} e event object
-     * 
+     *
      * on interaction with the raw select box, the target will be diverted to
      * the corresponding flounder list element
      *
@@ -3102,7 +3471,7 @@ var events = {
         // http://stackoverflow.com/questions/34660500/mobile-safari-multi-select-bug
         if (this.isIos) {
             var select = this.refs.select;
-            var plug = select.querySelector('.' + _classes2['default'].PLUG);
+            var plug = select.querySelector('.' + _classes2.default.PLUG);
 
             if (plug) {
                 select.removeChild(plug);
@@ -3127,6 +3496,7 @@ var events = {
             this.toggleList(e, 'close');
         }
     },
+
 
     /**
      * ## firstTouchController
@@ -3155,16 +3525,18 @@ var events = {
         }
     },
 
+
     /**
-     * ## addHoverClass
+     * ## removeHoverClass
      *
-     * adds a hover class to an element
+     * removes a hover class from an element
      *
      * @return Void_
      */
     removeHoverClass: function removeHoverClass() {
-        _utils2['default'].removeClass(this, _classes2['default'].HOVER);
+        _utils2.default.removeClass(this, _classes2.default.HOVER);
     },
+
 
     /**
      * ## removeListeners
@@ -3194,6 +3566,69 @@ var events = {
         }
     },
 
+
+    /**
+     * ## removeMultiTag
+     *
+     * removes a multi selection tag on click; fixes all references to value and state
+     *
+     * @param  {Object} e event object
+     *
+     * @return _Void_
+     */
+    removeMultiTag: function removeMultiTag(e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        var value = void 0;
+        var index = void 0;
+        var refs = this.refs;
+        var select = refs.select;
+        var selected = refs.selected;
+        var target = e.target;
+        var defaultValue = this._default;
+        var data = this.refs.data;
+        var targetIndex = target.getAttribute('data-index');
+
+        select[targetIndex].selected = false;
+
+        var selectedOptions = this.getSelected();
+
+        _utils2.default.removeClass(data[targetIndex], _classes2.default.SELECTED_HIDDEN);
+        _utils2.default.removeClass(data[targetIndex], _classes2.default.SELECTED);
+
+        target.removeEventListener('click', this.removeMultiTag);
+
+        var span = target.parentNode;
+        span.parentNode.removeChild(span);
+
+        if (selectedOptions.length === 0) {
+            this.addPlaceholder();
+            index = -1;
+            value = '';
+        } else {
+            value = selectedOptions.map(function (option) {
+                return option.value;
+            });
+
+            index = selectedOptions.map(function (option) {
+                return option.index;
+            });
+        }
+
+        this.setTextMultiTagIndent();
+
+        selected.setAttribute('data-value', value);
+        selected.setAttribute('data-index', index);
+
+        try {
+            this.onSelect(e, this.getSelectedValues());
+        } catch (e) {
+            console.warn('something may be wrong in "onSelect"', e);
+        }
+    },
+
+
     /**
      * ## removeOptionsListeners
      *
@@ -3202,14 +3637,18 @@ var events = {
      * @return _Void_
      */
     removeOptionsListeners: function removeOptionsListeners() {
-        var _this2 = this;
+        var _this5 = this;
 
         this.refs.data.forEach(function (dataObj) {
             if (dataObj.tagName === 'DIV') {
-                dataObj.removeEventListener('click', _this2.clickSet);
+                dataObj.removeEventListener('click', _this5.clickSet);
+
+                dataObj.removeEventListener('mouseenter', _this5.addHoverClass);
+                dataObj.removeEventListener('mouseleave', _this5.removeHoverClass);
             }
         });
     },
+
 
     /**
      * ## removeSearchListeners
@@ -3220,10 +3659,47 @@ var events = {
      */
     removeSearchListeners: function removeSearchListeners() {
         var search = this.refs.search;
-        search.removeEventListener('click', this.toggleList);
+        search.removeEventListener('click', this.toggleListSearchClick);
+        search.removeEventListener('focus', this.toggleListSearchClick);
         search.removeEventListener('keyup', this.fuzzySearch);
         search.removeEventListener('focus', this.clearPlaceholder);
     },
+
+
+    /**
+     * ## removeSelectedClass
+     *
+     * removes the [[this.selectedClass]] from all data
+     *
+     * @return _Void_
+     */
+    removeSelectedClass: function removeSelectedClass(data) {
+        var _this6 = this;
+
+        data = data || this.refs.data;
+
+        data.forEach(function (dataObj, i) {
+            _utils2.default.removeClass(dataObj, _this6.selectedClass);
+        });
+    },
+
+
+    /**
+     * ## removeSelectedValue
+     *
+     * sets the selected property to false for all data
+     *
+     * @return _Void_
+     */
+    removeSelectedValue: function removeSelectedValue(data) {
+        data = data || this.refs.data;
+        var optionTags = this.refs.select.children;
+
+        data.forEach(function (d, i) {
+            optionTags[i].selected = false;
+        });
+    },
+
 
     /**
      * ## removeSelectKeyListener
@@ -3237,10 +3713,11 @@ var events = {
         select.removeEventListener('keyup', this.setSelectValue);
     },
 
+
     /**
      * ## setKeypress
      *
-     * handles arrow key selection
+     * handles arrow key and enter selection
      *
      * @param {Object} e event object
      *
@@ -3251,20 +3728,25 @@ var events = {
         var increment = 0;
         var keyCode = e.keyCode;
 
-        var nonCharacterKeys = [16, 17, 18, 20, 91, 93];
+        var nonCharacterKeys = _keycodes2.default.NON_CHARACTER_KEYS;
 
         if (nonCharacterKeys.indexOf(keyCode) === -1) {
-            if (this.multipleTags) {
-                e.preventDefault();
+            if (keyCode === _keycodes2.default.TAB) {
+                var optionsList = refs.optionsListWrapper;
+                var wrapper = refs.wrapper;
+
+                this.addPlaceholder();
+                this.toggleClosed(e, optionsList, refs, wrapper, true);
                 return false;
             }
 
-            if (keyCode === 13 || keyCode === 27 || keyCode === 32) // space enter escape
-                {
-                    this.toggleList(e);
-                    return false;
-                } else if (!window.sidebar && (keyCode === 38 || keyCode === 40)) // up and down
-                {
+            if (keyCode === _keycodes2.default.ENTER || keyCode === _keycodes2.default.ESCAPE || keyCode === _keycodes2.default.SPACE) {
+                this.toggleList(e);
+                return false;
+            }
+
+            if (keyCode === _keycodes2.default.UP || keyCode === _keycodes2.default.DOWN) {
+                if (!window.sidebar) {
                     e.preventDefault();
                     var _search = refs.search;
 
@@ -3273,32 +3755,51 @@ var events = {
                     }
 
                     increment = keyCode - 39;
-                } else if (keyCode >= 48 && keyCode <= 57 || keyCode >= 65 && keyCode <= 90) // letters - allows native behavior
-                {
-                    return true;
                 }
 
-            var selectTag = refs.select;
-            var data = refs.data;
-            var dataMaxIndex = data.length - 1;
-            var index = selectTag.selectedIndex + increment;
-
-            if (index > dataMaxIndex) {
-                index = 0;
-            } else if (index < 0) {
-                index = dataMaxIndex;
+                this.setKeypressElement(e, increment);
             }
 
-            selectTag.selectedIndex = index;
-
-            var hasClass = _utils2['default'].hasClass;
-            var dataAtIndex = data[index];
-
-            if (hasClass(dataAtIndex, _classes2['default'].HIDDEN) || hasClass(dataAtIndex, _classes2['default'].SELECTED_HIDDEN) || hasClass(dataAtIndex, _classes2['default'].SEARCH_HIDDEN) || hasClass(dataAtIndex, _classes2['default'].DISABLED)) {
-                this.setKeypress(e);
-            }
+            return true;
         }
     },
+
+
+    /**
+     * ## setKeypressElement
+     *
+     * sets the element after the keypress.  if the element is hidden or
+     * disabled, it passes the event back to setKeypress to process the next
+     * element
+     *
+     * @param {Object} e event object
+     * @param {Number} increment amount to change the index by
+     *
+     * @return _Void_
+     */
+    setKeypressElement: function setKeypressElement(e, increment) {
+        var refs = this.refs;
+        var selectTag = refs.select;
+        var data = refs.data;
+        var dataMaxIndex = data.length - 1;
+        var index = selectTag.selectedIndex + increment;
+
+        if (index > dataMaxIndex) {
+            index = 0;
+        } else if (index < 0) {
+            index = dataMaxIndex;
+        }
+
+        selectTag.selectedIndex = index;
+
+        var hasClass = _utils2.default.hasClass;
+        var dataAtIndex = data[index];
+
+        if (hasClass(dataAtIndex, _classes2.default.HIDDEN) || hasClass(dataAtIndex, _classes2.default.SELECTED_HIDDEN) || hasClass(dataAtIndex, _classes2.default.SEARCH_HIDDEN) || hasClass(dataAtIndex, _classes2.default.DISABLED)) {
+            this.setKeypress(e);
+        }
+    },
+
 
     /**
      * ## setSelectValue
@@ -3315,7 +3816,7 @@ var events = {
      */
     setSelectValue: function setSelectValue(obj, e) {
         var refs = this.refs;
-        var keyCode = undefined;
+        var keyCode = void 0;
 
         if (e) // click
             {
@@ -3348,6 +3849,7 @@ var events = {
         this.___programmaticClick = false;
     },
 
+
     /**
      * ## setSelectValueButton
      *
@@ -3361,7 +3863,7 @@ var events = {
         var select = refs.select;
         var selectedClass = this.selectedClass;
 
-        var selectedOption = undefined;
+        var selectedOption = void 0;
 
         this.removeSelectedClass(data);
 
@@ -3371,11 +3873,12 @@ var events = {
         if (baseOption) {
             selectedOption = data[baseOption.index];
 
-            _utils2['default'].addClass(selectedOption, selectedClass);
+            _utils2.default.addClass(selectedOption, selectedClass);
 
-            _utils2['default'].scrollTo(selectedOption);
+            _utils2.default.scrollTo(selectedOption);
         }
     },
+
 
     /**
      * ## setSelectValueClick
@@ -3390,8 +3893,8 @@ var events = {
         var _multiple = this.multiple;
         var refs = this.refs;
         var selectedClass = this.selectedClass;
-        var index = undefined,
-            selectedOption = undefined;
+        var index = void 0,
+            selectedOption = void 0;
 
         if ((!_multiple || _multiple && !this.multipleTags && !e[this.multiSelect]) && !this.___forceMultiple) {
             this.deselectAll();
@@ -3400,7 +3903,7 @@ var events = {
         this.___forceMultiple = false;
         var target = e.target;
 
-        _utils2['default'].toggleClass(target, selectedClass);
+        _utils2.default.toggleClass(target, selectedClass);
         index = target.getAttribute('data-index');
 
         selectedOption = refs.selectOptions[index];
@@ -3410,10 +3913,35 @@ var events = {
         var firstOption = refs.selectOptions[0];
 
         if (firstOption.value === '' && this.getSelected().length > 1) {
-            _utils2['default'].removeClass(refs.data[0], selectedClass);
+            _utils2.default.removeClass(refs.data[0], selectedClass);
             refs.selectOptions[0].selected = false;
         }
     },
+
+
+    /**
+     * ## setTextMultiTagIndent
+     *
+     * sets the text-indent on the search field to go around selected tags
+     *
+     * @return _Void_
+     */
+    setTextMultiTagIndent: function setTextMultiTagIndent() {
+        var _this7 = this;
+
+        var refs = this.refs;
+        var search = refs.search;
+
+        var offset = 0;
+
+        nativeSlice.call(refs.multiTagWrapper.children, 0).forEach(function (e, i) {
+            offset += _utils2.default.getElWidth(e, _this7.setTextMultiTagIndent, _this7);
+        });
+
+        /* istanbul ignore next */
+        search.style.textIndent = offset > 0 ? offset + 'px' : '';
+    },
+
 
     /**
      * ## toggleClosed
@@ -3424,13 +3952,16 @@ var events = {
      * @param {DOMElement} optionsList the options list
      * @param {Object} refs contains the references of the elements in flounder
      * @param {DOMElement} wrapper wrapper of flounder
+     * @param {Boolean} exit prevents refocus. used while tabbing away
      *
      * @return _Void_
      */
     toggleClosed: function toggleClosed(e, optionsList, refs, wrapper) {
-        _utils2['default'].addClass(optionsList, _classes2['default'].HIDDEN);
+        var exit = arguments.length <= 4 || arguments[4] === undefined ? false : arguments[4];
+
+        _utils2.default.addClass(optionsList, _classes2.default.HIDDEN);
         this.removeSelectKeyListener();
-        _utils2['default'].removeClass(wrapper, 'open');
+        _utils2.default.removeClass(wrapper, _classes2.default.OPEN);
 
         var qsHTML = document.querySelector('html');
         qsHTML.removeEventListener('click', this.catchBodyClick);
@@ -3440,7 +3971,9 @@ var events = {
             this.fuzzySearchReset();
         }
 
-        refs.flounder.focus();
+        if (!exit) {
+            refs.flounder.focus();
+        }
 
         if (this.ready) {
             try {
@@ -3451,18 +3984,6 @@ var events = {
         }
     },
 
-    /**
-     * ## toggleListSearchClick
-     *
-     * toggleList wrapper for search.  only triggered if flounder is closed
-     *
-     * @return _Void_
-     */
-    toggleListSearchClick: function toggleListSearchClick(e) {
-        if (!_utils2['default'].hasClass(this.refs.wrapper, 'open')) {
-            this.toggleList(e, 'open');
-        }
-    },
 
     /**
      * ## toggleList
@@ -3477,13 +3998,13 @@ var events = {
         var refs = this.refs;
         var optionsList = refs.optionsListWrapper;
         var wrapper = refs.wrapper;
-        var hasClass = _utils2['default'].hasClass;
+        var isHidden = _utils2.default.hasClass(optionsList, _classes2.default.HIDDEN);
         var type = e.type;
 
-        if (type === 'mouseleave' || force === 'close' || !hasClass(optionsList, _classes2['default'].HIDDEN)) {
+        if (type === 'mouseleave' || force === 'close' || !isHidden) {
             this.toggleList.justOpened = false;
             this.toggleClosed(e, optionsList, refs, wrapper);
-        } else if (type === 'mouseenter' || force === 'open' || force !== 'close' && _utils2['default'].hasClass(optionsList, _classes2['default'].HIDDEN)) {
+        } else {
             if (type === 'keydown') {
                 this.toggleList.justOpened = true;
             }
@@ -3491,6 +4012,21 @@ var events = {
             this.toggleOpen(e, optionsList, refs, wrapper);
         }
     },
+
+
+    /**
+     * ## toggleListSearchClick
+     *
+     * toggleList wrapper for search.  only triggered if flounder is closed
+     *
+     * @return _Void_
+     */
+    toggleListSearchClick: function toggleListSearchClick(e) {
+        if (!_utils2.default.hasClass(this.refs.wrapper, _classes2.default.OPEN)) {
+            this.toggleList(e, 'open');
+        }
+    },
+
 
     /**
      * ## toggleOpen
@@ -3507,9 +4043,9 @@ var events = {
     toggleOpen: function toggleOpen(e, optionsList, refs, wrapper) {
         this.addSelectKeyListener();
 
-        if (!this.isIos || this.search || this.multipleTags === true && this.multiple === true) {
-            _utils2['default'].removeClass(optionsList, _classes2['default'].HIDDEN);
-            _utils2['default'].addClass(wrapper, 'open');
+        if (!this.isIos || this.search || this.multipleTags === true) {
+            _utils2.default.removeClass(optionsList, _classes2.default.HIDDEN);
+            _utils2.default.addClass(wrapper, _classes2.default.OPEN);
 
             var qsHTML = document.querySelector('html');
 
@@ -3521,9 +4057,7 @@ var events = {
             var index = refs.select.selectedIndex;
             var selectedDiv = refs.data[index];
 
-            if (selectedDiv) {
-                _utils2['default'].scrollTo(selectedDiv);
-            }
+            _utils2.default.scrollTo(selectedDiv);
         }
 
         if (this.search) {
@@ -3540,21 +4074,16 @@ var events = {
     }
 };
 
-exports['default'] = events;
-module.exports = exports['default'];
+exports.default = events;
 
-},{"./classes":15,"./search":19,"./utils":20}],18:[function(require,module,exports){
+},{"./classes":15,"./keycodes":19,"./search":20,"./utils":21}],18:[function(require,module,exports){
 'use strict';
 
-Object.defineProperty(exports, '__esModule', {
+Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _defaults = require('./defaults');
 
@@ -3586,28 +4115,17 @@ var _version = require('./version');
 
 var _version2 = _interopRequireDefault(_version);
 
-var Flounder = (function () {
+var _keycodes = require('./keycodes');
+
+var _keycodes2 = _interopRequireDefault(_keycodes);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Flounder = function () {
     _createClass(Flounder, [{
-        key: 'arrayOfFlounders',
-
-        /**
-         * ## arrayOfFlounders
-         *
-         * called when a jquery object, microbe, or array is fed into flounder
-         * as a target
-         *
-         * @param {DOMElement} target flounder mount point
-         * @param {Object} props passed options
-         *
-         * @return {Array} array of flounders
-         */
-        value: function arrayOfFlounders(targets, props) {
-            var _this = this;
-
-            return Array.prototype.slice.call(targets, 0).map(function (el, i) {
-                return new _this.constructor(el, props);
-            });
-        }
+        key: 'componentWillUnmount',
 
         /**
          * ## componentWillUnmount
@@ -3616,8 +4134,6 @@ var Flounder = (function () {
          *
          * @return _Void_
          */
-    }, {
-        key: 'componentWillUnmount',
         value: function componentWillUnmount() {
             try {
                 this.onComponentWillUnmount();
@@ -3635,194 +4151,97 @@ var Flounder = (function () {
         /**
          * ## constructor
          *
-         * main constuctor
+         * filters and sets up the main init
          *
-         * @param {DOMElement} target flounder mount point
+         * @param {DOMElement, String, Array} target flounder mount point
          * @param {Object} props passed options
          *
          * @return _Object_ new flounder object
          */
+
     }]);
 
     function Flounder(target, props) {
         _classCallCheck(this, Flounder);
 
-        if (!target && !props) {
-            return this.constructor;
-        } else if (target) {
+        if (!target) {
+            console.warn('Flounder - No target element found.');
+        } else {
             if (typeof target === 'string') {
                 target = document.querySelectorAll(target);
             }
-            if (target.length && target.tagName !== 'SELECT') {
-                return this.arrayOfFlounders(target, props);
-            } else if (!target.length && target.length !== 0 || target.tagName === 'SELECT') {
-                if (target.flounder) {
-                    target.flounder.destroy();
+
+            if ((target.length || target.length === 0) && target.tagName !== 'SELECT') {
+                if (target.length > 1) {
+                    console.warn('Flounder - More than one element found. Dropping all but the first.');
+                } else if (target.length === 0) {
+                    throw 'Flounder - No target element found.';
                 }
 
-                this.props = props;
-                this.setTarget(target);
-                this.bindThis();
-                this.initializeOptions();
-
-                if (this.search) {
-                    this.search = new _search2['default'](this);
-                }
-
-                try {
-                    this.onInit();
-                } catch (e) {
-                    console.warn('something may be wrong in "onInit"', e);
-                }
-                this.buildDom();
-
-                var _utils$setPlatform = _utils2['default'].setPlatform();
-
-                var isOsx = _utils$setPlatform.isOsx;
-                var isIos = _utils$setPlatform.isIos;
-                var multiSelect = _utils$setPlatform.multiSelect;
-
-                this.isOsx = isOsx;
-                this.isIos = isIos;
-                this.multiSelect = multiSelect;
-                this.onRender();
-
-                try {
-                    this.onComponentDidMount();
-                } catch (e) {
-                    console.warn('something may be wrong in "onComponentDidMount"', e);
-                }
-
-                this.ready = true;
-
-                return this.refs.flounder.flounder = this.originalTarget.flounder = this.target.flounder = this;
+                target = target[0];
             }
+
+            if (target.flounder) {
+                target.flounder.destroy();
+            }
+
+            return this.init(target, props);
         }
     }
 
     /**
-     * ## version
+     * ## filterSearchResults
      *
-     * sets version with getters and no setters for the sake of being read-only
-     */
-
-    /**
-     * ## displayMultipleTags
+     * filters results and adjusts the search hidden class on the dataOptions
      *
-     * handles the display and management of tags
-     *
-     * @param  {Array} selectedOptions currently selected options
-     * @param  {DOMElement} selected div to display currently selected options
+     * @param {Object} e event object
      *
      * @return _Void_
      */
 
+
     _createClass(Flounder, [{
-        key: 'displayMultipleTags',
-        value: function displayMultipleTags(selectedOptions, multiTagWrapper) {
-            var span = undefined,
-                a = undefined;
+        key: 'filterSearchResults',
+        value: function filterSearchResults(e) {
+            var _this = this;
 
-            var removeMultiTag = this.removeMultiTag;
+            var val = e.target.value.trim();
 
-            Array.prototype.slice.call(multiTagWrapper.children, 0).forEach(function (el) {
-                el.firstChild.removeEventListener('click', removeMultiTag);
-            });
+            this.fuzzySearch.__previousValue = val;
 
-            multiTagWrapper.innerHTML = '';
+            var matches = this.search.isThereAnythingRelatedTo(val) || [];
 
-            if (selectedOptions.length > 0) {
-                selectedOptions.forEach(function (option) {
-                    if (option.value !== '') {
-                        var _span = document.createElement('span');
-                        _span.className = _classes3['default'].MULTIPLE_SELECT_TAG;
+            if (val !== '') {
+                (function () {
+                    var data = _this.refs.data;
 
-                        var _a = document.createElement('a');
-                        _a.className = _classes3['default'].MULTIPLE_TAG_CLOSE;
-                        _a.setAttribute('data-index', option.index);
+                    data.forEach(function (el, i) {
+                        _utils2.default.addClass(el, _classes3.default.SEARCH_HIDDEN);
+                    });
 
-                        _span.appendChild(_a);
-
-                        _span.innerHTML += option.innerHTML;
-
-                        multiTagWrapper.appendChild(_span);
-                    } else {
-                        option.selected = false;
-                    }
-                });
-
-                Array.prototype.slice.call(multiTagWrapper.children, 0).forEach(function (el) {
-                    el.firstChild.addEventListener('click', removeMultiTag);
-                });
+                    matches.forEach(function (e) {
+                        _utils2.default.removeClass(data[e.i], _classes3.default.SEARCH_HIDDEN);
+                    });
+                })();
             } else {
-                this.addPlaceholder();
+                this.fuzzySearchReset();
             }
-
-            this.setTextMultiTagIndent();
-        }
-
-        /**
-         * ## displaySelected
-         *
-         * formats and displays the chosen options
-         *
-         * @param {DOMElement} selected display area for the selected option(s)
-         * @param {Object} refs element references
-         *
-         * @return _Void_
-         */
-    }, {
-        key: 'displaySelected',
-        value: function displaySelected(selected, refs) {
-            var value = [];
-            var index = -1;
-
-            var selectedOption = this.getSelected();
-            var selectedLength = selectedOption.length;
-            var multipleTags = this.multipleTags;
-
-            if (!multipleTags && selectedLength === 1) {
-                index = selectedOption[0].index;
-                selected.innerHTML = refs.data[index].innerHTML;
-                value = selectedOption[0].value;
-            } else if (!multipleTags && selectedLength === 0) {
-                var defaultValue = this._default;
-                index = defaultValue.index || -1;
-                selected.innerHTML = defaultValue.text;
-                value = defaultValue.value;
-            } else {
-                if (multipleTags) {
-                    selected.innerHTML = '';
-                    this.displayMultipleTags(selectedOption, refs.multiTagWrapper);
-                } else {
-                    selected.innerHTML = this.multipleMessage;
-                }
-
-                index = selectedOption.map(function (option) {
-                    return option.index;
-                });
-                value = selectedOption.map(function (option) {
-                    return option.value;
-                });
-            }
-
-            selected.setAttribute('data-value', value);
-            selected.setAttribute('data-index', index);
         }
 
         /**
          * ## fuzzySearch
          *
-         * searches for things
+         * filters events to determine the correct actions, based on events from the search box
          *
          * @param {Object} e event object
          *
          * @return _Void_
          */
+
     }, {
         key: 'fuzzySearch',
         value: function fuzzySearch(e) {
-            var _this2 = this;
+            this.fuzzySearch.__previousValue = this.fuzzySearch.__previousValue || '';
 
             try {
                 this.onInputChange(e);
@@ -3832,35 +4251,23 @@ var Flounder = (function () {
 
             if (!this.toggleList.justOpened) {
                 e.preventDefault();
+
                 var keyCode = e.keyCode;
 
-                if (keyCode !== 38 && keyCode !== 40 && keyCode !== 13 && keyCode !== 27) {
-                    var val = e.target.value.trim();
+                if (keyCode !== _keycodes2.default.UP && keyCode !== _keycodes2.default.DOWN && keyCode !== _keycodes2.default.ENTER && keyCode !== _keycodes2.default.ESCAPE) {
+                    if (this.multipleTags && keyCode === _keycodes2.default.BACKSPACE && this.fuzzySearch.__previousValue === '') {
+                        var lastTag = this.refs.multiTagWrapper.lastChild;
 
-                    var matches = this.search.isThereAnythingRelatedTo(val);
-
-                    if (matches) {
-                        (function () {
-                            var data = _this2.refs.data;
-
-                            data.forEach(function (el, i) {
-                                _utils2['default'].addClass(el, _classes3['default'].SEARCH_HIDDEN);
-                            });
-
-                            matches.forEach(function (e) {
-                                _utils2['default'].removeClass(data[e.i], _classes3['default'].SEARCH_HIDDEN);
-                            });
-                        })();
+                        if (lastTag) {
+                            lastTag.focus();
+                        }
                     } else {
-                        this.fuzzySearchReset();
+                        this.filterSearchResults(e);
                     }
-                } else if (keyCode === 27) {
+                } else if (keyCode === _keycodes2.default.ESCAPE || keyCode === _keycodes2.default.ENTER) {
                     this.fuzzySearchReset();
                     this.toggleList(e, 'close');
                     this.addPlaceholder();
-                } else {
-                    this.setSelectValue(e);
-                    this.setKeypress(e);
                 }
             } else {
                 this.toggleList.justOpened = false;
@@ -3874,16 +4281,70 @@ var Flounder = (function () {
          *
          * @return _Void_
          */
+
     }, {
         key: 'fuzzySearchReset',
         value: function fuzzySearchReset() {
             var refs = this.refs;
 
             refs.data.forEach(function (dataObj) {
-                _utils2['default'].removeClass(dataObj, _classes3['default'].SEARCH_HIDDEN);
+                _utils2.default.removeClass(dataObj, _classes3.default.SEARCH_HIDDEN);
             });
 
             refs.search.value = '';
+        }
+
+        /**
+         * ## init
+         *
+         * post setup, this sets initial values and starts the build process
+         *
+         * @param {DOMElement} target flounder mount point
+         * @param {Object} props passed options
+         *
+         * @return _Object_ new flounder object
+         */
+
+    }, {
+        key: 'init',
+        value: function init(target, props) {
+            this.props = props;
+            this.setTarget(target);
+            this.bindThis();
+            this.initializeOptions();
+
+            if (this.search) {
+                this.search = new _search2.default(this);
+            }
+
+            try {
+                this.onInit();
+            } catch (e) {
+                console.warn('something may be wrong in "onInit"', e);
+            }
+
+            this.buildDom();
+
+            var _utils$setPlatform = _utils2.default.setPlatform();
+
+            var isOsx = _utils$setPlatform.isOsx;
+            var isIos = _utils$setPlatform.isIos;
+            var multiSelect = _utils$setPlatform.multiSelect;
+
+            this.isOsx = isOsx;
+            this.isIos = isIos;
+            this.multiSelect = multiSelect;
+            this.onRender();
+
+            try {
+                this.onComponentDidMount();
+            } catch (e) {
+                console.warn('something may be wrong in "onComponentDidMount"', e);
+            }
+
+            this.ready = true;
+
+            return this.refs.flounder.flounder = this.originalTarget.flounder = this.target.flounder = this;
         }
 
         /**
@@ -3894,15 +4355,16 @@ var Flounder = (function () {
          *
          * @return _Void_
          */
+
     }, {
         key: 'initializeOptions',
         value: function initializeOptions() {
             var props = this.props = this.props || {};
 
             for (var opt in _defaults.defaultOptions) {
-                if (_defaults.defaultOptions.hasOwnProperty(opt) && opt !== 'classes') {
+                if (opt !== 'classes') {
                     this[opt] = props[opt] !== undefined ? props[opt] : _defaults.defaultOptions[opt];
-                } else if (opt === 'classes') {
+                } else {
                     var _classes = _defaults.defaultOptions[opt];
                     var propsClasses = props.classes;
 
@@ -3919,11 +4381,9 @@ var Flounder = (function () {
             if (this.multipleTags) {
                 this.search = true;
                 this.multiple = true;
-                this.selectedClass += '  ' + _classes3['default'].SELECTED_HIDDEN;
+                this.selectedClass += '  ' + _classes3.default.SELECTED_HIDDEN;
 
-                if (!this.placeholder) {
-                    this.placeholder = _defaults.defaultOptions.placeholder;
-                }
+                this.placeholder = this.placeholder === '' ? this.placeholder : _defaults.defaultOptions.placeholder;
             }
         }
 
@@ -3934,6 +4394,7 @@ var Flounder = (function () {
          *
          * @return _Void_
          */
+
     }, {
         key: 'onRender',
         value: function onRender() {
@@ -3941,138 +4402,13 @@ var Flounder = (function () {
             var refs = this.refs;
             var data = refs.data;
 
-            if (!!this.isIos && (!this.multipleTags || !this.multiple)) {
+            if (!!this.isIos && !this.multiple) {
                 var sel = refs.select;
-                _utils2['default'].removeClass(sel, _classes3['default'].HIDDEN);
-                _utils2['default'].addClass(sel, _classes3['default'].HIDDEN_IOS);
+                _utils2.default.removeClass(sel, _classes3.default.HIDDEN);
+                _utils2.default.addClass(sel, _classes3.default.HIDDEN_IOS);
             }
 
-            this.addListeners(refs, props);
-        }
-
-        /**
-         * ## removeMultiTag
-         *
-         * removes a multi selection tag on click; fixes all references to value and state
-         *
-         * @param  {Object} e event object
-         *
-         * @return _Void_
-         */
-    }, {
-        key: 'removeMultiTag',
-        value: function removeMultiTag(e) {
-            e.preventDefault();
-            e.stopPropagation();
-
-            var value = undefined;
-            var index = undefined;
-            var refs = this.refs;
-            var select = refs.select;
-            var selected = refs.selected;
-            var target = e.target;
-            var defaultValue = this._default;
-            var data = this.refs.data;
-            var targetIndex = target.getAttribute('data-index');
-            select[targetIndex].selected = false;
-
-            var selectedOptions = this.getSelected();
-
-            _utils2['default'].removeClass(data[targetIndex], _classes3['default'].SELECTED_HIDDEN);
-            _utils2['default'].removeClass(data[targetIndex], _classes3['default'].SELECTED);
-
-            target.removeEventListener('click', this.removeMultiTag);
-
-            var span = target.parentNode;
-            span.parentNode.removeChild(span);
-
-            if (selectedOptions.length === 0) {
-                this.addPlaceholder();
-                index = -1;
-                value = '';
-            } else {
-                value = selectedOptions.map(function (option) {
-                    return option.value;
-                });
-
-                index = selectedOptions.map(function (option) {
-                    return option.index;
-                });
-            }
-
-            this.setTextMultiTagIndent();
-
-            selected.setAttribute('data-value', value);
-            selected.setAttribute('data-index', index);
-
-            try {
-                this.onSelect(e, this.getSelectedValues());
-            } catch (e) {
-                console.warn('something may be wrong in "onSelect"', e);
-            }
-        }
-
-        /**
-         * ## removeSelectedClass
-         *
-         * removes the [[this.selectedClass]] from all data
-         *
-         * @return _Void_
-         */
-    }, {
-        key: 'removeSelectedClass',
-        value: function removeSelectedClass(data) {
-            var _this3 = this;
-
-            data = data || this.refs.data;
-
-            data.forEach(function (dataObj, i) {
-                _utils2['default'].removeClass(dataObj, _this3.selectedClass);
-            });
-        }
-
-        /**
-         * ## removeSelectedValue
-         *
-         * sets the selected property to false for all data
-         *
-         * @return _Void_
-         */
-    }, {
-        key: 'removeSelectedValue',
-        value: function removeSelectedValue(data) {
-            var _this4 = this;
-
-            data = data || this.refs.data;
-
-            data.forEach(function (d, i) {
-                _this4.refs.select[i].selected = false;
-            });
-        }
-
-        /**
-         * ## setTextMultiTagIndent
-         *
-         * sets the text-indent on the search field to go around selected tags
-         *
-         * @return _Void_
-         */
-    }, {
-        key: 'setTextMultiTagIndent',
-        value: function setTextMultiTagIndent() {
-            var _this5 = this;
-
-            var refs = this.refs;
-            var search = refs.search;
-            var offset = 0;
-
-            if (search) {
-                Array.prototype.slice.call(refs.multiTagWrapper.children, 0).forEach(function (e, i) {
-                    offset += _utils2['default'].getElWidth(e, _this5.setTextMultiTagIndent, _this5);
-                });
-
-                search.style.textIndent = offset + 'px';
-            }
+            this.addListeners(refs);
         }
 
         /**
@@ -4082,17 +4418,18 @@ var Flounder = (function () {
          *
          * @return _Boolean_ hasHeaders
          */
+
     }, {
         key: 'sortData',
         value: function sortData(data) {
-            var _this6 = this;
+            var _this2 = this;
 
             var res = arguments.length <= 1 || arguments[1] === undefined ? [] : arguments[1];
             var i = arguments.length <= 2 || arguments[2] === undefined ? 0 : arguments[2];
 
             data.forEach(function (d) {
                 if (d.header) {
-                    res = _this6.sortData(d.data, res, i);
+                    res = _this2.sortData(d.data, res, i);
                 } else {
                     if (typeof d !== 'object') {
                         d = {
@@ -4114,37 +4451,91 @@ var Flounder = (function () {
     }]);
 
     return Flounder;
-})();
+}();
 
+/**
+ * ## .find
+ *
+ * accepts array-like objects and selector strings to make multiple flounders
+ *
+ * @param {Array or String} flounder target(s)
+ * @param {Object} props passed options
+ *
+ * @return {Array} array of flounders
+ */
+
+
+Flounder.find = function (targets, props) {
+    if (typeof targets === 'string') {
+        targets = document.querySelectorAll(targets);
+    } else if (targets.nodeType === 1) {
+        targets = [targets];
+    }
+
+    return Array.prototype.slice.call(targets, 0).map(function (el) {
+        return new Flounder(el, props);
+    });
+};
+
+/**
+ * ## version
+ *
+ * sets version with getters and no setters for the sake of being read-only
+ */
 Object.defineProperty(Flounder, 'version', {
     get: function get() {
-        return _version2['default'];
+        return _version2.default;
     }
 });
 
 Object.defineProperty(Flounder.prototype, 'version', {
     get: function get() {
-        return _version2['default'];
+        return _version2.default;
     }
 });
 
-_utils2['default'].extendClass(Flounder, _api2['default'], _build2['default'], _events2['default']);
+_utils2.default.extendClass(Flounder, _api2.default, _build2.default, _events2.default);
 
-exports['default'] = Flounder;
-module.exports = exports['default'];
+exports.default = Flounder;
 
-},{"./api":13,"./build":14,"./classes":15,"./defaults":16,"./events":17,"./search":19,"./utils":20,"./version":21}],19:[function(require,module,exports){
+},{"./api":13,"./build":14,"./classes":15,"./defaults":16,"./events":17,"./keycodes":19,"./search":20,"./utils":21,"./version":22}],19:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+var keycodes = {
+    BACKSPACE: 8,
+    DOWN: 40,
+    ENTER: 13,
+    ESCAPE: 27,
+    LEFT: 37,
+    RIGHT: 39,
+    SPACE: 32,
+    TAB: 9,
+    UP: 38,
+    NON_CHARACTER_KEYS: [16, 17, 18, 20, 91, 93]
+};
 
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+exports.default = keycodes;
+
+},{}],20:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var defaults = {
+/**
+ * search defaults
+ *
+ * @type {Object}
+ */
+var defaults = exports.defaults = {
     /*
      * minimum value length to search
      *
@@ -4165,7 +4556,7 @@ var defaults = {
      * called as:
      * score += this.scoreThis( search[ param ], weights[ param ] );
      */
-    scoreProperties: ["text", "textFlat", "textSplit", "value", "valueFlat", "valueSplit", "description", "descriptionSplit"],
+    scoreProperties: ['text', 'textFlat', 'textSplit', 'value', 'valueFlat', 'valueSplit', 'description', 'descriptionSplit'],
 
     /*
      * params to test with startsWith
@@ -4173,7 +4564,7 @@ var defaults = {
      * called as:
      * score += startsWith( query, search[ param ], weights[ param + `StartsWith` ] );
      */
-    startsWithProperties: ["text", "value"],
+    startsWithProperties: ['text', 'value'],
 
     /*
      * scoring weight
@@ -4200,9 +4591,9 @@ var defaults = {
  * turns out there`s all kinds of flounders
  */
 
-var Sole = (function () {
+var Sole = exports.Sole = function () {
     _createClass(Sole, [{
-        key: "compareScoreCards",
+        key: 'compareScoreCards',
 
         /**
          * ## compareScoreCards
@@ -4215,10 +4606,10 @@ var Sole = (function () {
          * @return _Number_ comparison result
          */
         value: function compareScoreCards(a, b) {
-            a = a.score;
-            b = b.score;
+            if (a && a.score && b && b.score) {
+                a = a.score;
+                b = b.score;
 
-            if (a && b) {
                 if (a > b) {
                     return 1;
                 } else if (a < b) {
@@ -4227,6 +4618,8 @@ var Sole = (function () {
 
                 return 0;
             }
+
+            return null;
         }
 
         /**
@@ -4238,23 +4631,197 @@ var Sole = (function () {
          *
          * @return _Object_ this
          */
+
     }]);
 
     function Sole(flounder) {
-        var _this = this;
-
         _classCallCheck(this, Sole);
 
-        this.scoreThis = function (target, weight, noPunishment) {
+        this.flounder = flounder;
+
+        this.getResultWeights = this.getResultWeights.bind(this);
+        this.getResultWeights.bound = true;
+
+        this.scoreThis = this.scoreThis.bind(this);
+        this.scoreThis.bound = true;
+
+        return this;
+    }
+
+    /**
+     * ## escapeRegExp
+     *
+     * escapes a string to be compatible with regex
+     *
+     * @param {String} string string to be escaped
+     *
+     * return _String_ escaped string
+     */
+
+
+    _createClass(Sole, [{
+        key: 'escapeRegExp',
+        value: function escapeRegExp(string) {
+            return string.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
+        }
+
+        /**
+         * ## getResultWeights
+         *
+         * after the data is prepared this is mapped through the data to get weighted results
+         *
+         * @param  {Object} data object
+         * @param  {Number} i index
+         *
+         * @return _Object_ res weighted results
+         */
+
+    }, {
+        key: 'getResultWeights',
+        value: function getResultWeights(d, i) {
+            var _this = this;
+
+            var score = 0;
+            var res = { i: i, d: d };
+            var search = d.search = d.search || {};
+            var weights = defaults.weights;
+            var dText = '' + d.text;
+            var dValue = '' + d.value;
+
+            search.text = dText;
+            search.textFlat = dText.toLowerCase();
+            search.textSplit = search.textFlat.split(' ');
+
+            search.value = dValue;
+            search.valueFlat = dValue.toLowerCase();
+            search.valueSplit = search.valueFlat.split(' ');
+
+            search.description = d.description ? d.description.toLowerCase() : null;
+            search.descriptionSplit = d.description ? search.description.split(' ') : null;
+
+            defaults.scoreProperties.forEach(function (param) {
+                score += _this.scoreThis(search[param], weights[param]);
+            });
+
+            defaults.startsWithProperties.forEach(function (param) {
+                score += _this.startsWith(_this.query, search[param], weights[param + 'StartsWith']);
+            });
+
+            res.score = score;
+
+            return res;
+        }
+
+        /**
+         * ## isItemAboveMinimum
+         *
+         * removes the items that have recieved a score lower than the set minimum
+         *
+         * @return _Boolean_ under the minimum or not
+         */
+
+    }, {
+        key: 'isItemAboveMinimum',
+        value: function isItemAboveMinimum(d) {
+            return d.score >= defaults.minimumScore ? true : false;
+        }
+
+        /**
+         * ## isThereAnythingRelatedTo
+         *
+         * Check our search content for related query words,
+         * here it applies the various weightings to the portions of the search
+         * content.  Triggers show results
+         *
+         * @param {Array} query  array of words to search the content for
+         *
+         * @return _Array_ results returns array of relevant search results
+         */
+
+    }, {
+        key: 'isThereAnythingRelatedTo',
+        value: function isThereAnythingRelatedTo() {
+            var query = arguments.length <= 0 || arguments[0] === undefined ? '' : arguments[0];
+
+            var ratedResults = void 0;
+
+            query = query.length ? query : '' + query;
+
+            if (query.length >= defaults.minimumValueLength) {
+                this.query = query.toLowerCase().split(' ');
+
+                var data = this.flounder.data;
+                data = this.flounder.sortData(data);
+
+                ratedResults = this.ratedResults = data.map(this.getResultWeights);
+            } else {
+                return false;
+            }
+
+            ratedResults.sort(this.compareScoreCards);
+            ratedResults = ratedResults.filter(this.isItemAboveMinimum);
+
+            return this.ratedResults = ratedResults;
+        }
+
+        /**
+         * ## startsWith
+         *
+         * checks the beginning of the given text to see if the query matches exactly
+         *
+         * @param {String} query string to search for
+         * @param {String} value string to search in
+         * @param {Integer} weight amount of points to give an exact match
+         *
+         * @return _Integer_ points to award
+         */
+
+    }, {
+        key: 'startsWith',
+        value: function startsWith(query, value, weight) {
+            var valLength = value.length;
+            var queryLength = query.length;
+
+            if (queryLength <= valLength) {
+                var valStr = value.toLowerCase().slice(0, queryLength);
+
+                if (valStr === query) {
+                    return weight;
+                }
+            }
+
+            return 0;
+        }
+
+        /**
+         * ## scoreThis
+         *
+         * Queries a string or array for a set of search options and assigns a
+         * weighted score.
+         *
+         * @param {String} target string to be search
+         * @param {Integer} weight weighting of importance for this target.
+         *                   higher is more important
+         * @param {Boolean} noPunishment when passed true, this does not give
+         *                               negative points for non-matches
+         *
+         * @return _Integer_ the final weight adjusted score
+         */
+
+    }, {
+        key: 'scoreThis',
+        value: function scoreThis(target, weight, noPunishment) {
+            var _this2 = this;
+
             var score = 0;
 
             if (target) {
-                _this.query.forEach(function (queryWord) {
-                    queryWord = _this.escapeRegExp(queryWord);
+                this.query.forEach(function (queryWord) {
+                    queryWord = _this2.escapeRegExp(queryWord);
                     var count = 0;
 
-                    if (typeof target === "string") {
-                        queryWord = new RegExp(queryWord, "g");
+                    if (typeof target === 'string') {
+                        queryWord = new RegExp(queryWord, 'g');
                         count = (target.match(queryWord) || []).length;
                     } else if (target[0]) // array.  what if the words obj has the word length?
                         {
@@ -4274,176 +4841,30 @@ var Sole = (function () {
             }
 
             return Math.floor(score);
-        };
-
-        this.flounder = flounder;
-        return this;
-    }
-
-    /**
-     * ## escapeRegExp
-     *
-     * escapes a string to be compatible with regex
-     *
-     * @param {String} string string to be escaped
-     *
-     * return _String_ escaped string
-     */
-
-    _createClass(Sole, [{
-        key: "escapeRegExp",
-        value: function escapeRegExp(string) {
-            return string.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
         }
-
-        /**
-         * ## isThereAnythingRelatedTo
-         *
-         * Check our search content for related query words,
-         * here it applies the various weightings to the portions of the search
-         * content.  Triggers show results
-         *
-         * @param {Array} query  array of words to search the content for
-         *
-         * @return _Array_ results returns array of relevant search results
-         */
-    }, {
-        key: "isThereAnythingRelatedTo",
-        value: function isThereAnythingRelatedTo(query) {
-            var _this2 = this;
-
-            var ratedResults = undefined;
-
-            if (query.length >= defaults.minimumValueLength) {
-                (function () {
-                    _this2.query = query.toLowerCase().split(" ");
-
-                    var scoreThis = _this2.scoreThis;
-                    var startsWith = _this2.startsWith;
-                    var data = _this2.flounder.data;
-                    data = _this2.flounder.sortData(data);
-
-                    ratedResults = _this2.ratedResults = data.map(function (d, i) {
-                        var score = 0;
-                        var res = { i: i, d: d };
-                        var search = d.search = d.search || {};
-                        var weights = defaults.weights;
-                        var dText = "" + d.text;
-                        var dValue = "" + d.value;
-
-                        search.text = dText;
-                        search.textFlat = dText.toLowerCase();
-                        search.textSplit = search.textFlat.split(" ");
-
-                        search.value = dValue;
-                        search.valueFlat = dValue.toLowerCase();
-                        search.valueSplit = search.valueFlat.split(" ");
-
-                        search.description = d.description ? d.description.toLowerCase() : null;
-                        search.descriptionSplit = d.description ? search.description.split(" ") : null;
-
-                        defaults.scoreProperties.forEach(function (param) {
-                            score += scoreThis(search[param], weights[param]);
-                        });
-
-                        defaults.startsWithProperties.forEach(function (param) {
-                            score += startsWith(query, search[param], weights[param + "StartsWith"]);
-                        });
-
-                        res.score = score;
-
-                        return res;
-                    });
-                })();
-            } else {
-                return false;
-            }
-
-            ratedResults.sort(this.compareScoreCards);
-            ratedResults = ratedResults.filter(this.removeItemsUnderMinimum);
-
-            return this.ratedResults = ratedResults;
-        }
-
-        /**
-         * ## startsWith
-         *
-         * checks the beginning of the given text to see if the query matches exactly
-         *
-         * @param {String} query string to search for
-         * @param {String} value string to search in
-         * @param {Integer} weight amount of points to give an exact match
-         *
-         * @return {Integer} points to award
-         */
-    }, {
-        key: "startsWith",
-        value: function startsWith(query, value, weight) {
-            var valLength = value.length;
-            var queryLength = query.length;
-
-            if (queryLength <= valLength) {
-                var valStr = value.toLowerCase().slice(0, valLength);
-
-                if (valStr === query) {
-                    return weight;
-                }
-            }
-
-            return 0;
-        }
-
-        /**
-         * ## removeItemsUnderMinimum
-         *
-         * removes the items that have recieved a score lower than the set minimum
-         *
-         * @return _Boolean_ under the minimum or not
-         */
-    }, {
-        key: "removeItemsUnderMinimum",
-        value: function removeItemsUnderMinimum(d) {
-            return d.score >= defaults.minimumScore ? true : false;
-        }
-
-        /**
-         * ## scoreThis
-         *
-         * Queries a string or array for a set of search options and assigns a
-         * weighted score.
-         *
-         * @param {String} target string to be search
-         * @param {Integer} weight weighting of importance for this target.
-         *                   higher is more important
-         * @param {Boolean} noPunishment when passed true, this does not give
-         *                               negative points for non-matches
-         *
-         * @return _Integer_ the final weight adjusted score
-         */
     }]);
 
     return Sole;
-})();
+}();
 
-exports.Sole = Sole;
-exports["default"] = Sole;
+exports.default = Sole;
 
-},{}],20:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 'use strict';
 
-Object.defineProperty(exports, '__esModule', {
+Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-var _classes = require('./classes');
+var _classes = require('/Library/WebServer/Documents/flounder/src/core/classes');
 
 var _classes2 = _interopRequireDefault(_classes);
 
-var _microbejsSrcModulesHttp = require('microbejs/src/modules/http');
+var _http = require('microbejs/src/modules/http');
 
-var _microbejsSrcModulesHttp2 = _interopRequireDefault(_microbejsSrcModulesHttp);
+var _http2 = _interopRequireDefault(_http);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var utils = {
     /**
@@ -4456,6 +4877,7 @@ var utils = {
      *
      * @return _Void_
      */
+
     addClass: function addClass(_el, _class) {
         if (typeof _class !== 'string' && _class.length) {
             _class.forEach(function (_c) {
@@ -4475,6 +4897,7 @@ var utils = {
         _el.className = _elClass.trim();
     },
 
+
     /**
      * ## attachAttributes
      *
@@ -4486,16 +4909,19 @@ var utils = {
      * @return _Void_
      */
     attachAttributes: function attachAttributes(_el, _elObj) {
-        _elObj = _elObj || {};
-
-        for (var att in _elObj) {
-            if (att.indexOf('data-') !== -1) {
-                _el.setAttribute(att, _elObj[att]);
-            } else {
-                _el[att] = _elObj[att];
+        if (_elObj) {
+            for (var att in _elObj) {
+                if (att.slice(0, 5) === 'data-') {
+                    _el.setAttribute(att, _elObj[att]);
+                } else {
+                    _el[att] = _elObj[att];
+                }
             }
+        } else {
+            return null;
         }
     },
+
 
     /**
      * ## constructElement
@@ -4512,12 +4938,14 @@ var utils = {
         return _el;
     },
 
+
     /**
      * ## extendClass
      *
      * extends a class from an object.  returns the original reference
      *
      * @param {Class} _extend class to be extended
+     * @param {Class} objects objects to extend the class with
      *
      * @return {Class} modified class object
      */
@@ -4526,9 +4954,7 @@ var utils = {
 
         var merge = function merge(obj) {
             for (var prop in obj) {
-                if (Object.prototype.hasOwnProperty.call(obj, prop)) {
-                    _extend[prop] = obj[prop];
-                }
+                _extend[prop] = obj[prop];
             }
         };
 
@@ -4544,6 +4970,7 @@ var utils = {
         return _extend;
     },
 
+
     /**
      * ## escapeHTML
      *
@@ -4557,6 +4984,7 @@ var utils = {
         return String(string).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
     },
 
+
     /**
      * ## getElWidth
      *
@@ -4567,19 +4995,25 @@ var utils = {
      * @return _Integer_ adjusted width
      */
     getElWidth: function getElWidth(el, _cb, context) {
-        var style = getComputedStyle(el);
+        var timeout = arguments.length <= 3 || arguments[3] === undefined ? 1500 : arguments[3];
 
-        if (el.offsetWidth === 0) {
-            if (this.__checkWidthAgain !== true) {
-                setTimeout(_cb.bind(context), 1500);
-                this.__checkWidthAgain === true;
+        var style = window.getComputedStyle(el);
+
+        if (el.offsetWidth === 0 && this.__checkWidthAgain !== true) {
+            if (_cb && context) {
+                /* istanbul ignore next */
+                setTimeout(_cb.bind(context), timeout);
+                this.__checkWidthAgain = true;
+            } else {
+                throw 'Flounder getElWidth error: no callback given.';
             }
         } else {
-            this.__checkWidthAgain !== false;
+            this.__checkWidthAgain = false;
         }
 
         return el.offsetWidth + parseInt(style['margin-left']) + parseInt(style['margin-right']);
     },
+
 
     /**
      * ## hasClass
@@ -4597,6 +5031,7 @@ var utils = {
         return !!_elClass.match(regex);
     },
 
+
     /* placeholder for microbe http module */
     http: false,
 
@@ -4605,18 +5040,21 @@ var utils = {
      *
      * checks and returns the ios version
      *
-     * @return _Void_:
+     * @param {Object} windowObj window, but allows for as testing override
+     *
+     * @return _Void_
      */
     iosVersion: function iosVersion() {
+        var windowObj = arguments.length <= 0 || arguments[0] === undefined ? window : arguments[0];
 
-        if (/iPad|iPhone|iPod/.test(navigator.platform)) {
-            if (!!window.indexedDB) {
+        if (/iPad|iPhone|iPod/.test(windowObj.navigator.platform)) {
+            if (!!windowObj.indexedDB) {
                 return '8+';
             }
-            if (!!window.SpeechSynthesisUtterance) {
+            if (!!windowObj.SpeechSynthesisUtterance) {
                 return '7';
             }
-            if (!!window.webkitAudioContext) {
+            if (!!windowObj.webkitAudioContext) {
                 return '6';
             }
             return '5-';
@@ -4624,6 +5062,7 @@ var utils = {
 
         return false;
     },
+
 
     /**
      * ## removeAllChildren
@@ -4639,6 +5078,7 @@ var utils = {
             target.removeChild(el);
         });
     },
+
 
     /**
      * ## removeClass
@@ -4676,6 +5116,7 @@ var utils = {
         el.className = baseClass.trim();
     },
 
+
     /**
      * ## scrollTo
      *
@@ -4686,33 +5127,43 @@ var utils = {
      *@return _Void_
      */
     scrollTo: function scrollTo(element) {
-        var parent = element.parentNode.parentNode;
-        var elHeight = element.offsetHeight;
-        var min = parent.scrollTop;
-        var max = parent.scrollTop + parent.offsetHeight - element.offsetHeight;
-        var pos = element.offsetTop;
+        if (element) {
+            var parent = element.parentNode.parentNode;
+            var elHeight = element.offsetHeight;
+            var min = parent.scrollTop;
+            var max = parent.scrollTop + parent.offsetHeight - elHeight;
+            var pos = element.offsetTop;
 
-        if (pos < min) {
-            parent.scrollTop = pos - elHeight * 0.5;
-        } else if (pos > max) {
-            parent.scrollTop = pos - parent.offsetHeight + elHeight * 1.5;
+            if (pos < min) {
+                parent.scrollTop = pos - elHeight * 0.5;
+            } else if (pos > max) {
+                parent.scrollTop = pos - parent.offsetHeight + elHeight * 1.5;
+            }
+        } else {
+            return false;
         }
     },
+
 
     /**
      * ## setPlatform
      *
      * sets the platform to osx or not osx for the sake of the multi select key
      *
+     * @param {Object} windowObj window, but allows for as testing override
+     *
      * @return _Void_
      */
     setPlatform: function setPlatform() {
-        var isOsx = window.navigator.platform.indexOf('Mac') === -1 ? false : true;
-        var isIos = utils.iosVersion();
+        var windowObj = arguments.length <= 0 || arguments[0] === undefined ? window : arguments[0];
+
+        var isOsx = windowObj.navigator.platform.indexOf('Mac') === -1 ? false : true;
+        var isIos = utils.iosVersion(windowObj);
         var multiSelect = isOsx ? 'metaKey' : 'ctrlKey';
 
         return { isOsx: isOsx, isIos: isIos, multiSelect: multiSelect };
     },
+
 
     /**
      * ## toggleClass
@@ -4725,25 +5176,21 @@ var utils = {
      * @return _Void_
      */
     toggleClass: function toggleClass(_el, _class) {
-        var _addClass = utils.addClass;
-        var _removeClass = utils.removeClass;
-
         if (utils.hasClass(_el, _class)) {
-            _removeClass(_el, _class);
+            utils.removeClass(_el, _class);
         } else {
-            _addClass(_el, _class);
+            utils.addClass(_el, _class);
         }
     }
 };
 
-(0, _microbejsSrcModulesHttp2['default'])(utils);
+(0, _http2.default)(utils);
 
-exports['default'] = utils;
-module.exports = exports['default'];
+exports.default = utils;
 
-},{"./classes":15,"microbejs/src/modules/http":4}],21:[function(require,module,exports){
+},{"/Library/WebServer/Documents/flounder/src/core/classes":15,"microbejs/src/modules/http":4}],22:[function(require,module,exports){
 'use strict';
 
-module.exports = '0.8.5';
+module.exports = '1.0.0';
 
 },{}]},{},[1]);

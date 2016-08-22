@@ -206,6 +206,7 @@
     top:                            1px;
     left:                           1px;
     height:                         26px;
+    text-indent:                    8px;
     z-index:                        1;
     width:                          calc(100% - 6px);
     border:                         1px solid transparent;
@@ -278,7 +279,8 @@
 }
 
 
-.flounder__multiple__tag__close:hover
+.flounder__multiple__tag__close:hover,
+.flounder__multiple--select--tag:focus .flounder__multiple__tag__close
 {
     background-image:               url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2212%22%20height%3D%2213%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2013%2013%22%20enable-background%3D%22new%200%200%2013%2013%22%3E%3Ccircle%20cx%3D%226.5%22%20cy%3D%226.5%22%20r%3D%226.5%22%20fill%3D%22%23279BC8%22%2F%3E%3Cpath%20fill%3D%22%23fff%22%20d%3D%22M9%203H8v1H7v1H6V4H5V3H3v2h1v1h1v1H4v1H3v2h2V9h1V8h1v1h1v1h2V8H9V7H8V6h1V5h1V3z%22%2F%3E%3C%2Fsvg%3E');
 }

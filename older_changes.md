@@ -3,6 +3,93 @@ Older changes
 
 This is truncated from the readme file to keep down the size
 
+0.7.8
+-----
+
++ api
+    + destroy is now much safer
+
++ jenkins
+    + node 0.12 is no longer tested
+
+
+0.7.7
+-----
+
++ css
+    + added 3px padding to selected
+
++ api
+    + destroy now spares surrounding elements
+
+
+0.7.6
+-----
+
++ css
+    + inner arrow pointer-events set to none
+    + adjusted padding-right under arrow
+
+
+0.7.4
+-----
+
++ build
+    + disabled select options are now correctly detected
+    + moved the build order of the search box and list wrapper for css reasons
+
++ events
+    + click targets are now correctly detected and menu is closed
+    + fixed esc / search behaviors
+    + fixed click / search behavior
+
++ css
+    + fixed a hover / z-index issue
+    + added fuller basic focus, hover, and active indicators
+
+
+0.7.2
+-----
+
++ api
+    + rebuild bug fixed
+
+
+0.7.1
+-----
+
++ css
+    + arrow changed from svg to css
+
++ build
+    + fixed a complex data objects bug
+
+
+0.7.0
+-----
+
++ build
+    + complex data objects are now built correctly
+    + added the ability to disable the arrow element
+
++ wrappers
+    + react moved to it's own repo
+
++ css
+    + .flounder__arrow - background colors
+    + .flounder__arrow - :hover
+    + .flounder__arrow - :active
+
++ events
+    + hover is now javascript based for future expandability
+    + openOnHover now available
+
++ defaults
+    + fixed a bug where multiple defaults were being applied
+
++ api
+    fixed a bug in setDefaultValue concerning index 0
+
 
 0.6.3
 -----

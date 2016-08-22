@@ -6,11 +6,10 @@ import Flounder from '../core/flounder';
     $.fn.flounder = function( options )
     {
         let flounderDestroy = Flounder.prototype.destroy;
-        let flounder        = new Flounder( this, options );
 
         this.each( function( i, el )
         {
-            let _f      = flounder[ i ];
+            let _f      = new Flounder( el, options );
             let $el     = $( el );
             $el.data( 'flounder', _f );
 
@@ -21,7 +20,7 @@ import Flounder from '../core/flounder';
             };
         } );
 
-        return flounder.length === 1 ? flounder[0] : flounder;
+        return this;
     };
 
 }( jQuery ) );

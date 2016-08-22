@@ -3,6 +3,8 @@ import classes              from './classes';
 import utils                from './utils';
 import { setDefaultOption } from './defaults';
 
+const nativeSlice = Array.prototype.slice;
+
 const api = {
 
     /**
@@ -28,6 +30,8 @@ const api = {
 
             this.rebuild( this.data );
         } );
+
+        return [];
     },
 
 
@@ -102,11 +106,13 @@ const api = {
             {
                 let firstOption = originalTarget[0];
 
-                if ( firstOption && firstOption.textContent === this.props.placeholder )
+                if ( firstOption && utils.hasClass( firstOption, classes.PLACEHOLDER ) )
                 {
                     originalTarget.removeChild( firstOption );
                 }
-            } else if ( tagName === `INPUT` ) {
+            }
+            else
+            {
                 target = refs.flounder.parentNode;
             }
 
@@ -136,7 +142,6 @@ const api = {
         }
 
         refs.flounder.flounder  = originalTarget.flounder = this.target.flounder = null;
-
     },
 
 
@@ -157,7 +162,7 @@ const api = {
 
         if ( multiTagWrapper )
         {
-            let tags = Array.prototype.slice.call( multiTagWrapper.children );
+            let tags = nativeSlice.call( multiTagWrapper.children );
             tags.forEach( el => el.children[0].click() );
         }
     },
@@ -168,7 +173,7 @@ const api = {
      *
      * disables flounder by adjusting listeners and classes
      *
-     * @param {Boolean} bool dsable or enable
+     * @param {Boolean} bool disable or enable
      *
      * @return _Void_
      */
@@ -244,8 +249,10 @@ const api = {
 
                 return [ el, opt ];
             }
-
-            return null;
+            else
+            {
+                console.warn( 'Flounder - No element to disable.' );
+            }
         }
     },
 
@@ -265,7 +272,9 @@ const api = {
         if ( typeof text !== `string` && text.length )
         {
             let disableByText = this.disableByText.bind( this );
-            return text.map( _t => disableByText( _t, reenable ) );
+            let res = text.map( _v => disableByText( _v, reenable ) );
+
+            return res.length === 1 ? res[0] : res;
         }
         else
         {
@@ -281,7 +290,9 @@ const api = {
                 }
             } );
 
-            return res.length ? this.disableByIndex( res, reenable ) : null;
+            res = res.length === 1 ? res[0] : res;
+
+            return this.disableByIndex( res, reenable );
         }
     },
 
@@ -301,16 +312,20 @@ const api = {
         if ( typeof value !== `string` && value.length )
         {
             let disableByValue = this.disableByValue.bind( this );
-            return value.map( _v => disableByValue( _v, reenable ) );
+            let res = value.map( _v => disableByValue( _v, reenable ) );
+
+            return res.length === 1 ? res[ 0 ] : res;
         }
         else
         {
-            let values = this.refs.selectOptions.map( function( el, i )
+            let res = this.refs.selectOptions.map( function( el, i )
             {
-                return el.value === `${value}` ? i : null;
-            } ).filter( a => !!a );
+                return `${el.value}` === `${value}` ? i : null;
+            } ).filter( a => !!a || a === 0 ? true : false );
 
-            return value ? this.disableByIndex( values, reenable ) : null;
+            res = res.length === 1 ? res[0] : res;
+
+            return this.disableByIndex( res, reenable );
         }
     },
 
@@ -377,12 +392,23 @@ const api = {
         {
             return { option : refs.selectOptions[ _i ], div : refs.data[ _i ] };
         }
-        else
+        else if ( _i && _i.length && typeof _i !== `string` )
+        {
+            return _i.map( i =>
+            {
+                return this.getData( i );
+            } );
+        }
+        else if ( !_i )
         {
             return refs.selectOptions.map( ( el, i ) =>
             {
                 return this.getData( i );
             } );
+        }
+        else
+        {
+            console.warn( 'Flounder - Illegal parameter type.' );
         }
     },
 
@@ -400,15 +426,13 @@ const api = {
         let opts        = [], opt;
         let _data       = _el.options;
 
-        for ( let i = 0, len = _data.length; i < len; i++ )
+        nativeSlice.call( _data ).forEach( el =>
         {
-            opt = _data[ i ];
-
-            if ( opt.selected && !utils.hasClass( opt, classes.PLACEHOLDER ) )
+            if ( el.selected && !utils.hasClass( el, classes.PLACEHOLDER ) )
             {
-                opts.push( opt );
+                opts.push( el );
             }
-        }
+        } );
 
         return opts;
     },
@@ -423,7 +447,7 @@ const api = {
      */
     getSelectedValues()
     {
-        return this.getSelected().map( ( _v ) => _v.value )
+        return this.getSelected().map( _v => _v.value )
     },
 
 
@@ -439,37 +463,31 @@ const api = {
      */
     loadDataFromUrl( url, callback )
     {
-        try
+        utils.http.get( url ).then( data =>
         {
-            utils.http.get( url ).then( data =>
+            if ( data )
             {
-                if ( data )
+                this.data = JSON.parse( data );
+
+                if ( callback )
                 {
-                    this.data = JSON.parse( data );
-                    if ( callback )
-                    {
-                        callback( this.data );
-                    }
+                    callback( this.data );
                 }
-                else
-                {
-                    console.warn( `no data recieved` );
-                }
-            } ).catch( e =>
+            }
+            else
             {
-                console.warn( `something happened: `, e );
-                this.rebuild( [ {
-                            text        : ``,
-                            value       : ``,
-                            index       : 0,
-                            extraClass  : classes.LOADING_FAILED
-                        } ] );
-            } );
-        }
-        catch ( e )
+                console.warn( `no data recieved` );
+            }
+        } ).catch( e =>
         {
-            console.warn( `something happened.  check your loadDataFromUrl callback `, e );
-        }
+            console.warn( `something happened: `, e );
+            this.rebuild( [ {
+                        text        : ``,
+                        value       : ``,
+                        index       : 0,
+                        extraClass  : classes.LOADING_FAILED
+                    } ] );
+        } );
 
         return [ {
             text        : ``,
@@ -555,9 +573,10 @@ const api = {
 
             if ( el )
             {
-                let isOpen = utils.hasClass( refs.wrapper, `open` );
-                this.toggleList( {}, isOpen ? `close` : `open` );
-                this.___forceMultiple       = multiple;
+                let isOpen = utils.hasClass( refs.wrapper, classes.OPEN );
+                this.toggleList( isOpen ? `close` : `open` );
+                this.___forceMultiple       = multiple && this.multiple;
+
                 this.___programmaticClick   = programmatic;
                 el.click();
 
@@ -588,7 +607,8 @@ const api = {
         }
         else
         {
-            let res     = [];
+            let res = [];
+            text    = `${text}`;
 
             this.refs.data.forEach( function( el, i )
             {
@@ -600,7 +620,7 @@ const api = {
                 }
             } );
 
-            return res.length ? this.setByIndex( res, multiple, programmatic ) : null;
+            return this.setByIndex( res, multiple, programmatic );
         }
     },
 
@@ -626,12 +646,10 @@ const api = {
         {
             let values = this.refs.selectOptions.map( function( el, i )
             {
-                return el.value === `${value}` ? i : null;
-            } )
+                return `${el.value}` === `${value}` ? i : null;
+            } ).filter( a => a === 0 || !!a );
 
-            values = values.filter( a => a === 0 || !!a );
-
-            return values.length !== 0 ? this.setByIndex( values, multiple, programmatic ) : null;
+            return this.setByIndex( values, multiple, programmatic );
         }
     }
 };

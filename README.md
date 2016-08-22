@@ -1,11 +1,11 @@
-Flounder.js 0.8.5
+Flounder.js 1.0.0
 =================
 
 *** Flounder 1.0.0 is being built right now, so there is a feature freeze on earlier versions, but feel free to open issues for 0.X.X and feature issues for 1.0.0 should anything come up ***
 
 [![Flounder build status](https://travis-ci.org/sociomantic-tsunami/flounder.svg)](https://travis-ci.org)
 
-(for modern browsers and ie9+)
+(for modern browsers and ie10+)
 
 Flounder is a styled select box replacement aimed at being easily configurable while conforming to native functionality and accessibility standards.
 
@@ -22,6 +22,8 @@ Usage
 =====
 
 Flounder can be used in vanilla js, [requirejs](http://requirejs.org/), [jquery](http://jquery.com/), and [microbe](https://github.com/sociomantic-tsunami/microbe).
+
+Flounder can also be used in react, however there is a [seperate repo](https://github.com/sociomantic-tsunami/flounder-react) for that
 
 ```js
 // vanilla
@@ -48,45 +50,41 @@ document.querySelector( '#vanilla--select' ).flounder.destroy()
 
 ###Target options
 
-Flounder's target is quite flexible.
+Flounder's target is quite flexible, however it will only build on the first element it finds.
+
+* if you would like to build multiple flounders from an array or selector, use `Flounder.find( <selector or array-like object>, [configOptions] )`
 
 you can give it an element:
 
 ```js
-new Flounder( document.getElementsByTagName( 'input--el' )[0], options );
-```
-
-an array:
-
-```js
-new Flounder( [ el1, el2, el3 ], options );
+new Flounder( document.getElementsByTagName( 'input--el' )[0], configOptions );
 ```
 
 an HTML collection:
 
 ```js
-new Flounder( document.getElementsByTagName( 'input' ), options );
+new Flounder( document.getElementsByTagName( 'input' ), configOptions );
 ```
 
 a jQuery object:
 
 ```js
-new Flounder( $( 'input' ), options );
+new Flounder( $( 'input' ), configOptions );
 ```
 
 a microbe:
 
 ```js
-new Flounder( µ( 'input' ), options );
+new Flounder( µ( 'input' ), configOptions );
 ```
 
 or, just a selector string:
 
 ```js
-new Flounder( 'input', options );
+new Flounder( 'input', configOptions );
 ```
 
-If flounder is fed an element that already has a flounder, it will destroy it and re initialize it with the new options.
+If flounder is fed an element that already has a flounder, it will destroy it and re initialize it with the new config options.
 
 
 ###Available config options
@@ -160,7 +158,7 @@ If flounder is fed an element that already has a flounder, it will destroy it an
 
 + `onOpen` - (function) Triggered when the selectbox is opened
 
-+ `onSelect` - (function) Triggered when an option selectbox is closed
++ `onSelect` - (function) Triggered when an option is selected
 
 + `openOnHover` - (boolean) replaces click to open action with hover
 
@@ -312,10 +310,44 @@ this.setByValue( value, multiple* )
 + `setByValue( value, multiple )` sets the item with the passed value as selected.  If multiple is true and it is a multi-select box, it is selected additionally.  Otherwise it's selected instead. This accepts arrays as well.  Without multiple equaling true it will only select the last option. This does not fire the onClick event.
 
 
+npm scripts
+===========
+
++ `bash` creates the `dist` folder and copies `flounder-structure.css` to it
+
++ `build` runs `bash`, `gulp` and `test:unit:coverage:cli`
+
++ `demo` builds the demo
+
++ `gulp` runs bash and compiles flounder
+
++ `test` runs the `nyan` tests
+
++ `test:unit:coverage` runs the `istanbul` tests and opens the browser report
+
++ `test:unit:coverage:cli` runs the `istanbul` tests on the command line
+
++ `versionBump` bumps the version by 0.0.1
+
+
 Contributing
 ============
 
-We gladly accept and review any pull-requests. Feel free! :heart:
+Development of Flounder requires node '4.3.1' or higher.
+
+Flounder's **branch structure** goes as follows:
+
++ `release` - contains stavle including the dist files.  this is the branch that is used to make the npm and git releases
+
++ `master` - latest stable git repo. This is like release but without the noise of the dist files
+
++ `dev` - current development branch.  This is where feature branches should branch from
+
++ feature branches - these branches come from `dev`, are branched for a specific geature or bug, then get merged back into `dev`
+
+
+
+We gladly accept and review any pull-requests into the current `dev` branch. Feel free! :heart:
 
 Otherwise, if you just want to talk, we are very easy to get a hold of!
 
@@ -409,12 +441,55 @@ See more examples on the [demo page](./demo/index.html)
 Releasing
 --------
 
-When you release a new verion, commit it to dev (keeps dev upto date), commit it to master, then commit it to release. It must be released from the `release` branch.  It is the *only* branch that commits the dist files
+When you release a new verion, commit it to master, then commit it to release. It must be released from the `release` branch.  It is the *only* branch that commits the dist files
 
 
 
 Change Log
 ==========
+
+1.0.0
+-----
+
++ Flounder
+    + branch structure reorganized
+    + Flounder now only handles one element
+    + new Flounder _always_ returns a instance of Flounder
+    + Flounder will warn if it drops elements
+    + some methods moved to events.js because that's obviously where they live
+    + Flounder now gets Flounder.find() to apply build multiples.  This accepts anything array-like, elements, and selector strings
+    + internal refactoring
+    + dropped support for node 4.1
+
++ events
+    + multiTags now support aria
+    + multiTags now support keyboard navigation
+    + keyboard navigation flow / tag selection optimized
+    + fixed focus toggleOpen from multipleTags to search box
+    + tabbing away now closes the menu
+    + fixed multitag focus
+    + fixed multitag search with empty results
+
++ api
+    + buildFromUrl now returns a placeholder array
+
++ build
+    + multiTag construction added to build
+    + changed build order of DOM elements to fix multiTag tab order
+    + fixed a selectOption class bug
+    + adjusted default search indent settings
+
++ search
+    + improved imteraction between tags and search box
+
++ readme
+    + npm scripts added
+
++ tests
+    + removed qunit
+    + added mocha
+    + added istanbul
+
 
 0.8.5
 -----
@@ -432,7 +507,14 @@ Change Log
 + api
     + fixed a bug in deselectAll where tags would remain
 
-    
+
+0.8.3
+-----
+
++ search
+    + fixed a bug where search would break when only numbers were entered
+
+
 0.8.3
 -----
 
@@ -478,93 +560,6 @@ Change Log
 + api
     + console.log is now console.warn
 
-
-0.7.8
------
-
-+ api
-    + destroy is now much safer
-
-+ jenkins
-    + node 0.12 is no longer tested
-
-
-0.7.7
------
-
-+ css
-    + added 3px padding to selected
-
-+ api
-    + destroy now spares surrounding elements
-
-
-0.7.6
------
-
-+ css
-    + inner arrow pointer-events set to none
-    + adjusted padding-right under arrow
-
-
-0.7.4
------
-
-+ build
-    + disabled select options are now correctly detected
-    + moved the build order of the search box and list wrapper for css reasons
-
-+ events
-    + click targets are now correctly detected and menu is closed
-    + fixed esc / search behaviors
-    + fixed click / search behavior
-
-+ css
-    + fixed a hover / z-index issue
-    + added fuller basic focus, hover, and active indicators
-
-
-0.7.2
------
-
-+ api
-    + rebuild bug fixed
-
-
-0.7.1
------
-
-+ css
-    + arrow changed from svg to css
-
-+ build
-    + fixed a complex data objects bug
-
-
-0.7.0
------
-
-+ build
-    + complex data objects are now built correctly
-    + added the ability to disable the arrow element
-
-+ wrappers
-    + react moved to it's own repo
-
-+ css
-    + .flounder__arrow - background colors
-    + .flounder__arrow - :hover
-    + .flounder__arrow - :active
-
-+ events
-    + hover is now javascript based for future expandability
-    + openOnHover now available
-
-+ defaults
-    + fixed a bug where multiple defaults were being applied
-
-+ api
-    fixed a bug in setDefaultValue concerning index 0
 
 
 

@@ -1,8 +1,9 @@
-import Flounder from '../src/core/flounder';
+import Flounder from '/core/flounder';
 
 window.Flounder = Flounder;
 
 let _slice = Array.prototype.slice;
+
 /**
  * example data object
  *
@@ -44,7 +45,7 @@ let buildData = function()
         res.push( {
             text        : dataObj.text,
             value       : dataObj.id,
-            description : dataObj.id + ' could be described as "' + dataObj.text + '"'
+            description : `${dataObj.id} could be described as "${dataObj.text}"`
         } );
     } );
 
@@ -156,7 +157,7 @@ new Flounder( document.getElementById( 'vanilla--select' ), {
  * Vanilla from Div (multiple, tags, placeholder, built from element)
  */
 new Flounder( document.getElementById( 'vanilla--multiple--tags' ), {
-    
+
     defaultIndex        : 2,
 
     multipleTags        : true,
@@ -198,7 +199,7 @@ new Flounder( document.getElementById( 'vanilla--multiple--desc' ), {
             res.push( {
                 text        : dataObj.text,
                 value       : dataObj.id,
-                description : dataObj.id + ' - ' + dataObj.text,
+                description : `${dataObj.id} could be described as "${dataObj.text}"`,
                 disabled    : i === 1 ? true : false
             } );
         } );
@@ -230,7 +231,7 @@ requirejs( [ 'flounder' ], function( Flounder )
                 res.push( {
                     text        : dataObj.text,
                     value       : dataObj.id,
-                    description : dataObj.id + ' could be described as "' + dataObj.text + '"'
+                    description : `${dataObj.id} could be described as "${dataObj.text}"`
                 } );
             } );
 
@@ -287,7 +288,6 @@ requirejs( [ 'flounder' ], function( Flounder )
          * jQuery plugin from Div (search, placeholder, jquery wrapper, loadData onInit)
          */
          $( '#jquery--div' ).flounder( {
-
             onInit               : function()
             {
                 var self = this;

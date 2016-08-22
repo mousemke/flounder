@@ -1,7 +1,7 @@
 import classes              from './classes';
 import utils                from './utils';
 
-const defaultOptions = {
+export const defaultOptions = {
     allowHTML               : false,
     classes                 : {
         flounder    : ``,
@@ -47,7 +47,7 @@ const defaults = {
      *
      * @return _Void_
      */
-    setDefaultOption( self, configObj, data = [], rebuild = false )
+    setDefaultOption( self, configObj = {}, data, rebuild = false )
     {
         /**
          * ## setIndexDefault
@@ -80,7 +80,7 @@ const defaults = {
          *
          * @return {Object} default settings
          */
-        let setPlaceholderDefault = function( _data )
+        let setPlaceholderDefault = function( self, _data )
         {
             let refs        = self.refs;
             let select      = refs.select;
@@ -97,27 +97,16 @@ const defaults = {
             {
                 let escapedText     = self.allowHTML ? _default.text : utils.escapeHTML( _default.text );
 
-                if ( !select[ 0 ] || select[ 0 ].value !== `` )
-                {
-                    let defaultOption   = self.constructElement( { tagname : `option`,
-                                                className   : classes.OPTION_TAG,
-                                                value       :  _default.value } );
-                    defaultOption.innerHTML = escapedText;
+                let defaultOption   = utils.constructElement( { tagname : `option`,
+                                            className   : classes.OPTION_TAG,
+                                            value       :  _default.value } );
+                defaultOption.innerHTML = escapedText;
 
-                    select.insertBefore( defaultOption, select[ 0 ] );
-                    self.refs.selectOptions.unshift( defaultOption );
-                    data.unshift( _default );
-                }
-                else
-                {
-                    data[ 0 ] = _default;
-                }
-            }
-            else
-            {
-                data.unshift( _default );
+                select.insertBefore( defaultOption, select[ 0 ] );
+                self.refs.selectOptions.unshift( defaultOption );
             }
 
+            data.unshift( _default );
 
             return _default;
         };
@@ -159,45 +148,6 @@ const defaults = {
 
 
         /**
-         * ## sortData
-         *
-         * checks the data object for header options, and sorts it accordingly
-         *
-         * @return _Boolean_ hasHeaders
-         */
-        let sortData = function( data, res = [], i = 0 )
-        {
-            data.forEach( function( d )
-            {
-                if ( d.header )
-                {
-                    res = sortData( d.data, res, i );
-                }
-                else
-                {
-                    if ( typeof d !== `object` )
-                    {
-                        d = {
-                            text    : d,
-                            value   : d,
-                            index   : i
-                        };
-                    }
-                    else
-                    {
-                        d.index = i;
-                    }
-
-                    res.push( d );
-                    i++;
-                }
-            } );
-
-            return res;
-        };
-
-
-        /**
          * ## checkDefaultPriority
          *
          * sorts out which default should be gotten by priority
@@ -206,10 +156,10 @@ const defaults = {
          */
         let checkDefaultPriority = function()
         {
-            let _data       = sortData( data );
+            let _data       = self.sortData( data );
 
-            if ( ( configObj.multipleTags || configObj.multiple ) 
-                    && !configObj.defaultIndex 
+            if ( ( configObj.multipleTags || configObj.multiple )
+                    && !configObj.defaultIndex
                     && !configObj.defaultValue )
             {
                 configObj.placeholder = configObj.placeholder || defaultOptions.placeholder;
@@ -248,8 +198,56 @@ const defaults = {
             return def;
         };
 
+
+        data    = data || configObj.data || [];
+
         return checkDefaultPriority();
+    },
+
+
+    /**
+     * ## sortData
+     *
+     * checks the data object for header options, and sorts it accordingly
+     *
+     * @return _Boolean_ hasHeaders
+     */
+    sortData( data, res = [], i = 0 )
+    {
+        let self = this;
+
+        data.forEach( d =>
+        {
+            if ( d.header )
+            {
+                res = this.sortData( d.data, res, i );
+            }
+            else
+            {
+                if ( typeof d !== `object` )
+                {
+                    d = {
+                        text    : d,
+                        value   : d,
+                        index   : i
+                    };
+                }
+                else
+                {
+                    d.index = i;
+                }
+
+                res.push( d );
+                i++;
+            }
+        } );
+
+        return res;
     }
 };
+
+
+export const setDefaultOption = defaults.setDefaultOption;
+
 
 export default defaults;

@@ -17,6 +17,7 @@ const classes =
     MULTI_TAG_LIST      : `flounder__multi--tag--list`,
     MULTIPLE_SELECT_TAG : `flounder__multiple--select--tag`,
     MULTIPLE_TAG_CLOSE  : `flounder__multiple__tag__close`,
+    OPEN                : `open`,
     OPTION              : `flounder__option`,
     OPTION_TAG          : `flounder--option--tag`,
     OPTIONS_WRAPPER     : `flounder__list--wrapper`,
@@ -29,6 +30,6 @@ const classes =
     SEARCH              : `flounder__input--search`,
     SEARCH_HIDDEN       : `flounder--search--hidden`,
     SELECT_TAG          : `flounder--select--tag`
-}
+};
 
 export default classes;

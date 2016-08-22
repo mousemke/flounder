@@ -10,7 +10,7 @@ const build = {
      *
      * adds a description to the option
      *
-     * @param {DOMElement} el option leement to add description to
+     * @param {DOMElement} el option element to add description to
      * @param {String} text description
      *
      * @return _Void_
@@ -61,10 +61,11 @@ const build = {
      */
     bindThis()
     {
-            [ 
+        [ 
             `catchBodyClick`,
             `checkClickTarget`,
             `checkFlounderKeypress`,
+            `checkMultiTagKeydown`,
             `clearPlaceholder`,
             `clickSet`,
             `divertTarget`,
@@ -75,11 +76,12 @@ const build = {
             `setKeypress`,
             `setSelectValue`,
             `toggleList`,
-            `toggleListSearchClick` ].forEach( func =>
-            {
-                this[ func ] = this[ func ].bind( this );
-                this[ func ].___isBound = true;
-            } );
+            `toggleListSearchClick`
+        ].forEach( func =>
+        {
+            this[ func ] = this[ func ].bind( this );
+            this[ func ].___isBound = true;
+        } );
     },
 
     /**
@@ -96,7 +98,7 @@ const build = {
     {
         if (  props.disableArrow )
         {
-            return null;
+            return false;
         }
         else
         {
@@ -124,7 +126,6 @@ const build = {
      */
     buildData( defaultValue, originalData, optionsList, select )
     {
-        originalData                = originalData || [];
         let index                   = 0;
         let data                    = [];
         let selectOptions           = [];
@@ -136,7 +137,6 @@ const build = {
         let refs                    = this.refs;
         let selectRef               = refs.select;
         let allowHTML               = this.allowHTML;
-
 
         /**
          * ## buildDiv
@@ -150,13 +150,6 @@ const build = {
          */
         let buildDiv = function( dataObj, i )
         {
-            if ( typeof dataObj !== `object` )
-            {
-                dataObj = {
-                    text    : dataObj,
-                    value   : dataObj
-                };
-            }
             dataObj.index   = i;
 
             let extraClass  = i === defaultValue.index ? `  ${selectedClass}` : ``;
@@ -205,13 +198,15 @@ const build = {
 
             if ( !selectRef )
             {
+                let selectOptionClass   = `${classes.OPTION_TAG}  ${dataObj.extraClass || ''}`;
                 selectOption            = constructElement( { tagname : `option`,
-                                            className   : `${classes.OPTION_TAG}  ${dataObj.extraClass}`,
+                                            className   : selectOptionClass.trim(),
                                             value       : dataObj.value } );
                 let escapedText         = escapeHTML( dataObj.text );
                 selectOption.innerHTML  = escapedText;
 
-                let disabled = dataObj.disabled;
+                let disabled            = dataObj.disabled;
+
                 if ( disabled )
                 {
                     selectOption.setAttribute( `disabled`, disabled );
@@ -229,6 +224,7 @@ const build = {
                 {
                     addClass( data[ i ], classes.DISABLED );
                 }
+
                 addClass( selectChild, classes.OPTION_TAG );
             }
 
@@ -250,6 +246,7 @@ const build = {
 
         originalData.forEach( ( dataObj, i ) =>
         {
+            /* istanbul ignore next */
             let dataObjType = typeof dataObj;
 
             if ( dataObjType !== `object` )
@@ -329,26 +326,24 @@ const build = {
         let select              = this.initSelectBox( wrapper );
         select.tabIndex         = -1;
 
-        if ( this.multiple === true )
-        {
-            select.setAttribute( `multiple`, `` );
-        }
-
         let data                = this.data;
         let defaultValue        = this._default = setDefaultOption( this, this.props, data );
-        defaultValue.index      = defaultValue.index || defaultValue.index === 0 ? defaultValue.index : -1;
 
         let selected            = constructElement( { className : classes.SELECTED_DISPLAYED,
-                                        'data-value' : defaultValue.value, 'data-index' : defaultValue.index } );
+                                        'data-value' : defaultValue.value, 'data-index' : defaultValue.index || -1 } );
 
         let multiTagWrapper     = this.multipleTags ? constructElement( { className : classes.MULTI_TAG_LIST } ) : null;
-
-        let search              = this.addSearch( flounder );
 
         let optionsListWrapper  = constructElement( { className : `${classes.OPTIONS_WRAPPER}  ${classes.HIDDEN}` } );
         let optionsList         = constructElement( { className : classes.LIST } );
         optionsList.setAttribute( `role`, `listbox` );
         optionsListWrapper.appendChild( optionsList );
+
+        if ( this.multiple === true )
+        {
+            select.setAttribute( `multiple`, `` );
+            optionsList.setAttribute( `aria-multiselectable`, `true` );
+        }
 
         let arrow               = this.buildArrow( props, constructElement );
 
@@ -359,6 +354,8 @@ const build = {
                 flounder.appendChild( el );
             }
         } );
+
+        let search              = this.addSearch( flounder );
 
         let selectOptions;
 
@@ -386,6 +383,35 @@ const build = {
         {
             selected.innerHTML = defaultValue.text;
         }
+    },
+
+
+    /**
+     * ## buildMultiTag
+     *
+     * builds and returns a single multiTag
+     *
+     * @param {String} option tag to grab text to add to the tag and role
+     *
+     * @return _DOMElement_ option tag
+     */
+    buildMultiTag( option )
+    {
+        let optionText  = option.innerHTML;
+        let span        = document.createElement( `SPAN` )
+        span.className  = classes.MULTIPLE_SELECT_TAG;
+        span.setAttribute( `aria-label`, `Close` );
+        span.setAttribute( `tabindex`, 0 );
+
+        let a           = document.createElement( `A` )
+        a.className     = classes.MULTIPLE_TAG_CLOSE;
+        a.setAttribute( `data-index`, option.index );
+
+        span.appendChild( a );
+
+        span.innerHTML += optionText;
+
+        return span;
     },
 
 
@@ -442,7 +468,7 @@ const build = {
             }
 
             this.target             = target.parentNode;
-            utils.addClass( select || target, classes.HIDDEN );
+            utils.addClass( target, classes.HIDDEN );
         }
         else
         {
@@ -455,7 +481,7 @@ const build = {
 
 
     /**
-     * popInSelectElements
+     * ## popInSelectElements
      *
      * pops the previously saves elements back into a select tag, restoring the
      * original state
@@ -476,7 +502,7 @@ const build = {
 
 
     /**
-     * popOutSelectElements
+     * ## popOutSelectElements
      *
      * pops out all the options of a select box, clones them, then appends the
      * clones.  This gives us the ability to restore the original tag
@@ -514,7 +540,7 @@ const build = {
      */
     reconfigure( data, props )
     {
-        if ( typeof data !== `string` && typeof data.length === `number` )
+        if ( data && typeof data !== `string` && typeof data.length === `number` )
         {
             props       = props       = props || this.props;
             props.data  = data;
@@ -526,7 +552,8 @@ const build = {
         }
         else
         {
-            props.data  = data || props.data || this.data;
+            props       = props         || {};
+            props.data  = props.data    || this.data;
         }
 
         return this.constructor( this.originalTarget, props );
@@ -534,7 +561,7 @@ const build = {
 
 
     /**
-     * ## Set Target
+     * ## setTarget
      *
      * sets the target related
      *

@@ -7,27 +7,11 @@ import events               from './events';
 import classes              from './classes';
 import Search               from './search';
 import version              from './version';
+import keycodes             from './keycodes';
 
 
 class Flounder
 {
-    /**
-     * ## arrayOfFlounders
-     *
-     * called when a jquery object, microbe, or array is fed into flounder
-     * as a target
-     *
-     * @param {DOMElement} target flounder mount point
-     * @param {Object} props passed options
-     *
-     * @return {Array} array of flounders
-     */
-    arrayOfFlounders( targets, props )
-    {
-        return Array.prototype.slice.call( targets, 0 ).map( ( el, i ) => new this.constructor( el, props ) );
-    }
-
-
     /**
      * ## componentWillUnmount
      *
@@ -58,197 +42,92 @@ class Flounder
     /**
      * ## constructor
      *
-     * main constuctor
+     * filters and sets up the main init
      *
-     * @param {DOMElement} target flounder mount point
+     * @param {DOMElement, String, Array} target flounder mount point
      * @param {Object} props passed options
      *
      * @return _Object_ new flounder object
      */
     constructor( target, props )
     {
-        if ( !target && !props )
+        if ( !target )
         {
-            return this.constructor;
+            console.warn( 'Flounder - No target element found.' );
         }
-        else if ( target )
+        else
         {
             if ( typeof target === `string` )
             {
                 target = document.querySelectorAll( target );
             }
-            if ( target.length && target.tagName !== `SELECT` )
+
+            if ( ( target.length || target.length === 0 ) && target.tagName !== `SELECT`)
             {
-                return this.arrayOfFlounders( target, props );
+                if ( target.length > 1 )
+                {
+                    console.warn( 'Flounder - More than one element found. Dropping all but the first.' );
+                }
+                else if ( target.length === 0 )
+                {
+                    throw 'Flounder - No target element found.';
+                }
+
+                target = target[ 0 ];
             }
-            else if ( ( !target.length && target.length !== 0 ) || target.tagName === `SELECT` )
+
+            if ( target.flounder )
             {
-                if ( target.flounder )
-                {
-                    target.flounder.destroy();
-                }
-
-                this.props = props;
-                this.setTarget( target );
-                this.bindThis();
-                this.initializeOptions();
-
-                if ( this.search )
-                {
-                    this.search = new Search( this );
-                }
-
-                try
-                {
-                    this.onInit();
-                }
-                catch( e )
-                {
-                    console.warn( `something may be wrong in "onInit"`, e );
-                }
-                this.buildDom();
-                let { isOsx, isIos, multiSelect } = utils.setPlatform();
-                this.isOsx          = isOsx;
-                this.isIos          = isIos;
-                this.multiSelect    = multiSelect;
-                this.onRender();
-
-                try
-                {
-                    this.onComponentDidMount();
-                }
-                catch( e )
-                {
-                    console.warn( `something may be wrong in "onComponentDidMount"`, e );
-                }
-
-                this.ready = true;
-
-                return this.refs.flounder.flounder = this.originalTarget.flounder = this.target.flounder = this;
+                target.flounder.destroy();
             }
+
+            return this.init( target, props );
         }
     }
 
 
     /**
-     * ## displayMultipleTags
+     * ## filterSearchResults
      *
-     * handles the display and management of tags
+     * filters results and adjusts the search hidden class on the dataOptions
      *
-     * @param  {Array} selectedOptions currently selected options
-     * @param  {DOMElement} selected div to display currently selected options
+     * @param {Object} e event object
      *
      * @return _Void_
      */
-    displayMultipleTags( selectedOptions, multiTagWrapper )
+    filterSearchResults( e )
     {
-        let span, a;
+        let val = e.target.value.trim();
 
-        let removeMultiTag = this.removeMultiTag;
+        this.fuzzySearch.__previousValue = val;
 
-        Array.prototype.slice.call( multiTagWrapper.children, 0 ).forEach( function( el )
+        let matches = this.search.isThereAnythingRelatedTo( val ) || [];
+
+        if ( val !== '' )
         {
-            el.firstChild.removeEventListener( `click`, removeMultiTag );
-        } );
+            let data    = this.refs.data;
 
-        multiTagWrapper.innerHTML = ``;
-
-        if ( selectedOptions.length > 0 )
-        {
-            selectedOptions.forEach( function( option )
+            data.forEach( ( el, i ) =>
             {
-                if ( option.value !== `` )
-                {
-                    let span        = document.createElement( `span` )
-                    span.className  = classes.MULTIPLE_SELECT_TAG;
-
-                    let a           = document.createElement( `a` )
-                    a.className     = classes.MULTIPLE_TAG_CLOSE;
-                    a.setAttribute( `data-index`, option.index );
-
-                    span.appendChild( a );
-
-                    span.innerHTML += option.innerHTML;
-
-                    multiTagWrapper.appendChild( span );
-                }
-                else
-                {
-                    option.selected = false;
-                }
+                utils.addClass( el, classes.SEARCH_HIDDEN );
             } );
 
-            Array.prototype.slice.call( multiTagWrapper.children, 0 ).forEach( function( el )
+            matches.forEach( e =>
             {
-                el.firstChild.addEventListener( `click`, removeMultiTag );
+                utils.removeClass( data[ e.i ], classes.SEARCH_HIDDEN );
             } );
         }
         else
         {
-            this.addPlaceholder();
+            this.fuzzySearchReset();
         }
-
-        this.setTextMultiTagIndent();
-    }
-
-
-    /**
-     * ## displaySelected
-     *
-     * formats and displays the chosen options
-     *
-     * @param {DOMElement} selected display area for the selected option(s)
-     * @param {Object} refs element references
-     *
-     * @return _Void_
-     */
-    displaySelected( selected, refs )
-    {
-        let value = [];
-        let index = -1;
-
-        let selectedOption  = this.getSelected();
-        let selectedLength  = selectedOption.length;
-        let multipleTags    = this.multipleTags;
-
-        if ( !multipleTags && selectedLength ===  1 )
-        {
-            index               = selectedOption[0].index;
-            selected.innerHTML  = refs.data[ index ].innerHTML;
-            value               = selectedOption[0].value;
-        }
-        else if ( !multipleTags && selectedLength === 0 )
-        {
-            let defaultValue    = this._default;
-            index               = defaultValue.index || -1;
-            selected.innerHTML  = defaultValue.text;
-            value               = defaultValue.value;
-        }
-        else
-        {
-            if ( multipleTags )
-            {
-                selected.innerHTML  = ``;
-                this.displayMultipleTags( selectedOption, refs.multiTagWrapper );
-            }
-            else
-            {
-                selected.innerHTML  = this.multipleMessage;
-            }
-
-            index = selectedOption.map( option => option.index );
-            value = selectedOption.map( option => option.value );
-        }
-
-        selected.setAttribute( `data-value`, value );
-        selected.setAttribute( `data-index`, index );
     }
 
 
     /**
      * ## fuzzySearch
      *
-     * searches for things
+     * filters events to determine the correct actions, based on events from the search box
      *
      * @param {Object} e event object
      *
@@ -256,6 +135,8 @@ class Flounder
      */
     fuzzySearch( e )
     {
+        this.fuzzySearch.__previousValue = this.fuzzySearch.__previousValue || '';
+
         try
         {
             this.onInputChange( e );
@@ -268,44 +149,32 @@ class Flounder
         if ( !this.toggleList.justOpened )
         {
             e.preventDefault();
+
             let keyCode = e.keyCode;
 
-            if ( keyCode !== 38 && keyCode !== 40 &&
-                    keyCode !== 13 && keyCode !== 27 )
+            if ( keyCode !== keycodes.UP && keyCode !== keycodes.DOWN &&
+                    keyCode !== keycodes.ENTER && keyCode !== keycodes.ESCAPE )
             {
-                let val = e.target.value.trim();
-
-                let matches = this.search.isThereAnythingRelatedTo( val );
-
-                if ( matches )
+                if ( this.multipleTags && keyCode === keycodes.BACKSPACE &&
+                        this.fuzzySearch.__previousValue === '' )
                 {
-                    let data    = this.refs.data;
+                    let lastTag = this.refs.multiTagWrapper.lastChild;
 
-                    data.forEach( ( el, i ) =>
+                    if ( lastTag )
                     {
-                        utils.addClass( el, classes.SEARCH_HIDDEN );
-                    } );
-
-                    matches.forEach( e =>
-                    {
-                        utils.removeClass( data[ e.i ], classes.SEARCH_HIDDEN );
-                    } );
+                        lastTag.focus();
+                    }
                 }
                 else
                 {
-                    this.fuzzySearchReset();
+                    this.filterSearchResults( e );
                 }
             }
-            else if ( keyCode === 27 )
+            else if ( keyCode === keycodes.ESCAPE || keyCode === keycodes.ENTER )
             {
                 this.fuzzySearchReset();
                 this.toggleList( e, `close` );
                 this.addPlaceholder();
-            }
-            else
-            {
-                this.setSelectValue( e );
-                this.setKeypress( e );
             }
         }
         else
@@ -336,6 +205,59 @@ class Flounder
 
 
     /**
+     * ## init
+     *
+     * post setup, this sets initial values and starts the build process
+     *
+     * @param {DOMElement} target flounder mount point
+     * @param {Object} props passed options
+     *
+     * @return _Object_ new flounder object
+     */
+    init( target, props )
+    {
+        this.props = props;
+        this.setTarget( target );
+        this.bindThis();
+        this.initializeOptions();
+
+        if ( this.search )
+        {
+            this.search = new Search( this );
+        }
+
+        try
+        {
+            this.onInit();
+        }
+        catch( e )
+        {
+            console.warn( `something may be wrong in "onInit"`, e );
+        }
+
+        this.buildDom();
+        let { isOsx, isIos, multiSelect } = utils.setPlatform();
+        this.isOsx          = isOsx;
+        this.isIos          = isIos;
+        this.multiSelect    = multiSelect;
+        this.onRender();
+
+        try
+        {
+            this.onComponentDidMount();
+        }
+        catch( e )
+        {
+            console.warn( `something may be wrong in "onComponentDidMount"`, e );
+        }
+
+        this.ready = true;
+
+        return this.refs.flounder.flounder = this.originalTarget.flounder = this.target.flounder = this;
+    }
+
+
+    /**
      * ## initializeOptions
      *
      * inserts the initial options into the flounder object, setting defaults
@@ -349,11 +271,11 @@ class Flounder
 
         for ( let opt in defaultOptions )
         {
-            if ( defaultOptions.hasOwnProperty( opt ) && opt !== `classes` )
+            if ( opt !== `classes` )
             {
                 this[ opt ] = props[ opt ] !== undefined ? props[ opt ] : defaultOptions[ opt ];
             }
-            else if ( opt === `classes` )
+            else
             {
                 let classes         = defaultOptions[ opt ];
                 let propsClasses    = props.classes;
@@ -378,10 +300,8 @@ class Flounder
             this.multiple       = true;
             this.selectedClass  += `  ${classes.SELECTED_HIDDEN}`;
 
-            if ( !this.placeholder )
-            {
-                this.placeholder = defaultOptions.placeholder;
-            }
+            this.placeholder    = this.placeholder === '' ? this.placeholder
+                                                    : defaultOptions.placeholder;
         }
     }
 
@@ -399,145 +319,14 @@ class Flounder
         let refs    = this.refs;
         let data    = refs.data;
 
-        if ( !!this.isIos && ( !this.multipleTags || !this.multiple )  )
+        if ( !!this.isIos && !this.multiple )
         {
             let sel     = refs.select;
             utils.removeClass( sel, classes.HIDDEN );
             utils.addClass( sel, classes.HIDDEN_IOS );
         }
 
-        this.addListeners( refs, props );
-    }
-
-
-    /**
-     * ## removeMultiTag
-     *
-     * removes a multi selection tag on click; fixes all references to value and state
-     *
-     * @param  {Object} e event object
-     *
-     * @return _Void_
-     */
-    removeMultiTag( e )
-    {
-        e.preventDefault();
-        e.stopPropagation();
-
-        let value;
-        let index;
-        let refs            = this.refs;
-        let select          = refs.select;
-        let selected        = refs.selected;
-        let target          = e.target;
-        let defaultValue    = this._default;
-        let data            = this.refs.data;
-        let targetIndex     = target.getAttribute( `data-index` );
-        select[ targetIndex ].selected = false;
-
-        let selectedOptions = this.getSelected();
-
-        utils.removeClass( data[ targetIndex ], classes.SELECTED_HIDDEN );
-        utils.removeClass( data[ targetIndex ], classes.SELECTED );
-
-        target.removeEventListener( `click`, this.removeMultiTag );
-
-        let span = target.parentNode;
-        span.parentNode.removeChild( span );
-
-        if ( selectedOptions.length === 0 )
-        {
-            this.addPlaceholder();
-            index               = -1;
-            value               = ``;
-        }
-        else
-        {
-            value = selectedOptions.map( function( option )
-            {
-                return option.value;
-            } );
-
-            index = selectedOptions.map( function( option )
-            {
-                return option.index;
-            } );
-        }
-
-        this.setTextMultiTagIndent();
-
-        selected.setAttribute( `data-value`, value );
-        selected.setAttribute( `data-index`, index );
-
-        try
-        {
-            this.onSelect( e, this.getSelectedValues() );
-        }
-        catch( e )
-        {
-            console.warn( `something may be wrong in "onSelect"`, e );
-        }
-    }
-
-
-    /**
-     * ## removeSelectedClass
-     *
-     * removes the [[this.selectedClass]] from all data
-     *
-     * @return _Void_
-     */
-    removeSelectedClass( data )
-    {
-        data = data || this.refs.data;
-
-        data.forEach( ( dataObj, i ) =>
-        {
-            utils.removeClass( dataObj, this.selectedClass );
-        } );
-    }
-
-
-    /**
-     * ## removeSelectedValue
-     *
-     * sets the selected property to false for all data
-     *
-     * @return _Void_
-     */
-    removeSelectedValue( data )
-    {
-        data = data || this.refs.data;
-
-        data.forEach( ( d, i ) =>
-        {
-            this.refs.select[ i ].selected = false;
-        } );
-    }
-
-
-    /**
-     * ## setTextMultiTagIndent
-     *
-     * sets the text-indent on the search field to go around selected tags
-     *
-     * @return _Void_
-     */
-    setTextMultiTagIndent()
-    {
-        let refs    = this.refs;
-        let search  = refs.search;
-        let offset  = 0;
-
-        if ( search )
-        {
-            Array.prototype.slice.call( refs.multiTagWrapper.children, 0 ).forEach( ( e, i ) =>
-            {
-                offset += utils.getElWidth( e, this.setTextMultiTagIndent, this );
-            } );
-
-            search.style.textIndent = `${offset}px`;
-        }
+        this.addListeners( refs );
     }
 
 
@@ -579,6 +368,31 @@ class Flounder
         return res;
     }
 }
+
+
+/**
+ * ## .find
+ *
+ * accepts array-like objects and selector strings to make multiple flounders
+ *
+ * @param {Array or String} flounder target(s)
+ * @param {Object} props passed options
+ *
+ * @return {Array} array of flounders
+ */
+Flounder.find = function( targets, props )
+{
+    if ( typeof targets === `string` )
+    {
+        targets = document.querySelectorAll( targets );
+    }
+    else if ( targets.nodeType === 1 )
+    {
+        targets = [ targets ];
+    }
+
+    return Array.prototype.slice.call( targets, 0 ).map( el => new Flounder( el, props ) );
+};
 
 
 /**

@@ -6,12 +6,10 @@ import Flounder from '../core/flounder';
     µ.core.flounder = function( options )
     {
         let flounderDestroy = Flounder.prototype.destroy;
-        let flounder        = new Flounder( this, options );
-
 
         this.each( function( el, i )
         {
-            let _f                      = flounder[ i ];
+            let _f                      = new Flounder( el, options );
             el.data                     = el.data || {};
             el.data.flounder            = el.data.flounder || {};
             el.data.flounder.flounder   = _f;
@@ -23,6 +21,6 @@ import Flounder from '../core/flounder';
             };
         } );
 
-        return flounder;
+        return this;
     };
 }( µ ) );

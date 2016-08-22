@@ -1,4 +1,9 @@
-let defaults = {
+/**
+ * search defaults
+ *
+ * @type {Object}
+ */
+export const defaults = {
     /*
      * minimum value length to search
      *
@@ -70,11 +75,11 @@ export class Sole
      */
     compareScoreCards( a, b )
     {
-        a = a.score;
-        b = b.score;
-
-        if ( a && b )
+        if ( a && a.score && b && b.score )
         {
+            a = a.score;
+            b = b.score;
+
             if ( a > b )
             {
                 return 1;
@@ -86,6 +91,8 @@ export class Sole
 
             return 0;
         }
+
+        return null;
     }
 
 
@@ -100,7 +107,14 @@ export class Sole
      */
     constructor( flounder )
     {
-        this.flounder = flounder;
+        this.flounder               = flounder;
+
+        this.getResultWeights       = this.getResultWeights.bind( this );
+        this.getResultWeights.bound = true;
+
+        this.scoreThis              = this.scoreThis.bind( this );
+        this.scoreThis.bound        = true;
+
         return this;
     }
 
@@ -121,6 +135,66 @@ export class Sole
 
 
     /**
+     * ## getResultWeights
+     *
+     * after the data is prepared this is mapped through the data to get weighted results
+     *
+     * @param  {Object} data object
+     * @param  {Number} i index
+     *
+     * @return _Object_ res weighted results
+     */
+    getResultWeights( d, i )
+    {
+        let score   = 0;
+        let res     = { i : i, d : d };
+        let search  = d.search  = d.search || {};
+        let weights = defaults.weights;
+        let dText   = `${d.text}`;
+        let dValue  = `${d.value}`;
+
+        search.text             = dText;
+        search.textFlat         = dText.toLowerCase();
+        search.textSplit        = search.textFlat.split( ` ` );
+
+        search.value            = dValue;
+        search.valueFlat        = dValue.toLowerCase();
+        search.valueSplit       = search.valueFlat.split( ` ` );
+
+        search.description      = d.description ? d.description.toLowerCase() : null;
+        search.descriptionSplit = d.description ? search.description.split( ` ` ) : null;
+
+
+        defaults.scoreProperties.forEach( param =>
+        {
+            score += this.scoreThis( search[ param ], weights[ param ] );
+        } );
+
+        defaults.startsWithProperties.forEach( param =>
+        {
+            score += this.startsWith( this.query, search[ param ], weights[ `${param}StartsWith` ] );
+        } );
+
+        res.score = score;
+
+        return res;
+    }
+
+
+    /**
+     * ## isItemAboveMinimum
+     *
+     * removes the items that have recieved a score lower than the set minimum
+     *
+     * @return _Boolean_ under the minimum or not
+     */
+    isItemAboveMinimum( d )
+    {
+        return d.score >= defaults.minimumScore ? true : false;
+    }
+
+
+    /**
      * ## isThereAnythingRelatedTo
      *
      * Check our search content for related query words,
@@ -131,53 +205,20 @@ export class Sole
      *
      * @return _Array_ results returns array of relevant search results
      */
-    isThereAnythingRelatedTo( query )
+    isThereAnythingRelatedTo( query = '' )
     {
         let ratedResults;
 
+        query = query.length ? query : `${query}`;
+
         if ( query.length >= defaults.minimumValueLength )
         {
-            this.query          = query.toLowerCase().split( ` ` );
+            this.query      = query.toLowerCase().split( ` ` );
 
-            let scoreThis       = this.scoreThis;
-            let startsWith      = this.startsWith;
-            let data            = this.flounder.data;
-                data            = this.flounder.sortData( data );
+            let data        = this.flounder.data;
+                data        = this.flounder.sortData( data );
 
-            ratedResults    = this.ratedResults = data.map( function( d, i )
-            {
-                let score   = 0 ;
-                let res     = { i : i, d : d };
-                let search  = d.search  = d.search || {};
-                let weights = defaults.weights;
-                let dText   = `${d.text}`;
-                let dValue  = `${d.value}`;
-                
-                search.text             = dText;
-                search.textFlat         = dText.toLowerCase();
-                search.textSplit        = search.textFlat.split( ` ` );
-
-                search.value            = dValue;
-                search.valueFlat        = dValue.toLowerCase();
-                search.valueSplit       = search.valueFlat.split( ` ` );
-
-                search.description      = d.description ? d.description.toLowerCase() : null;
-                search.descriptionSplit = d.description ? search.description.split( ` ` ) : null;
-
-                defaults.scoreProperties.forEach( function( param )
-                {
-                    score += scoreThis( search[ param ], weights[ param ] );
-                } );
-
-                defaults.startsWithProperties.forEach( function( param )
-                {
-                    score += startsWith( query, search[ param ], weights[ `${param}StartsWith` ] );
-                } );
-
-                res.score = score;
-
-                return res;
-            } );
+            ratedResults    = this.ratedResults = data.map( this.getResultWeights );
         }
         else
         {
@@ -185,7 +226,7 @@ export class Sole
         }
 
         ratedResults.sort( this.compareScoreCards );
-        ratedResults = ratedResults.filter( this.removeItemsUnderMinimum );
+        ratedResults = ratedResults.filter( this.isItemAboveMinimum );
 
         return ( this.ratedResults = ratedResults );
     }
@@ -200,7 +241,7 @@ export class Sole
      * @param {String} value string to search in
      * @param {Integer} weight amount of points to give an exact match
      *
-     * @return {Integer} points to award
+     * @return _Integer_ points to award
      */
     startsWith( query, value, weight )
     {
@@ -209,7 +250,7 @@ export class Sole
 
         if ( queryLength <= valLength )
         {
-            let valStr = value.toLowerCase().slice( 0, valLength );
+            let valStr = value.toLowerCase().slice( 0, queryLength );
 
             if ( valStr === query )
             {
@@ -218,19 +259,6 @@ export class Sole
         }
 
         return 0;
-    }
-
-
-    /**
-     * ## removeItemsUnderMinimum
-     *
-     * removes the items that have recieved a score lower than the set minimum
-     *
-     * @return _Boolean_ under the minimum or not
-     */
-    removeItemsUnderMinimum( d )
-    {
-        return d.score >= defaults.minimumScore ? true : false;
     }
 
 
@@ -248,7 +276,7 @@ export class Sole
      *
      * @return _Integer_ the final weight adjusted score
      */
-    scoreThis = ( target, weight, noPunishment ) =>
+    scoreThis( target, weight, noPunishment )
     {
         let score = 0;
 
@@ -273,7 +301,7 @@ export class Sole
                 }
                 else
                 {
-                    count       = target[ queryWord ] || 0.000001;
+                    count = target[ queryWord ] || 0.000001;
                 }
 
                 if ( count && count > 0 )

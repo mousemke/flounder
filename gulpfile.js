@@ -37,7 +37,7 @@ function browserifyFiles( folder, filename, ext )
     ext = ext || '.js';
 
     browserify( './src/' + folder + '/' + filename + ext )
-        .transform( babelify, { stage : 0 } )
+        .transform( babelify )
         .bundle()
         .pipe( fs.createWriteStream( __dirname + '/dist/' + filename + ext ) )
         .on( 'finish', function()
@@ -54,7 +54,7 @@ function min( folder, filename, ext )
     ext = ext || '.js';
 
     browserify( './src/' + folder + '/' + filename + ext )
-        .transform( babelify, { stage : 0 } )
+        .transform( babelify )
         .bundle()
         .pipe( fs.createWriteStream( __dirname + '/dist/' + filename + '.min' + ext ) )
         .on( 'finish', function()
@@ -67,19 +67,10 @@ function min( folder, filename, ext )
 }
 
 
-gulp.task( 'buildTests', function()
-{
-    browserify( './tests/tests.js' )
-        .transform( babelify, { stage : 0 } )
-        .bundle()
-        .pipe( fs.createWriteStream( __dirname + '/tests/tests.dist.js' ) )
-} );
-
-
 gulp.task( 'demo', function()
 {
     browserify( './demo/demo.js' )
-        .transform( babelify, { stage : 0 } )
+        .transform( babelify )
         .bundle()
         .pipe( fs.createWriteStream( __dirname + '/demo/demoDist.js' ) );
 } );
@@ -111,7 +102,7 @@ gulp.task( 'microbe', function()
 
 gulp.task( 'default', [], function()
 {
-    gulp.start( [ 'vanilla', 'amd', 'jquery', 'microbe', 'demo', 'buildTests' ] );
+    gulp.start( [ 'vanilla', 'amd', 'jquery', 'microbe', 'demo' ] );
 } );
 
 

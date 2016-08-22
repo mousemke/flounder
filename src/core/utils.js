@@ -1,5 +1,5 @@
 
-import classes          from './classes';
+import classes          from '/core/classes';
 import microbeHttp      from 'microbejs/src/modules/http';
 
 const utils = {
@@ -50,18 +50,23 @@ const utils = {
      */
     attachAttributes( _el, _elObj )
     {
-        _elObj = _elObj || {};
-
-        for ( let att in _elObj )
+        if ( _elObj )
         {
-            if ( att.indexOf( `data-` ) !== -1 )
+            for ( let att in _elObj )
             {
-                _el.setAttribute( att, _elObj[ att ] );
+                if ( att.slice( 0, 5 ) === `data-` )
+                {
+                    _el.setAttribute( att, _elObj[ att ] );
+                }
+                else
+                {
+                    _el[ att ] = _elObj[ att ];
+                }
             }
-            else
-            {
-                _el[ att ] = _elObj[ att ];
-            }
+        }
+        else
+        {
+            return null;
         }
     },
 
@@ -89,6 +94,7 @@ const utils = {
      * extends a class from an object.  returns the original reference
      *
      * @param {Class} _extend class to be extended
+     * @param {Class} objects objects to extend the class with
      *
      * @return {Class} modified class object
      */
@@ -100,10 +106,7 @@ const utils = {
         {
             for ( let prop in obj )
             {
-                if ( Object.prototype.hasOwnProperty.call( obj, prop ) )
-                {
-                    _extend[ prop ] = obj[ prop ];
-                }
+                _extend[ prop ] = obj[ prop ];
             }
         };
 
@@ -144,21 +147,26 @@ const utils = {
      *
      * @return _Integer_ adjusted width
      */
-    getElWidth( el, _cb, context )
+    getElWidth( el, _cb, context, timeout = 1500 )
     {
-        let style = getComputedStyle( el );
+        let style = window.getComputedStyle( el );
 
-        if ( el.offsetWidth === 0 )
+        if ( el.offsetWidth === 0 && this.__checkWidthAgain !== true )
         {
-            if ( this.__checkWidthAgain !== true )
+            if ( _cb && context )
             {
-                setTimeout( _cb.bind( context ), 1500 );
-                this.__checkWidthAgain === true;
+                /* istanbul ignore next */
+                setTimeout( _cb.bind( context ), timeout );
+                this.__checkWidthAgain = true;
+            }
+            else
+            {
+                throw 'Flounder getElWidth error: no callback given.'
             }
         }
         else
         {
-            this.__checkWidthAgain !== false
+            this.__checkWidthAgain = false
         }
 
         return el.offsetWidth + parseInt( style[ `margin-left` ] ) +
@@ -193,16 +201,17 @@ const utils = {
      *
      * checks and returns the ios version
      *
-     * @return _Void_:
+     * @param {Object} windowObj window, but allows for as testing override
+     *
+     * @return _Void_
      */
-    iosVersion()
+    iosVersion( windowObj = window )
     {
-
-        if ( /iPad|iPhone|iPod/.test( navigator.platform ) )
+        if ( /iPad|iPhone|iPod/.test( windowObj.navigator.platform ) )
         {
-            if ( !!window.indexedDB ) { return `8+`; }
-            if ( !!window.SpeechSynthesisUtterance ) { return `7`; }
-            if ( !!window.webkitAudioContext ) { return `6`; }
+            if ( !!windowObj.indexedDB ) { return `8+`; }
+            if ( !!windowObj.SpeechSynthesisUtterance ) { return `7`; }
+            if ( !!windowObj.webkitAudioContext ) { return `6`; }
             return `5-`;
         }
 
@@ -286,19 +295,26 @@ const utils = {
      */
     scrollTo( element )
     {
-        let parent      = element.parentNode.parentNode;
-        let elHeight    = element.offsetHeight;
-        let min         = parent.scrollTop;
-        let max         = parent.scrollTop + parent.offsetHeight - element.offsetHeight;
-        let pos         = element.offsetTop;
+        if ( element )
+        {
+            let parent      = element.parentNode.parentNode;
+            let elHeight    = element.offsetHeight;
+            let min         = parent.scrollTop;
+            let max         = parent.scrollTop + parent.offsetHeight - elHeight;
+            let pos         = element.offsetTop;
 
-        if ( pos < min )
-        {
-            parent.scrollTop = pos  - ( elHeight * 0.5 );
+            if ( pos < min )
+            {
+                parent.scrollTop = pos  - ( elHeight * 0.5 );
+            }
+            else if ( pos > max )
+            {
+                parent.scrollTop = pos - parent.offsetHeight + ( elHeight * 1.5 );
+            }
         }
-        else if ( pos > max )
+        else
         {
-            parent.scrollTop = pos - parent.offsetHeight + ( elHeight * 1.5 );
+            return false;
         }
     },
 
@@ -308,12 +324,14 @@ const utils = {
      *
      * sets the platform to osx or not osx for the sake of the multi select key
      *
+     * @param {Object} windowObj window, but allows for as testing override
+     *
      * @return _Void_
      */
-    setPlatform()
+    setPlatform( windowObj = window )
     {
-        let isOsx       = window.navigator.platform.indexOf( `Mac` ) === -1 ? false : true;
-        let isIos       = utils.iosVersion();
+        let isOsx       = windowObj.navigator.platform.indexOf( `Mac` ) === -1 ? false : true;
+        let isIos       = utils.iosVersion( windowObj );
         let multiSelect = isOsx ? `metaKey` : `ctrlKey`;
 
         return { isOsx, isIos, multiSelect };
@@ -332,16 +350,13 @@ const utils = {
      */
     toggleClass( _el, _class )
     {
-        let _addClass       = utils.addClass;
-        let _removeClass    = utils.removeClass;
-
         if ( utils.hasClass( _el, _class ) )
         {
-            _removeClass( _el, _class );
+            utils.removeClass( _el, _class );
         }
         else
         {
-            _addClass( _el, _class );
+            utils.addClass( _el, _class );
         }
     }
 }
