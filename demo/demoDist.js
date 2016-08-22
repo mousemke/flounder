@@ -5191,6 +5191,6 @@ exports.default = utils;
 },{"/Library/WebServer/Documents/flounder/src/core/classes":15,"microbejs/src/modules/http":4}],22:[function(require,module,exports){
 'use strict';
 
-module.exports = '1.0.0';
+module.exports = '1.0.1';
 
 },{}]},{},[1]);
