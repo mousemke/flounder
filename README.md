@@ -1,8 +1,6 @@
 Flounder.js 1.0.0
 =================
 
-*** Flounder 1.0.0 is being built right now, so there is a feature freeze on earlier versions, but feel free to open issues for 0.X.X and feature issues for 1.0.0 should anything come up ***
-
 [![Flounder build status](https://travis-ci.org/sociomantic-tsunami/flounder.svg)](https://travis-ci.org)
 
 (for modern browsers and ie10+)
@@ -346,6 +344,12 @@ Flounder's **branch structure** goes as follows:
 + feature branches - these branches come from `dev`, are branched for a specific geature or bug, then get merged back into `dev`
 
 
+Releasing
+--------
+
+When you release a new verion, commit it to master, then commit it to release. It must be released from the `release` branch.  It is the *only* branch that commits the dist files
+
+
 
 We gladly accept and review any pull-requests into the current `dev` branch. Feel free! :heart:
 
@@ -355,7 +359,6 @@ Otherwise, if you just want to talk, we are very easy to get a hold of!
 + Email:          [flounder@knoblau.ch](mailto:flounder@knoblau.ch)
 + Web:            <a href="http://flounderjs.com/" target="_blank">http://flounderjs.com/</a>
 + Git:            <a href="https://github.com/sociomantic-tsunami/flounder/" target="_blank">https://github.com/sociomantic-tsunami/flounder/</a>
-
 
 
 This project adheres to the [Contributor Covenant](http://contributor-covenant.org/). By participating, you are expected to honor this code.
@@ -438,15 +441,14 @@ See more examples on the [demo page](./demo/index.html)
 
 
 
-Releasing
---------
-
-When you release a new verion, commit it to master, then commit it to release. It must be released from the `release` branch.  It is the *only* branch that commits the dist files
-
-
-
 Change Log
 ==========
+
+1.0.1
+-----
+
++ just a readme fix
+
 
 1.0.0
 -----
@@ -489,76 +491,6 @@ Change Log
     + removed qunit
     + added mocha
     + added istanbul
-
-
-0.8.5
------
-
-+ events
-    + fixed a bubbling bug in clickSet
-
-+ api
-    + fixed a bug in ie where setByValue wouldn't work as the DOM was still building
-
-
-0.8.4
------
-
-+ api
-    + fixed a bug in deselectAll where tags would remain
-
-
-0.8.3
------
-
-+ search
-    + fixed a bug where search would break when only numbers were entered
-
-
-0.8.3
------
-
-+ search
-    + fixed a bug where search would break when only numbers were entered
-
-
-0.8.2
------
-
-+ general
-    rolled back the switch from slice to spread
-
-
-0.8.1
------
-
-+ release issues...
-
-
-0.8.0
------
-
-+ general
-    + altered the gitignore to a release branch structure
-    + changed node test versions
-    + changed packages to better accomodate travis builds
-    + moving things to a more es6 sytax
-
-+ build
-    + placeholders now have their own class
-
-+ default
-    + changed how multipleTags handle defaults
-
-+ css
-    + css is now copied to `./dist` from `./src` directory
-
-+ events
-    + added onInputChange
-    + changed removeMultipleTags action
-
-+ api
-    + console.log is now console.warn
 
 
 
