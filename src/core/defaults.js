@@ -158,19 +158,19 @@ const defaults = {
         {
             let _data       = self.sortData( data );
 
+            let placeholder = configObj.placeholder;
+
             if ( ( configObj.multipleTags || configObj.multiple )
                     && !configObj.defaultIndex
                     && !configObj.defaultValue )
             {
-                configObj.placeholder = configObj.placeholder || defaultOptions.placeholder;
+                placeholder = placeholder || defaultOptions.placeholder;
             }
 
             if ( configObj.defaultEmpty )
             {
-                configObj.placeholder = ``;
+                placeholder = ``;
             }
-
-            let placeholder = configObj.placeholder;
 
             if ( placeholder || placeholder === `` || _data.length === 0 )
             {
