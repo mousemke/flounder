@@ -9,7 +9,11 @@ import Search               from './search';
 import version              from './version';
 import keycodes             from './keycodes';
 
-
+/**
+ * main flounder class
+ *
+ * @return {Object} Flounder instance
+ */
 class Flounder
 {
     /**
@@ -17,7 +21,7 @@ class Flounder
      *
      * on unmount, removes events
      *
-     * @return _Void_
+     * @return {Void} void
      */
     componentWillUnmount()
     {
@@ -25,9 +29,10 @@ class Flounder
         {
             this.onComponentWillUnmount();
         }
-        catch( e )
+        catch ( e )
         {
-            console.warn( `something may be wrong in "onComponentWillUnmount"`, e );
+            console.warn( `something may be wrong in
+                                        "onComponentWillUnmount"`, e );
         }
 
         this.removeListeners();
@@ -44,10 +49,10 @@ class Flounder
      *
      * filters and sets up the main init
      *
-     * @param {DOMElement, String, Array} target flounder mount point
+     * @param {Mixed} target flounder mount point _DOMElement, String, Array_
      * @param {Object} props passed options
      *
-     * @return _Object_ new flounder object
+     * @return {Object} new flounder object
      */
     constructor( target, props )
     {
@@ -62,11 +67,13 @@ class Flounder
                 target = document.querySelectorAll( target );
             }
 
-            if ( ( target.length || target.length === 0 ) && target.tagName !== `SELECT`)
+            if ( ( target.length || target.length === 0 ) &&
+                    target.tagName !== `SELECT`)
             {
                 if ( target.length > 1 )
                 {
-                    console.warn( 'Flounder - More than one element found. Dropping all but the first.' );
+                    console.warn( `Flounder - More than one element found.
+                                                Dropping all but the first.` );
                 }
                 else if ( target.length === 0 )
                 {
@@ -93,21 +100,21 @@ class Flounder
      *
      * @param {Object} e event object
      *
-     * @return _Void_
+     * @return {Void} void
      */
     filterSearchResults( e )
     {
-        let val = e.target.value.trim();
+        const val = e.target.value.trim();
 
-        this.fuzzySearch.__previousValue = val;
+        this.fuzzySearch.previousValue = val;
 
-        let matches = this.search.isThereAnythingRelatedTo( val ) || [];
+        const matches = this.search.isThereAnythingRelatedTo( val ) || [];
 
         if ( val !== '' )
         {
-            let data    = this.refs.data;
+            const data    = this.refs.data;
 
-            data.forEach( ( el, i ) =>
+            data.forEach( i =>
             {
                 utils.addClass( el, classes.SEARCH_HIDDEN );
             } );
@@ -127,15 +134,16 @@ class Flounder
     /**
      * ## fuzzySearch
      *
-     * filters events to determine the correct actions, based on events from the search box
+     * filters events to determine the correct actions, based on events from
+     * the search box
      *
      * @param {Object} e event object
      *
-     * @return _Void_
+     * @return {Void} void
      */
     fuzzySearch( e )
     {
-        this.fuzzySearch.__previousValue = this.fuzzySearch.__previousValue || '';
+        this.fuzzySearch.previousValue = this.fuzzySearch.previousValue || '';
 
         try
         {
@@ -156,7 +164,7 @@ class Flounder
                     keyCode !== keycodes.ENTER && keyCode !== keycodes.ESCAPE )
             {
                 if ( this.multipleTags && keyCode === keycodes.BACKSPACE &&
-                        this.fuzzySearch.__previousValue === '' )
+                        this.fuzzySearch.previousValue === '' )
                 {
                     let lastTag = this.refs.multiTagWrapper.lastChild;
 
@@ -170,7 +178,8 @@ class Flounder
                     this.filterSearchResults( e );
                 }
             }
-            else if ( keyCode === keycodes.ESCAPE || keyCode === keycodes.ENTER )
+            else if ( keyCode === keycodes.ESCAPE ||
+                            keyCode === keycodes.ENTER )
             {
                 this.fuzzySearchReset();
                 this.toggleList( e, `close` );
@@ -189,7 +198,7 @@ class Flounder
      *
      * resets all options to visible
      *
-     * @return _Void_
+     * @return {Void} void
      */
     fuzzySearchReset()
     {
@@ -212,7 +221,7 @@ class Flounder
      * @param {DOMElement} target flounder mount point
      * @param {Object} props passed options
      *
-     * @return _Object_ new flounder object
+     * @return {Object} new flounder object
      */
     init( target, props )
     {
@@ -253,7 +262,9 @@ class Flounder
 
         this.ready = true;
 
-        return this.refs.flounder.flounder = this.originalTarget.flounder = this.target.flounder = this;
+        this.originalTarget.flounder = this.target.flounder = this;
+
+        return this.refs.flounder.flounder = this;
     }
 
 
@@ -263,7 +274,7 @@ class Flounder
      * inserts the initial options into the flounder object, setting defaults
      * when necessary
      *
-     * @return _Void_
+     * @return {Void} void
      */
     initializeOptions()
     {
@@ -273,11 +284,13 @@ class Flounder
         {
             props.onChange = props.onSelect;
 
-            console.warn( 'Please use onChange.  onSelect has been depricated and will be removed in 2.0.0' );
+            console.warn( `Please use onChange.  onSelect has been depricated
+                                            and will be removed in 2.0.0` );
 
             this.onSelect = function()
             {
-                console.warn( 'Please use onChange.  onSelect has been depricated and will be removed in 2.0.0' );
+                console.warn( `Please use onChange. onSelect has been
+                                    depricated and will be removed in 2.0.0` );
                 this.onChange( ...arguments );
             };
         }
@@ -286,7 +299,8 @@ class Flounder
         {
             if ( opt !== `classes` )
             {
-                this[ opt ] = props[ opt ] !== undefined ? props[ opt ] : defaultOptions[ opt ];
+                this[ opt ] = props[ opt ] !== undefined ? props[ opt ] :
+                                                     defaultOptions[ opt ];
             }
             else
             {
@@ -324,7 +338,7 @@ class Flounder
      *
      * attaches necessary events to the built DOM
      *
-     * @return _Void_
+     * @return {Void} void
      */
     onRender()
     {
@@ -348,7 +362,7 @@ class Flounder
      *
      * checks the data object for header options, and sorts it accordingly
      *
-     * @return _Boolean_ hasHeaders
+     * @return {Boolean} hasHeaders
      */
     sortData( data, res = [], i = 0 )
     {
@@ -404,7 +418,8 @@ Flounder.find = function( targets, props )
         targets = [ targets ];
     }
 
-    return Array.prototype.slice.call( targets, 0 ).map( el => new Flounder( el, props ) );
+    return Array.prototype.slice.call( targets, 0 )
+                                .map( el => new Flounder( el, props ) );
 };
 
 
