@@ -269,6 +269,19 @@ class Flounder
     {
         let props = this.props = this.props || {};
 
+        if ( props.onSelect )
+        {
+            props.onChange = props.onSelect;
+
+            console.warn( 'Please use onChange.  onSelect has been depricated and will be removed in 2.0.0' );
+
+            this.onSelect = function()
+            {
+                console.warn( 'Please use onChange.  onSelect has been depricated and will be removed in 2.0.0' );
+                this.onChange( ...arguments );
+            };
+        }
+
         for ( let opt in defaultOptions )
         {
             if ( opt !== `classes` )

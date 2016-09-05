@@ -105,6 +105,7 @@ If flounder is fed an element that already has a flounder, it will destroy it an
     multiple                : false,
     multipleTags            : false,
     multipleMessage         : '(Multiple Items Selected)',
+    onChange                : function( e, valueArray ){},
     onClose                 : function( e, valueArray ){},
     onComponentDidMount     : function(){},
     onComponentWillUnmount  : function(){},
@@ -112,7 +113,6 @@ If flounder is fed an element that already has a flounder, it will destroy it an
     onInit                  : function(){},
     onInputChange           : function( e ){},
     onOpen                  : function( e, valueArray ){},
-    onSelect                : function( e, valueArray ){}
     openOnHover             : false,
     placeholder             : 'Please choose an option',
     search                  : false,
@@ -142,6 +142,8 @@ If flounder is fed an element that already has a flounder, it will destroy it an
 
 + `multipleMessage` - (string) If there are no tags, this is the message that will be displayed in the selected area when there are multiple options selected
 
++ `onChange` - (function) Triggered when the selection is changed
+
 + `onClose` - (function) Triggered when the selectbox is closed
 
 + `onComponentDidMount` - (function) Triggered when the selectbox is finished building
@@ -155,8 +157,6 @@ If flounder is fed an element that already has a flounder, it will destroy it an
 + `onInputChange` - (function) Triggered when someone types in a search box.  note: this will do nothing if search is not enabled.
 
 + `onOpen` - (function) Triggered when the selectbox is opened
-
-+ `onSelect` - (function) Triggered when an option is selected
 
 + `openOnHover` - (boolean) replaces click to open action with hover
 

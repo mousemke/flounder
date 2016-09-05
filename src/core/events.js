@@ -807,11 +807,11 @@ const events = {
 
         try
         {
-            this.onSelect( e, this.getSelectedValues() );
+            this.onChange( e, this.getSelectedValues() );
         }
         catch( e )
         {
-            console.warn( `something may be wrong in "onSelect"`, e );
+            console.warn( `something may be wrong in "onChange"`, e );
         }
     },
 
@@ -1057,11 +1057,11 @@ const events = {
                 {
                     try
                     {
-                        this.onSelect( e, this.getSelectedValues() );
+                        this.onChange( e, this.getSelectedValues() );
                     }
                     catch( e )
                     {
-                        console.warn( `something may be wrong in "onSelect"`, e );
+                        console.warn( `something may be wrong in "onChange"`, e );
                     }
                 }
             }

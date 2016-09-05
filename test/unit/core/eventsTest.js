@@ -1515,7 +1515,7 @@ describe( 'removeMultiTag', () =>
     } );
 
 
-    it( 'should catch onSelect failures', () =>
+    it( 'should catch onChange failures', () =>
     {
         document.body.flounder = null;
 
@@ -1523,7 +1523,7 @@ describe( 'removeMultiTag', () =>
         let refs            = flounder.refs;
         let multiTagWrapper = refs.multiTagWrapper;
 
-        flounder.onSelect   =  () => a + b;
+        flounder.onChange   =  () => a + b;
 
         flounder.setByIndex( 1 );
 
@@ -1940,7 +1940,7 @@ describe( 'setSelectValue', () =>
     } );
 
 
-    it( 'should only run onSelect if it is not a programatic click' , () =>
+    it( 'should only run onChange if it is not a programatic click' , () =>
     {
         document.body.flounder = null;
         let flounder = new Flounder( document.body, { data: [ 1, 2, 3 ] } );
@@ -1953,26 +1953,26 @@ describe( 'setSelectValue', () =>
         assert.equal( flounder.___programmaticClick, false );
         assert.equal( flounder.setSelectValueClick.callCount, 1 );
 
-        sinon.stub( flounder, 'onSelect', () => {} );
+        sinon.stub( flounder, 'onChange', () => {} );
         flounder.setSelectValue( null, {} );
 
-        assert.equal( flounder.onSelect.callCount, 1 );
+        assert.equal( flounder.onChange.callCount, 1 );
     } );
 
 
-    it( 'should warn when onSelect fails' , () =>
+    it( 'should warn when onChange fails' , () =>
     {
         document.body.flounder = null;
         let flounder = new Flounder( document.body, { data: [ 1, 2, 3 ] } );
 
         sinon.stub( flounder, 'setSelectValueButton', () => {} );
-        sinon.stub( flounder, 'onSelect', () => a + b );
+        sinon.stub( flounder, 'onChange', () => a + b );
         sinon.stub( console, 'warn', () => {} );
 
         flounder.setSelectValue( { keyCode: 99 } );
 
         assert.equal( console.warn.callCount, 1 );
-        assert.equal( flounder.onSelect.callCount, 1 );
+        assert.equal( flounder.onChange.callCount, 1 );
 
         console.warn.restore();
     } );
@@ -1984,13 +1984,13 @@ describe( 'setSelectValue', () =>
         let flounder = new Flounder( document.body, { data: [ 1, 2, 3 ] } );
 
         sinon.stub( flounder, 'setSelectValueButton', () => {} );
-        sinon.stub( flounder, 'onSelect', () => {} );
+        sinon.stub( flounder, 'onChange', () => {} );
 
         flounder.toggleList.justOpened = true;
         flounder.setSelectValue( { keyCode: 99 } );
 
         assert.equal( flounder.toggleList.justOpened, false );
-        assert.equal( flounder.onSelect.callCount, 0 );
+        assert.equal( flounder.onChange.callCount, 0 );
     } );
 } );
 
