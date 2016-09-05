@@ -1,5 +1,4 @@
 
-import classes          from '/core/classes';
 import microbeHttp      from 'microbejs/src/modules/http';
 
 const utils = {

@@ -1,5 +1,4 @@
 
-import classes              from './classes';
 import utils                from './utils';
 import { setDefaultOption } from './defaults';
 
@@ -118,6 +117,7 @@ const api = {
 
             try
             {
+                let classes = this.classes;
                 target.parentNode.removeChild( target );
                 originalTarget.tabIndex = 0;
                 utils.removeClass( originalTarget, classes.HIDDEN );
@@ -163,7 +163,13 @@ const api = {
         if ( multiTagWrapper )
         {
             let tags = nativeSlice.call( multiTagWrapper.children );
-            tags.forEach( el => el.children[0].click() );
+            tags.forEach( el =>
+            {
+                if ( el.children.length )
+                {
+                    return el.children[0].click();
+                }
+            } );
         }
     },
 
@@ -180,6 +186,7 @@ const api = {
     disable( bool )
     {
         let refs        = this.refs;
+        let classes     = this.classes;
         let flounder    = refs.flounder;
         let selected    = refs.selected;
 
@@ -234,7 +241,8 @@ const api = {
 
             if ( el )
             {
-                let opt = refs.selectOptions[ index ];
+                let opt     = refs.selectOptions[ index ];
+                let classes = this.classes;
 
                 if ( reenable )
                 {
@@ -425,6 +433,7 @@ const api = {
         let _el         = this.refs.select;
         let opts        = [], opt;
         let _data       = _el.options;
+        let classes     = this.classes;
 
         nativeSlice.call( _data ).forEach( el =>
         {
@@ -463,31 +472,40 @@ const api = {
      */
     loadDataFromUrl( url, callback )
     {
-        utils.http.get( url ).then( data =>
-        {
-            if ( data )
-            {
-                this.data = JSON.parse( data );
+        let classes = this.classes;
 
-                if ( callback )
-                {
-                    callback( this.data );
-                }
-            }
-            else
-            {
-                console.warn( `no data recieved` );
-            }
-        } ).catch( e =>
+        try
         {
-            console.warn( `something happened: `, e );
-            this.rebuild( [ {
-                        text        : ``,
-                        value       : ``,
-                        index       : 0,
-                        extraClass  : classes.LOADING_FAILED
-                    } ] );
-        } );
+            utils.http.get( url ).then( data =>
+            {
+                if ( data )
+                {
+                    this.data = JSON.parse( data );
+
+                    if ( callback )
+                    {
+                        callback( this.data );
+                    }
+                }
+                else
+                {
+                    console.warn( `no data recieved` );
+                }
+            } ).catch( e =>
+            {
+                console.warn( `something happened: `, e );
+                this.rebuild( [ {
+                            text        : ``,
+                            value       : ``,
+                            index       : 0,
+                            extraClass  : classes.LOADING_FAILED
+                        } ] );
+            } );
+        }
+        catch ( e )
+        {
+            console.warn( `something happened.  check your loadDataFromUrl callback `, e );
+        }
 
         return [ {
             text        : ``,
@@ -573,11 +591,9 @@ const api = {
 
             if ( el )
             {
-                let isOpen = utils.hasClass( refs.wrapper, classes.OPEN );
-                this.toggleList( isOpen ? `close` : `open` );
-                this.___forceMultiple       = multiple && this.multiple;
+                this.___forceMultiple     = multiple && this.multiple;
+                this.___programmaticClick = programmatic;
 
-                this.___programmaticClick   = programmatic;
                 el.click();
 
                 return el;

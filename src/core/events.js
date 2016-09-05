@@ -1,5 +1,4 @@
 
-import classes          from './classes';
 import search           from './search';
 import utils            from './utils';
 import keycodes         from './keycodes';
@@ -25,19 +24,6 @@ const events = {
         {
             refs.wrapper.addEventListener( `mouseenter`, this.firstTouchController );
         }
-    },
-
-
-    /**
-     * ## addHoverClass
-     *
-     * adds a hover class to an element
-     *
-     * @return Void_
-     */
-    addHoverClass()
-    {
-        utils.addClass( this, classes.HOVER );
     },
 
 
@@ -124,12 +110,14 @@ const events = {
      */
     addOptionsListeners()
     {
+        let classes = this.classes;
+
         this.refs.data.forEach( ( dataObj, i ) =>
         {
             if ( dataObj.tagName === `DIV` )
             {
-                dataObj.addEventListener( `mouseenter`, this.addHoverClass );
-                dataObj.addEventListener( `mouseleave`, this.removeHoverClass );
+                dataObj.addEventListener( `mouseenter`, utils.addClass( dataObj, classes.HOVER ) );
+                dataObj.addEventListener( `mouseleave`, utils.removeClass( dataObj, classes.HOVER ) );
 
                 dataObj.addEventListener( `click`, this.clickSet );
             }
@@ -195,7 +183,14 @@ const events = {
      */
     addSearchListeners()
     {
-        let search = this.refs.search;
+        let search                  = this.refs.search;
+        let multiTagWrapper         = this.refs.multiTagWrapper;
+
+        if( multiTagWrapper )
+        {
+            multiTagWrapper.addEventListener( `click`, this.toggleListSearchClick );
+        }
+
         search.addEventListener( `click`, this.toggleListSearchClick );
         search.addEventListener( `focus`, this.toggleListSearchClick );
         search.addEventListener( `keyup`, this.fuzzySearch );
@@ -223,7 +218,8 @@ const events = {
         // http://stackoverflow.com/questions/34660500/mobile-safari-multi-select-bug
         if ( this.isIos )
         {
-            let firstOption = select.children[0];
+            let classes     = this.classes;
+            let firstOption = select[0];
 
             let plug        = document.createElement( `OPTION` );
             plug.disabled   = true;
@@ -526,10 +522,12 @@ const events = {
 
         this.setSelectValue( {}, e );
 
-        if ( !this.multiple || !e[ this.multiSelect ] )
+        if ( !this.___programmaticClick )
         {
             this.toggleList( e );
         }
+
+        this.___programmaticClick = false;
     },
 
 
@@ -548,9 +546,11 @@ const events = {
         nativeSlice.call( multiTagWrapper.children, 0 ).forEach( el =>
         {
             let firstChild = el.firstChild;
-
-            firstChild.removeEventListener( `click`, this.removeMultiTag );
-            el.removeEventListener( `keydown`, this.checkMultiTagKeydown );
+            if ( firstChild )
+            {
+                firstChild.removeEventListener( `click`, this.removeMultiTag );
+                el.removeEventListener( `keydown`, this.checkMultiTagKeydown );
+            }
         } );
 
         multiTagWrapper.innerHTML = ``;
@@ -638,6 +638,7 @@ const events = {
         if ( this.isIos )
         {
             let select  = this.refs.select;
+            let classes = this.classes;
             let plug    = select.querySelector( `.${classes.PLUG}` );
 
             if ( plug )
@@ -715,6 +716,8 @@ const events = {
 
 
     /**
+
+
      * ## removeListeners
      *
      * removes event listeners from flounder.  normally pre unload
@@ -994,10 +997,11 @@ const events = {
             index = dataMaxIndex;
         }
 
-        selectTag.selectedIndex = index;
-
+        let classes             = this.classes;
         let hasClass            = utils.hasClass;
         let dataAtIndex         = data[ index ];
+
+        selectTag.selectedIndex = index;
 
         if ( hasClass( dataAtIndex, classes.HIDDEN ) ||
              hasClass( dataAtIndex, classes.SELECTED_HIDDEN ) ||
@@ -1066,8 +1070,6 @@ const events = {
                 }
             }
         }
-
-        this.___programmaticClick = false;
     },
 
 
@@ -1078,7 +1080,7 @@ const events = {
      *
      * @return _Void_
      */
-    setSelectValueButton()
+    setSelectValueButton( e )
     {
         let refs            = this.refs;
         let data            = refs.data;
@@ -1086,6 +1088,9 @@ const events = {
         let selectedClass   = this.selectedClass;
 
         let selectedOption;
+
+        if( this.multipleTags )
+            return;
 
         this.removeSelectedClass( data );
 
@@ -1175,17 +1180,20 @@ const events = {
      * post toggleList, this runs it the list should be closed
      *
      * @param {Object} e event object
-     * @param {DOMElement} optionsList the options list
+     * @param {DOMElement} optionsListWrapper the options list
      * @param {Object} refs contains the references of the elements in flounder
      * @param {DOMElement} wrapper wrapper of flounder
      * @param {Boolean} exit prevents refocus. used while tabbing away
      *
      * @return _Void_
      */
-    toggleClosed( e, optionsList, refs, wrapper, exit = false )
+    toggleClosed( e, refs, wrapper = this.refs.wrapper, exit = false )
     {
-        utils.addClass( optionsList, classes.HIDDEN );
+        let classes = this.classes;
+
+        utils.addClass( refs.optionsListWrapper, classes.HIDDEN );
         this.removeSelectKeyListener();
+
         utils.removeClass( wrapper, classes.OPEN );
 
         let qsHTML = document.querySelector( `html` );
@@ -1227,8 +1235,11 @@ const events = {
      */
     toggleList( e, force )
     {
+        let classes     = this.classes;
         let refs        = this.refs;
+
         let optionsList = refs.optionsListWrapper;
+
         let wrapper     = refs.wrapper;
         let isHidden    = utils.hasClass( optionsList, classes.HIDDEN );
         let type        = e.type;
@@ -1236,7 +1247,7 @@ const events = {
         if ( type === `mouseleave` || force === `close` || !isHidden )
         {
             this.toggleList.justOpened = false;
-            this.toggleClosed( e, optionsList, refs, wrapper );
+            this.toggleClosed( e, refs, wrapper );
         }
         else
         {
@@ -1245,7 +1256,7 @@ const events = {
                 this.toggleList.justOpened = true;
             }
 
-            this.toggleOpen( e, optionsList, refs, wrapper );
+            this.toggleOpen( e, refs, wrapper );
         }
     },
 
@@ -1259,6 +1270,8 @@ const events = {
      */
     toggleListSearchClick( e )
     {
+        let classes = this.classes;
+
         if ( !utils.hasClass( this.refs.wrapper, classes.OPEN ) )
         {
             this.toggleList( e, `open` );
@@ -1272,20 +1285,22 @@ const events = {
      * post toggleList, this runs it the list should be opened
      *
      * @param {Object} e event object
-     * @param {DOMElement} optionsList the options list
+     * @param {DOMElement} optionsListWrapper the options list
      * @param {Object} refs contains the references of the elements in flounder
      * @param {DOMElement} wrapper wrapper of flounder
      *
      * @return _Void_
      */
-    toggleOpen( e, optionsList, refs, wrapper )
+    toggleOpen( e, refs )
     {
         this.addSelectKeyListener();
 
         if ( !this.isIos || this.search || this.multipleTags === true )
         {
-            utils.removeClass( optionsList, classes.HIDDEN );
-            utils.addClass( wrapper, classes.OPEN );
+            let classes = this.classes;
+
+            utils.removeClass( refs.optionsListWrapper, classes.HIDDEN );
+            utils.addClass( refs.wrapper, classes.OPEN );
 
             let qsHTML = document.querySelector( `html` );
 
@@ -1307,6 +1322,12 @@ const events = {
             refs.search.focus();
         }
 
+        if( refs.multiTagWrapper && refs.multiTagWrapper.childNodes.length === refs.optionsList.childNodes.length )
+        {
+            this.removeNoResultsMessage();
+            this.addNoMoreOptionsMessage();
+        }
+
         if ( this.ready )
         {
             try
@@ -1318,6 +1339,7 @@ const events = {
                 console.warn( `something may be wrong in "onOpen"`, e );
             }
         }
+
     }
 };
 

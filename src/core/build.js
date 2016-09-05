@@ -1,5 +1,4 @@
 
-import classes                  from './classes';
 import { setDefaultOption }     from './defaults';
 import utils                    from './utils';
 
@@ -12,14 +11,14 @@ const build = {
      *
      * @param {DOMElement} el option element to add description to
      * @param {String} text description
-     *
+     * @param {String} CSS class to apply
      * @return _Void_
      */
-    addOptionDescription( el, text )
+    addOptionDescription( el, text, className )
     {
         let div         = document.createElement( `div` );
         div.innerHTML   = text;
-        div.className   = classes.DESCRIPTION;
+        div.className   = className;
         el.appendChild( div );
     },
 
@@ -37,7 +36,8 @@ const build = {
     {
         if ( this.search )
         {
-            let search = utils.constructElement( {
+            let classes = this.classes;
+            let search  = utils.constructElement( {
                                     tagname     : `input`,
                                     type        : `text`,
                                     className   : classes.SEARCH
@@ -102,6 +102,7 @@ const build = {
         }
         else
         {
+            let classes     = this.classes;
             let arrow       = constructElement( { className : classes.ARROW } );
             let arrowInner  = constructElement( { className : classes.ARROW_INNER } );
             arrow.appendChild( arrowInner )
@@ -137,6 +138,7 @@ const build = {
         let refs                    = this.refs;
         let selectRef               = refs.select;
         let allowHTML               = this.allowHTML;
+        let classes                 = this.classes;
 
         /**
          * ## buildDiv
@@ -172,7 +174,7 @@ const build = {
 
             if ( dataObj.description )
             {
-                addOptionDescription( data, dataObj.description );
+                addOptionDescription( data, dataObj.description, classes.DESCRIPTION );
             }
 
             data.className += dataObj.extraClass ? `  ${dataObj.extraClass}` : ``;
@@ -261,7 +263,7 @@ const build = {
             {
                 let section = constructElement( { tagname   : `div`,
                                                 className   : classes.SECTION } );
-                let header = constructElement( { tagname    : `div`,
+                let header  = constructElement( { tagname    : `div`,
                                                 className   : classes.HEADER } );
                 header.textContent = dataObj.header;
                 section.appendChild( header );
@@ -308,16 +310,18 @@ const build = {
     buildDom()
     {
         let props               = this.props;
+        let classes             = this.classes;
         this.refs               = {};
 
         let constructElement    = utils.constructElement;
 
-        let wrapperClass        = classes.MAIN_WRAPPER;
-        let wrapper             = utils.constructElement( { className : this.wrapperClass ?
-                                    `${wrapperClass}  ${this.wrapperClass}` : wrapperClass } );
+        let wrapper             = utils.constructElement( { className : classes.MAIN_WRAPPER } );
+
         let flounderClass       = classes.MAIN;
-        let flounder            = constructElement( { className : this.flounderClass ?
-                                    `${flounderClass}  ${this.flounderClass}` : flounderClass } );
+
+        let flounderClasses     = this.multipleTags ? flounderClass + ' ' + classes.MULTIPLE_TAG_FLOUNDER : flounderClass;
+
+        let flounder            = constructElement( { className : flounderClasses } );
 
         flounder.setAttribute( `aria-hidden`, true );
         flounder.tabIndex       = 0;
@@ -329,10 +333,16 @@ const build = {
         let data                = this.data;
         let defaultValue        = this._default = setDefaultOption( this, this.props, data );
 
-        let selected            = constructElement( { className : classes.SELECTED_DISPLAYED,
-                                        'data-value' : defaultValue.value, 'data-index' : defaultValue.index || -1 } );
+        let selectedDisplayedClasses = this.multipleTags ? classes.SELECTED_DISPLAYED + ' ' + classes.MULTIPLE_SELECTED : classes.SELECTED_DISPLAYED;
+
+        let selected            = constructElement( { className : selectedDisplayedClasses,
+                                        'data-value' : defaultValue.value, 'data-index' : defaultValue.index } );
 
         let multiTagWrapper     = this.multipleTags ? constructElement( { className : classes.MULTI_TAG_LIST } ) : null;
+
+        let searchLocation      = multiTagWrapper || flounder;
+
+        let search              = this.addSearch( searchLocation );
 
         let optionsListWrapper  = constructElement( { className : `${classes.OPTIONS_WRAPPER}  ${classes.HIDDEN}` } );
         let optionsList         = constructElement( { className : classes.LIST } );
@@ -354,8 +364,6 @@ const build = {
                 flounder.appendChild( el );
             }
         } );
-
-        let search              = this.addSearch( flounder );
 
         let selectOptions;
 
@@ -397,6 +405,7 @@ const build = {
      */
     buildMultiTag( option )
     {
+        let classes     = this.classes;
         let optionText  = option.innerHTML;
         let span        = document.createElement( `SPAN` )
         span.className  = classes.MULTIPLE_SELECT_TAG;
@@ -430,6 +439,7 @@ const build = {
         let target  = this.target;
         let refs    = this.refs;
         let select  = refs.select;
+        let classes = this.classes;
 
         if ( target.tagName === `SELECT` )
         {
@@ -578,6 +588,7 @@ const build = {
 
         if ( target.tagName === `INPUT` )
         {
+            let classes = this.classes;
             utils.addClass( target, classes.HIDDEN );
             target.setAttribute( `aria-hidden`, true );
             target.tabIndex = -1;
