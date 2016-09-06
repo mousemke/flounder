@@ -28,6 +28,19 @@ const events = {
 
 
     /**
+     * ## addHoverClass
+     *
+     * adds a hover class to an element
+     *
+     * @return Void_
+     */
+    addHoverClass( e )
+    {
+        utils.addClass( e.target, this.classes.HOVER );
+    },
+
+
+    /**
      * ## addListeners
      *
      * adds listeners on render
@@ -110,14 +123,12 @@ const events = {
      */
     addOptionsListeners()
     {
-        let classes = this.classes;
-
         this.refs.data.forEach( ( dataObj, i ) =>
         {
             if ( dataObj.tagName === `DIV` )
             {
-                dataObj.addEventListener( `mouseenter`, utils.addClass( dataObj, classes.HOVER ) );
-                dataObj.addEventListener( `mouseleave`, utils.removeClass( dataObj, classes.HOVER ) );
+                dataObj.addEventListener( `mouseenter`, this.addHoverClass );
+                dataObj.addEventListener( `mouseleave`, this.removeHoverClass );
 
                 dataObj.addEventListener( `click`, this.clickSet );
             }
@@ -709,9 +720,9 @@ const events = {
      *
      * @return Void_
      */
-    removeHoverClass()
+    removeHoverClass( e )
     {
-        utils.removeClass( this, classes.HOVER );
+        utils.removeClass( e.target, this.classes.HOVER );
     },
 
 

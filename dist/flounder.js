@@ -1841,7 +1841,7 @@ var build = {
     bindThis: function bindThis() {
         var _this = this;
 
-        ['catchBodyClick', 'checkClickTarget', 'checkFlounderKeypress', 'checkMultiTagKeydown', 'clearPlaceholder', 'clickSet', 'divertTarget', 'displayMultipleTags', 'firstTouchController', 'fuzzySearch', 'removeMultiTag', 'setKeypress', 'setSelectValue', 'toggleList', 'toggleListSearchClick'].forEach(function (func) {
+        ['addHoverClass', 'catchBodyClick', 'checkClickTarget', 'checkFlounderKeypress', 'checkMultiTagKeydown', 'clearPlaceholder', 'clickSet', 'divertTarget', 'displayMultipleTags', 'firstTouchController', 'fuzzySearch', 'removeHoverClass', 'removeMultiTag', 'setKeypress', 'setSelectValue', 'toggleList', 'toggleListSearchClick'].forEach(function (func) {
             _this[func] = _this[func].bind(_this);
             _this[func].___isBound = true;
         });
@@ -2302,7 +2302,6 @@ var build = {
         target.flounder = this;
 
         if (target.tagName === 'INPUT') {
-            console.log(this);
             var classes = this.classes;
             _utils2.default.addClass(target, classes.HIDDEN);
             target.setAttribute('aria-hidden', true);
@@ -2467,15 +2466,13 @@ var defaults = {
             if (select) {
                 var escapedText = self.allowHTML ? _default.text : _utils2.default.escapeHTML(_default.text);
 
-                if (!select[0] || select[0].value !== '') {
-                    var defaultOption = _utils2.default.constructElement({ tagname: 'option',
-                        className: classes.OPTION_TAG,
-                        value: _default.value });
-                    defaultOption.innerHTML = escapedText;
+                var defaultOption = _utils2.default.constructElement({ tagname: 'option',
+                    className: classes.OPTION_TAG,
+                    value: _default.value });
+                defaultOption.innerHTML = escapedText;
 
-                    select.insertBefore(defaultOption, select[0]);
-                    self.refs.selectOptions.unshift(defaultOption);
-                }
+                select.insertBefore(defaultOption, select[0]);
+                self.refs.selectOptions.unshift(defaultOption);
             }
 
             data.unshift(_default);
@@ -2646,6 +2643,18 @@ var events = {
 
 
     /**
+     * ## addHoverClass
+     *
+     * adds a hover class to an element
+     *
+     * @return Void_
+     */
+    addHoverClass: function addHoverClass(e) {
+        _utils2.default.addClass(e.target, this.classes.HOVER);
+    },
+
+
+    /**
      * ## addListeners
      *
      * adds listeners on render
@@ -2718,12 +2727,10 @@ var events = {
     addOptionsListeners: function addOptionsListeners() {
         var _this2 = this;
 
-        var classes = this.classes;
-
         this.refs.data.forEach(function (dataObj, i) {
             if (dataObj.tagName === 'DIV') {
-                dataObj.addEventListener('mouseenter', _utils2.default.addClass(dataObj, classes.HOVER));
-                dataObj.addEventListener('mouseleave', _utils2.default.removeClass(dataObj, classes.HOVER));
+                dataObj.addEventListener('mouseenter', _this2.addHoverClass);
+                dataObj.addEventListener('mouseleave', _this2.removeHoverClass);
 
                 dataObj.addEventListener('click', _this2.clickSet);
             }
@@ -3249,8 +3256,8 @@ var events = {
      *
      * @return Void_
      */
-    removeHoverClass: function removeHoverClass() {
-        _utils2.default.removeClass(this, classes.HOVER);
+    removeHoverClass: function removeHoverClass(e) {
+        _utils2.default.removeClass(e.target, this.classes.HOVER);
     },
 
 

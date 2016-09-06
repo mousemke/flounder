@@ -62,6 +62,7 @@ const build = {
     bindThis()
     {
         [ 
+            `addHoverClass`,
             `catchBodyClick`,
             `checkClickTarget`,
             `checkFlounderKeypress`,
@@ -72,6 +73,7 @@ const build = {
             `displayMultipleTags`,
             `firstTouchController`,
             `fuzzySearch`,
+            `removeHoverClass`,
             `removeMultiTag`,
             `setKeypress`,
             `setSelectValue`,
