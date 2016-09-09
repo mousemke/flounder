@@ -25,13 +25,6 @@ describe( 'defaultOptions', () =>
 
     it( 'should have the correct default prop', () =>
     {
-        let classes = {
-                        flounder    : ``,
-                        hidden      : `flounder--hidden`,
-                        selected    : `flounder__option--selected`,
-                        wrapper     : ``
-                    };
-
         assert.equal( _d.allowHTML, false );
         assert.deepEqual( _d.classes, classes );
         assert.equal( _d.defaultEmpty, false );

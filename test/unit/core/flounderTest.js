@@ -199,10 +199,10 @@ describe( 'fuzzySearch', () =>
                                                         search          : true
                                                     } );
     let e = {
-                keyCode : 77,
-                preventDefault : e => e,
-                target  : { value : 'm  ' }
-            };
+        keyCode : 77,
+        preventDefault : e => e,
+        target  : { value : 'm  ' }
+    };
 
 
     it( 'should exist', () =>
@@ -440,7 +440,7 @@ describe( 'initializeOptions', () =>
         'wow'
     ];
 
-    let flounder = new Flounder( document.body, { data: data, multiple: 'doge', classes: { flounder: 'cat' } } );
+    let flounder = new Flounder( document.body, { data: data, multiple: 'doge', classes: { MAIN: 'cat' } } );
 
     it( 'should exist', () =>
     {
@@ -452,11 +452,17 @@ describe( 'initializeOptions', () =>
     {
         assert.deepEqual( flounder.data, data );
         assert.equal( flounder.multiple, 'doge' );
-        assert.equal( flounder.flounderClass, 'cat' );
+        assert.equal( flounder.classes.MAIN, 'cat' );
     } );
 
 
-    let flounder2 = new Flounder( document.body, { data: data, defaultEmpty: true, multipleTags: true } );
+    let f2Options = {
+        data            : data,
+        defaultEmpty    : true,
+        multipleTags    : true
+    };
+
+    let flounder2 = new Flounder( document.body, f2Options );
 
 
     it( 'should have an empty placeholder if set empty', () =>
