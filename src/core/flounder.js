@@ -114,7 +114,7 @@ class Flounder
         {
             const data    = this.refs.data;
 
-            data.forEach( i =>
+            data.forEach( el =>
             {
                 utils.addClass( el, classes.SEARCH_HIDDEN );
             } );

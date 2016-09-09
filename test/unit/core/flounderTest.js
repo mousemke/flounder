@@ -271,7 +271,7 @@ describe( 'fuzzySearch', () =>
     {
         e.keyCode = keycodes.BACKSPACE;
 
-        flounder.fuzzySearch.__previousValue = '';
+        flounder.fuzzySearch.previousValue = '';
 
         flounder.fuzzySearch( e );
 
