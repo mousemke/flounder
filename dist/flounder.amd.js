@@ -6,7 +6,7 @@
  * Released under the MIT license
  * https://github.com/sociomantic-tsunami/flounder/license
  *
- * Date: Tue Sep 06 2016
+ * Date: Fri Sep 09 2016
  * "This, so far, is the best Flounder ever"
  */
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
@@ -1182,6 +1182,7 @@ var api = {
         this.componentWillUnmount();
 
         var refs = this.refs;
+        var classes = this.classes;
         var originalTarget = this.originalTarget;
         var tagName = originalTarget.tagName;
 
@@ -1312,14 +1313,14 @@ var api = {
 
             if (el) {
                 var opt = refs.selectOptions[index];
-                var _classes2 = this.classes;
+                var classes = this.classes;
 
                 if (reenable) {
                     opt.disabled = false;
-                    _utils2.default.removeClass(el, _classes2.DISABLED);
+                    _utils2.default.removeClass(el, classes.DISABLED);
                 } else {
                     opt.disabled = true;
-                    _utils2.default.addClass(el, _classes2.DISABLED);
+                    _utils2.default.addClass(el, classes.DISABLED);
                 }
 
                 return [el, opt];
@@ -1663,7 +1664,7 @@ var api = {
 
             if (el) {
                 this.___forceMultiple = multiple && this.multiple;
-                this.___programmaticClick = programmatic;
+                this.programmaticClick = programmatic;
 
                 el.click();
 
@@ -1813,7 +1814,7 @@ var build = {
      *
      * @return _Mixed_ search node or false
      */
-    addSearch: function addSearch(flounder) {
+    addSearch: function addSearch(searchSibling, flounder) {
         if (this.search) {
             var classes = this.classes;
             var search = _utils2.default.constructElement({
@@ -1821,7 +1822,8 @@ var build = {
                 type: 'text',
                 className: classes.SEARCH
             });
-            flounder.appendChild(search);
+
+            flounder.insertBefore(search, searchSibling);
 
             return search;
         }
@@ -2076,10 +2078,6 @@ var build = {
 
         var multiTagWrapper = this.multipleTags ? constructElement({ className: classes.MULTI_TAG_LIST }) : null;
 
-        var searchLocation = multiTagWrapper || flounder;
-
-        var search = this.addSearch(searchLocation);
-
         var optionsListWrapper = constructElement({ className: classes.OPTIONS_WRAPPER + '  ' + classes.HIDDEN });
         var optionsList = constructElement({ className: classes.LIST });
         optionsList.setAttribute('role', 'listbox');
@@ -2097,6 +2095,9 @@ var build = {
                 flounder.appendChild(el);
             }
         });
+
+        var searchLocation = this.multipleTags ? optionsListWrapper : selected;
+        var search = this.addSearch(searchLocation, flounder);
 
         var selectOptions = void 0;
 
@@ -2405,6 +2406,8 @@ var defaultOptions = exports.defaultOptions = {
 
 var defaults = {
 
+    defaultOptions: defaultOptions,
+
     /**
      * ## setDefaultOption
      *
@@ -2415,7 +2418,6 @@ var defaults = {
      *
      * @return _Void_
      */
-
     setDefaultOption: function setDefaultOption(self) {
         var configObj = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
         var data = arguments[2];
@@ -2511,39 +2513,6 @@ var defaults = {
         };
 
         /**
-         * ## sortData
-         *
-         * checks the data object for header options, and sorts it accordingly
-         *
-         * @return _Boolean_ hasHeaders
-         */
-        var sortData = function sortData(data) {
-            var res = arguments.length <= 1 || arguments[1] === undefined ? [] : arguments[1];
-            var i = arguments.length <= 2 || arguments[2] === undefined ? 0 : arguments[2];
-
-            data.forEach(function (d) {
-                if (d.header) {
-                    res = sortData(d.data, res, i);
-                } else {
-                    if (typeof d !== 'object') {
-                        d = {
-                            text: d,
-                            value: d,
-                            index: i
-                        };
-                    } else {
-                        d.index = i;
-                    }
-
-                    res.push(d);
-                    i++;
-                }
-            });
-
-            return res;
-        };
-
-        /**
          * ## checkDefaultPriority
          *
          * sorts out which default should be gotten by priority
@@ -2551,7 +2520,7 @@ var defaults = {
          * @return {Object} default data object
          */
         var checkDefaultPriority = function checkDefaultPriority() {
-            var _data = sortData(data);
+            var _data = self.sortData(data);
 
             if ((configObj.multipleTags || configObj.multiple) && !configObj.defaultIndex && !configObj.defaultValue) {
                 configObj.placeholder = configObj.placeholder || defaultOptions.placeholder;
@@ -2589,6 +2558,42 @@ var defaults = {
         data = data || configObj.data || [];
 
         return checkDefaultPriority();
+    },
+
+
+    /**
+     * ## sortData
+     *
+     * checks the data object for header options, and sorts it accordingly
+     *
+     * @return _Boolean_ hasHeaders
+     */
+    sortData: function sortData(data) {
+        var _this = this;
+
+        var res = arguments.length <= 1 || arguments[1] === undefined ? [] : arguments[1];
+        var i = arguments.length <= 2 || arguments[2] === undefined ? 0 : arguments[2];
+
+        data.forEach(function (d) {
+            if (d.header) {
+                res = _this.sortData(d.data, res, i);
+            } else {
+                if (typeof d !== 'object') {
+                    d = {
+                        text: d,
+                        value: d,
+                        index: i
+                    };
+                } else {
+                    d.index = i;
+                }
+
+                res.push(d);
+                i++;
+            }
+        });
+
+        return res;
     }
 };
 
@@ -2820,12 +2825,13 @@ var events = {
         // weird shit
         // http://stackoverflow.com/questions/34660500/mobile-safari-multi-select-bug
         if (this.isIos) {
-            var _classes = this.classes;
-            var firstOption = select[0];
+            var classes = this.classes;
+            var firstOption = select.children[0];
 
             var plug = document.createElement('OPTION');
             plug.disabled = true;
-            plug.className = _classes.PLUG;
+            plug.setAttribute('disabled', true);
+            plug.className = classes.PLUG;
             select.insertBefore(plug, firstOption);
         }
 
@@ -2913,13 +2919,13 @@ var events = {
 
                 if (res.length === 1) {
                     var el = res[0];
+
                     _this3.setByIndex(el.index, _this3.multiple);
 
-                    if (_this3.multipleTags) {
-                        setTimeout(function () {
-                            return refs.search.focus();
-                        }, 200);
-                    }
+                    // if ( this.multipleTags )
+                    // {
+                    //     setTimeout( () => refs.search.focus(), 200 );
+                    // }
                 }
 
                 return {
@@ -2944,6 +2950,7 @@ var events = {
     checkFlounderKeypress: function checkFlounderKeypress(e) {
         var keyCode = e.keyCode;
         var refs = this.refs;
+        var classes = this.classes;
 
         if (keyCode === _keycodes2.default.TAB) {
             var optionsList = refs.optionsListWrapper;
@@ -3089,11 +3096,11 @@ var events = {
 
         this.setSelectValue({}, e);
 
-        if (!this.___programmaticClick) {
+        if (!this.programmaticClick) {
             this.toggleList(e);
         }
 
-        this.___programmaticClick = false;
+        this.programmaticClick = false;
     },
 
 
@@ -3193,8 +3200,8 @@ var events = {
         // http://stackoverflow.com/questions/34660500/mobile-safari-multi-select-bug
         if (this.isIos) {
             var select = this.refs.select;
-            var _classes2 = this.classes;
-            var plug = select.querySelector('.' + _classes2.PLUG);
+            var classes = this.classes;
+            var plug = select.querySelector('.' + classes.PLUG);
 
             if (plug) {
                 select.removeChild(plug);
@@ -3305,6 +3312,7 @@ var events = {
 
         var value = void 0;
         var index = void 0;
+        var classes = this.classes;
         var refs = this.refs;
         var select = refs.select;
         var selected = refs.selected;
@@ -3553,7 +3561,7 @@ var events = {
 
         this.displaySelected(refs.selected, refs);
 
-        if (!this.___programmaticClick) {
+        if (!this.programmaticClick) {
             // tab, shift, ctrl, alt, caps, cmd
             var nonKeys = [9, 16, 17, 18, 20, 91];
 
@@ -3569,6 +3577,8 @@ var events = {
                 }
             }
         }
+
+        this.programmaticClick = false;
     },
 
 
@@ -3680,9 +3690,9 @@ var events = {
      *
      * @return _Void_
      */
-    toggleClosed: function toggleClosed(e, refs) {
-        var wrapper = arguments.length <= 2 || arguments[2] === undefined ? this.refs.wrapper : arguments[2];
-        var exit = arguments.length <= 3 || arguments[3] === undefined ? false : arguments[3];
+    toggleClosed: function toggleClosed(e, optionsList, refs) {
+        var wrapper = arguments.length <= 3 || arguments[3] === undefined ? this.refs.wrapper : arguments[3];
+        var exit = arguments.length <= 4 || arguments[4] === undefined ? false : arguments[4];
 
         var classes = this.classes;
 
@@ -3734,13 +3744,13 @@ var events = {
 
         if (type === 'mouseleave' || force === 'close' || !isHidden) {
             this.toggleList.justOpened = false;
-            this.toggleClosed(e, refs, wrapper);
+            this.toggleClosed(e, optionsList, refs, wrapper);
         } else {
             if (type === 'keydown') {
                 this.toggleList.justOpened = true;
             }
 
-            this.toggleOpen(e, refs, wrapper);
+            this.toggleOpen(e, optionsList, refs, wrapper);
         }
     },
 
@@ -3773,14 +3783,14 @@ var events = {
      *
      * @return _Void_
      */
-    toggleOpen: function toggleOpen(e, refs) {
+    toggleOpen: function toggleOpen(e, optionsList, refs) {
         this.addSelectKeyListener();
 
         if (!this.isIos || this.search || this.multipleTags === true) {
-            var _classes3 = this.classes;
+            var classes = this.classes;
 
-            _utils2.default.removeClass(refs.optionsListWrapper, _classes3.HIDDEN);
-            _utils2.default.addClass(refs.wrapper, _classes3.OPEN);
+            _utils2.default.removeClass(refs.optionsListWrapper, classes.HIDDEN);
+            _utils2.default.addClass(refs.wrapper, classes.OPEN);
 
             var qsHTML = document.querySelector('html');
 
@@ -4039,7 +4049,7 @@ var Flounder = function () {
 
             var val = e.target.value.trim();
 
-            this.fuzzySearch.__previousValue = val;
+            this.fuzzySearch.previousValue = val;
 
             var matches = this.search.isThereAnythingRelatedTo(val) || [];
 
@@ -4083,7 +4093,7 @@ var Flounder = function () {
         key: 'fuzzySearch',
         value: function fuzzySearch(e) {
             this.lastSearchEvent = e;
-            this.fuzzySearch.__previousValue = this.fuzzySearch.__previousValue || '';
+            this.fuzzySearch.previousValue = this.fuzzySearch.previousValue || '';
 
             try {
                 this.onInputChange(e);
@@ -4097,7 +4107,7 @@ var Flounder = function () {
                 var keyCode = e.keyCode;
 
                 if (keyCode !== _keycodes2.default.UP && keyCode !== _keycodes2.default.DOWN && keyCode !== _keycodes2.default.ENTER && keyCode !== _keycodes2.default.ESCAPE) {
-                    if (this.multipleTags && keyCode === _keycodes2.default.BACKSPACE && this.fuzzySearch.__previousValue === '') {
+                    if (this.multipleTags && keyCode === _keycodes2.default.BACKSPACE && this.fuzzySearch.previousValue === '') {
                         var lastTag = this.refs.multiTagWrapper.lastChild;
 
                         if (lastTag) {
@@ -4155,6 +4165,7 @@ var Flounder = function () {
 
             this.bindThis();
             this.initializeOptions();
+
             this.setTarget(target);
 
             if (this.search) {
@@ -4245,7 +4256,7 @@ var Flounder = function () {
                 this.multiple = true;
                 this.selectedClass += '  ' + this.classes.SELECTED_HIDDEN;
 
-                if (!this.placeholder) {
+                if (this.placeholder === undefined) {
                     this.placeholder = _defaults.defaultOptions.placeholder;
                 }
             }
@@ -4880,29 +4891,29 @@ var utils = {
      *
      * on the quest to nuke jquery, a wild helper function appears
      *
-     * @param {DOMElement} _el target element
+     * @param {DOMElement} el target element
      * @param {String} _class class to add
      *
      * @return _Void_
      */
 
-    addClass: function addClass(_el, _class) {
+    addClass: function addClass(el, _class) {
         if (typeof _class !== 'string' && _class.length) {
             _class.forEach(function (_c) {
-                utils.addClass(_el, _c);
+                utils.addClass(el, _c);
             });
 
             return true;
         }
 
-        var _elClass = _el.className;
-        var _elClassLength = _elClass.length;
+        var elClass = el.className;
+        var elClassLength = elClass.length;
 
-        if (!utils.hasClass(_el, _class) && _elClass.slice(0, _class.length + 1) !== _class + ' ' && _elClass.slice(_elClassLength - _class.length - 1, _elClassLength) !== ' ' + _class) {
-            _elClass += '  ' + _class;
+        if (!utils.hasClass(el, _class) && elClass.slice(0, _class.length + 1) !== _class + ' ' && elClass.slice(elClassLength - _class.length - 1, elClassLength) !== ' ' + _class) {
+            elClass += '  ' + _class;
         }
 
-        _el.className = _elClass.trim();
+        el.className = elClass.trim();
     },
 
 
@@ -4911,18 +4922,18 @@ var utils = {
      *
      * attached data attributes and others (seperately)
      *
-     * @param {DOMElement} _el element to assign attributes
-     * @param {Object} _elObj contains the attributes to attach
+     * @param {DOMElement} el element to assign attributes
+     * @param {Object} elObj contains the attributes to attach
      *
      * @return _Void_
      */
-    attachAttributes: function attachAttributes(_el, _elObj) {
-        if (_elObj) {
-            for (var att in _elObj) {
+    attachAttributes: function attachAttributes(el, elObj) {
+        if (elObj) {
+            for (var att in elObj) {
                 if (att.slice(0, 5) === 'data-') {
-                    _el.setAttribute(att, _elObj[att]);
+                    el.setAttribute(att, elObj[att]);
                 } else {
-                    _el[att] = _elObj[att];
+                    el[att] = elObj[att];
                 }
             }
         } else {
@@ -5106,7 +5117,7 @@ var utils = {
 
             return true;
         }
-
+        // console.trace()
         var baseClass = el.className;
         var baseClassLength = baseClass.length;
         var classLength = _class.length;

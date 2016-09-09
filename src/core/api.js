@@ -94,6 +94,7 @@ const api = {
         this.componentWillUnmount();
 
         let refs                = this.refs;
+        let classes             = this.classes;
         let originalTarget      = this.originalTarget;
         let tagName             =  originalTarget.tagName;
 
@@ -592,7 +593,7 @@ const api = {
             if ( el )
             {
                 this.___forceMultiple     = multiple && this.multiple;
-                this.___programmaticClick = programmatic;
+                this.programmaticClick = programmatic;
 
                 el.click();
 

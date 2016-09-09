@@ -230,10 +230,11 @@ const events = {
         if ( this.isIos )
         {
             let classes     = this.classes;
-            let firstOption = select[0];
+            let firstOption = select.children[ 0 ];
 
             let plug        = document.createElement( `OPTION` );
             plug.disabled   = true;
+            plug.setAttribute( 'disabled', true );
             plug.className  = classes.PLUG;
             select.insertBefore( plug, firstOption );
         }
@@ -331,6 +332,7 @@ const events = {
             if ( res.length === 1 )
             {
                 let el = res[ 0 ];
+
                 this.setByIndex( el.index, this.multiple );
 
                 if ( this.multipleTags )
@@ -359,6 +361,7 @@ const events = {
     {
         let keyCode = e.keyCode;
         let refs    = this.refs;
+        let classes = this.classes;
 
         if ( keyCode === keycodes.TAB )
         {
@@ -533,12 +536,12 @@ const events = {
 
         this.setSelectValue( {}, e );
 
-        if ( !this.___programmaticClick )
+        if ( !this.programmaticClick )
         {
             this.toggleList( e );
         }
 
-        this.___programmaticClick = false;
+        this.programmaticClick = false;
     },
 
 
@@ -775,6 +778,7 @@ const events = {
 
         let value;
         let index;
+        let classes         = this.classes;
         let refs            = this.refs;
         let select          = refs.select;
         let selected        = refs.selected;
@@ -1055,7 +1059,7 @@ const events = {
 
         this.displaySelected( refs.selected, refs );
 
-        if ( !this.___programmaticClick )
+        if ( !this.programmaticClick )
         {
             // tab, shift, ctrl, alt, caps, cmd
             let nonKeys = [ 9, 16, 17, 18, 20, 91 ];
@@ -1081,6 +1085,8 @@ const events = {
                 }
             }
         }
+
+        this.programmaticClick = false;
     },
 
 
@@ -1198,7 +1204,7 @@ const events = {
      *
      * @return _Void_
      */
-    toggleClosed( e, refs, wrapper = this.refs.wrapper, exit = false )
+    toggleClosed( e, optionsList, refs, wrapper = this.refs.wrapper, exit = false )
     {
         let classes = this.classes;
 
@@ -1258,7 +1264,7 @@ const events = {
         if ( type === `mouseleave` || force === `close` || !isHidden )
         {
             this.toggleList.justOpened = false;
-            this.toggleClosed( e, refs, wrapper );
+            this.toggleClosed( e, optionsList, refs, wrapper );
         }
         else
         {
@@ -1267,7 +1273,7 @@ const events = {
                 this.toggleList.justOpened = true;
             }
 
-            this.toggleOpen( e, refs, wrapper );
+            this.toggleOpen( e, optionsList, refs, wrapper );
         }
     },
 
@@ -1302,7 +1308,7 @@ const events = {
      *
      * @return _Void_
      */
-    toggleOpen( e, refs )
+    toggleOpen( e, optionsList, refs )
     {
         this.addSelectKeyListener();
 
@@ -1333,7 +1339,7 @@ const events = {
             refs.search.focus();
         }
 
-        if( refs.multiTagWrapper && refs.multiTagWrapper.childNodes.length === refs.optionsList.childNodes.length )
+        if ( refs.multiTagWrapper && refs.multiTagWrapper.childNodes.length === refs.optionsList.childNodes.length )
         {
             this.removeNoResultsMessage();
             this.addNoMoreOptionsMessage();

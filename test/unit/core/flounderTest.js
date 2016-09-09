@@ -271,7 +271,7 @@ describe( 'fuzzySearch', () =>
     {
         e.keyCode = keycodes.BACKSPACE;
 
-        flounder.fuzzySearch.__previousValue = '';
+        flounder.fuzzySearch.previousValue = '';
 
         flounder.fuzzySearch( e );
 
@@ -456,7 +456,13 @@ describe( 'initializeOptions', () =>
     } );
 
 
-    let flounder2 = new Flounder( document.body, { data: data, defaultEmpty: true, multipleTags: true } );
+    let f2Options = {
+        data            : data,
+        defaultEmpty    : true,
+        multipleTags    : true
+    };
+
+    let flounder2 = new Flounder( document.body, f2Options );
 
 
     it( 'should have an empty placeholder if set empty', () =>

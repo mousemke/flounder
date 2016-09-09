@@ -12,13 +12,14 @@ const build = {
      * @param {DOMElement} el option element to add description to
      * @param {String} text description
      * @param {String} CSS class to apply
-     * @return _Void_
+     *
+     * @return {Void} void
      */
-    addOptionDescription( el, text, className )
+    addOptionDescription( el, text )
     {
         let div         = document.createElement( `div` );
         div.innerHTML   = text;
-        div.className   = className;
+        div.className   = this.classes.DESCRIPTION;
         el.appendChild( div );
     },
 
@@ -32,17 +33,18 @@ const build = {
      *
      * @return _Mixed_ search node or false
      */
-    addSearch( flounder )
+    addSearch( searchSibling, flounder )
     {
         if ( this.search )
         {
             let classes = this.classes;
             let search  = utils.constructElement( {
-                                    tagname     : `input`,
-                                    type        : `text`,
-                                    className   : classes.SEARCH
-                                } );
-            flounder.appendChild( search );
+                tagname     : `input`,
+                type        : `text`,
+                className   : classes.SEARCH
+            } );
+
+            flounder.insertBefore( search, searchSibling );
 
             return search;
         }
@@ -57,7 +59,7 @@ const build = {
      * binds this to whatever functions need it.  Arrow functions cannot be used
      * here due to the react extension needing them as well;
      *
-     * @return _Void_
+     * @return {Void} void
      */
     bindThis()
     {
@@ -129,11 +131,11 @@ const build = {
      */
     buildData( defaultValue, originalData, optionsList, select )
     {
+        let self                    = this;
         let index                   = 0;
         let data                    = [];
         let selectOptions           = [];
         let constructElement        = utils.constructElement;
-        let addOptionDescription    = this.addOptionDescription;
         let selectedClass           = this.selectedClass;
         let escapeHTML              = utils.escapeHTML;
         let addClass                = utils.addClass;
@@ -176,7 +178,7 @@ const build = {
 
             if ( dataObj.description )
             {
-                addOptionDescription( data, dataObj.description, classes.DESCRIPTION );
+                self.addOptionDescription( data, dataObj.description, classes.DESCRIPTION );
             }
 
             data.className += dataObj.extraClass ? `  ${dataObj.extraClass}` : ``;
@@ -307,7 +309,7 @@ const build = {
      *
      * builds flounder
      *
-     * @return _Void_
+     * @return {Void} void
      */
     buildDom()
     {
@@ -342,10 +344,6 @@ const build = {
 
         let multiTagWrapper     = this.multipleTags ? constructElement( { className : classes.MULTI_TAG_LIST } ) : null;
 
-        let searchLocation      = multiTagWrapper || flounder;
-
-        let search              = this.addSearch( searchLocation );
-
         let optionsListWrapper  = constructElement( { className : `${classes.OPTIONS_WRAPPER}  ${classes.HIDDEN}` } );
         let optionsList         = constructElement( { className : classes.LIST } );
         optionsList.setAttribute( `role`, `listbox` );
@@ -366,6 +364,9 @@ const build = {
                 flounder.appendChild( el );
             }
         } );
+
+        let searchLocation      = this.multipleTags ? optionsListWrapper : selected;
+        let search              = this.addSearch( searchLocation, flounder );
 
         let selectOptions;
 
@@ -500,7 +501,7 @@ const build = {
      *
      * @param {DOMElement} select select element
      *
-     * @return _Void_
+     * @return {Void} void
      */
     popInSelectElements( select )
     {
@@ -521,7 +522,7 @@ const build = {
      *
      * @param {DOMElement} select select element
      *
-     * @return _Void_
+     * @return {Void} void
      */
     popOutSelectElements( select )
     {
@@ -579,7 +580,7 @@ const build = {
      *
      * @param {DOMElement} target  the actual to-be-flounderized element
      *
-     * @return _Void_
+     * @return {Void} void
      */
     setTarget( target )
     {

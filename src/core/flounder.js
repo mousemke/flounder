@@ -196,7 +196,7 @@ class Flounder
     {
         let val = e.target.value.trim();
 
-        this.fuzzySearch.__previousValue = val;
+        this.fuzzySearch.previousValue = val;
 
         let matches = this.search.isThereAnythingRelatedTo( val ) || [];
 
@@ -246,7 +246,7 @@ class Flounder
     fuzzySearch( e )
     {
         this.lastSearchEvent = e;
-        this.fuzzySearch.__previousValue = this.fuzzySearch.__previousValue || '';
+        this.fuzzySearch.previousValue = this.fuzzySearch.previousValue || '';
 
         try
         {
@@ -267,7 +267,7 @@ class Flounder
                     keyCode !== keycodes.ENTER && keyCode !== keycodes.ESCAPE )
             {
                 if ( this.multipleTags && keyCode === keycodes.BACKSPACE &&
-                        this.fuzzySearch.__previousValue === '' )
+                        this.fuzzySearch.previousValue === '' )
                 {
                     let lastTag = this.refs.multiTagWrapper.lastChild;
 
@@ -332,6 +332,7 @@ class Flounder
 
         this.bindThis();
         this.initializeOptions();
+
         this.setTarget( target );
 
         if ( this.search )
@@ -349,6 +350,7 @@ class Flounder
         }
 
         this.buildDom();
+
         let { isOsx, isIos, multiSelect } = utils.setPlatform();
         this.isOsx          = isOsx;
         this.isIos          = isIos;
@@ -435,7 +437,7 @@ class Flounder
             this.multiple       = true;
             this.selectedClass  += `  ${this.classes.SELECTED_HIDDEN}`;
 
-            if ( !this.placeholder )
+            if ( this.placeholder === undefined )
             {
                 this.placeholder = defaultOptions.placeholder;
             }
