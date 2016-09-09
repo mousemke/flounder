@@ -10,19 +10,20 @@ var _package        = require( './package.json' );
 var now             = new Date();
 var year            = now.getUTCFullYear();
 
-var licenceLong     = '/*!\n' +
-                      ' * Flounder JavaScript Stylable Selectbox v' + _package.version + '\n' +
-                      ' * ' + _package.homepage + '\n' +
-                      ' *\n' +
-                      ' * Copyright ' + ( 2015 === year ? year : '2015-' + year ) + ' Sociomantic Labs and other contributors\n' +
-                      ' * Released under the MIT license\n' +
-                      ' * https://github.com/sociomantic-tsunami/flounder/license\n' +
-                      ' *\n' +
-                      ' * Date: ' + now.toDateString() + '\n' +
-                      ' * "This, so far, is the best Flounder ever"\n' +
-                      ' */\n';
+var licenceLong     = `/*!
+                        * Flounder JavaScript Stylable Selectbox v${_package.version}
+                        * ${_package.homepage}
+                        *
+                        * Copyright 2015-${year} Sociomantic Labs and other contributors
+                        * Released under the MIT license
+                        * https://github.com/sociomantic-tsunami/flounder/license
+                        *
+                        * Date: ${now.toDateString()}
+                        *
+                        * "This, so far, is the best Flounder ever"
+                        */`;
 
-var licenceShort    = '/*! Flounder v' + _package.version + ' | (c) ' + ( 2015 === year ? year : '2015-' + year ) + ' Sociomantic Labs | https://github.com/sociomantic-tsunami/flounder/license */\n';
+var licenceShort    = `/*! Flounder v${_package.version} | (c) 2015-${year} Sociomantic Labs | https://github.com/sociomantic-tsunami/flounder/license */`;
 
 
 function build( folder, filename, ext )

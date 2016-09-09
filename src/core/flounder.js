@@ -4,7 +4,6 @@ import utils                from './utils';
 import api                  from './api';
 import build                from './build';
 import events               from './events';
-import classes              from './classes';
 import Search               from './search';
 import version              from './version';
 import keycodes             from './keycodes';
@@ -16,6 +15,44 @@ import keycodes             from './keycodes';
  */
 class Flounder
 {
+    /**
+     * ## addNoMoreOptionsMessage
+     *
+     * Adding 'No More Options' message to the option list
+     *
+     * @return _Void_
+     */
+    addNoMoreOptionsMessage()
+    {
+        let classes     = this.classes;
+        let noMoreOptionsEl = this.refs.noMoreOptionsEl || utils.constructElement( { className : classes.NO_RESULTS } );
+
+        noMoreOptionsEl.innerHTML = 'No more recipients to add.';
+        this.refs.optionsList.appendChild( noMoreOptionsEl );
+
+        this.refs.noMoreOptionsEl = noMoreOptionsEl;
+    }
+
+
+    /**
+     * ## addNoResultsMessage
+     *
+     * Adding 'No Results' message to the option list
+     *
+     * @return _Void_
+     */
+    addNoResultsMessage()
+    {
+        let classes     = this.classes;
+        let noResultsEl = this.refs.noResultsEl || utils.constructElement( { className : classes.NO_RESULTS } );
+
+        noResultsEl.innerHTML = 'No matches found';
+        this.refs.optionsList.appendChild( noResultsEl );
+
+        this.refs.noResultsEl = noResultsEl;
+    }
+
+
     /**
      * ## componentWillUnmount
      *
@@ -94,27 +131,81 @@ class Flounder
 
 
     /**
+     * ## displaySelected
+     *
+     * formats and displays the chosen options
+     *
+     * @param {DOMElement} selected display area for the selected option(s)
+     * @param {Object} refs element references
+     *
+     * @return _Void_
+     */
+    displaySelected( selected, refs )
+    {
+        let value = [];
+        let index = -1;
+
+        let selectedOption  = this.getSelected();
+        let selectedLength  = selectedOption.length;
+        let multipleTags    = this.multipleTags;
+
+        if ( !multipleTags && selectedLength ===  1 )
+        {
+            index               = selectedOption[0].index;
+            selected.innerHTML  = refs.data[ index ].innerHTML;
+            value               = selectedOption[0].value;
+        }
+        else if ( !multipleTags && selectedLength === 0 )
+        {
+            let defaultValue    = this._default;
+            index               = defaultValue.index || -1;
+            selected.innerHTML  = defaultValue.text;
+            value               = defaultValue.value;
+        }
+        else
+        {
+            if ( multipleTags )
+            {
+                selected.innerHTML  = ``;
+                this.displayMultipleTags( selectedOption, refs.multiTagWrapper );
+            }
+            else
+            {
+                selected.innerHTML  = this.multipleMessage;
+            }
+
+            index = selectedOption.map( option => option.index );
+            value = selectedOption.map( option => option.value );
+        }
+
+        selected.setAttribute( `data-value`, value );
+        selected.setAttribute( `data-index`, index );
+    }
+
+
+    /**
      * ## filterSearchResults
      *
      * filters results and adjusts the search hidden class on the dataOptions
      *
      * @param {Object} e event object
      *
-     * @return {Void} void
+     * @return _Void_
      */
     filterSearchResults( e )
     {
-        const val = e.target.value.trim();
+        let val = e.target.value.trim();
 
         this.fuzzySearch.previousValue = val;
 
-        const matches = this.search.isThereAnythingRelatedTo( val ) || [];
+        let matches = this.search.isThereAnythingRelatedTo( val ) || [];
 
         if ( val !== '' )
         {
-            const data    = this.refs.data;
+            let data    = this.refs.data;
+            let classes = this.classes;
 
-            data.forEach( i =>
+            data.forEach( el =>
             {
                 utils.addClass( el, classes.SEARCH_HIDDEN );
             } );
@@ -123,6 +214,18 @@ class Flounder
             {
                 utils.removeClass( data[ e.i ], classes.SEARCH_HIDDEN );
             } );
+
+            if( !this.refs.noMoreOptionsEl )
+            {
+                if( matches.length === 0 )
+                {
+                    this.addNoResultsMessage();
+                }
+                else
+                {
+                    this.removeNoResultsMessage();
+                }
+            }
         }
         else
         {
@@ -134,15 +237,15 @@ class Flounder
     /**
      * ## fuzzySearch
      *
-     * filters events to determine the correct actions, based on events from
-     * the search box
+     * filters events to determine the correct actions, based on events from the search box
      *
      * @param {Object} e event object
      *
-     * @return {Void} void
+     * @return _Void_
      */
     fuzzySearch( e )
     {
+        this.lastSearchEvent = e;
         this.fuzzySearch.previousValue = this.fuzzySearch.previousValue || '';
 
         try
@@ -178,8 +281,7 @@ class Flounder
                     this.filterSearchResults( e );
                 }
             }
-            else if ( keyCode === keycodes.ESCAPE ||
-                            keyCode === keycodes.ENTER )
+            else if ( keyCode === keycodes.ESCAPE || keyCode === keycodes.ENTER )
             {
                 this.fuzzySearchReset();
                 this.toggleList( e, `close` );
@@ -198,11 +300,12 @@ class Flounder
      *
      * resets all options to visible
      *
-     * @return {Void} void
+     * @return _Void_
      */
     fuzzySearchReset()
     {
-        let refs = this.refs;
+        let refs    = this.refs;
+        let classes = this.classes;
 
         refs.data.forEach( dataObj =>
         {
@@ -226,9 +329,11 @@ class Flounder
     init( target, props )
     {
         this.props = props;
-        this.setTarget( target );
+
         this.bindThis();
         this.initializeOptions();
+
+        this.setTarget( target );
 
         if ( this.search )
         {
@@ -245,6 +350,7 @@ class Flounder
         }
 
         this.buildDom();
+
         let { isOsx, isIos, multiSelect } = utils.setPlatform();
         this.isOsx          = isOsx;
         this.isIos          = isIos;
@@ -297,24 +403,28 @@ class Flounder
 
         for ( let opt in defaultOptions )
         {
-            if ( opt !== `classes` )
+            if ( defaultOptions.hasOwnProperty( opt ) )
             {
-                this[ opt ] = props[ opt ] !== undefined ? props[ opt ] :
-                                                     defaultOptions[ opt ];
-            }
-            else
-            {
-                let classes         = defaultOptions[ opt ];
-                let propsClasses    = props.classes;
-
-                for ( let clss in classes )
+                if ( opt === `classes` )
                 {
-                    this[ `${clss}Class` ] = propsClasses && propsClasses[ clss ] !== undefined ?
-                                                propsClasses[ clss ] :
-                                                classes[ clss ];
+                    this.classes       = {};
+                    let defaultClasses = defaultOptions[ opt ];
+                    let propClasses    = typeof props[ opt ] === `object` ? props[ opt ] : {};
+
+                    for ( let clss in defaultClasses )
+                    {
+                        this.classes[ clss ] = propClasses[ clss ] ? propClasses[ clss ] : defaultClasses[ clss ];
+                    }
+                }
+                else
+                {
+                    this[ opt ] = props[ opt ] !== undefined ? props[ opt ] :
+                                                     defaultOptions[ opt ];
                 }
             }
         }
+
+        this.selectedClass = this.classes.SELECTED;
 
         if ( props.defaultEmpty )
         {
@@ -325,10 +435,12 @@ class Flounder
         {
             this.search         = true;
             this.multiple       = true;
-            this.selectedClass  += `  ${classes.SELECTED_HIDDEN}`;
+            this.selectedClass  += `  ${this.classes.SELECTED_HIDDEN}`;
 
-            this.placeholder    = this.placeholder === '' ? this.placeholder
-                                                    : defaultOptions.placeholder;
+            if ( this.placeholder === undefined )
+            {
+                this.placeholder = defaultOptions.placeholder;
+            }
         }
     }
 
@@ -349,11 +461,162 @@ class Flounder
         if ( !!this.isIos && !this.multiple )
         {
             let sel     = refs.select;
+            let classes = this.classes;
             utils.removeClass( sel, classes.HIDDEN );
             utils.addClass( sel, classes.HIDDEN_IOS );
         }
 
-        this.addListeners( refs );
+        this.addListeners( refs, props );
+    }
+
+
+    /**
+     * ## removeMultiTag
+     *
+     * removes a multi selection tag on click; fixes all references to value and state
+     *
+     * @param  {Object} e event object
+     *
+     * @return _Void_
+     */
+    removeMultiTag( e )
+    {
+        e.preventDefault();
+        e.stopPropagation();
+
+        let value;
+        let index;
+        let classes         = this.classes;
+        let refs            = this.refs;
+        let select          = refs.select;
+        let selected        = refs.selected;
+        let target          = e.target;
+        let defaultValue    = this._default;
+        let data            = this.refs.data;
+        let targetIndex     = target.getAttribute( `data-index` );
+        select[ targetIndex ].selected = false;
+
+        let selectedOptions = this.getSelected();
+
+        utils.removeClass( data[ targetIndex ], classes.SELECTED_HIDDEN );
+        utils.removeClass( data[ targetIndex ], classes.SELECTED );
+
+        target.removeEventListener( `click`, this.removeMultiTag );
+
+        let span = target.parentNode;
+        span.parentNode.removeChild( span );
+
+        if ( selectedOptions.length === 0 )
+        {
+            this.addPlaceholder();
+            index               = -1;
+            value               = ``;
+        }
+        else
+        {
+            value = selectedOptions.map( function( option )
+            {
+                return option.value;
+            } );
+
+            index = selectedOptions.map( function( option )
+            {
+                return option.index;
+            } );
+        }
+
+        this.removeNoMoreOptionsMessage();
+        this.removeNoResultsMessage();
+
+        if ( this.lastSearchEvent  )
+        {
+            this.fuzzySearch( this.lastSearchEvent );
+        }
+
+        selected.setAttribute( `data-value`, value );
+        selected.setAttribute( `data-index`, index );
+
+        try
+        {
+            this.onSelect( e, this.getSelectedValues() );
+        }
+        catch( e )
+        {
+            console.warn( `something may be wrong in "onSelect"`, e );
+        }
+    }
+
+
+    /**
+     * ## removeNoResultsMessage
+     *
+     * Removing 'No Results' message from the option list
+     *
+     * @return _Void_
+     */
+    removeNoResultsMessage()
+    {
+        let noResultsEl =  this.refs.noResultsEl;
+
+        if( this.refs.optionsList && noResultsEl )
+        {
+            this.refs.optionsList.removeChild( noResultsEl );
+            this.refs.noResultsEl = undefined;
+        }
+    }
+
+    /**
+     * ## removeNoMoreOptionsMessage
+     *
+     * Removing 'No More options' message from the option list
+     *
+     * @return _Void_
+     */
+    removeNoMoreOptionsMessage()
+    {
+        let noMoreOptionsEl =  this.refs.noMoreOptionsEl;
+
+        if( this.refs.optionsList && noMoreOptionsEl )
+        {
+            this.refs.optionsList.removeChild( noMoreOptionsEl );
+            this.refs.noMoreOptionsEl = undefined;
+        }
+    }
+
+
+    /**
+     * ## removeSelectedClass
+     *
+     * removes the [[this.selectedClass]] from all data
+     *
+     * @return _Void_
+     */
+    removeSelectedClass( data )
+    {
+        data = data || this.refs.data;
+
+        data.forEach( ( dataObj, i ) =>
+        {
+            utils.removeClass( dataObj, this.selectedClass );
+        } );
+    }
+
+
+    /**
+     * ## removeSelectedValue
+     *
+     * sets the selected property to false for all data
+     *
+     * @return _Void_
+     */
+    removeSelectedValue( data )
+    {
+        data = data || this.refs.data;
+
+        data.forEach( ( d, i ) =>
+        {
+            this.refs.select[ i ].selected = false;
+        } );
     }
 
 

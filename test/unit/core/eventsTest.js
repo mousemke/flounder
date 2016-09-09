@@ -76,8 +76,11 @@ describe( 'addHoverClass', () =>
 {
     it( 'should add a hover class to it\'s triggered element', () =>
     {
+        document.body.flounder = null;
+        let flounder    = new Flounder( document.body );
+
         let el = document.createElement( 'DIV' );
-        events.addHoverClass.call( el );
+        flounder.addHoverClass( { target: el } );
         assert.equal( utils.hasClass( el, classes.HOVER ), true );
     } );
 } );
@@ -452,9 +455,10 @@ describe( 'addSelectKeyListener', () =>
         flounder.addSelectKeyListener();
 
         let select  = flounder.refs.select;
-        let plug    = select.children[0];
+        let plug    = select.children[ 0 ];
 
         assert.equal( plug.tagName, 'OPTION' );
+
         assert.equal( plug.disabled, true );
         assert.equal( plug.className, classes.PLUG );
         assert.deepEqual( plug.parentNode, select );
@@ -585,9 +589,7 @@ describe( 'checkEnterOnSearch', () =>
         let res = flounder.checkEnterOnSearch( e, refs );
 
         assert.equal( res.length, 1 );
-        assert.equal( refs.search.focus.callCount, 1 );
-
-        refs.search.focus.restore();
+        assert.equal( flounder.getSelected()[ 0 ].value, 2 );
     } );
 
 
@@ -613,7 +615,13 @@ describe( 'checkEnterOnSearch', () =>
     it( 'should only refocus on search if multipleTags is active', done =>
     {
         document.body.flounder = null;
-        let flounder    = new Flounder( document.body, { data: [ 1, 2, 3 ], multipleTags: true } );
+
+        let opt         = {
+            data            : [ 1, 2, 3 ],
+            multipleTags    : true
+        };
+
+        let flounder    = new Flounder( document.body, opt );
         let refs        = flounder.refs;
 
         sinon.stub( refs.search, 'focus', () => {} );
@@ -626,7 +634,7 @@ describe( 'checkEnterOnSearch', () =>
 
         setTimeout( function()
         {
-            assert.equal( refs.search.focus.callCount, 2 );
+            assert.equal( refs.search.focus.callCount, 1 );
             refs.search.focus.restore();
             done();
         }, 300 );
@@ -656,15 +664,15 @@ describe( 'checkEnterOnSearch', () =>
  *
  * @return _Void_
  */
+
 describe( 'checkFlounderKeypress', () =>
 {
-    document.body.flounder = null;
-    let flounder    = new Flounder( document.body, { data: [ 1, 2, 3 ], search: true } );
-    let refs        = flounder.refs;
-
-
     it( 'should close the menu and add the placeholder on tab', () =>
     {
+        document.body.flounder = null;
+        let flounder    = new Flounder( document.body, { data: [ 1, 2, 3 ], search: true } );
+        let refs        = flounder.refs;
+
         let e = { keyCode: keycodes.TAB, target: { value: 2 }, preventDefault: () => {} };
 
         sinon.stub( flounder, 'addPlaceholder', () => {} );
@@ -682,9 +690,18 @@ describe( 'checkFlounderKeypress', () =>
 
     it( 'should toggle open on enter', () =>
     {
-        let e = { keyCode: keycodes.ENTER, target: { value: 2 }, preventDefault: () => {} };
+        document.body.flounder = null;
+        let flounder    = new Flounder( document.body, { data: [ 1, 2, 3 ], search: true } );
+        let refs        = flounder.refs;
 
-        let res = flounder.checkFlounderKeypress( e );
+        let e = {
+            keyCode : keycodes.ENTER,
+            target  : {
+                value   : 2
+            },
+            preventDefault : () => {} };
+
+        flounder.checkFlounderKeypress( e );
 
         assert.equal( utils.hasClass( refs.wrapper, classes.OPEN ), true );
     } );
@@ -692,7 +709,18 @@ describe( 'checkFlounderKeypress', () =>
 
     it( 'should toggle enter if search is enabled', () =>
     {
-        let e = { keyCode: keycodes.ENTER, target: { value: 2 }, preventDefault: () => {} };
+        document.body.flounder = null;
+        let flounder    = new Flounder( document.body, { data : [ 1, 2, 3 ], search : true } );
+        let refs        = flounder.refs;
+        refs.wrapper.className += '  open';
+
+        let e = {
+            keyCode : keycodes.ENTER,
+            target  : {
+                value : 2
+            },
+            preventDefault: () => {}
+        };
 
         let res = flounder.checkFlounderKeypress( e );
 
@@ -703,7 +731,17 @@ describe( 'checkFlounderKeypress', () =>
 
     it( 'should toggle the list open with space', () =>
     {
-        let e = { keyCode: keycodes.SPACE, target: { tagName: 'MOON' }, preventDefault: () => {} };
+        document.body.flounder = null;
+        let flounder    = new Flounder( document.body, { data: [ 1, 2, 3 ], search: true } );
+        let refs        = flounder.refs;
+
+        let e = {
+            keyCode : keycodes.SPACE,
+            target  : {
+                tagName : 'MOON'
+            },
+            preventDefault : () => {}
+    };
 
         flounder.checkFlounderKeypress( e );
 
@@ -713,6 +751,10 @@ describe( 'checkFlounderKeypress', () =>
 
     it( 'should pass normal letters through', () =>
     {
+        document.body.flounder = null;
+        let flounder    = new Flounder( document.body, { data: [ 1, 2, 3 ], search: true } );
+        let refs        = flounder.refs;
+
         let e = { keyCode: 49, target: { tagName: 'INPUT' } };
         flounder.checkFlounderKeypress( e );
 
@@ -725,6 +767,10 @@ describe( 'checkFlounderKeypress', () =>
 
     it( 'should do nothing if it doesnt hit the above conditions', () =>
     {
+        document.body.flounder = null;
+        let flounder    = new Flounder( document.body, { data: [ 1, 2, 3 ], search: true } );
+        let refs        = flounder.refs;
+
         refs.selected.innerHTML = 'moon';
 
         let e = { keyCode: 49, target: {} };
@@ -1092,10 +1138,16 @@ describe( 'clickSet', () =>
 {
     it( 'should set the clicked div\'s option as selected' , () =>
     {
-        let flounder    = new Flounder( document.body, {} );
-        flounder.multiple = true;
-        let e           = { preventDefault: sinon.spy(), stopPropagation: sinon.spy() };
-        e[ flounder.multiSelect ] = true;
+        document.body.flounder      = null;
+        let flounder                = new Flounder( document.body, {} );
+        flounder.multiple           = true;
+        flounder.programmaticClick  = true;
+        let e                       = {
+            preventDefault  : sinon.spy(),
+            stopPropagation : sinon.spy()
+        };
+
+        e[ flounder.multiSelect ]   = true;
 
         sinon.stub( flounder, 'setSelectValue', () => {} );
         sinon.stub( flounder, 'toggleList', () => {} );
@@ -1112,6 +1164,7 @@ describe( 'clickSet', () =>
 
     it( 'should set the clicked div\'s option as selected and toggle the list if it\'s not a multiple select', () =>
     {
+        document.body.flounder = null;
         let flounder    = new Flounder( document.body, {} );
         let e           = { preventDefault: sinon.spy(), stopPropagation: sinon.spy() };
 
@@ -1354,11 +1407,15 @@ describe( 'removeHoverClass', () =>
 {
     it( 'should remove a hover class to it\'s triggered element', () =>
     {
-        let el = document.createElement( 'DIV' );
-        el.className = classes.HOVER;
+        document.body.flounder = null;
 
-        events.removeHoverClass.call( el );
-        assert.equal( utils.hasClass( el, classes.HOVER ), false );
+        let flounder    = new Flounder( document.body, { data: [ 1, 2, 3 ] } );
+
+        let el = document.createElement( 'DIV' );
+        el.className = flounder.classes.HOVER;
+
+        flounder.removeHoverClass( { target : el } );
+        assert.equal( utils.hasClass( el, flounder.classes.HOVER ), false );
     } );
 } );
 
@@ -1946,16 +2003,17 @@ describe( 'setSelectValue', () =>
         let flounder = new Flounder( document.body, { data: [ 1, 2, 3 ] } );
 
         sinon.stub( flounder, 'setSelectValueClick', () => {} );
+        sinon.stub( flounder, 'onChange', () => {} );
 
-        flounder.___programmaticClick = true;
+        flounder.programmaticClick = true;
         flounder.setSelectValue( null, {} );
 
-        assert.equal( flounder.___programmaticClick, false );
         assert.equal( flounder.setSelectValueClick.callCount, 1 );
 
-        sinon.stub( flounder, 'onChange', () => {} );
+        flounder.programmaticClick = false;
         flounder.setSelectValue( null, {} );
 
+        assert.equal( flounder.setSelectValueClick.callCount, 2 );
         assert.equal( flounder.onChange.callCount, 1 );
     } );
 

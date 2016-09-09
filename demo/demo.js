@@ -145,10 +145,10 @@ new Flounder( document.getElementById( 'vanilla--select' ), {
     onSelect        : function(){ console.log( 'woot' ); },
 
     classes         : {
-        flounder        : 'class--to--give--the--main--flounder--element',
-        hidden          : 'class--to--denote--hidden',
-        selected        : 'class--to--denote--selected--option',
-        wrapper         : 'additional--class--to--give--the--wrapper'
+        MAIN         : 'flounder  extra-class-to-give-the-main-flounder-element',
+        HIDDEN       : 'flounder--hidden  extra-class-to-denote-hidden',
+        SELECTED     : 'flounder__option--selected  extra-class-to-denote-selected-option',
+        MAIN_WRAPPER : 'flounder--wrapper  flounder__input--select  extra-class-to-give-the-wrapper'
     }
 } );
 
@@ -164,6 +164,7 @@ new Flounder( document.getElementById( 'vanilla--multiple--tags' ), {
 
     onInit              : function(){ this.data = buildData(); },
 
+    onChange            : () => { console.trace() }
 } );
 
 

@@ -1,5 +1,4 @@
 
-import classes                  from './classes';
 import { setDefaultOption }     from './defaults';
 import utils                    from './utils';
 
@@ -12,14 +11,15 @@ const build = {
      *
      * @param {DOMElement} el option element to add description to
      * @param {String} text description
+     * @param {String} CSS class to apply
      *
-     * @return _Void_
+     * @return {Void} void
      */
     addOptionDescription( el, text )
     {
         let div         = document.createElement( `div` );
         div.innerHTML   = text;
-        div.className   = classes.DESCRIPTION;
+        div.className   = this.classes.DESCRIPTION;
         el.appendChild( div );
     },
 
@@ -33,16 +33,18 @@ const build = {
      *
      * @return _Mixed_ search node or false
      */
-    addSearch( flounder )
+    addSearch( searchSibling, flounder )
     {
         if ( this.search )
         {
-            let search = utils.constructElement( {
-                                    tagname     : `input`,
-                                    type        : `text`,
-                                    className   : classes.SEARCH
-                                } );
-            flounder.appendChild( search );
+            let classes = this.classes;
+            let search  = utils.constructElement( {
+                tagname     : `input`,
+                type        : `text`,
+                className   : classes.SEARCH
+            } );
+
+            flounder.insertBefore( search, searchSibling );
 
             return search;
         }
@@ -57,11 +59,12 @@ const build = {
      * binds this to whatever functions need it.  Arrow functions cannot be used
      * here due to the react extension needing them as well;
      *
-     * @return _Void_
+     * @return {Void} void
      */
     bindThis()
     {
         [ 
+            `addHoverClass`,
             `catchBodyClick`,
             `checkClickTarget`,
             `checkFlounderKeypress`,
@@ -72,6 +75,7 @@ const build = {
             `displayMultipleTags`,
             `firstTouchController`,
             `fuzzySearch`,
+            `removeHoverClass`,
             `removeMultiTag`,
             `setKeypress`,
             `setSelectValue`,
@@ -102,6 +106,7 @@ const build = {
         }
         else
         {
+            let classes     = this.classes;
             let arrow       = constructElement( { className : classes.ARROW } );
             let arrowInner  = constructElement( { className : classes.ARROW_INNER } );
             arrow.appendChild( arrowInner )
@@ -126,17 +131,18 @@ const build = {
      */
     buildData( defaultValue, originalData, optionsList, select )
     {
+        let self                    = this;
         let index                   = 0;
         let data                    = [];
         let selectOptions           = [];
         let constructElement        = utils.constructElement;
-        let addOptionDescription    = this.addOptionDescription;
         let selectedClass           = this.selectedClass;
         let escapeHTML              = utils.escapeHTML;
         let addClass                = utils.addClass;
         let refs                    = this.refs;
         let selectRef               = refs.select;
         let allowHTML               = this.allowHTML;
+        let classes                 = this.classes;
 
         /**
          * ## buildDiv
@@ -172,7 +178,7 @@ const build = {
 
             if ( dataObj.description )
             {
-                addOptionDescription( data, dataObj.description );
+                self.addOptionDescription( data, dataObj.description, classes.DESCRIPTION );
             }
 
             data.className += dataObj.extraClass ? `  ${dataObj.extraClass}` : ``;
@@ -261,7 +267,7 @@ const build = {
             {
                 let section = constructElement( { tagname   : `div`,
                                                 className   : classes.SECTION } );
-                let header = constructElement( { tagname    : `div`,
+                let header  = constructElement( { tagname    : `div`,
                                                 className   : classes.HEADER } );
                 header.textContent = dataObj.header;
                 section.appendChild( header );
@@ -303,21 +309,23 @@ const build = {
      *
      * builds flounder
      *
-     * @return _Void_
+     * @return {Void} void
      */
     buildDom()
     {
         let props               = this.props;
+        let classes             = this.classes;
         this.refs               = {};
 
         let constructElement    = utils.constructElement;
 
-        let wrapperClass        = classes.MAIN_WRAPPER;
-        let wrapper             = utils.constructElement( { className : this.wrapperClass ?
-                                    `${wrapperClass}  ${this.wrapperClass}` : wrapperClass } );
+        let wrapper             = utils.constructElement( { className : classes.MAIN_WRAPPER } );
+
         let flounderClass       = classes.MAIN;
-        let flounder            = constructElement( { className : this.flounderClass ?
-                                    `${flounderClass}  ${this.flounderClass}` : flounderClass } );
+
+        let flounderClasses     = this.multipleTags ? flounderClass + ' ' + classes.MULTIPLE_TAG_FLOUNDER : flounderClass;
+
+        let flounder            = constructElement( { className : flounderClasses } );
 
         flounder.setAttribute( `aria-hidden`, true );
         flounder.tabIndex       = 0;
@@ -329,8 +337,10 @@ const build = {
         let data                = this.data;
         let defaultValue        = this._default = setDefaultOption( this, this.props, data );
 
-        let selected            = constructElement( { className : classes.SELECTED_DISPLAYED,
-                                        'data-value' : defaultValue.value, 'data-index' : defaultValue.index || -1 } );
+        let selectedDisplayedClasses = this.multipleTags ? classes.SELECTED_DISPLAYED + ' ' + classes.MULTIPLE_SELECTED : classes.SELECTED_DISPLAYED;
+
+        let selected            = constructElement( { className : selectedDisplayedClasses,
+                                        'data-value' : defaultValue.value, 'data-index' : defaultValue.index } );
 
         let multiTagWrapper     = this.multipleTags ? constructElement( { className : classes.MULTI_TAG_LIST } ) : null;
 
@@ -355,7 +365,8 @@ const build = {
             }
         } );
 
-        let search              = this.addSearch( flounder );
+        let searchLocation      = this.multipleTags ? optionsListWrapper : selected;
+        let search              = this.addSearch( searchLocation, flounder );
 
         let selectOptions;
 
@@ -397,6 +408,7 @@ const build = {
      */
     buildMultiTag( option )
     {
+        let classes     = this.classes;
         let optionText  = option.innerHTML;
         let span        = document.createElement( `SPAN` )
         span.className  = classes.MULTIPLE_SELECT_TAG;
@@ -430,6 +442,7 @@ const build = {
         let target  = this.target;
         let refs    = this.refs;
         let select  = refs.select;
+        let classes = this.classes;
 
         if ( target.tagName === `SELECT` )
         {
@@ -488,7 +501,7 @@ const build = {
      *
      * @param {DOMElement} select select element
      *
-     * @return _Void_
+     * @return {Void} void
      */
     popInSelectElements( select )
     {
@@ -509,7 +522,7 @@ const build = {
      *
      * @param {DOMElement} select select element
      *
-     * @return _Void_
+     * @return {Void} void
      */
     popOutSelectElements( select )
     {
@@ -567,7 +580,7 @@ const build = {
      *
      * @param {DOMElement} target  the actual to-be-flounderized element
      *
-     * @return _Void_
+     * @return {Void} void
      */
     setTarget( target )
     {
@@ -578,6 +591,7 @@ const build = {
 
         if ( target.tagName === `INPUT` )
         {
+            let classes = this.classes;
             utils.addClass( target, classes.HIDDEN );
             target.setAttribute( `aria-hidden`, true );
             target.tabIndex = -1;

@@ -1,14 +1,9 @@
-import classes              from './classes';
 import utils                from './utils';
+import defaultClasses       from './classes';
 
 export const defaultOptions = {
     allowHTML               : false,
-    classes                 : {
-        flounder    : ``,
-        hidden      : `flounder--hidden`,
-        selected    : `flounder__option--selected`,
-        wrapper     : ``
-    },
+    classes                 : defaultClasses,
     data                    : [],
     defaultEmpty            : false,
     defaultIndex            : false,
@@ -32,10 +27,11 @@ export const defaultOptions = {
     selectDataOverride      : false
 };
 
+
+
 const defaults = {
 
     defaultOptions : defaultOptions,
-
 
     /**
      * ## setDefaultOption
@@ -49,10 +45,11 @@ const defaults = {
      */
     setDefaultOption( self, configObj = {}, data, rebuild = false )
     {
+
         /**
          * ## setIndexDefault
          *
-         * sets a specified indexas the default option. This only works correctly
+         * sets a specified index as the default option. This only works correctly
          * if it is a valid index, otherwise it returns null
          *
          * @return {Object} default settings
@@ -83,6 +80,7 @@ const defaults = {
         let setPlaceholderDefault = function( self, _data )
         {
             let refs        = self.refs;
+            let classes     = self.classes;
             let select      = refs.select;
             let placeholder = configObj.placeholder;
 
@@ -156,21 +154,21 @@ const defaults = {
          */
         let checkDefaultPriority = function()
         {
-            let _data       = self.sortData( data );
-
-            let placeholder = configObj.placeholder;
+            let _data = self.sortData( data );
 
             if ( ( configObj.multipleTags || configObj.multiple )
                     && !configObj.defaultIndex
                     && !configObj.defaultValue )
             {
-                placeholder = placeholder || defaultOptions.placeholder;
+                configObj.placeholder = configObj.placeholder || defaultOptions.placeholder;
             }
 
             if ( configObj.defaultEmpty )
             {
-                placeholder = ``;
+                configObj.placeholder = ``;
             }
+
+            let placeholder = configObj.placeholder;
 
             if ( placeholder || placeholder === `` || _data.length === 0 )
             {
@@ -198,7 +196,6 @@ const defaults = {
             return def;
         };
 
-
         data    = data || configObj.data || [];
 
         return checkDefaultPriority();
@@ -214,8 +211,6 @@ const defaults = {
      */
     sortData( data, res = [], i = 0 )
     {
-        let self = this;
-
         data.forEach( d =>
         {
             if ( d.header )
@@ -246,8 +241,6 @@ const defaults = {
     }
 };
 
-
 export const setDefaultOption = defaults.setDefaultOption;
-
 
 export default defaults;

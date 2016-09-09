@@ -1,5 +1,4 @@
 
-import classes          from './classes';
 import search           from './search';
 import utils            from './utils';
 import keycodes         from './keycodes';
@@ -35,9 +34,9 @@ const events = {
      *
      * @return Void_
      */
-    addHoverClass()
+    addHoverClass( e )
     {
-        utils.addClass( this, classes.HOVER );
+        utils.addClass( e.target, this.classes.HOVER );
     },
 
 
@@ -195,7 +194,14 @@ const events = {
      */
     addSearchListeners()
     {
-        let search = this.refs.search;
+        let search                  = this.refs.search;
+        let multiTagWrapper         = this.refs.multiTagWrapper;
+
+        if( multiTagWrapper )
+        {
+            multiTagWrapper.addEventListener( `click`, this.toggleListSearchClick );
+        }
+
         search.addEventListener( `click`, this.toggleListSearchClick );
         search.addEventListener( `focus`, this.toggleListSearchClick );
         search.addEventListener( `keyup`, this.fuzzySearch );
@@ -223,10 +229,12 @@ const events = {
         // http://stackoverflow.com/questions/34660500/mobile-safari-multi-select-bug
         if ( this.isIos )
         {
-            let firstOption = select.children[0];
+            let classes     = this.classes;
+            let firstOption = select.children[ 0 ];
 
             let plug        = document.createElement( `OPTION` );
             plug.disabled   = true;
+            plug.setAttribute( 'disabled', true );
             plug.className  = classes.PLUG;
             select.insertBefore( plug, firstOption );
         }
@@ -324,6 +332,7 @@ const events = {
             if ( res.length === 1 )
             {
                 let el = res[ 0 ];
+
                 this.setByIndex( el.index, this.multiple );
 
                 if ( this.multipleTags )
@@ -352,6 +361,7 @@ const events = {
     {
         let keyCode = e.keyCode;
         let refs    = this.refs;
+        let classes = this.classes;
 
         if ( keyCode === keycodes.TAB )
         {
@@ -526,10 +536,12 @@ const events = {
 
         this.setSelectValue( {}, e );
 
-        if ( !this.multiple || !e[ this.multiSelect ] )
+        if ( !this.programmaticClick )
         {
             this.toggleList( e );
         }
+
+        this.programmaticClick = false;
     },
 
 
@@ -548,9 +560,11 @@ const events = {
         nativeSlice.call( multiTagWrapper.children, 0 ).forEach( el =>
         {
             let firstChild = el.firstChild;
-
-            firstChild.removeEventListener( `click`, this.removeMultiTag );
-            el.removeEventListener( `keydown`, this.checkMultiTagKeydown );
+            if ( firstChild )
+            {
+                firstChild.removeEventListener( `click`, this.removeMultiTag );
+                el.removeEventListener( `keydown`, this.checkMultiTagKeydown );
+            }
         } );
 
         multiTagWrapper.innerHTML = ``;
@@ -638,6 +652,7 @@ const events = {
         if ( this.isIos )
         {
             let select  = this.refs.select;
+            let classes = this.classes;
             let plug    = select.querySelector( `.${classes.PLUG}` );
 
             if ( plug )
@@ -708,13 +723,15 @@ const events = {
      *
      * @return Void_
      */
-    removeHoverClass()
+    removeHoverClass( e )
     {
-        utils.removeClass( this, classes.HOVER );
+        utils.removeClass( e.target, this.classes.HOVER );
     },
 
 
     /**
+
+
      * ## removeListeners
      *
      * removes event listeners from flounder.  normally pre unload
@@ -761,6 +778,7 @@ const events = {
 
         let value;
         let index;
+        let classes         = this.classes;
         let refs            = this.refs;
         let select          = refs.select;
         let selected        = refs.selected;
@@ -994,10 +1012,11 @@ const events = {
             index = dataMaxIndex;
         }
 
-        selectTag.selectedIndex = index;
-
+        let classes             = this.classes;
         let hasClass            = utils.hasClass;
         let dataAtIndex         = data[ index ];
+
+        selectTag.selectedIndex = index;
 
         if ( hasClass( dataAtIndex, classes.HIDDEN ) ||
              hasClass( dataAtIndex, classes.SELECTED_HIDDEN ) ||
@@ -1040,7 +1059,7 @@ const events = {
 
         this.displaySelected( refs.selected, refs );
 
-        if ( !this.___programmaticClick )
+        if ( !this.programmaticClick )
         {
             // tab, shift, ctrl, alt, caps, cmd
             let nonKeys = [ 9, 16, 17, 18, 20, 91 ];
@@ -1065,9 +1084,8 @@ const events = {
                     }
                 }
             }
+            this.programmaticClick = false;
         }
-
-        this.___programmaticClick = false;
     },
 
 
@@ -1078,7 +1096,7 @@ const events = {
      *
      * @return _Void_
      */
-    setSelectValueButton()
+    setSelectValueButton( e )
     {
         let refs            = this.refs;
         let data            = refs.data;
@@ -1086,6 +1104,9 @@ const events = {
         let selectedClass   = this.selectedClass;
 
         let selectedOption;
+
+        if( this.multipleTags )
+            return;
 
         this.removeSelectedClass( data );
 
@@ -1175,17 +1196,20 @@ const events = {
      * post toggleList, this runs it the list should be closed
      *
      * @param {Object} e event object
-     * @param {DOMElement} optionsList the options list
+     * @param {DOMElement} optionsListWrapper the options list
      * @param {Object} refs contains the references of the elements in flounder
      * @param {DOMElement} wrapper wrapper of flounder
      * @param {Boolean} exit prevents refocus. used while tabbing away
      *
      * @return _Void_
      */
-    toggleClosed( e, optionsList, refs, wrapper, exit = false )
+    toggleClosed( e, optionsList, refs, wrapper = this.refs.wrapper, exit = false )
     {
-        utils.addClass( optionsList, classes.HIDDEN );
+        let classes = this.classes;
+
+        utils.addClass( refs.optionsListWrapper, classes.HIDDEN );
         this.removeSelectKeyListener();
+
         utils.removeClass( wrapper, classes.OPEN );
 
         let qsHTML = document.querySelector( `html` );
@@ -1227,8 +1251,11 @@ const events = {
      */
     toggleList( e, force )
     {
+        let classes     = this.classes;
         let refs        = this.refs;
+
         let optionsList = refs.optionsListWrapper;
+
         let wrapper     = refs.wrapper;
         let isHidden    = utils.hasClass( optionsList, classes.HIDDEN );
         let type        = e.type;
@@ -1259,6 +1286,8 @@ const events = {
      */
     toggleListSearchClick( e )
     {
+        let classes = this.classes;
+
         if ( !utils.hasClass( this.refs.wrapper, classes.OPEN ) )
         {
             this.toggleList( e, `open` );
@@ -1272,20 +1301,22 @@ const events = {
      * post toggleList, this runs it the list should be opened
      *
      * @param {Object} e event object
-     * @param {DOMElement} optionsList the options list
+     * @param {DOMElement} optionsListWrapper the options list
      * @param {Object} refs contains the references of the elements in flounder
      * @param {DOMElement} wrapper wrapper of flounder
      *
      * @return _Void_
      */
-    toggleOpen( e, optionsList, refs, wrapper )
+    toggleOpen( e, optionsList, refs )
     {
         this.addSelectKeyListener();
 
         if ( !this.isIos || this.search || this.multipleTags === true )
         {
-            utils.removeClass( optionsList, classes.HIDDEN );
-            utils.addClass( wrapper, classes.OPEN );
+            let classes = this.classes;
+
+            utils.removeClass( refs.optionsListWrapper, classes.HIDDEN );
+            utils.addClass( refs.wrapper, classes.OPEN );
 
             let qsHTML = document.querySelector( `html` );
 
@@ -1307,6 +1338,12 @@ const events = {
             refs.search.focus();
         }
 
+        if ( refs.multiTagWrapper && refs.multiTagWrapper.childNodes.length === refs.optionsList.childNodes.length )
+        {
+            this.removeNoResultsMessage();
+            this.addNoMoreOptionsMessage();
+        }
+
         if ( this.ready )
         {
             try
@@ -1318,6 +1355,7 @@ const events = {
                 console.warn( `something may be wrong in "onOpen"`, e );
             }
         }
+
     }
 };
 

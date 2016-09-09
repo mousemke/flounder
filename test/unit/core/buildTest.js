@@ -26,11 +26,12 @@ describe( 'addOptionDescription', () =>
     it( 'should add a description element to the passed element', () =>
     {
         let el = document.createElement( 'div' );
-
+        build.classes = classes;
         build.addOptionDescription( el, 'moon' );
 
         assert.equal( el.children.length, 1 );
         assert.equal( el.children[0].innerHTML, 'moon' );
+
         assert.equal( el.children[0].className, classes.DESCRIPTION );
     } );
 } );
@@ -50,17 +51,23 @@ describe( 'addSearch', () =>
 {
     it( 'should return false if no search is needed', () =>
     {
-        let search = build.addSearch();
+        build.classes   = classes;
+        let search      = build.addSearch();
         assert.equal( search, false );
     } );
 
 
     it( 'should build a search input and add it to flounder', () =>
     {
+        document.body.flounder = null;
+        let flounder    = new Flounder( document.body, { openOnHover: true } );
+
         let el          = document.createElement( 'div' );
+        let fMock       = document.createElement( 'div' );
+        fMock.appendChild( el );
         build.search    = true;
 
-        let search      = build.addSearch( el );
+        let search      = build.addSearch( el, fMock );
         assert.equal( search.className, classes.SEARCH );
         assert.equal( search.tagName, 'INPUT' );
         build.search    = false;

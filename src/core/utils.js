@@ -1,5 +1,4 @@
 
-import classes          from '/core/classes';
 import microbeHttp      from 'microbejs/src/modules/http';
 
 const utils = {
@@ -8,33 +7,33 @@ const utils = {
      *
      * on the quest to nuke jquery, a wild helper function appears
      *
-     * @param {DOMElement} _el target element
+     * @param {DOMElement} el target element
      * @param {String} _class class to add
      *
      * @return _Void_
      */
-    addClass( _el, _class )
+    addClass( el, _class )
     {
         if ( typeof _class !== `string` && _class.length )
         {
             _class.forEach( function( _c )
             {
-                utils.addClass( _el, _c );
+                utils.addClass( el, _c );
             } );
 
             return true;
         }
 
-        let _elClass        = _el.className;
-        let _elClassLength  = _elClass.length;
+        let elClass        = el.className;
+        let elClassLength  = elClass.length;
 
-        if ( !utils.hasClass( _el, _class ) && _elClass.slice( 0, _class.length + 1 ) !== `${_class} ` &&
-            _elClass.slice( _elClassLength - _class.length - 1, _elClassLength ) !== ` ${_class}` )
+        if ( !utils.hasClass( el, _class ) && elClass.slice( 0, _class.length + 1 ) !== `${_class} ` &&
+            elClass.slice( elClassLength - _class.length - 1, elClassLength ) !== ` ${_class}` )
         {
-            _elClass += ( `  ${_class}` );
+            elClass += ( `  ${_class}` );
         }
 
-        _el.className = _elClass.trim();
+        el.className = elClass.trim();
     },
 
 
@@ -43,24 +42,24 @@ const utils = {
      *
      * attached data attributes and others (seperately)
      *
-     * @param {DOMElement} _el element to assign attributes
-     * @param {Object} _elObj contains the attributes to attach
+     * @param {DOMElement} el element to assign attributes
+     * @param {Object} elObj contains the attributes to attach
      *
      * @return _Void_
      */
-    attachAttributes( _el, _elObj )
+    attachAttributes( el, elObj )
     {
-        if ( _elObj )
+        if ( elObj )
         {
-            for ( let att in _elObj )
+            for ( let att in elObj )
             {
                 if ( att.slice( 0, 5 ) === `data-` )
                 {
-                    _el.setAttribute( att, _elObj[ att ] );
+                    el.setAttribute( att, elObj[ att ] );
                 }
                 else
                 {
-                    _el[ att ] = _elObj[ att ];
+                    el[ att ] = elObj[ att ];
                 }
             }
         }
@@ -258,7 +257,7 @@ const utils = {
 
             return true;
         }
-
+// console.trace()
         let baseClass       = el.className;
         let baseClassLength = baseClass.length;
         let classLength     = _class.length;
