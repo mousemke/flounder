@@ -43,7 +43,7 @@ const defaults = {
      *
      * @return {Void} void
      */
-    setDefaultOption( self, configObj = {}, data, rebuild = false )
+    setDefaultOption( self, configObj = {}, originalData, rebuild = false )
     {
         /**
          * ## setIndexDefault
@@ -81,10 +81,10 @@ const defaults = {
          *
          * @return {Object} default settings
          */
-        function setPlaceholderDefault( self )
+        function setPlaceholderDefault( flounder )
         {
-            const refs        = self.refs;
-            const classes     = self.classes;
+            const refs        = flounder.refs;
+            const classes     = flounder.classes;
             const select      = refs.select;
             const placeholder = configObj.placeholder;
 
@@ -98,7 +98,7 @@ const defaults = {
 
             if ( select )
             {
-                const escapedText     = self.allowHTML ? defaultObj.text :
+                const escapedText     = flounder.allowHTML ? defaultObj.text :
                                             utils.escapeHTML( defaultObj.text );
 
                 const defaultOption   = utils.constructElement( {
@@ -110,10 +110,10 @@ const defaults = {
                 defaultOption.innerHTML = escapedText;
 
                 select.insertBefore( defaultOption, select[ 0 ] );
-                self.refs.selectOptions.unshift( defaultOption );
+                flounder.refs.selectOptions.unshift( defaultOption );
             }
 
-            data.unshift( defaultObj );
+            originalData.unshift( defaultObj );
 
             return defaultObj;
         }
@@ -127,12 +127,12 @@ const defaults = {
          *
          * @return {Object} default settings
          */
-        function setValueDefault( _data, _val )
+        function setValueDefault( data, val )
         {
-            const defaultProp = _val || `${configObj.defaultValue}`;
+            const defaultProp = val || `${configObj.defaultValue}`;
             let index;
 
-            _data.forEach( ( dataObj, i ) =>
+            data.forEach( ( dataObj, i ) =>
             {
                 const dataObjValue = `${dataObj.value}`;
 
@@ -142,7 +142,7 @@ const defaults = {
                 }
             } );
 
-            const defaultValue = index >= 0 ? _data[ index ] : null;
+            const defaultValue = index >= 0 ? data[ index ] : null;
 
             if ( defaultValue )
             {
@@ -164,7 +164,7 @@ const defaults = {
          */
         function checkDefaultPriority()
         {
-            const data = self.sortData( data );
+            const data = self.sortData( originalData );
 
             if ( ( configObj.multipleTags || configObj.multiple )
                     && !configObj.defaultIndex
@@ -208,7 +208,7 @@ const defaults = {
             return def;
         }
 
-        data    = data || configObj.data || [];
+        originalData    = originalData || configObj.data || [];
 
         return checkDefaultPriority();
     },

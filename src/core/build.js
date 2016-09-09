@@ -216,8 +216,9 @@ const build = {
 
             if ( !selectRef )
             {
-                const extraClass        = ` ${dataObj.extraClass}` || '';
-                const selectOptionClass = `${classes.OPTION_TAG}${extraClass}`;
+                const extra             = dataObj.extraClass || '';
+                const selectOptionClass = `${classes.OPTION_TAG}  ${extra}`;
+
                 selectOption            = constructElement( {
                     tagname     : 'option',
                     className   : selectOptionClass.trim(),
@@ -321,7 +322,6 @@ const build = {
             }
         } );
 
-
         return  [ data, selectOptions ];
     },
 
@@ -413,11 +413,11 @@ const build = {
 
         const search            = this.addSearch( searchLocation, flounder );
 
+
         const built = this.buildData( defaultValue, data, optionsList, select );
 
-        const selectOptions = built.selectOptions;
-
-        data    = built.data;
+        data                = built[ 0 ];
+        const selectOptions = built[ 1 ];
 
         this.target.appendChild( wrapper );
 

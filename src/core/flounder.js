@@ -141,60 +141,6 @@ class Flounder
 
 
     /**
-     * ## displaySelected
-     *
-     * formats and displays the chosen options
-     *
-     * @param {DOMElement} selected display area for the selected option(s)
-     * @param {Object} refs element references
-     *
-     * @return {Void} void
-     */
-    displaySelected( selected, refs )
-    {
-        let value = [];
-        let index = -1;
-
-        const selectedOption  = this.getSelected();
-        const selectedLength  = selectedOption.length;
-        const multipleTags    = this.multipleTags;
-
-        if ( !multipleTags && selectedLength ===  1 )
-        {
-            index               = selectedOption[ 0 ].index;
-            selected.innerHTML  = refs.data[ index ].innerHTML;
-            value               = selectedOption[ 0 ].value;
-        }
-        else if ( !multipleTags && selectedLength === 0 )
-        {
-            const defaultValue  = this.defaultObj;
-            index               = defaultValue.index || -1;
-            selected.innerHTML  = defaultValue.text;
-            value               = defaultValue.value;
-        }
-        else
-        {
-            if ( multipleTags )
-            {
-                selected.innerHTML  = '';
-                this.displayMultipleTags( selectedOption,
-                                                        refs.multiTagWrapper );
-            }
-            else
-            {
-                selected.innerHTML  = this.multipleMessage;
-            }
-
-            index = selectedOption.map( option => option.index );
-            value = selectedOption.map( option => option.value );
-        }
-
-        selected.setAttribute( 'data-value', value );
-        selected.setAttribute( 'data-index', index );
-    }
-
-
-    /**
      * ## filterSearchResults
      *
      * filters results and adjusts the search hidden class on the dataOptions

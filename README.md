@@ -1,4 +1,4 @@
-Flounder.js 1.0.2
+Flounder.js 1.1.0
 =================
 
 [![Flounder build status](https://travis-ci.org/sociomantic-tsunami/flounder.svg)](https://travis-ci.org)
@@ -473,11 +473,12 @@ See more examples on the [demo page](./demo/index.html)
 Change Log
 ==========
 
-1.0.2
+1.1.0
 -----
 
 + Flounder
     + last of the `0.8.5` changes merged in
+    + added eslint requirements
 
 + default
     + placeholder tweak for the flounder-react

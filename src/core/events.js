@@ -1,5 +1,4 @@
-/* globals console, document, setTimeout */
-import search           from './search';
+/* globals console, document, setTimeout, window */
 import utils            from './utils';
 import keycodes         from './keycodes';
 
@@ -124,7 +123,7 @@ const events = {
      */
     addOptionsListeners()
     {
-        this.refs.data.forEach( ( dataObj, i ) =>
+        this.refs.data.forEach( dataObj =>
         {
             if ( dataObj.tagName === 'DIV' )
             {
@@ -345,10 +344,8 @@ const events = {
 
             return res;
         }
-        else
-        {
-            return false;
-        }
+
+        return false;
     },
 
 
@@ -519,9 +516,9 @@ const events = {
      * @return {Void} void
      */
     clearPlaceholder()
-     {
+    {
         this.refs.selected.innerHTML = '';
-     },
+    },
 
 
     /**
@@ -610,15 +607,15 @@ const events = {
         if ( !multipleTags && selectedLength ===  1 )
         {
             index               = selectedOption[ 0 ].index;
-            value               = selectedOption[ 0 ].value;
             selected.innerHTML  = refs.data[ index ].innerHTML;
+            value               = selectedOption[ 0 ].value;
         }
         else if ( !multipleTags && selectedLength === 0 )
         {
             const defaultValue  = this.defaultObj;
-            index               = defaultValue.index;
-            value               = defaultValue.value;
+            index               = defaultValue.index || -1;
             selected.innerHTML  = defaultValue.text;
+            value               = defaultValue.value;
         }
         else
         {
@@ -793,7 +790,6 @@ const events = {
         const select          = refs.select;
         const selected        = refs.selected;
         const target          = e.target;
-        const defaultValue    = this.defaultObj;
         const data            = this.refs.data;
         const targetIndex     = target.getAttribute( 'data-index' );
 
@@ -1092,7 +1088,7 @@ const events = {
                     }
                     catch ( e )
                     {
-                        console.warn( 'something may be wrong in "onChange"', e );
+                        console.warn( 'something may be wrong in onChange', e );
                     }
                 }
             }

@@ -571,15 +571,15 @@ const api = {
         data            = this.data = data || this.data;
         props           = this.props;
         const refs      = this.refs;
-        const select   = refs.select;
+        const select    = refs.select;
 
         this.deselectAll();
         this.removeOptionsListeners();
 
+        refs.select.innerHTML       = '';
         refs.select         = false;
         this.defaultObj     = setDefaultOption( this, props, data, true );
 
-        refs.select.innerHTML       = '';
         refs.optionsList.innerHTML  = '';
 
         [ refs.data, refs.selectOptions ] = this.buildData( this.defaultObj,
@@ -587,6 +587,7 @@ const api = {
         refs.select                 = select;
 
         this.addOptionsListeners();
+
         this.data = data;
 
         this.displaySelected( refs.selected, refs );

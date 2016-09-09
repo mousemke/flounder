@@ -91,21 +91,21 @@ describe( 'bindThis', () =>
         document.body.flounder = null;
         let flounder = new Flounder( document.body, {} );
 
-        assert.equal( flounder.catchBodyClick.___isBound, true );
-        assert.equal( flounder.checkClickTarget.___isBound, true );
-        assert.equal( flounder.checkFlounderKeypress.___isBound, true );
-        assert.equal( flounder.checkMultiTagKeydown.___isBound, true );
-        assert.equal( flounder.clearPlaceholder.___isBound, true );
-        assert.equal( flounder.clickSet.___isBound, true );
-        assert.equal( flounder.divertTarget.___isBound, true );
-        assert.equal( flounder.displayMultipleTags.___isBound, true );
-        assert.equal( flounder.firstTouchController.___isBound, true );
-        assert.equal( flounder.fuzzySearch.___isBound, true );
-        assert.equal( flounder.removeMultiTag.___isBound, true );
-        assert.equal( flounder.setKeypress.___isBound, true );
-        assert.equal( flounder.setSelectValue.___isBound, true );
-        assert.equal( flounder.toggleList.___isBound, true );
-        assert.equal( flounder.toggleListSearchClick.___isBound, true );
+        assert.equal( flounder.catchBodyClick.isBound, true );
+        assert.equal( flounder.checkClickTarget.isBound, true );
+        assert.equal( flounder.checkFlounderKeypress.isBound, true );
+        assert.equal( flounder.checkMultiTagKeydown.isBound, true );
+        assert.equal( flounder.clearPlaceholder.isBound, true );
+        assert.equal( flounder.clickSet.isBound, true );
+        assert.equal( flounder.divertTarget.isBound, true );
+        assert.equal( flounder.displayMultipleTags.isBound, true );
+        assert.equal( flounder.firstTouchController.isBound, true );
+        assert.equal( flounder.fuzzySearch.isBound, true );
+        assert.equal( flounder.removeMultiTag.isBound, true );
+        assert.equal( flounder.setKeypress.isBound, true );
+        assert.equal( flounder.setSelectValue.isBound, true );
+        assert.equal( flounder.toggleList.isBound, true );
+        assert.equal( flounder.toggleListSearchClick.isBound, true );
     } );
 } );
 
