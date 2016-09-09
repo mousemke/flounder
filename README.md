@@ -267,7 +267,7 @@ this.buildFromUrl( url, callback )
 this.clickByIndex( index, multiple* )
 this.clickByText( text, multiple* )
 this.clickByValue( value, multiple* )
-this.deselectAll()
+this.deselectAll( silent )
 this.destroy()
 this.disable( bool* )
 this.disableByIndex( index )
@@ -298,7 +298,7 @@ this.setByValue( value, multiple* )
 
 + `clickByValue( value, multiple )` sets the item with the passed value as selected.  If multiple is true and it is a multi-select box, it is selected additionally.  Otherwise it's selected instead. This accepts arrays as well.  Without multiple equaling true it will only select the last option. This fires the onClick event
 
-+ `deselectAll()` deselects all data
++ `deselectAll()` deselects all data.  Fires one change event when done deselecting all.  while `silent` = true, this event will be suppressed
 
 + `destroy()` removes event listeners, then flounder.  this will return the element to it's original state
 
@@ -476,10 +476,14 @@ Change Log
 1.0.2
 -----
 
-+ last of the `0.8.5` changes merged in
++ Flounder
+    + last of the `0.8.5` changes merged in
 
 + default
     + placeholder tweak for the flounder-react
+
++ api
+    + onSelect changed to onChange.  Deprication warning added.  Will be removed 2.0.0
 
 
 1.0.1

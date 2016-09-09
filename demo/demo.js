@@ -164,6 +164,7 @@ new Flounder( document.getElementById( 'vanilla--multiple--tags' ), {
 
     onInit              : function(){ this.data = buildData(); },
 
+    onChange            : () => { console.trace() }
 } );
 
 

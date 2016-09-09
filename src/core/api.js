@@ -144,7 +144,38 @@ const api = {
 
         refs.flounder.flounder  = originalTarget.flounder = this.target.flounder = null;
     },
+// let changed = 0;
 
+//         if ( this.multiple )
+//         {
+//             let multiTagWrapper = this.refs.multiTagWrapper;
+
+//             if ( multiTagWrapper )
+//             {
+//                 let tags    = nativeSlice.call( multiTagWrapper.children );
+
+//                 tags.forEach( ( el, count ) =>
+//                 {
+//                     el = el.children;
+//                     let lastEl = count === tags.length - 1;
+
+//                     if ( el )
+//                     {
+//                         el      = el[ 0 ];
+//                         let i   = el.getAttribute( 'data-index' );
+
+//                         if ( lastEl && !silent )
+//                         {
+//                             this.clickByIndex( i, true );
+//                         }
+//                         else
+//                         {
+//                             this.setByIndex( i, true, true );
+//                         }
+//                     }
+//                 } );
+//             }
+//         }
 
     /**
      * ## deselectAll
@@ -153,24 +184,47 @@ const api = {
      *
      * @return _Void_
      */
-    deselectAll()
+    deselectAll( silent )
     {
-        this.removeSelectedClass();
-        this.removeSelectedValue();
-
-
-        let multiTagWrapper = this.refs.multiTagWrapper;
-
-        if ( multiTagWrapper )
+        if ( this.multiple )
         {
-            let tags = nativeSlice.call( multiTagWrapper.children );
-            tags.forEach( el =>
+            this.removeSelectedClass();
+            this.removeSelectedValue();
+
+            let multiTagWrapper = this.refs.multiTagWrapper;
+
+            if ( multiTagWrapper )
             {
-                if ( el.children.length )
+                let tags = nativeSlice.call( multiTagWrapper.children );
+
+                tags.forEach( ( el, count ) =>
                 {
-                    return el.children[0].click();
-                }
-            } );
+                    let lastEl = count === tags.length - 1;
+
+                    if ( el )
+                    {
+
+                        if ( !silent && lastEl )
+                        {
+                            el = el.children;
+                            el = el[ 0 ];
+
+                            el.click();
+                        }
+                        else
+                        {
+                            el.removeEventListener( `click`, this.removeMultiTag );
+                            el.remove();
+
+                            if ( lastEl )
+                            {
+                                this.setTextMultiTagIndent();
+                                this.addPlaceholder();
+                            }
+                        }
+                    }
+                } );
+            }
         }
     },
 
