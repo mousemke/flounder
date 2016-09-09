@@ -12,7 +12,7 @@ const events = {
      *
      * adds the listeners for onFirstTouch
      *
-     * @return _Void_
+     * @return {Void} void
      */
     addFirstTouchListeners()
     {
@@ -45,7 +45,7 @@ const events = {
      *
      * adds listeners on render
      *
-     * @return _Void_
+     * @return {Void} void
      */
     addListeners( refs )
     {
@@ -86,7 +86,7 @@ const events = {
      * @param {Array} selectedOptions currently selected options
      * @param {DOMElement} multiTagWrapper parent element of the tags
      *
-     * @return _Void_
+     * @return {Void} void
      */
     addMultipleTags( selectedOptions, multiTagWrapper )
     {
@@ -119,7 +119,7 @@ const events = {
      *
      * adds listeners to the options
      *
-     * @return _Void_
+     * @return {Void} void
      */
     addOptionsListeners()
     {
@@ -142,7 +142,7 @@ const events = {
      * determines what (if anything) should be refilled into the the
      * placeholder position
      *
-     * @return _Void_
+     * @return {Void} void
      */
     addPlaceholder()
     {
@@ -190,7 +190,7 @@ const events = {
      *
      * adds listeners to the search box
      *
-     * @return _Void_
+     * @return {Void} void
      */
     addSearchListeners()
     {
@@ -215,7 +215,7 @@ const events = {
      * adds a listener to the selectbox to allow for seeking through the native
      * selectbox on keypress
      *
-     * @return _Void_
+     * @return {Void} void
      */
     addSelectKeyListener()
     {
@@ -250,7 +250,7 @@ const events = {
      *
      * @param  {Object} e event object
      *
-     * @return _Void_
+     * @return {Void} void
      */
     catchBodyClick( e )
     {
@@ -305,7 +305,7 @@ const events = {
      * @param {Object} e event object
      * @param {Object} refs element references
      *
-     * @return _Void_
+     * @return {Void} void
      */
     checkEnterOnSearch( e , refs )
     {
@@ -355,7 +355,7 @@ const events = {
      *
      * checks flounder focused keypresses and filters all but space and enter
      *
-     * @return _Void_
+     * @return {Void} void
      */
     checkFlounderKeypress( e )
     {
@@ -402,7 +402,7 @@ const events = {
      *
      * @param {Object} e event object
      *
-     * @return _Void_
+     * @return {Void} void
      */
     checkMultiTagKeydown( e )
     {
@@ -453,7 +453,7 @@ const events = {
      * @param {Number} keyCode keyclode from te keypress event
      * @param {Number} index index of currently focused tag
      *
-     * @return _Void_
+     * @return {Void} void
      */
     checkMultiTagKeydownNavigate( focusSearch, keyCode, index )
     {
@@ -484,7 +484,7 @@ const events = {
      * @param {Function} focusSearch function to focus on the search field
      * @param {Number} index index of currently focused tag
      *
-     * @return _Void_
+     * @return {Void} void
      */
     checkMultiTagKeydownRemove( target, focusSearch, index )
     {
@@ -511,7 +511,7 @@ const events = {
      *
      * @param {Object} e event object
      *
-     * @return _Void_
+     * @return {Void} void
      */
      clearPlaceholder()
      {
@@ -527,7 +527,7 @@ const events = {
      *
      * @param {Object} e event object
      *
-     * @return _Void_
+     * @return {Void} void
      */
     clickSet( e )
     {
@@ -553,7 +553,7 @@ const events = {
      * @param  {Array} selectedOptions currently selected options
      * @param  {DOMElement} selected div to display currently selected options
      *
-     * @return _Void_
+     * @return {Void} void
      */
     displayMultipleTags( selectedOptions, multiTagWrapper )
     {
@@ -590,7 +590,7 @@ const events = {
      * @param {DOMElement} selected display area for the selected option(s)
      * @param {Object} refs element references
      *
-     * @return _Void_
+     * @return {Void} void
      */
     displaySelected( selected, refs )
     {
@@ -643,7 +643,7 @@ const events = {
      * on interaction with the raw select box, the target will be diverted to
      * the corresponding flounder list element
      *
-     * @return _Void_
+     * @return {Void} void
      */
     divertTarget( e )
     {
@@ -691,7 +691,7 @@ const events = {
      *
      * @param {Object} e event object
      *
-     * @return _Void_
+     * @return {Void} void
      */
     firstTouchController( e )
     {
@@ -736,7 +736,7 @@ const events = {
      *
      * removes event listeners from flounder.  normally pre unload
      *
-     * @return _Void_
+     * @return {Void} void
      */
     removeListeners()
     {
@@ -769,7 +769,7 @@ const events = {
      *
      * @param  {Object} e event object
      *
-     * @return _Void_
+     * @return {Void} void
      */
     removeMultiTag( e )
     {
@@ -839,7 +839,7 @@ const events = {
      *
      * removes event listeners on the data divs
      *
-     * @return _Void_
+     * @return {Void} void
      */
     removeOptionsListeners()
     {
@@ -861,7 +861,7 @@ const events = {
      *
      * removes the listeners from the search input
      *
-     * @return _Void_
+     * @return {Void} void
      */
     removeSearchListeners()
     {
@@ -878,7 +878,7 @@ const events = {
      *
      * removes the [[this.selectedClass]] from all data
      *
-     * @return _Void_
+     * @return {Void} void
      */
     removeSelectedClass( data )
     {
@@ -896,7 +896,7 @@ const events = {
      *
      * sets the selected property to false for all data
      *
-     * @return _Void_
+     * @return {Void} void
      */
     removeSelectedValue( data )
     {
@@ -915,7 +915,7 @@ const events = {
      *
      * disables the event listener on the native select box
      *
-     * @return _Void_
+     * @return {Void} void
      */
     removeSelectKeyListener()
     {
@@ -931,7 +931,7 @@ const events = {
      *
      * @param {Object} e event object
      *
-     * @return _Void_
+     * @return {Void} void
      */
     setKeypress( e )
     {
@@ -993,7 +993,7 @@ const events = {
      * @param {Object} e event object
      * @param {Number} increment amount to change the index by
      *
-     * @return _Void_
+     * @return {Void} void
      */
     setKeypressElement( e, increment )
     {
@@ -1040,7 +1040,7 @@ const events = {
      * @param {Object} obj possible event object
      * @param {Object} e event object
      *
-     * @return _Void_
+     * @return {Void} void
      */
     setSelectValue( obj, e )
     {
@@ -1094,7 +1094,7 @@ const events = {
      *
      * processes the setting of a value after a keypress event
      *
-     * @return _Void_
+     * @return {Void} void
      */
     setSelectValueButton( e )
     {
@@ -1131,7 +1131,7 @@ const events = {
      *
      * @param {Object} e event object
      *
-     * @return _Void_
+     * @return {Void} void
      */
     setSelectValueClick( e )
     {
@@ -1170,7 +1170,7 @@ const events = {
      *
      * sets the text-indent on the search field to go around selected tags
      *
-     * @return _Void_
+     * @return {Void} void
      */
     setTextMultiTagIndent()
     {
@@ -1201,7 +1201,7 @@ const events = {
      * @param {DOMElement} wrapper wrapper of flounder
      * @param {Boolean} exit prevents refocus. used while tabbing away
      *
-     * @return _Void_
+     * @return {Void} void
      */
     toggleClosed( e, optionsList, refs, wrapper = this.refs.wrapper, exit = false )
     {
@@ -1247,7 +1247,7 @@ const events = {
      *
      * @param {String} force toggle can be forced by passing 'open' or 'close'
      *
-     * @return _Void_
+     * @return {Void} void
      */
     toggleList( e, force )
     {
@@ -1282,7 +1282,7 @@ const events = {
      *
      * toggleList wrapper for search.  only triggered if flounder is closed
      *
-     * @return _Void_
+     * @return {Void} void
      */
     toggleListSearchClick( e )
     {
@@ -1305,7 +1305,7 @@ const events = {
      * @param {Object} refs contains the references of the elements in flounder
      * @param {DOMElement} wrapper wrapper of flounder
      *
-     * @return _Void_
+     * @return {Void} void
      */
     toggleOpen( e, optionsList, refs )
     {

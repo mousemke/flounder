@@ -8,7 +8,7 @@ const keycodes = {
     SPACE               : 32,
     TAB                 : 9,
     UP                  : 38,
-    NON_CHARACTER_KEYS  : [ 16, 17, 18, 20, 91, 93 ]
+    NON_CHARACTER_KEYS  : [ 16, 17, 18, 20, 91, 93 ]
 };
 
 export default keycodes;

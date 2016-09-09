@@ -3,16 +3,15 @@ import Flounder from '../core/flounder';
 
 ( function( µ )
 {
-
     µ.core.flounder = function( options )
     {
-        let flounderDestroy = Flounder.prototype.destroy;
+        const flounderDestroy = Flounder.prototype.destroy;
 
-        this.each( function( el )
+        this.each( el =>
         {
-            let f                       = new Flounder( el, options );
-            el.data                     = el.data || {};
-            el.data.flounder            = el.data.flounder || {};
+            const f                     = new Flounder( el, options );
+            el.data                     = el.data || {};
+            el.data.flounder            = el.data.flounder || {};
             el.data.flounder.flounder   = f;
 
             f.destroy                  = function()

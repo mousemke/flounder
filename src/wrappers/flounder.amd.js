@@ -1,7 +1,7 @@
 /* global define */
 import Flounder from '../core/flounder';
 
-define( 'flounder', [], function()
+define( 'flounder', [], () =>
 {
     return Flounder;
 } );

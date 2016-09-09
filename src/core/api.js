@@ -14,7 +14,7 @@ const api = {
      * @param {String} url address to get the data from
      * @param {Function} callback function to run after getting the data
      *
-     * @return _Void_
+     * @return {Void} void
      */
     buildFromUrl( url, callback )
     {
@@ -42,7 +42,7 @@ const api = {
      *
      * @param {Mixed} index index to set flounder to.  _Number, or Array of numbers_
      *
-     * return _Void_
+     * return {Void} void
      */
     clickByIndex( index, multiple )
     {
@@ -58,7 +58,7 @@ const api = {
      *
      * @param {Mixed} text text to set flounder to.  _String, or Array of strings_
      *
-     * return _Void_
+     * return {Void} void
      */
     clickByText( text, multiple )
     {
@@ -74,7 +74,7 @@ const api = {
      *
      * @param {Mixed} value value to set flounder to.  _String, or Array of strings_
      *
-     * return _Void_
+     * return {Void} void
      */
     clickByValue( value, multiple )
     {
@@ -87,7 +87,7 @@ const api = {
      *
      * removes flounder and all it`s events from the dom
      *
-     * @return _Void_
+     * @return {Void} void
      */
     destroy()
     {
@@ -182,7 +182,7 @@ const api = {
      *
      * deslects all data
      *
-     * @return _Void_
+     * @return {Void} void
      */
     deselectAll( silent )
     {
@@ -236,7 +236,7 @@ const api = {
      *
      * @param {Boolean} bool disable or enable
      *
-     * @return _Void_
+     * @return {Void} void
      */
     disable( bool )
     {
@@ -270,7 +270,7 @@ const api = {
      * @param {Mixed} i index of the option
      * @param {Boolean} reenable enables the option instead
      *
-     * return _Void_
+     * return {Void} void
      */
     disableByIndex( index, reenable )
     {
@@ -328,7 +328,7 @@ const api = {
      * @param {Mixed} value value of the option
      * @param {Boolean} reenable enables the option instead
      *
-     * return _Void_
+     * return {Void} void
      */
     disableByText( text, reenable )
     {
@@ -368,7 +368,7 @@ const api = {
      * @param {Mixed} value value of the option
      * @param {Boolean} reenable enables the option instead
      *
-     * return _Void_
+     * return {Void} void
      */
     disableByValue( value, reenable )
     {
@@ -481,7 +481,7 @@ const api = {
      *
      * returns the currently selected data of a SELECT box
      *
-     * @return _Void_
+     * @return {Void} void
      */
     getSelected()
     {
@@ -507,7 +507,7 @@ const api = {
      *
      * returns the values of the currently selected data
      *
-     * @return _Void_
+     * @return {Void} void
      */
     getSelectedValues()
     {
@@ -523,7 +523,7 @@ const api = {
      * @param {String} url address to get the data from
      * @param {Function} callback function to run after getting the data
      *
-     * @return _Void_
+     * @return {Void} void
      */
     loadDataFromUrl( url, callback )
     {
@@ -620,7 +620,7 @@ const api = {
      *
      * @param {Mixed} index index to set flounder to.  _Number, or Array of numbers_
      *
-     * return _Void_
+     * return {Void} void
      */
     setByIndex( index, multiple, programmatic = true )
     {
@@ -667,7 +667,7 @@ const api = {
      *
      * @param {Mixed} text text to set flounder to.  _String, or Array of strings_
      *
-     * return _Void_
+     * return {Void} void
      */
     setByText( text, multiple, programmatic = true )
     {
@@ -704,7 +704,7 @@ const api = {
      *
      * @param {Mixed} value value to set flounder to.  _String, or Array of strings_
      *
-     * return _Void_
+     * return {Void} void
      */
     setByValue( value, multiple, programmatic = true )
     {

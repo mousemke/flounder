@@ -1,4 +1,4 @@
-
+/* globals document, window, setTimeout*/
 import microbeHttp      from 'microbejs/src/modules/http';
 
 const utils = {
@@ -8,29 +8,33 @@ const utils = {
      * on the quest to nuke jquery, a wild helper function appears
      *
      * @param {DOMElement} el target element
-     * @param {String} _class class to add
+     * @param {String} clss class to add
      *
-     * @return _Void_
+     * @return {Void} void
      */
-    addClass( el, _class )
+    addClass( el, clss )
     {
-        if ( typeof _class !== `string` && _class.length )
+        if ( typeof clss !== 'string' && clss.length )
         {
-            _class.forEach( function( _c )
+            clss.forEach( c =>
             {
-                utils.addClass( el, _c );
+                utils.addClass( el, c );
             } );
 
             return true;
         }
 
-        let elClass        = el.className;
-        let elClassLength  = elClass.length;
+        let elClass         = el.className;
+        const elClassLength = elClass.length;
 
-        if ( !utils.hasClass( el, _class ) && elClass.slice( 0, _class.length + 1 ) !== `${_class} ` &&
-            elClass.slice( elClassLength - _class.length - 1, elClassLength ) !== ` ${_class}` )
+        const className = elClass.slice( elClassLength - clss.length - 1,
+                                                                elClassLength );
+
+        if ( !utils.hasClass( el, clss ) &&
+                elClass.slice( 0, clss.length + 1 ) !== `${clss} ` &&
+            className !== ` ${clss}` )
         {
-            elClass += ( `  ${_class}` );
+            elClass += `  ${clss}`;
         }
 
         el.className = elClass.trim();
@@ -45,15 +49,15 @@ const utils = {
      * @param {DOMElement} el element to assign attributes
      * @param {Object} elObj contains the attributes to attach
      *
-     * @return _Void_
+     * @return {Void} void
      */
     attachAttributes( el, elObj )
     {
         if ( elObj )
         {
-            for ( let att in elObj )
+            for ( const att in elObj )
             {
-                if ( att.slice( 0, 5 ) === `data-` )
+                if ( att.slice( 0, 5 ) === 'data-' )
                 {
                     el.setAttribute( att, elObj[ att ] );
                 }
@@ -73,17 +77,17 @@ const utils = {
     /**
      * ## constructElement
      *
-     * @param {Object} _elObj object carrying properties to transfer
+     * @param {Object} elObj object carrying properties to transfer
      *
-     * @return _Element_
+     * @return {Element} new element
      */
-    constructElement( _elObj )
+    constructElement( elObj )
     {
-        let _el         = document.createElement( _elObj.tagname || `div` );
+        const el = document.createElement( elObj.tagname || 'div' );
 
-        utils.attachAttributes( _el, _elObj );
+        utils.attachAttributes( el, elObj );
 
-        return _el;
+        return el;
     },
 
 
@@ -92,30 +96,39 @@ const utils = {
      *
      * extends a class from an object.  returns the original reference
      *
-     * @param {Class} _extend class to be extended
+     * @param {Class} extend class to be extended
      * @param {Class} objects objects to extend the class with
      *
      * @return {Class} modified class object
      */
-    extendClass( _extend, ...objects )
+    extendClass( extend, ...objects )
     {
-        _extend = _extend.prototype;
+        extend = extend.prototype;
 
-        let merge = function ( obj )
+        /**
+         * ## merge
+         *
+         * combines two objects
+         *
+         * @param {Object} obj object to combine with extend
+         *
+         * @return {Obj} newly combined object
+         */
+        function merge( obj )
         {
-            for ( let prop in obj )
+            for ( const prop in obj )
             {
-                _extend[ prop ] = obj[ prop ];
+                extend[ prop ] = obj[ prop ];
             }
-        };
+        }
 
         for ( let i = 0, lenI = objects.length; i < lenI; i++ )
         {
-            let obj = objects[ i ];
+            const obj = objects[ i ];
             merge( obj );
         }
 
-        return _extend;
+        return extend;
     },
 
 
@@ -126,14 +139,14 @@ const utils = {
      *
      * @param {String} string unescaped string
      *
-     * @return _Void_
+     * @return {Void} void
      */
     escapeHTML( string )
     {
-        return String( string ).replace( /&/g, `&amp;` )
-                                .replace( /</g, `&lt;` )
-                                .replace( />/g, `&gt;` )
-                                .replace( /"/g, `&quot;` );
+        return String( string ).replace( /&/g, '&amp;' )
+                                .replace( /</g, '&lt;' )
+                                .replace( />/g, '&gt;' )
+                                .replace( /"/g, '&quot;' );
     },
 
 
@@ -143,33 +156,36 @@ const utils = {
      * gets the width adjusted for margins
      *
      * @param {DOMElement} el target element
+     * @param {Function} cb callback
+     * @param {Object} context transferred this
+     * @param {Number} timeout time to wait in ms
      *
-     * @return _Integer_ adjusted width
+     * @return {Integer} adjusted width
      */
-    getElWidth( el, _cb, context, timeout = 1500 )
+    getElWidth( el, cb, context, timeout = 1500 )
     {
-        let style = window.getComputedStyle( el );
+        const style = window.getComputedStyle( el );
 
-        if ( el.offsetWidth === 0 && this.__checkWidthAgain !== true )
+        if ( el.offsetWidth === 0 && this.checkWidthAgain !== true )
         {
-            if ( _cb && context )
+            if ( cb && context )
             {
                 /* istanbul ignore next */
-                setTimeout( _cb.bind( context ), timeout );
-                this.__checkWidthAgain = true;
+                setTimeout( cb.bind( context ), timeout );
+                this.checkWidthAgain = true;
             }
             else
             {
-                throw 'Flounder getElWidth error: no callback given.'
+                throw 'Flounder getElWidth error: no callback given.';
             }
         }
         else
         {
-            this.__checkWidthAgain = false
+            this.checkWidthAgain = false;
         }
 
-        return el.offsetWidth + parseInt( style[ `margin-left` ] ) +
-                                parseInt( style[ `margin-right` ] );
+        return el.offsetWidth + parseInt( style[ 'margin-left' ] ) +
+                                parseInt( style[ 'margin-right' ] );
     },
 
 
@@ -178,16 +194,17 @@ const utils = {
      *
      * on the quest to nuke jquery, a wild helper function appears
      *
-     * @param {DOMElement} _el target element
-     * @param {String} _class class to check
+     * @param {DOMElement} el target element
+     * @param {String} clss class to check
      *
-     * @return _Void_
+     * @return {Void} void
      */
-    hasClass( _el, _class )
+    hasClass( el, clss )
     {
-        let _elClass    = _el.className;
-        let regex       = new RegExp( `(^${_class} )|( ${_class}$)|( ${_class} )|(^${_class}$)` );
-        return !!_elClass.match( regex );
+        const elClass   = el.className;
+        const regex     = new RegExp( `(^${clss} )|( ${clss}$)|( ${clss} )|(^${clss}$)` ); // eslint-disable-line
+
+        return !!elClass.match( regex );
     },
 
 
@@ -202,16 +219,26 @@ const utils = {
      *
      * @param {Object} windowObj window, but allows for as testing override
      *
-     * @return _Void_
+     * @return {Void} void
      */
     iosVersion( windowObj = window )
     {
         if ( /iPad|iPhone|iPod/.test( windowObj.navigator.platform ) )
         {
-            if ( !!windowObj.indexedDB ) { return `8+`; }
-            if ( !!windowObj.SpeechSynthesisUtterance ) { return `7`; }
-            if ( !!windowObj.webkitAudioContext ) { return `6`; }
-            return `5-`;
+            if ( windowObj.indexedDB )
+            {
+                return '8+';
+            }
+            else if ( windowObj.SpeechSynthesisUtterance )
+            {
+                return '7';
+            }
+            if ( windowObj.webkitAudioContext )
+            {
+                return '6';
+            }
+
+            return '5-';
         }
 
         return false;
@@ -225,11 +252,11 @@ const utils = {
      *
      * @param {DOMElement} target target element
      *
-     * @return _Void_
+     * @return {Void} void
      */
     removeAllChildren( target )
     {
-        Array.prototype.slice.call( target.children, 0 ).forEach( function( el )
+        Array.prototype.slice.call( target.children, 0 ).forEach( el =>
         {
             target.removeChild( el );
         } );
@@ -241,42 +268,43 @@ const utils = {
      *
      * on the quest to nuke jquery, a wild helper function appears
      *
-     * @param {DOMElement} _el target element
-     * @param {String} _class class to remove
+     * @param {DOMElement} el target element
+     * @param {String} clss class to remove
      *
-     * @return _Void_
+     * @return {Void} void
      */
-    removeClass( el, _class )
+    removeClass( el, clss )
     {
-        if ( typeof _class !== `string` && _class.length )
+        if ( typeof clss !== 'string' && clss.length )
         {
-            _class.forEach( function( _c )
+            clss.forEach( _c =>
             {
                 utils.removeClass( el, _c );
             } );
 
             return true;
         }
-// console.trace()
-        let baseClass       = el.className;
-        let baseClassLength = baseClass.length;
-        let classLength     = _class.length;
 
-        if ( baseClass === _class )
+        let baseClass           = el.className;
+        const baseClassLength   = baseClass.length;
+        const classLength       = clss.length;
+
+        if ( baseClass === clss )
         {
-            baseClass = ``;
+            baseClass = '';
         }
-        else if ( baseClass.slice( 0, classLength + 1 ) === `${_class} ` )
+        else if ( baseClass.slice( 0, classLength + 1 ) === `${clss} ` )
         {
             baseClass = baseClass.slice( classLength + 1, baseClassLength );
         }
-        else if ( baseClass.slice( baseClassLength - classLength - 1, baseClassLength ) === ` ${_class}` )
+        else if ( baseClass.slice( baseClassLength - classLength - 1,
+                                            baseClassLength ) === ` ${clss}` )
         {
             baseClass = baseClass.slice( 0, baseClassLength - classLength - 1 );
         }
-        else if ( baseClass.indexOf( ` ${_class} ` ) !== -1 )
+        else if ( baseClass.indexOf( ` ${clss} ` ) !== -1 )
         {
-            baseClass = baseClass.replace( ` ${_class} `, ` ` );
+            baseClass = baseClass.replace( ` ${clss} `, ' ' );
         }
 
         el.className = baseClass.trim();
@@ -290,25 +318,25 @@ const utils = {
      *
      * @param {DOMElement} element element to check
      *
-     *@return _Void_
+     * @return {Void} void
      */
     scrollTo( element )
     {
         if ( element )
         {
-            let parent      = element.parentNode.parentNode;
-            let elHeight    = element.offsetHeight;
-            let min         = parent.scrollTop;
-            let max         = parent.scrollTop + parent.offsetHeight - elHeight;
-            let pos         = element.offsetTop;
+            const parent    = element.parentNode.parentNode;
+            const elHeight  = element.offsetHeight;
+            const min       = parent.scrollTop;
+            const max       = parent.scrollTop + parent.offsetHeight - elHeight;
+            const pos       = element.offsetTop;
 
             if ( pos < min )
             {
-                parent.scrollTop = pos  - ( elHeight * 0.5 );
+                parent.scrollTop = pos  - elHeight * 0.5;
             }
             else if ( pos > max )
             {
-                parent.scrollTop = pos - parent.offsetHeight + ( elHeight * 1.5 );
+                parent.scrollTop = pos - parent.offsetHeight + elHeight * 1.5;
             }
         }
         else
@@ -325,15 +353,20 @@ const utils = {
      *
      * @param {Object} windowObj window, but allows for as testing override
      *
-     * @return _Void_
+     * @return {Void} void
      */
     setPlatform( windowObj = window )
     {
-        let isOsx       = windowObj.navigator.platform.indexOf( `Mac` ) === -1 ? false : true;
-        let isIos       = utils.iosVersion( windowObj );
-        let multiSelect = isOsx ? `metaKey` : `ctrlKey`;
+        const platform      = windowObj.navigator.platform;
+        const isOsx         = platform.indexOf( 'Mac' ) !== -1;
+        const isIos         = utils.iosVersion( windowObj );
+        const multiSelect   = isOsx ? 'metaKey' : 'ctrlKey';
 
-        return { isOsx, isIos, multiSelect };
+        return {
+            isOsx,
+            isIos,
+            multiSelect
+        };
     },
 
 
@@ -345,7 +378,7 @@ const utils = {
      * @param  {DOMElement} _el target to toggle class on
      * @param  {String} _class class to toggle on/off
      *
-     * @return _Void_
+     * @return {Void} void
      */
     toggleClass( _el, _class )
     {
@@ -358,7 +391,7 @@ const utils = {
             utils.addClass( _el, _class );
         }
     }
-}
+};
 
 microbeHttp( utils );
 

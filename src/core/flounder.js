@@ -20,7 +20,7 @@ class Flounder
      *
      * Adding 'No More Options' message to the option list
      *
-     * @return _Void_
+     * @return {Void} void
      */
     addNoMoreOptionsMessage()
     {
@@ -39,7 +39,7 @@ class Flounder
      *
      * Adding 'No Results' message to the option list
      *
-     * @return _Void_
+     * @return {Void} void
      */
     addNoResultsMessage()
     {
@@ -138,7 +138,7 @@ class Flounder
      * @param {DOMElement} selected display area for the selected option(s)
      * @param {Object} refs element references
      *
-     * @return _Void_
+     * @return {Void} void
      */
     displaySelected( selected, refs )
     {
@@ -190,7 +190,7 @@ class Flounder
      *
      * @param {Object} e event object
      *
-     * @return _Void_
+     * @return {Void} void
      */
     filterSearchResults( e )
     {
@@ -241,7 +241,7 @@ class Flounder
      *
      * @param {Object} e event object
      *
-     * @return _Void_
+     * @return {Void} void
      */
     fuzzySearch( e )
     {
@@ -300,7 +300,7 @@ class Flounder
      *
      * resets all options to visible
      *
-     * @return _Void_
+     * @return {Void} void
      */
     fuzzySearchReset()
     {
@@ -477,7 +477,7 @@ class Flounder
      *
      * @param  {Object} e event object
      *
-     * @return _Void_
+     * @return {Void} void
      */
     removeMultiTag( e )
     {
@@ -552,7 +552,7 @@ class Flounder
      *
      * Removing 'No Results' message from the option list
      *
-     * @return _Void_
+     * @return {Void} void
      */
     removeNoResultsMessage()
     {
@@ -570,7 +570,7 @@ class Flounder
      *
      * Removing 'No More options' message from the option list
      *
-     * @return _Void_
+     * @return {Void} void
      */
     removeNoMoreOptionsMessage()
     {
@@ -589,7 +589,7 @@ class Flounder
      *
      * removes the [[this.selectedClass]] from all data
      *
-     * @return _Void_
+     * @return {Void} void
      */
     removeSelectedClass( data )
     {
@@ -607,7 +607,7 @@ class Flounder
      *
      * sets the selected property to false for all data
      *
-     * @return _Void_
+     * @return {Void} void
      */
     removeSelectedValue( data )
     {

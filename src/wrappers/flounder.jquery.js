@@ -5,12 +5,12 @@ import Flounder from '../core/flounder';
 {
     $.fn.flounder = function( options )
     {
-        let flounderDestroy = Flounder.prototype.destroy;
+        const flounderDestroy = Flounder.prototype.destroy;
 
-        this.each( function( i, el )
+        this.each( ( i, el ) =>
         {
-            let f       = new Flounder( el, options );
-            let $el     = $( el );
+            const f     = new Flounder( el, options );
+            const $el   = $( el );
             $el.data( 'flounder', f );
 
             f.destroy  = function()

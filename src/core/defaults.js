@@ -41,7 +41,7 @@ const defaults = {
      * @param {String or Number}    defaultProp         default passed from this.props
      * @param {Object}              data                this.props.data
      *
-     * @return _Void_
+     * @return {Void} void
      */
     setDefaultOption( self, configObj = {}, data, rebuild = false )
     {
