@@ -49,7 +49,7 @@ describe( 'defaultOptions', () =>
         assert.equal( typeof _d.onInit, 'function' );
         assert.equal( typeof _d.onInputChange, 'function' );
         assert.equal( typeof _d.onOpen, 'function' );
-        assert.equal( typeof _d.onSelect, 'function' );
+        assert.equal( typeof _d.onChange, 'function' );
         assert.equal( _d.openOnHover, false );
         assert.equal( _d.placeholder, `Please choose an option` );
         assert.equal( _d.search, false );

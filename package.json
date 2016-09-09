@@ -1,6 +1,6 @@
 {
   "name": "flounder",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "author": "Mouse Braun <mouse@knoblau.ch>",
   "description": "a native friendly dropdown menu",
   "repository": {
@@ -12,6 +12,8 @@
     "build": "npm run bash && ./node_modules/.bin/gulp && npm run test:unit:coverage:cli",
     "demo": "./node_modules/.bin/gulp demo",
     "gulp": "npm run bash && ./node_modules/.bin/gulp",
+    "lint": "eslint ./src --ext .js",
+    "lintFix": "eslint ./src --ext .js",
     "test": "npm run test:unit:coverage:cli",
     "test:unit": "node_modules/.bin/babel-node node_modules/.bin/_mocha ./test/test.js -R nyan -r ./test/test-setup",
     "test:unit:coverage": "npm run test:unit:coverage:cli && open coverage/lcov-report/index.html",

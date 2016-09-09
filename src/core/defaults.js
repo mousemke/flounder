@@ -18,6 +18,7 @@ export const defaultOptions = {
     multiple                : false,
     multipleTags            : false,
     multipleMessage         : `(Multiple Items Selected)`,
+    onChange                : function( e, selectedValues ){},
     onClose                 : function( e, selectedValues ){},
     onComponentDidMount     : function(){},
     onComponentWillUnmount  : function(){},
@@ -25,7 +26,6 @@ export const defaultOptions = {
     onInit                  : function(){},
     onInputChange           : function( e ){},
     onOpen                  : function( e, selectedValues ){},
-    onSelect                : function( e, selectedValues ){},
     openOnHover             : false,
     placeholder             : `Please choose an option`,
     search                  : false,
@@ -158,19 +158,19 @@ const defaults = {
         {
             let _data       = self.sortData( data );
 
+            let placeholder = configObj.placeholder;
+
             if ( ( configObj.multipleTags || configObj.multiple )
                     && !configObj.defaultIndex
                     && !configObj.defaultValue )
             {
-                configObj.placeholder = configObj.placeholder || defaultOptions.placeholder;
+                placeholder = placeholder || defaultOptions.placeholder;
             }
 
             if ( configObj.defaultEmpty )
             {
-                configObj.placeholder = ``;
+                placeholder = ``;
             }
-
-            let placeholder = configObj.placeholder;
 
             if ( placeholder || placeholder === `` || _data.length === 0 )
             {

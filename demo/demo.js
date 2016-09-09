@@ -113,7 +113,7 @@ new Flounder( document.getElementById( 'vanilla--input' ), {
 
     onInit              : function(){ this.data = buildData(); },
 
-    onSelect            : function( e )
+    onChange            : function( e )
     {
         let selected    = _slice.call( this.refs.select.selectedOptions );
         selected        = selected.map( el => el.index );
