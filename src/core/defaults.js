@@ -81,15 +81,16 @@ const defaults = {
          *
          * @return {Object} default settings
          */
-        let setPlaceholderDefault = function( self, _data )
+        function setPlaceholderDefault( self )
         {
-            let refs        = self.refs;
-            let classes     = self.classes;
-            let select      = refs.select;
-            let placeholder = configObj.placeholder;
+            const refs        = self.refs;
+            const classes     = self.classes;
+            const select      = refs.select;
+            const placeholder = configObj.placeholder;
 
-            let defaultObj    = {
-                text        : placeholder || placeholder === '' ? placeholder : defaultOptions.placeholder,
+            const defaultObj    = {
+                text        : placeholder || placeholder === '' ? placeholder :
+                                                    defaultOptions.placeholder,
                 value       : '',
                 index       : 0,
                 extraClass  : `${classes.HIDDEN}  ${classes.PLACEHOLDER}`
@@ -97,11 +98,15 @@ const defaults = {
 
             if ( select )
             {
-                let escapedText     = self.allowHTML ? defaultObj.text : utils.escapeHTML( defaultObj.text );
+                const escapedText     = self.allowHTML ? defaultObj.text :
+                                            utils.escapeHTML( defaultObj.text );
 
-                let defaultOption   = utils.constructElement( { tagname : `option`,
-                                            className   : classes.OPTION_TAG,
-                                            value       :  defaultObj.value } );
+                const defaultOption   = utils.constructElement( {
+                    tagname     : 'option',
+                    className   : classes.OPTION_TAG,
+                    value       :  defaultObj.value
+                } );
+
                 defaultOption.innerHTML = escapedText;
 
                 select.insertBefore( defaultOption, select[ 0 ] );
@@ -111,7 +116,7 @@ const defaults = {
             data.unshift( defaultObj );
 
             return defaultObj;
-        };
+        }
 
 
         /**
@@ -122,14 +127,14 @@ const defaults = {
          *
          * @return {Object} default settings
          */
-        let setValueDefault = function( _data, _val )
+        function setValueDefault( _data, _val )
         {
-            let defaultProp = _val || `${configObj.defaultValue}`;
+            const defaultProp = _val || `${configObj.defaultValue}`;
             let index;
 
-            _data.forEach( function( dataObj, i )
+            _data.forEach( ( dataObj, i ) =>
             {
-                let dataObjValue = `${dataObj.value}`;
+                const dataObjValue = `${dataObj.value}`;
 
                 if ( dataObjValue === defaultProp )
                 {
@@ -137,16 +142,17 @@ const defaults = {
                 }
             } );
 
-            let defaultValue = index >= 0 ? _data[ index ] : null;
+            const defaultValue = index >= 0 ? _data[ index ] : null;
 
             if ( defaultValue )
             {
                 defaultValue.index = index;
+
                 return defaultValue;
             }
 
             return null;
-        };
+        }
 
 
         /**
@@ -156,15 +162,16 @@ const defaults = {
          *
          * @return {Object} default data object
          */
-        let checkDefaultPriority = function()
+        function checkDefaultPriority()
         {
-            let _data = self.sortData( data );
+            const data = self.sortData( data );
 
-            if ( ( configObj.multipleTags || configObj.multiple )
+            if ( ( configObj.multipleTags || configObj.multiple )
                     && !configObj.defaultIndex
                     && !configObj.defaultValue )
             {
-                configObj.placeholder = configObj.placeholder || defaultOptions.placeholder;
+                configObj.placeholder = configObj.placeholder ||
+                                                defaultOptions.placeholder;
             }
 
             if ( configObj.defaultEmpty )
@@ -172,19 +179,19 @@ const defaults = {
                 configObj.placeholder = '';
             }
 
-            let placeholder = configObj.placeholder;
+            const placeholder = configObj.placeholder;
 
-            if ( placeholder || placeholder === '' || _data.length === 0 )
+            if ( placeholder || placeholder === '' || data.length === 0 )
             {
-                return setPlaceholderDefault( self, _data );
+                return setPlaceholderDefault( self, data );
             }
 
             let def;
 
             if ( rebuild )
             {
-                let val = self.refs.selected.getAttribute( `data-value` );
-                def     = setValueDefault( _data, val );
+                const val = self.refs.selected.getAttribute( 'data-value' );
+                def     = setValueDefault( data, val );
 
                 if ( def )
                 {
@@ -193,14 +200,15 @@ const defaults = {
             }
 
             // default prio
-            def = configObj.defaultIndex ? setIndexDefault( _data ) : null;
-            def = !def && configObj.defaultValue ? setValueDefault( _data ) : def;
-            def = !def ? setIndexDefault( _data, 0 ) : def;
+            def = configObj.defaultIndex ? setIndexDefault( data ) : null;
+            def = !def && configObj.defaultValue ? setValueDefault( data ) :
+                                                                            def;
+            def = !def ? setIndexDefault( data, 0 ) : def;
 
             return def;
-        };
+        }
 
-        data    = data || configObj.data || [];
+        data    = data || configObj.data || [];
 
         return checkDefaultPriority();
     },
@@ -223,7 +231,7 @@ const defaults = {
             }
             else
             {
-                if ( typeof d !== `object` )
+                if ( typeof d !== 'object' )
                 {
                     d = {
                         text    : d,

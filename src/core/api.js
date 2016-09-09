@@ -650,9 +650,12 @@ const api = {
      * programatically sets the text by string.  If the text string
      * is not matched to an element, nothing will be selected
      *
-     * @param {Mixed} text text to set flounder to.  _String, or Array of strings_
+     * @param {Mixed} text text to set flounder to.
+     *                                            _String, or Array of strings_
+     * @param {Boolean} multiple multiSelect or not
+     * @param {Boolean} programmatic fire onChange and toggle menu or not
      *
-     * return {Void} void
+     * @return {Void} void
      */
     setByText( text, multiple, programmatic = true )
     {
