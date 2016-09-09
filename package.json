@@ -9,7 +9,7 @@
   },
   "scripts": {
     "bash": "mkdir -p dist && cp ./src/styles/flounder-structure.css ./dist/flounder-structure.css",
-    "build": "npm run bash && ./node_modules/.bin/gulp && npm run test:unit:coverage:cli",
+    "build": "npm run bash && ./node_modules/.bin/gulp && npm run test",
     "demo": "./node_modules/.bin/gulp demo",
     "gulp": "npm run bash && ./node_modules/.bin/gulp",
     "lint": "eslint ./src --ext .js",
