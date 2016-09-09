@@ -1,4 +1,4 @@
-
+/* globals console, document */
 import { defaultOptions }   from './defaults';
 import utils                from './utils';
 import api                  from './api';
@@ -24,8 +24,13 @@ class Flounder
      */
     addNoMoreOptionsMessage()
     {
-        let classes     = this.classes;
-        let noMoreOptionsEl = this.refs.noMoreOptionsEl || utils.constructElement( { className : classes.NO_RESULTS } );
+        const classes = this.classes;
+        const elProps = {
+            className : classes.NO_RESULTS
+        };
+
+        const noMoreOptionsEl   = this.refs.noMoreOptionsEl ||
+                                            utils.constructElement( elProps );
 
         noMoreOptionsEl.innerHTML = 'No more recipients to add.';
         this.refs.optionsList.appendChild( noMoreOptionsEl );
@@ -43,8 +48,13 @@ class Flounder
      */
     addNoResultsMessage()
     {
-        let classes     = this.classes;
-        let noResultsEl = this.refs.noResultsEl || utils.constructElement( { className : classes.NO_RESULTS } );
+        const classes = this.classes;
+        const elProps = {
+            className : classes.NO_RESULTS
+        };
+
+        const noResultsEl = this.refs.noResultsEl ||
+                                            utils.constructElement( elProps );
 
         noResultsEl.innerHTML = 'No matches found';
         this.refs.optionsList.appendChild( noResultsEl );
@@ -99,13 +109,13 @@ class Flounder
         }
         else
         {
-            if ( typeof target === `string` )
+            if ( typeof target === 'string' )
             {
                 target = document.querySelectorAll( target );
             }
 
             if ( ( target.length || target.length === 0 ) &&
-                    target.tagName !== `SELECT`)
+                        target.tagName !== 'SELECT' )
             {
                 if ( target.length > 1 )
                 {
@@ -145,19 +155,19 @@ class Flounder
         let value = [];
         let index = -1;
 
-        let selectedOption  = this.getSelected();
-        let selectedLength  = selectedOption.length;
-        let multipleTags    = this.multipleTags;
+        const selectedOption  = this.getSelected();
+        const selectedLength  = selectedOption.length;
+        const multipleTags    = this.multipleTags;
 
         if ( !multipleTags && selectedLength ===  1 )
         {
-            index               = selectedOption[0].index;
+            index               = selectedOption[ 0 ].index;
             selected.innerHTML  = refs.data[ index ].innerHTML;
-            value               = selectedOption[0].value;
+            value               = selectedOption[ 0 ].value;
         }
         else if ( !multipleTags && selectedLength === 0 )
         {
-            let defaultValue    = this._default;
+            const defaultValue  = this.defaultObj;
             index               = defaultValue.index || -1;
             selected.innerHTML  = defaultValue.text;
             value               = defaultValue.value;
@@ -166,8 +176,9 @@ class Flounder
         {
             if ( multipleTags )
             {
-                selected.innerHTML  = ``;
-                this.displayMultipleTags( selectedOption, refs.multiTagWrapper );
+                selected.innerHTML  = '';
+                this.displayMultipleTags( selectedOption,
+                                                        refs.multiTagWrapper );
             }
             else
             {
@@ -178,8 +189,8 @@ class Flounder
             value = selectedOption.map( option => option.value );
         }
 
-        selected.setAttribute( `data-value`, value );
-        selected.setAttribute( `data-index`, index );
+        selected.setAttribute( 'data-value', value );
+        selected.setAttribute( 'data-index', index );
     }
 
 
@@ -194,16 +205,16 @@ class Flounder
      */
     filterSearchResults( e )
     {
-        let val = e.target.value.trim();
+        const val = e.target.value.trim();
 
         this.fuzzySearch.previousValue = val;
 
-        let matches = this.search.isThereAnythingRelatedTo( val ) || [];
+        const matches = this.search.isThereAnythingRelatedTo( val ) || [];
 
         if ( val !== '' )
         {
-            let data    = this.refs.data;
-            let classes = this.classes;
+            const data    = this.refs.data;
+            const classes = this.classes;
 
             data.forEach( el =>
             {
@@ -215,9 +226,9 @@ class Flounder
                 utils.removeClass( data[ e.i ], classes.SEARCH_HIDDEN );
             } );
 
-            if( !this.refs.noMoreOptionsEl )
+            if ( !this.refs.noMoreOptionsEl )
             {
-                if( matches.length === 0 )
+                if ( matches.length === 0 )
                 {
                     this.addNoResultsMessage();
                 }
@@ -237,7 +248,8 @@ class Flounder
     /**
      * ## fuzzySearch
      *
-     * filters events to determine the correct actions, based on events from the search box
+     * filters events to determine the correct actions, based on events from
+     * the search box
      *
      * @param {Object} e event object
      *
@@ -252,16 +264,16 @@ class Flounder
         {
             this.onInputChange( e );
         }
-        catch( e )
+        catch ( e )
         {
-            console.warn( `something may be wrong in "onInputChange"`, e );
+            console.warn( 'something may be wrong in "onInputChange"', e );
         }
 
         if ( !this.toggleList.justOpened )
         {
             e.preventDefault();
 
-            let keyCode = e.keyCode;
+            const keyCode = e.keyCode;
 
             if ( keyCode !== keycodes.UP && keyCode !== keycodes.DOWN &&
                     keyCode !== keycodes.ENTER && keyCode !== keycodes.ESCAPE )
@@ -269,7 +281,7 @@ class Flounder
                 if ( this.multipleTags && keyCode === keycodes.BACKSPACE &&
                         this.fuzzySearch.previousValue === '' )
                 {
-                    let lastTag = this.refs.multiTagWrapper.lastChild;
+                    const lastTag = this.refs.multiTagWrapper.lastChild;
 
                     if ( lastTag )
                     {
@@ -281,10 +293,11 @@ class Flounder
                     this.filterSearchResults( e );
                 }
             }
-            else if ( keyCode === keycodes.ESCAPE || keyCode === keycodes.ENTER )
+            else if ( keyCode === keycodes.ESCAPE ||
+                                            keyCode === keycodes.ENTER )
             {
                 this.fuzzySearchReset();
-                this.toggleList( e, `close` );
+                this.toggleList( e, 'close' );
                 this.addPlaceholder();
             }
         }
@@ -304,15 +317,15 @@ class Flounder
      */
     fuzzySearchReset()
     {
-        let refs    = this.refs;
-        let classes = this.classes;
+        const refs    = this.refs;
+        const classes = this.classes;
 
         refs.data.forEach( dataObj =>
         {
             utils.removeClass( dataObj, classes.SEARCH_HIDDEN );
         } );
 
-        refs.search.value = ``;
+        refs.search.value = '';
     }
 
 
@@ -344,14 +357,15 @@ class Flounder
         {
             this.onInit();
         }
-        catch( e )
+        catch ( e )
         {
-            console.warn( `something may be wrong in "onInit"`, e );
+            console.warn( 'something may be wrong in "onInit"', e );
         }
 
         this.buildDom();
 
-        let { isOsx, isIos, multiSelect } = utils.setPlatform();
+        const { isOsx, isIos, multiSelect } = utils.setPlatform();
+
         this.isOsx          = isOsx;
         this.isIos          = isIos;
         this.multiSelect    = multiSelect;
@@ -361,9 +375,9 @@ class Flounder
         {
             this.onComponentDidMount();
         }
-        catch( e )
+        catch ( e )
         {
-            console.warn( `something may be wrong in "onComponentDidMount"`, e );
+            console.warn( 'something may be wrong in onComponentDidMount', e );
         }
 
         this.ready = true;
@@ -384,7 +398,7 @@ class Flounder
      */
     initializeOptions()
     {
-        let props = this.props = this.props || {};
+        const props = this.props = this.props || {};
 
         if ( props.onSelect )
         {
@@ -401,19 +415,22 @@ class Flounder
             };
         }
 
-        for ( let opt in defaultOptions )
+        for ( const opt in defaultOptions )
         {
             if ( defaultOptions.hasOwnProperty( opt ) )
             {
-                if ( opt === `classes` )
+                if ( opt === 'classes' )
                 {
-                    this.classes       = {};
-                    let defaultClasses = defaultOptions[ opt ];
-                    let propClasses    = typeof props[ opt ] === `object` ? props[ opt ] : {};
+                    this.classes            = {};
+                    const defaultClasses    = defaultOptions[ opt ];
+                    const propClasses       = typeof props[ opt ] === 'object' ?
+                                                            props[ opt ] : {};
 
-                    for ( let clss in defaultClasses )
+                    for ( const clss in defaultClasses )
                     {
-                        this.classes[ clss ] = propClasses[ clss ] ? propClasses[ clss ] : defaultClasses[ clss ];
+                        this.classes[ clss ] = propClasses[ clss ] ?
+                                                        propClasses[ clss ] :
+                                                        defaultClasses[ clss ];
                     }
                 }
                 else
@@ -428,7 +445,7 @@ class Flounder
 
         if ( props.defaultEmpty )
         {
-            this.placeholder = ``;
+            this.placeholder = '';
         }
 
         if ( this.multipleTags )
@@ -454,14 +471,13 @@ class Flounder
      */
     onRender()
     {
-        let props   = this.props;
-        let refs    = this.refs;
-        let data    = refs.data;
+        const props   = this.props;
+        const refs    = this.refs;
 
-        if ( !!this.isIos && !this.multiple )
+        if ( !!this.isIos && !this.multiple )
         {
-            let sel     = refs.select;
-            let classes = this.classes;
+            const sel     = refs.select;
+            const classes = this.classes;
             utils.removeClass( sel, classes.HIDDEN );
             utils.addClass( sel, classes.HIDDEN_IOS );
         }
@@ -473,7 +489,8 @@ class Flounder
     /**
      * ## removeMultiTag
      *
-     * removes a multi selection tag on click; fixes all references to value and state
+     * removes a multi selection tag on click; fixes all references to value
+     * and state
      *
      * @param  {Object} e event object
      *
@@ -486,40 +503,39 @@ class Flounder
 
         let value;
         let index;
-        let classes         = this.classes;
-        let refs            = this.refs;
-        let select          = refs.select;
-        let selected        = refs.selected;
-        let target          = e.target;
-        let defaultValue    = this._default;
-        let data            = this.refs.data;
-        let targetIndex     = target.getAttribute( `data-index` );
+        const classes         = this.classes;
+        const refs            = this.refs;
+        const select          = refs.select;
+        const selected        = refs.selected;
+        const target          = e.target;
+        const data            = this.refs.data;
+        const targetIndex     = target.getAttribute( 'data-index' );
         select[ targetIndex ].selected = false;
 
-        let selectedOptions = this.getSelected();
+        const selectedOptions = this.getSelected();
 
         utils.removeClass( data[ targetIndex ], classes.SELECTED_HIDDEN );
         utils.removeClass( data[ targetIndex ], classes.SELECTED );
 
-        target.removeEventListener( `click`, this.removeMultiTag );
+        target.removeEventListener( 'click', this.removeMultiTag );
 
-        let span = target.parentNode;
+        const span = target.parentNode;
         span.parentNode.removeChild( span );
 
         if ( selectedOptions.length === 0 )
         {
             this.addPlaceholder();
-            index               = -1;
-            value               = ``;
+            index = -1;
+            value = '';
         }
         else
         {
-            value = selectedOptions.map( function( option )
+            value = selectedOptions.map( option =>
             {
                 return option.value;
             } );
 
-            index = selectedOptions.map( function( option )
+            index = selectedOptions.map( option =>
             {
                 return option.index;
             } );
@@ -533,16 +549,16 @@ class Flounder
             this.fuzzySearch( this.lastSearchEvent );
         }
 
-        selected.setAttribute( `data-value`, value );
-        selected.setAttribute( `data-index`, index );
+        selected.setAttribute( 'data-value', value );
+        selected.setAttribute( 'data-index', index );
 
         try
         {
             this.onSelect( e, this.getSelectedValues() );
         }
-        catch( e )
+        catch ( e )
         {
-            console.warn( `something may be wrong in "onSelect"`, e );
+            console.warn( 'something may be wrong in "onSelect"', e );
         }
     }
 
@@ -556,9 +572,9 @@ class Flounder
      */
     removeNoResultsMessage()
     {
-        let noResultsEl =  this.refs.noResultsEl;
+        const noResultsEl =  this.refs.noResultsEl;
 
-        if( this.refs.optionsList && noResultsEl )
+        if ( this.refs.optionsList && noResultsEl )
         {
             this.refs.optionsList.removeChild( noResultsEl );
             this.refs.noResultsEl = undefined;
@@ -574,9 +590,9 @@ class Flounder
      */
     removeNoMoreOptionsMessage()
     {
-        let noMoreOptionsEl =  this.refs.noMoreOptionsEl;
+        const noMoreOptionsEl =  this.refs.noMoreOptionsEl;
 
-        if( this.refs.optionsList && noMoreOptionsEl )
+        if ( this.refs.optionsList && noMoreOptionsEl )
         {
             this.refs.optionsList.removeChild( noMoreOptionsEl );
             this.refs.noMoreOptionsEl = undefined;
@@ -589,13 +605,15 @@ class Flounder
      *
      * removes the [[this.selectedClass]] from all data
      *
+     * @param {Array} data flounder data options
+     *
      * @return {Void} void
      */
     removeSelectedClass( data )
     {
-        data = data || this.refs.data;
+        data = data || this.refs.data;
 
-        data.forEach( ( dataObj, i ) =>
+        data.forEach( dataObj =>
         {
             utils.removeClass( dataObj, this.selectedClass );
         } );
@@ -607,11 +625,13 @@ class Flounder
      *
      * sets the selected property to false for all data
      *
+     * @param {Array} data flounder data options
+     *
      * @return {Void} void
      */
     removeSelectedValue( data )
     {
-        data = data || this.refs.data;
+        data = data || this.refs.data;
 
         data.forEach( ( d, i ) =>
         {
@@ -625,6 +645,10 @@ class Flounder
      *
      * checks the data object for header options, and sorts it accordingly
      *
+     * @param {Array} data flounder data options
+     * @param {Array} res results
+     * @param {Number} i index
+     *
      * @return {Boolean} hasHeaders
      */
     sortData( data, res = [], i = 0 )
@@ -637,7 +661,7 @@ class Flounder
             }
             else
             {
-                if ( typeof d !== `object` )
+                if ( typeof d !== 'object' )
                 {
                     d = {
                         text    : d,
@@ -665,14 +689,14 @@ class Flounder
  *
  * accepts array-like objects and selector strings to make multiple flounders
  *
- * @param {Array or String} flounder target(s)
+ * @param {Mixed} targets target(s) _Array or String_
  * @param {Object} props passed options
  *
  * @return {Array} array of flounders
  */
 Flounder.find = function( targets, props )
 {
-    if ( typeof targets === `string` )
+    if ( typeof targets === 'string' )
     {
         targets = document.querySelectorAll( targets );
     }
@@ -691,14 +715,14 @@ Flounder.find = function( targets, props )
  *
  * sets version with getters and no setters for the sake of being read-only
  */
-Object.defineProperty( Flounder, `version`, {
+Object.defineProperty( Flounder, 'version', {
     get : function()
     {
         return version;
     }
 } );
 
-Object.defineProperty( Flounder.prototype, `version`, {
+Object.defineProperty( Flounder.prototype, 'version', {
     get : function()
     {
         return version;

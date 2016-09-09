@@ -12,17 +12,17 @@ export const defaultOptions = {
     keepChangesOnDestroy    : false,
     multiple                : false,
     multipleTags            : false,
-    multipleMessage         : `(Multiple Items Selected)`,
-    onChange                : function( e, selectedValues ){},
-    onClose                 : function( e, selectedValues ){},
-    onComponentDidMount     : function(){},
-    onComponentWillUnmount  : function(){},
-    onFirstTouch            : function( e ){},
-    onInit                  : function(){},
-    onInputChange           : function( e ){},
-    onOpen                  : function( e, selectedValues ){},
+    multipleMessage         : '(Multiple Items Selected)',
+    onChange                : function( e, selectedValues ){},  // eslint-disable-line
+    onClose                 : function( e, selectedValues ){},  // eslint-disable-line
+    onComponentDidMount     : function(){},                     // eslint-disable-line
+    onComponentWillUnmount  : function(){},                     // eslint-disable-line
+    onFirstTouch            : function( e ){},                  // eslint-disable-line
+    onInit                  : function(){},                     // eslint-disable-line
+    onInputChange           : function( e ){},                  // eslint-disable-line
+    onOpen                  : function( e, selectedValues ){},  // eslint-disable-line
     openOnHover             : false,
-    placeholder             : `Please choose an option`,
+    placeholder             : 'Please choose an option',
     search                  : false,
     selectDataOverride      : false
 };
@@ -38,35 +38,39 @@ const defaults = {
      *
      * sets the initial default value
      *
-     * @param {String or Number}    defaultProp         default passed from this.props
-     * @param {Object}              data                this.props.data
+     * @param {String} defaultProp default passed from this.props
+     * @param {Object} data this.props.data
      *
      * @return {Void} void
      */
     setDefaultOption( self, configObj = {}, data, rebuild = false )
     {
-
         /**
          * ## setIndexDefault
          *
-         * sets a specified index as the default option. This only works correctly
-         * if it is a valid index, otherwise it returns null
+         * sets a specified index as the default option. This only works
+         * correctly if it is a valid index, otherwise it returns null
+         *
+         * @param {Array} data option data
+         * @param {Number} index index
          *
          * @return {Object} default settings
          */
-        let setIndexDefault = function( _data, index )
+        function setIndexDefault( data, index )
         {
-            let defaultIndex        = index || index === 0 ? index : configObj.defaultIndex;
-            let defaultOption       = _data[ defaultIndex ];
+            const defaultIndex        = index || index === 0 ? index :
+                                                        configObj.defaultIndex;
+            const defaultOption       = data[ defaultIndex ];
 
             if ( defaultOption )
             {
                 defaultOption.index   = defaultIndex;
+
                 return defaultOption;
             }
 
             return null;
-        };
+        }
 
 
         /**
@@ -84,29 +88,29 @@ const defaults = {
             let select      = refs.select;
             let placeholder = configObj.placeholder;
 
-            let _default    = {
-                text        : placeholder || placeholder === `` ? placeholder : defaultOptions.placeholder,
-                value       : ``,
+            let defaultObj    = {
+                text        : placeholder || placeholder === '' ? placeholder : defaultOptions.placeholder,
+                value       : '',
                 index       : 0,
                 extraClass  : `${classes.HIDDEN}  ${classes.PLACEHOLDER}`
             };
 
             if ( select )
             {
-                let escapedText     = self.allowHTML ? _default.text : utils.escapeHTML( _default.text );
+                let escapedText     = self.allowHTML ? defaultObj.text : utils.escapeHTML( defaultObj.text );
 
                 let defaultOption   = utils.constructElement( { tagname : `option`,
                                             className   : classes.OPTION_TAG,
-                                            value       :  _default.value } );
+                                            value       :  defaultObj.value } );
                 defaultOption.innerHTML = escapedText;
 
                 select.insertBefore( defaultOption, select[ 0 ] );
                 self.refs.selectOptions.unshift( defaultOption );
             }
 
-            data.unshift( _default );
+            data.unshift( defaultObj );
 
-            return _default;
+            return defaultObj;
         };
 
 
@@ -165,12 +169,12 @@ const defaults = {
 
             if ( configObj.defaultEmpty )
             {
-                configObj.placeholder = ``;
+                configObj.placeholder = '';
             }
 
             let placeholder = configObj.placeholder;
 
-            if ( placeholder || placeholder === `` || _data.length === 0 )
+            if ( placeholder || placeholder === '' || _data.length === 0 )
             {
                 return setPlaceholderDefault( self, _data );
             }

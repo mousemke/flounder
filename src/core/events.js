@@ -92,7 +92,7 @@ const events = {
     {
         selectedOptions.forEach( option =>
         {
-            if ( option.value !== `` )
+            if ( option.value !== '' )
             {
                 let tag = this.buildMultiTag( option );
 
@@ -149,7 +149,7 @@ const events = {
         let selectedValues  = this.getSelectedValues();
         let val             = selectedValues[ 0 ];
         let selectedItems   = this.getSelected();
-        let selectedText    = selectedItems.length ? selectedItems[ 0 ].innerHTML : ``;
+        let selectedText    = selectedItems.length ? selectedItems[ 0 ].innerHTML : '';
         let selectedCount   = selectedValues.length;
         let selected        = this.refs.selected;
 
@@ -173,13 +173,13 @@ const events = {
                 this.setByIndex( 0 );
             }
 
-            if ( !val || val === `` )
+            if ( !val || val === '' )
             {
                 selected.innerHTML = this.placeholder;
             }
             else
             {
-                selected.innerHTML = ``;
+                selected.innerHTML = '';
             }
         }
     },
@@ -388,7 +388,7 @@ const events = {
         {
             if ( refs.search && e.target.tagName === `INPUT` )
             {
-                refs.selected.innerHTML = ``;
+                refs.selected.innerHTML = '';
             }
         }
     },
@@ -516,7 +516,7 @@ const events = {
      clearPlaceholder()
      {
         let selected    = this.refs.selected;
-        selected.innerHTML = ``;
+        selected.innerHTML = '';
      },
 
 
@@ -567,7 +567,7 @@ const events = {
             }
         } );
 
-        multiTagWrapper.innerHTML = ``;
+        multiTagWrapper.innerHTML = '';
 
         if ( selectedOptions.length > 0 )
         {
@@ -609,7 +609,7 @@ const events = {
         }
         else if ( !multipleTags && selectedLength === 0 )
         {
-            let defaultValue    = this._default;
+            let defaultValue    = this.defaultObj;
             index               = defaultValue.index;
             value               = defaultValue.value;
             selected.innerHTML  = defaultValue.text;
@@ -618,7 +618,7 @@ const events = {
         {
             if ( multipleTags )
             {
-                selected.innerHTML  = ``;
+                selected.innerHTML  = '';
                 this.displayMultipleTags( selectedOption, refs.multiTagWrapper );
             }
             else
@@ -783,7 +783,7 @@ const events = {
         let select          = refs.select;
         let selected        = refs.selected;
         let target          = e.target;
-        let defaultValue    = this._default;
+        let defaultValue    = this.defaultObj;
         let data            = this.refs.data;
         let targetIndex     = target.getAttribute( `data-index` );
 
@@ -803,7 +803,7 @@ const events = {
         {
             this.addPlaceholder();
             index               = -1;
-            value               = ``;
+            value               = '';
         }
         else
         {
@@ -969,7 +969,7 @@ const events = {
 
                     if ( search )
                     {
-                        search.value = ``;
+                        search.value = '';
                     }
 
                     increment = keyCode - 39;
@@ -1140,12 +1140,12 @@ const events = {
         let selectedClass   = this.selectedClass;
         let index, selectedOption;
 
-        if ( ( !_multiple ||  _multiple && !this.multipleTags && !e[ this.multiSelect ] ) && !this.___forceMultiple )
+        if ( ( !_multiple ||  _multiple && !this.multipleTags && !e[ this.multiSelect ] ) && !this.forceMultiple )
         {
             this.deselectAll();
         }
 
-        this.___forceMultiple   = false;
+        this.forceMultiple   = false;
         let target              = e.target;
 
         utils.toggleClass( target, selectedClass );
@@ -1157,7 +1157,7 @@ const events = {
 
         let firstOption = refs.selectOptions[ 0 ];
 
-        if ( firstOption.value === `` && this.getSelected().length > 1 )
+        if ( firstOption.value === '' && this.getSelected().length > 1 )
         {
             utils.removeClass( refs.data[0], selectedClass );
             refs.selectOptions[0].selected = false;
@@ -1186,7 +1186,7 @@ const events = {
 
 
         /* istanbul ignore next */
-        search.style.textIndent = offset > 0 ? `${offset}px` : ``;
+        search.style.textIndent = offset > 0 ? `${offset}px` : '';
     },
 
 
