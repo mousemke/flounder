@@ -634,7 +634,7 @@ describe( 'checkEnterOnSearch', () =>
 
         setTimeout( function()
         {
-            assert.equal( refs.search.focus.callCount, 2 );
+            assert.equal( refs.search.focus.callCount, 1 );
             refs.search.focus.restore();
             done();
         }, 300 );
@@ -2003,16 +2003,17 @@ describe( 'setSelectValue', () =>
         let flounder = new Flounder( document.body, { data: [ 1, 2, 3 ] } );
 
         sinon.stub( flounder, 'setSelectValueClick', () => {} );
+        sinon.stub( flounder, 'onChange', () => {} );
 
         flounder.programmaticClick = true;
         flounder.setSelectValue( null, {} );
 
-        assert.equal( flounder.programmaticClick, false );
         assert.equal( flounder.setSelectValueClick.callCount, 1 );
 
-        sinon.stub( flounder, 'onChange', () => {} );
+        flounder.programmaticClick = false;
         flounder.setSelectValue( null, {} );
 
+        assert.equal( flounder.setSelectValueClick.callCount, 2 );
         assert.equal( flounder.onChange.callCount, 1 );
     } );
 

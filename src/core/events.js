@@ -1084,9 +1084,8 @@ const events = {
                     }
                 }
             }
+            this.programmaticClick = false;
         }
-
-        // this.programmaticClick = false;
     },
 
 
