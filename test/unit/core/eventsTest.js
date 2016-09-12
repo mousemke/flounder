@@ -735,8 +735,18 @@ describe( 'checkFlounderKeypress', () =>
             search  : true
         } );
 
+        const e = {
+            keyCode         : keycodes.TAB,
+            target          : {
+                value : 2
+            },
+            preventDefault  : noop
+        };
+
         sinon.stub( flounder, 'addPlaceholder', noop );
         sinon.stub( flounder, 'toggleClosed', noop );
+
+        flounder.checkFlounderKeypress( e );
 
         assert.equal( flounder.addPlaceholder.callCount, 1 );
         assert.equal( flounder.toggleClosed.callCount, 1 );
@@ -896,7 +906,7 @@ describe( 'checkMultiTagKeydown', () =>
 
         const flounder    = new Flounder( document.body, {
             data            : [ 1, 2, 3 ],
-            multipletags    : true
+            multipleTags    : true
         } );
         const refs        = flounder.refs;
 
@@ -1495,12 +1505,12 @@ describe( 'divertTarget', () =>
 
         const flounder    = new Flounder( document.body, {
             data            : [ 1, 2, 3 ],
-            multipeTags    : true
+            multipleTags    : true
         } );
-        const refs        = flounder.refs;
-        const select      = refs.select;
 
-        const plug        = document.createElement( 'OPTION' );
+        const select    = flounder.refs.select;
+
+        const plug      = document.createElement( 'OPTION' );
         plug.className  = `${classes.PLUG}`;
         select.appendChild( plug );
 
@@ -1514,8 +1524,8 @@ describe( 'divertTarget', () =>
         flounder.divertTarget( {
             type            : 'moon',
             target          : select,
-            preventDefault  : preventDefault,
-            stopPropagation : stopPropagation
+            preventDefault,
+            stopPropagation
         } );
 
         assert.equal( preventDefault.callCount, 1 );
@@ -2029,8 +2039,14 @@ describe( 'setKeypress', () =>
             search  : true
         } );
 
+        const e = {
+            keyCode : keycodes.TAB
+        };
+
         sinon.stub( flounder, 'addPlaceholder', noop );
         sinon.stub( flounder, 'toggleClosed', noop );
+
+        flounder.setKeypress( e );
 
         assert.equal( flounder.addPlaceholder.callCount, 1 );
         assert.equal( flounder.toggleClosed.callCount, 1 );

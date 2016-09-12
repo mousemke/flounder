@@ -1,5 +1,5 @@
 /* globals global require, document */
-const jsdom                   = require( 'jsdom' );
+const jsdom                 = require( 'jsdom' );
 
 global.document             = jsdom.jsdom( `
     <!doctype html>

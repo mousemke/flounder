@@ -617,8 +617,8 @@ describe( 'getSelected', () =>
     const div         = document.querySelector( 'div' );
     const flounder    = new Flounder( div, {
         multiple    : true,
-        placeholder : 'moon'
-
+        placeholder : 'moon',
+        data        : [ 1, 2, 3 ]
     } );
 
     it( 'should return the selected elements excluding placeholders', () =>
@@ -734,6 +734,7 @@ describe( 'loadDataFromUrl', () =>
     it( 'should give a warning when it recieves no data', () =>
     {
         sinon.stub( console, 'warn', noop );
+        flounder.loadDataFromUrl( false );
 
         assert.equal( console.warn.callCount, 1 );
         console.warn.restore();
@@ -743,6 +744,10 @@ describe( 'loadDataFromUrl', () =>
     it( 'should report something if the callback goes wrong', () =>
     {
         sinon.stub( console, 'warn', noop );
+        flounder.loadDataFromUrl( '["1","2","3"]', () =>
+        {
+            a + b; // eslint-disable-line
+        } );
 
         assert.equal( console.warn.callCount, 1 );
         console.warn.restore();
