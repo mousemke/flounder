@@ -1,9 +1,8 @@
-
+/* globals describe, it, document */
 import Flounder     from '/core/flounder';
 import { defaults } from '/core/search';
 
 import assert       from 'assert';
-import sinon        from 'sinon';
 
 
 
@@ -16,27 +15,27 @@ describe( 'defaults', () =>
 {
     it( 'should hve the correct defaults set', () =>
     {
-        let {
+        const {
             minimumValueLength,
             minimumScore,
             scoreProperties,
             startsWithProperties,
             weights
-             } = defaults;
+        } = defaults;
 
         assert.equal( minimumValueLength, 1 );
         assert.equal( minimumScore, 0 );
-        assert.equal( startsWithProperties[ 0 ], `text` );
-        assert.equal( startsWithProperties[ 1 ], `value` );
+        assert.equal( startsWithProperties[ 0 ], 'text' );
+        assert.equal( startsWithProperties[ 1 ], 'value' );
 
-        assert.notEqual( scoreProperties.indexOf( `text` ), -1 );
-        assert.notEqual( scoreProperties.indexOf( `textFlat` ), -1 );
-        assert.notEqual( scoreProperties.indexOf( `textSplit` ), -1 );
-        assert.notEqual( scoreProperties.indexOf( `value` ), -1 );
-        assert.notEqual( scoreProperties.indexOf( `valueFlat` ), -1 );
-        assert.notEqual( scoreProperties.indexOf( `valueSplit` ), -1 );
-        assert.notEqual( scoreProperties.indexOf( `description` ), -1 );
-        assert.notEqual( scoreProperties.indexOf( `descriptionSplit` ), -1 );
+        assert.notEqual( scoreProperties.indexOf( 'text' ), -1 );
+        assert.notEqual( scoreProperties.indexOf( 'textFlat' ), -1 );
+        assert.notEqual( scoreProperties.indexOf( 'textSplit' ), -1 );
+        assert.notEqual( scoreProperties.indexOf( 'value' ), -1 );
+        assert.notEqual( scoreProperties.indexOf( 'valueFlat' ), -1 );
+        assert.notEqual( scoreProperties.indexOf( 'valueSplit' ), -1 );
+        assert.notEqual( scoreProperties.indexOf( 'description' ), -1 );
+        assert.notEqual( scoreProperties.indexOf( 'descriptionSplit' ), -1 );
 
 
         assert.equal( weights.text, 30 );
@@ -61,7 +60,7 @@ describe( 'defaults', () =>
  */
 describe( 'Sole', () =>
 {
-    let data = [
+    const data = [
         'doge',
         'moon',
         'moin',
@@ -72,8 +71,11 @@ describe( 'Sole', () =>
         }
     ];
 
-    let flounder    = new Flounder( document.body, { data : data, search : true } );
-    let search      = flounder.search;
+    const flounder    = new Flounder( document.body, {
+        data    : data,
+        search  : true
+    } );
+    const search      = flounder.search;
 
 
     /**
@@ -84,14 +86,18 @@ describe( 'Sole', () =>
      * @param {Object} a result
      * @param {Object} b result to compare with
      *
-     * @return _Number_ comparison result
+     * @return {Number} comparison result
      */
     describe( 'compareScoreCards', () =>
     {
         it( 'should be able to tell which number is higher', () =>
         {
-            let a = { score : 20 };
-            let b = { score : 200 };
+            const a = {
+                score : 20
+            };
+            const b = {
+                score : 200
+            };
 
             let res = search.compareScoreCards( a, b );
             assert.equal( res, -1 );
@@ -121,7 +127,7 @@ describe( 'Sole', () =>
      *
      * @param {Object} options option object
      *
-     * @return _Object_ this
+     * @return {Object} this
      */
     describe( 'constructor', () =>
     {
@@ -146,14 +152,14 @@ describe( 'Sole', () =>
      *
      * @param {String} string string to be escaped
      *
-     * return _String_ escaped string
+     * @return {String} escaped string
      */
     describe( 'escapeRegExp', () =>
     {
         it( 'should properly escape a string', () =>
         {
-            let str = search.escapeRegExp( 'http://www.moon+doge.dc/[someaddress]' );
-            assert.equal( str, 'http:\\/\\/www\\.moon\\+doge\\.dc\\/\\[someaddress\\]' );
+            const str = search.escapeRegExp( 'http://www.moon+doge.dc/' );
+            assert.equal( str, 'http:\\/\\/www\\.moon\\+doge\\.dc\\/' );
         } );
     } );
 
@@ -162,12 +168,13 @@ describe( 'Sole', () =>
     /**
      * ## getResultWeights
      *
-     * after the data is prepared this is mapped through the data to get weighted results
+     * after the data is prepared this is mapped through the data to get
+     * weighted results
      *
      * @param  {Object} data object
      * @param  {Number} i index
      *
-     * @return _Object_ res weighted results
+     * @return {Object} res weighted results
      */
     describe( 'getResultWeights', () =>
     {
@@ -203,16 +210,20 @@ describe( 'Sole', () =>
      *
      * removes the items that have recieved a score lower than the set minimum
      *
-     * @return _Boolean_ under the minimum or not
+     * @return {Boolean} under the minimum or not
      */
     describe( 'isItemAboveMinimum', () =>
     {
         it( 'should return false if the number is under the minimum', () =>
         {
-            let above   = search.isItemAboveMinimum( { score : 2 } );
+            let above   = search.isItemAboveMinimum( {
+                score : 2
+            } );
             assert.equal( above, true );
 
-            above       = search.isItemAboveMinimum( { score : -2 } );
+            above       = search.isItemAboveMinimum( {
+                score : -2
+            } );
             assert.equal( above, false );
         } );
     } );
@@ -228,7 +239,7 @@ describe( 'Sole', () =>
      *
      * @param {Array} query  array of words to search the content for
      *
-     * @return _Array_ results returns array of relevant search results
+     * @return {Array} results returns array of relevant search results
      */
     describe( 'isThereAnythingRelatedTo', () =>
     {
@@ -236,13 +247,13 @@ describe( 'Sole', () =>
         {
             let res = search.isThereAnythingRelatedTo( 'doge' );
 
-            assert.equal( res[0].i, 0 );
-            assert.equal( res[0].d.text, 'doge' );
+            assert.equal( res[ 0 ].i, 0 );
+            assert.equal( res[ 0 ].d.text, 'doge' );
 
             res = search.isThereAnythingRelatedTo( 'mo' );
             assert.equal( res.length, 2 );
-            assert.equal( res[0].d.text, 'moon' );
-            assert.equal( res[1].d.value, 'moin' );
+            assert.equal( res[ 0 ].d.text, 'moon' );
+            assert.equal( res[ 1 ].d.value, 'moin' );
 
             res = search.isThereAnythingRelatedTo();
             assert.equal( res, false );
@@ -254,17 +265,18 @@ describe( 'Sole', () =>
     /**
      * ## startsWith
      *
-     * checks the beginning of the given text to see if the query matches exactly
+     * checks the beginning of the given text to see if the query matches
+     * exactly
      *
      * @param {String} query string to search for
      * @param {String} value string to search in
      * @param {Integer} weight amount of points to give an exact match
      *
-     * @return _Integer_ points to award
+     * @return {Integer} points to award
      */
     describe( 'startsWith', () =>
     {
-        it( 'should return the weight when a word starts with a specific query', () =>
+        it( 'should give the weight for a word that starts with a string', () =>
         {
             let res = search.startsWith( 'moo', 'moon', 25 );
             assert.equal( res, 25 );
@@ -288,7 +300,7 @@ describe( 'Sole', () =>
      * @param {Boolean} noPunishment when passed true, this does not give
      *                               negative points for non-matches
      *
-     * @return _Integer_ the final weight adjusted score
+     * @return {Integer} the final weight adjusted score
      */
     describe( 'scoreThis', () =>
     {

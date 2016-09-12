@@ -1,4 +1,4 @@
-
+/* globals describe, it */
 import keycodes from '/core/keycodes';
 import assert   from 'assert';
 

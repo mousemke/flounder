@@ -1,6 +1,5 @@
-
+/* globals describe, it, document */
 import Flounder     from '/core/flounder';
-import defaults     from '/core/defaults';
 
 import classes      from '/core/classes';
 import utils        from '/core/utils';
@@ -25,14 +24,14 @@ describe( 'addOptionDescription', () =>
 {
     it( 'should add a description element to the passed element', () =>
     {
-        let el = document.createElement( 'div' );
+        const el = document.createElement( 'div' );
         build.classes = classes;
         build.addOptionDescription( el, 'moon' );
 
         assert.equal( el.children.length, 1 );
-        assert.equal( el.children[0].innerHTML, 'moon' );
+        assert.equal( el.children[ 0 ].innerHTML, 'moon' );
 
-        assert.equal( el.children[0].className, classes.DESCRIPTION );
+        assert.equal( el.children[ 0 ].className, classes.DESCRIPTION );
     } );
 } );
 
@@ -52,22 +51,19 @@ describe( 'addSearch', () =>
     it( 'should return false if no search is needed', () =>
     {
         build.classes   = classes;
-        let search      = build.addSearch();
+        const search      = build.addSearch();
         assert.equal( search, false );
     } );
 
 
     it( 'should build a search input and add it to flounder', () =>
     {
-        document.body.flounder = null;
-        let flounder    = new Flounder( document.body, { openOnHover: true } );
-
-        let el          = document.createElement( 'div' );
-        let fMock       = document.createElement( 'div' );
+        const el          = document.createElement( 'div' );
+        const fMock       = document.createElement( 'div' );
         fMock.appendChild( el );
         build.search    = true;
 
-        let search      = build.addSearch( el, fMock );
+        const search      = build.addSearch( el, fMock );
         assert.equal( search.className, classes.SEARCH );
         assert.equal( search.tagName, 'INPUT' );
         build.search    = false;
@@ -89,7 +85,7 @@ describe( 'bindThis', () =>
     it( 'should bind `this` to the list of functions', () =>
     {
         document.body.flounder = null;
-        let flounder = new Flounder( document.body, {} );
+        const flounder = new Flounder( document.body, {} );
 
         assert.equal( flounder.catchBodyClick.isBound, true );
         assert.equal( flounder.checkClickTarget.isBound, true );
@@ -124,20 +120,21 @@ describe( 'bindThis', () =>
 describe( 'buildArrow', () =>
 {
     document.body.flounder = null;
-    let flounder = new Flounder( document.body, {} );
 
     it( 'should build and return an arrow element unless it\'s disabled', () =>
     {
-        let res = build.buildArrow( { disableArrow : true }, utils.constructElement );
+        const res = build.buildArrow( {
+            disableArrow : true
+        }, utils.constructElement );
 
         assert.equal( res, false );
 
-        let el = build.buildArrow( {}, utils.constructElement );
+        const el = build.buildArrow( {}, utils.constructElement );
 
         assert.equal( el.nodeType, 1 );
         assert.equal( el.className, classes.ARROW );
         assert.equal( el.children.length, 1 );
-        assert.equal( el.children[0].className, classes.ARROW_INNER );
+        assert.equal( el.children[ 0 ].className, classes.ARROW_INNER );
     } );
 } );
 
@@ -196,7 +193,10 @@ describe( 'buildMultiTag', () =>
 {
     it( 'should return a tag based on the option it\'s passed', () =>
     {
-        let tag = build.buildMultiTag( { innerHTML: 'moon', index: 2 } );
+        const tag = build.buildMultiTag( {
+            innerHTML   : 'moon',
+            index       : 2
+        } );
 
         assert.equal( tag.tagName, 'SPAN' );
         assert.notEqual( tag.innerHTML.indexOf( 'moon' ), -1 );
@@ -206,7 +206,7 @@ describe( 'buildMultiTag', () =>
 
         assert.equal( tag.getAttribute( 'aria-label' ), 'Close' );
 
-        let close = tag.children[0];
+        const close = tag.children[ 0 ];
 
         assert.equal( close.tagName, 'A' );
         assert.equal( close.getAttribute( 'data-index' ), 2 );
@@ -235,6 +235,31 @@ describe( 'initSelectBox', () =>
 } );
 
 
+/**
+ * buildSelect
+ * @return {Object} options
+ */
+function buildSelect()
+{
+    const select = document.createElement( 'SELECT' );
+
+    const option1 = document.createElement( 'OPTION' );
+    select.appendChild( option1 );
+
+    const option2 = document.createElement( 'OPTION' );
+    select.appendChild( option2 );
+
+    const option3 = document.createElement( 'OPTION' );
+    select.appendChild( option3 );
+
+    return {
+        select,
+        option1,
+        option2,
+        option3
+    };
+}
+
 
 /**
  * ## popInSelectElements
@@ -248,37 +273,21 @@ describe( 'initSelectBox', () =>
  */
 describe( 'popInSelectElements', () =>
 {
-    function buildSelect()
-    {
-        let select = document.createElement( 'SELECT' );
-
-        let option1 = document.createElement( 'OPTION' );
-        select.appendChild( option1 );
-
-        let option2 = document.createElement( 'OPTION' );
-        select.appendChild( option2 );
-
-        let option3 = document.createElement( 'OPTION' );
-        select.appendChild( option3 );
-
-        return { select, option1, option2, option3 };
-    }
-
-
     document.body.flounder = null;
-    let flounder = new Flounder( document.body, {} );
+    const flounder = new Flounder( document.body, {} );
 
 
     it( 'should restore the original children to the select tag', () =>
     {
-        let selectObj1 = buildSelect();
-        let selectObj2 = buildSelect();
+        const selectObj1 = buildSelect();
+        const selectObj2 = buildSelect();
 
-        flounder.originalChildren = [ selectObj1.option1, selectObj1.option2, selectObj1.option3 ];
+        flounder.originalChildren = [ selectObj1.option1, selectObj1.option2,
+                                                        selectObj1.option3 ];
 
         flounder.popInSelectElements( selectObj2.select );
 
-        assert.notDeepEqual( selectObj2.option1, selectObj2.select[0] );
+        assert.notDeepEqual( selectObj2.option1, selectObj2.select[ 0 ] );
         assert.equal( selectObj1.select.children.length, 0 );
     } );
 } );
@@ -297,35 +306,19 @@ describe( 'popInSelectElements', () =>
  */
 describe( 'popOutSelectElements', () =>
 {
-    function buildSelect()
-    {
-        let select = document.createElement( 'SELECT' );
-
-        let option1 = document.createElement( 'OPTION' );
-        select.appendChild( option1 );
-        let option2 = document.createElement( 'OPTION' );
-        select.appendChild( option2 );
-        let option3 = document.createElement( 'OPTION' );
-        select.appendChild( option3 );
-
-        return { select, option1, option2, option3 };
-    }
-
-
     document.body.flounder = null;
-    let flounder = new Flounder( document.body, {} );
+    const flounder = new Flounder( document.body, {} );
 
 
     it( 'should save the original children from the select tag', () =>
     {
-        let selectObj1 = buildSelect();
-        let selectObj2 = buildSelect();
+        const selectObj2 = buildSelect();
 
         flounder.popOutSelectElements( selectObj2.select );
 
         assert.equal( flounder.originalChildren.length, 3 );
-        assert.equal( flounder.originalChildren[0].nodeType, 1 );
-        assert.equal( flounder.originalChildren[0].tagName, 'OPTION' );
+        assert.equal( flounder.originalChildren[ 0 ].nodeType, 1 );
+        assert.equal( flounder.originalChildren[ 0 ].tagName, 'OPTION' );
     } );
 } );
 
@@ -343,38 +336,60 @@ describe( 'popOutSelectElements', () =>
 describe( 'reconfigure', () =>
 {
     document.body.flounder = null;
-    let flounder = new Flounder( document.body, { data: [ 1, 2, 34 ] } );
-    let _f;
+    const flounder = new Flounder( document.body, {
+        data : [ 1, 2, 34 ]
+    } );
 
-    let flounderSpy = sinon.stub( flounder, 'constructor', ( el, props ) => props );
+    sinon.stub( flounder, 'constructor', ( el, props ) => props );
 
-    it( 'should sort out the data given to it in preparation to rebuild, then call the constructor', () =>
+    it( 'should sort out the data given as preparation to rebuild', () =>
     {
-        let _p1 = flounder.reconfigure( [ 1, 2, 3 ] );
-        let _p2 = flounder.reconfigure( [ 1, 2, 4 ], { multiple: true} );
-        let _p3 = flounder.reconfigure( { data: [ 1, 2, 5 ] } );
-        let _p4 = flounder.reconfigure( { search: true } );
-        let _p5 = flounder.reconfigure( null, { data: [ 1, 2, 6 ] } );
-        let _p6 = flounder.reconfigure();
+        const p1 = flounder.reconfigure( [ 1, 2, 3 ] );
+        const p2 = flounder.reconfigure( [ 1, 2, 4 ], {
+            multiple : true
+        } );
+        const p3 = flounder.reconfigure( {
+            data : [ 1, 2, 5 ]
+        } );
+        const p4 = flounder.reconfigure( {
+            search : true
+        } );
+        const p5 = flounder.reconfigure( null, {
+            data : [ 1, 2, 6 ]
+        } );
+        const p6 = flounder.reconfigure();
 
-        assert.deepEqual( _p1.data, [ 1, 2, 3 ] );
+        assert.deepEqual( p1.data, [ 1, 2, 3 ] );
 
-        assert.deepEqual( _p2.data, [ 1, 2, 4 ] );
-        assert.equal( _p2.multiple, true );
+        assert.deepEqual( p2.data, [ 1, 2, 4 ] );
+        assert.equal( p2.multiple, true );
 
-        assert.deepEqual( _p3.data, [ 1, 2, 5 ] );
+        assert.deepEqual( p3.data, [ 1, 2, 5 ] );
 
-        assert.deepEqual( _p4, { search : true,
-                                 data   : [
-                                            { text: 1, value: 1, index: 0 },
-                                            { text: 2, value: 2, index: 1 },
-                                            { text: 34, value: 34, index: 2 }
-                                        ]
-                                    } );
-        assert.equal( _p4.search, true );
+        assert.deepEqual( p4, {
+            search : true,
+            data   : [
+                {
+                    text    : 1,
+                    value   : 1,
+                    index   : 0
+                },
+                {
+                    text    : 2,
+                    value   : 2,
+                    index   : 1
+                },
+                {
+                    text    : 34,
+                    value   : 34,
+                    index   : 2
+                }
+            ]
+        } );
+        assert.equal( p4.search, true );
 
-        assert.deepEqual( _p5.data , [ 1, 2, 6 ] );
-        assert.deepEqual( _p6.data , [
+        assert.deepEqual( p5.data, [ 1, 2, 6 ] );
+        assert.deepEqual( p6.data, [
             {
                 'index' : 0,
                 'text'  : 1,
@@ -408,11 +423,11 @@ describe( 'reconfigure', () =>
 describe( 'setTarget', () =>
 {
     document.body.flounder = null;
-    let flounder = new Flounder( document.body, {} );
+    const flounder = new Flounder( document.body, {} );
 
     it( 'should set a passed element as the target', () =>
     {
-        let el = document.createElement( 'DIV' );
+        const el = document.createElement( 'DIV' );
         flounder.setTarget( el );
 
         assert.deepEqual( el, flounder.target );
@@ -420,7 +435,7 @@ describe( 'setTarget', () =>
     } );
 
 
-    it( 'should find a passed selector string and set the first one as the target', () =>
+    it( 'should find a passed selector string and set the first one', () =>
     {
         flounder.setTarget( 'body' );
 
@@ -431,8 +446,8 @@ describe( 'setTarget', () =>
 
     it( 'should hide a passed input and set it\'s parent as the target', () =>
     {
-        let div     = document.createElement( 'DIV' );
-        let input   = document.createElement( 'INPUT' );
+        const div     = document.createElement( 'DIV' );
+        const input   = document.createElement( 'INPUT' );
         div.appendChild( input );
 
         flounder.setTarget( input );

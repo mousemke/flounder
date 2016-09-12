@@ -298,7 +298,7 @@ this.setByValue( value, multiple* )
 
 + `clickByValue( value, multiple )` sets the item with the passed value as selected.  If multiple is true and it is a multi-select box, it is selected additionally.  Otherwise it's selected instead. This accepts arrays as well.  Without multiple equaling true it will only select the last option. This fires the onClick event
 
-+ `deselectAll()` deselects all data.  Fires one change event when done deselecting all.  while `silent` = true, this event will be suppressed
++ `deselectAll( silent )` deselects all data.  Fires one change event when done deselecting all.  while `silent` = true, this event will be suppressed
 
 + `destroy()` removes event listeners, then flounder.  this will return the element to it's original state
 
@@ -344,11 +344,11 @@ npm scripts
 
 + `build` runs `bash`, `gulp` and `test:unit:coverage:cli`
 
-+ `demo` builds the demo
-
 + `gulp` runs bash and compiles flounder
 
-+ `test` runs the `nyan` tests
++ `lint` checks the code with eslint
+
++ `test` runs ling and then a coverage test
 
 + `test:unit:coverage` runs the `istanbul` tests and opens the browser report
 

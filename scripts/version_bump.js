@@ -1,3 +1,4 @@
+/* globals process, console, require */
 /**
  * ## version_bump.js
  *
@@ -6,9 +7,9 @@
  * @author  Mouse Braun         <mouse@knoblau.ch>
  * @author  Nicolas Brugneaux   <nicolas.brugneaux@gmail.com>
  *
- * @package Microbe
+ * @package LayoutEngine
  */
-var fs              = require( 'fs' );
+const fs              = require( 'fs' );
 
 /**
  * ## getResource
@@ -21,8 +22,9 @@ var fs              = require( 'fs' );
  */
 function getResource( url )
 {
-    var _d = fs.readFileSync( url );
-    return _d.toString( 'utf8', 0, _d.length );
+    const d = fs.readFileSync( url );
+
+    return d.toString( 'utf8', 0, d.length );
 }
 
 
@@ -32,16 +34,17 @@ function getResource( url )
  * overwrites a resource
  *
  * @param {String} url target
+ * @param {Array} data array of data objects
  *
  * @return {String} decoded data
  */
 function setResource( url, data )
 {
-    fs.writeFile( url, data, function ( err )
+    fs.writeFile( url, data, err =>
     {
         if ( err )
         {
-            console.log( err );
+            console.error( err );
         }
     } );
 }
@@ -56,18 +59,18 @@ function setResource( url, data )
  * @param {Number} ln line number
  * @param {String} replacement replacement text
  *
- * @return _Void_
+ * @return {Void} void
  */
 function updateLine( url, ln, replacement )
 {
-    var data            = getResource( url );
-    var dataSplit       = data.split( '\n' );
-        dataSplit[ ln ] = replacement;
-        data            = dataSplit.join( '\n' );
+    let data        = getResource( url );
+    const dataSplit = data.split( '\n' );
+    dataSplit[ ln ] = replacement;
+    data            = dataSplit.join( '\n' );
 
     setResource( url, data );
 
-    console.log( url + ' successfully changed' );
+    console.warn( `${url} successfully changed` );
 }
 
 
@@ -76,31 +79,30 @@ function updateLine( url, ln, replacement )
  *
  * grabs the version file, parses, and updates the minor version
  *
- * @param {String} url target
- *
  * @return {String} updated version string
  */
-function updateVersion( url )
+function updateVersion()
 {
-    var version         = getResource( versionUrl );
-    var versionSplit    = version.split( '.' );
+    const version         = getResource( versionUrl );
+    const versionSplit    = version.split( '.' );
     versionSplit.shift();
-    versionSplit[0]     = parseInt( versionSplit[0].split( '\'' )[1] );
+    versionSplit[ 0 ]     = parseInt( versionSplit[ 0 ].split( '\'' )[ 1 ] );
 
-    var newVersion      = parseInt( versionSplit[2] ) + 1;
-        versionSplit[2] = newVersion;
+    const newVersion      = parseInt( versionSplit[ 2 ] ) + 1;
+    versionSplit[ 2 ]   = newVersion;
+
     return versionSplit.join( '.' );
 }
 
 
-var readmeUrl       = './README.md';
-var packageUrl      = './package.json';
-var versionUrl      = './src/core/version.js';
-var bowerUrl        = './bower.json';
+const readmeUrl       = './README.md';
+const packageUrl      = './package.json';
+const versionUrl      = './src/core/version.js';
+const bowerUrl        = './bower.json';
 
-var newVersion      = process.argv[ 2 ] || updateVersion( versionUrl );
+const newVersion      = process.argv[ 2 ] || updateVersion( versionUrl );
 
-updateLine( versionUrl, 0, 'module.exports = \'' + newVersion + '\';' );
-updateLine( readmeUrl, 0, 'Flounder.js ' + newVersion );
-updateLine( packageUrl, 2, '  "version": "' + newVersion + '",' );
-updateLine( bowerUrl, 2, '    "version": "' + newVersion + '",' );
+updateLine( versionUrl, 0, `module.exports = \'${newVersion}\';` );
+updateLine( readmeUrl, 0, `Flounder.js ${newVersion}` );
+updateLine( packageUrl, 2, `  "version": "${newVersion}",` );
+updateLine( bowerUrl, 2, `    "version": "${newVersion}",` );

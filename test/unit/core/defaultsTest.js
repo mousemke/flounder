@@ -1,52 +1,49 @@
-
+/* globals describe, it, document */
 import Flounder     from '/core/flounder';
 import defaults     from '/core/defaults';
 
-import utils        from '/core/utils';
 import classes      from '/core/classes';
-
 import assert       from 'assert';
-import sinon        from 'sinon';
 
 
-let div         = document.querySelector( 'div' );
-let flounder    = new Flounder( div );
+const div         = document.querySelector( 'div' );
+const flounder    = new Flounder( div );
 
 
 describe( 'defaultOptions', () =>
 {
-    let _d = defaults.defaultOptions;
+    const dVal = defaults.defaultOptions;
 
     it( 'should be an object', () =>
     {
-        assert.equal( typeof _d, 'object' );
+        assert.equal( typeof dVal, 'object' );
     } );
 
 
     it( 'should have the correct default prop', () =>
     {
-        assert.equal( _d.allowHTML, false );
-        assert.deepEqual( _d.classes, classes );
-        assert.equal( _d.defaultEmpty, false );
-        assert.equal( _d.defaultIndex, false );
-        assert.equal( _d.defaultValue, false );
-        assert.equal( _d.disableArrow, false );
-        assert.equal( _d.keepChangesOnDestroy, false );
-        assert.equal( _d.multiple, false );
-        assert.equal( _d.multipleTags, false );
-        assert.equal( _d.multipleMessage, `(Multiple Items Selected)` );
-        assert.equal( typeof _d.onClose, 'function' );
-        assert.equal( typeof _d.onComponentDidMount, 'function', false );
-        assert.equal( typeof _d.onComponentWillUnmount, 'function' );
-        assert.equal( typeof _d.onFirstTouch, 'function' );
-        assert.equal( typeof _d.onInit, 'function' );
-        assert.equal( typeof _d.onInputChange, 'function' );
-        assert.equal( typeof _d.onOpen, 'function' );
-        assert.equal( typeof _d.onChange, 'function' );
-        assert.equal( _d.openOnHover, false );
-        assert.equal( _d.placeholder, `Please choose an option` );
-        assert.equal( _d.search, false );
-        assert.equal( _d.selectDataOverride, false );
+        assert.equal( dVal.allowHTML, false );
+        assert.deepEqual( dVal.classes, classes );
+        assert.equal( dVal.defaultEmpty, false );
+        assert.equal( dVal.defaultIndex, false );
+        assert.equal( dVal.defaultValue, false );
+        assert.equal( dVal.disableArrow, false );
+        assert.equal( dVal.keepChangesOnDestroy, false );
+        assert.equal( dVal.multiple, false );
+        assert.equal( dVal.multipleTags, false );
+        assert.equal( dVal.multipleMessage, '(Multiple Items Selected)' );
+        assert.equal( typeof dVal.onClose, 'function' );
+        assert.equal( typeof dVal.onComponentDidMount, 'function', false );
+        assert.equal( typeof dVal.onComponentWillUnmount, 'function' );
+        assert.equal( typeof dVal.onFirstTouch, 'function' );
+        assert.equal( typeof dVal.onInit, 'function' );
+        assert.equal( typeof dVal.onInputChange, 'function' );
+        assert.equal( typeof dVal.onOpen, 'function' );
+        assert.equal( typeof dVal.onChange, 'function' );
+        assert.equal( dVal.openOnHover, false );
+        assert.equal( dVal.placeholder, 'Please choose an option' );
+        assert.equal( dVal.search, false );
+        assert.equal( dVal.selectDataOverride, false );
     } );
 } );
 
@@ -57,7 +54,8 @@ describe( 'defaultOptions', () =>
  *
  * sets the initial default value
  *
- * @param {String or Number}    defaultProp         default passed from this.props
+ * @param {String or Number}    defaultProp         default passed from
+ *                                                                   this.props
  * @param {Object}              data                this.props.data
  *
  * @return _Void_
@@ -66,11 +64,12 @@ describe( 'setDefaultOption', () =>
 {
     it( 'should return a placeholder on default everything', () =>
     {
-        let _default = defaults.setDefaultOption( flounder );
+        const defaultVal = defaults.setDefaultOption( flounder );
 
-        assert.equal( _default.index, 0 );
-        assert.notEqual( _default.extraClass.indexOf( classes.PLACEHOLDER ), -1 );
-        assert.equal( _default.value, '' );
+        assert.equal( defaultVal.index, 0 );
+        assert.notEqual( defaultVal.extraClass.indexOf( classes.PLACEHOLDER ),
+                                                                        -1 );
+        assert.equal( defaultVal.value, '' );
     } );
 
 
@@ -78,25 +77,32 @@ describe( 'setDefaultOption', () =>
     {
         it( 'should set an index as the default if passed', () =>
         {
-            let configObj   = { defaultIndex : 2, data: [ 1, 2, 3 ] };
+            const configObj   = {
+                defaultIndex    : 2,
+                data            : [ 1, 2, 3 ]
+            };
 
-            let _default    = defaults.setDefaultOption( flounder, configObj );
+            const defaultVal = defaults.setDefaultOption( flounder, configObj );
 
-            assert.equal( _default.index, 2 );
-            assert.ok( !_default.extraClass || _default.extraClass.indexOf( classes.PLACEHOLDER ) === -1 );
-            assert.equal( _default.value, 3 );
+            assert.equal( defaultVal.index, 2 );
+            assert.ok( !defaultVal.extraClass ||
+                defaultVal.extraClass.indexOf( classes.PLACEHOLDER ) === -1 );
+            assert.equal( defaultVal.value, 3 );
         } );
 
 
         it( 'should fall back if the given index doesnt exist', () =>
         {
-            let configObj   = { defaultIndex : 200, data: [ 1, 2, 3 ] };
+            const configObj     = {
+                defaultIndex    : 200,
+                data            : [ 1, 2, 3 ]
+            };
 
-            let _default    = defaults.setDefaultOption( flounder, configObj );
+            const defaultVal = defaults.setDefaultOption( flounder, configObj );
 
-            assert.equal( _default.index, 0 );
-            assert.ok( !_default.extraClass );
-            assert.equal( _default.value, 1 );
+            assert.equal( defaultVal.index, 0 );
+            assert.ok( !defaultVal.extraClass );
+            assert.equal( defaultVal.value, 1 );
         } );
     } );
 
@@ -105,15 +111,19 @@ describe( 'setDefaultOption', () =>
     {
         it( 'should set a placeholder as the default if passed', () =>
         {
-            let _data           = [ 1, 2, 3 ];
-            let configObj       = { placeholder : 'moon!', data: _data };
+            const dataVal       = [ 1, 2, 3 ];
+            const configObj     = {
+                placeholder : 'moon!',
+                data        : dataVal
+            };
             flounder.allowHTML  = true;
-            let _default        = defaults.setDefaultOption( flounder, configObj );
+            const defaultVal = defaults.setDefaultOption( flounder, configObj );
 
-            assert.equal( _default.index, 0 );
-            assert.notEqual( _default.extraClass.indexOf( classes.PLACEHOLDER ), -1 );
-            assert.equal( _default.value, '' );
-            assert.equal( _data.length, 4 );
+            assert.equal( defaultVal.index, 0 );
+            assert.notEqual(
+                    defaultVal.extraClass.indexOf( classes.PLACEHOLDER ), -1 );
+            assert.equal( defaultVal.value, '' );
+            assert.equal( dataVal.length, 4 );
         } );
     } );
 
@@ -122,25 +132,32 @@ describe( 'setDefaultOption', () =>
     {
         it( 'should set a value as the default if passed', () =>
         {
-            let configObj   = { defaultValue : 2, data: [ 1, 2, 3 ] };
+            const configObj  = {
+                defaultValue    : 2,
+                data            : [ 1, 2, 3 ]
+            };
 
-            let _default    = defaults.setDefaultOption( flounder, configObj );
+            const defaultVal = defaults.setDefaultOption( flounder, configObj );
 
-            assert.equal( _default.index, 1 );
-            assert.ok( !_default.extraClass || _default.extraClass.indexOf( classes.PLACEHOLDER ) === -1 );
-            assert.equal( _default.value, 2 );
+            assert.equal( defaultVal.index, 1 );
+            assert.ok( !defaultVal.extraClass ||
+                defaultVal.extraClass.indexOf( classes.PLACEHOLDER ) === -1 );
+            assert.equal( defaultVal.value, 2 );
         } );
 
 
         it( 'should fall back if the given index doesnt exist', () =>
         {
-            let configObj   = { defaultValue: 200, data: [ 1, 2, 3 ] };
+            const configObj   = {
+                defaultValue    : 200,
+                data            : [ 1, 2, 3 ]
+            };
 
-            let _default    = defaults.setDefaultOption( flounder, configObj );
+            const defaultVal = defaults.setDefaultOption( flounder, configObj );
 
-            assert.equal( _default.index, 0 );
-            assert.ok( !_default.extraClass );
-            assert.equal( _default.value, 1 );
+            assert.equal( defaultVal.index, 0 );
+            assert.ok( !defaultVal.extraClass );
+            assert.equal( defaultVal.value, 1 );
         } );
     } );
 
@@ -148,26 +165,36 @@ describe( 'setDefaultOption', () =>
 
     describe( 'checkDefaultPriority', () =>
     {
-        it( 'sort out the priority options and choose what should be gotten', () =>
+        it( 'sort out the priority options', () =>
         {
-            let configObj   = { defaultValue : 2, defaultIndex: 0, placeholder: 'moon', data: [ 1, 2, 3 ] };
+            const configObj   = {
+                defaultValue : 2,
+                defaultIndex : 0,
+                placeholder  : 'moon',
+                data         : [ 1, 2, 3 ]
+            };
 
-            let _default    = defaults.setDefaultOption( flounder, configObj );
+            const defaultVal = defaults.setDefaultOption( flounder, configObj );
 
-            assert.notEqual( _default.extraClass.indexOf( classes.PLACEHOLDER ), -1 );
+            assert.notEqual(
+                    defaultVal.extraClass.indexOf( classes.PLACEHOLDER ), -1 );
         } );
 
 
-        it( 'should try to add the previous value in the case of a rebuild', () =>
+        it( 'should try to add the previous value for a rebuild', () =>
         {
-            let div         = document.querySelector( 'div' );
-            let configObj   = { defaultIndex: 2, data: [ 1, 2, 3 ] };
+            const div         = document.querySelector( 'div' );
+            const configObj   = {
+                defaultIndex    : 2,
+                data            : [ 1, 2, 3 ]
+            };
 
-            let flounder    = new Flounder( div, configObj );
+            const flounder    = new Flounder( div, configObj );
 
-            let _default    = defaults.setDefaultOption( flounder, configObj, flounder.data, true );
+            const defaultVal    = defaults.setDefaultOption( flounder,
+                                            configObj, flounder.data, true );
 
-            assert.equal( _default.value, 3 );
+            assert.equal( defaultVal.value, 3 );
         } );
     } );
 } );
@@ -184,30 +211,30 @@ describe( 'sortData', () =>
 {
     it( 'should build objects out of simple data sets', () =>
     {
-        let data = defaults.sortData( [ 1, 2, 3 ] );
+        const data = defaults.sortData( [ 1, 2, 3 ] );
 
-        assert.equal( data[0].text, 1 );
-        assert.equal( data[1].value, 2 );
-        assert.equal( data[2].index, 2 );
+        assert.equal( data[ 0 ].text, 1 );
+        assert.equal( data[ 1 ].value, 2 );
+        assert.equal( data[ 2 ].index, 2 );
     } );
 
 
     it( 'should add indexes to object data items', () =>
     {
-        let data = defaults.sortData( [ {
+        const data = defaults.sortData( [ {
             text    : 1,
             value   : 2
         } ], [], 0 );
 
-        assert.equal( data[0].text, 1 );
-        assert.equal( data[0].value, 2 );
-        assert.equal( data[0].index, 0 );
+        assert.equal( data[ 0 ].text, 1 );
+        assert.equal( data[ 0 ].value, 2 );
+        assert.equal( data[ 0 ].index, 0 );
     } );
 
 
     it( 'should recursively process headers', () =>
     {
-        let data = defaults.sortData( [
+        const data = defaults.sortData( [
             {
                 header : 'top',
                 data    : [ 1, 2, 3 ]
@@ -218,9 +245,9 @@ describe( 'sortData', () =>
             }
         ] );
 
-        assert.equal( data[0].text, 1 );
-        assert.equal( data[2].value, 3 );
-        assert.equal( data[5].value, 6 );
+        assert.equal( data[ 0 ].text, 1 );
+        assert.equal( data[ 2 ].value, 3 );
+        assert.equal( data[ 5 ].value, 6 );
     } );
 } );
 

@@ -1,4 +1,4 @@
-
+/* globals describe, it, document, console */
 import assert   from 'assert';
 import sinon    from 'sinon';
 
@@ -10,6 +10,9 @@ import utils    from '/core/utils';
 import Sole     from '/core/search';
 
 
+const noop = () =>
+{};
+
 /**
  * ## componentWillUnmount
  *
@@ -19,7 +22,7 @@ import Sole     from '/core/search';
  */
 describe( 'componentWillUnmount', () =>
 {
-    let flounder    = new Flounder( document.body );
+    let flounder    = new Flounder( document.body );
 
     it( 'should exist', () =>
     {
@@ -28,31 +31,31 @@ describe( 'componentWillUnmount', () =>
 
 
     flounder.originalChildren       = true;
-    let popInSelectElementsSpy      = sinon.stub( flounder, 'popInSelectElements', () => {} );
+    const selectEl = sinon.stub( flounder, 'popInSelectElements', noop );
 
     flounder.componentWillUnmount();
     flounder.originalChildren       = false;
 
     it( 'should be able to pop in the original children ', () =>
     {
-        assert.ok( popInSelectElementsSpy.callCount === 1 );
+        assert.ok( selectEl.callCount === 1 );
     } );
 
 
 
     it( 'should remove event listeners', () =>
     {
-        flounder                = new Flounder( document.body );
-        let removeListenersSpy  = sinon.spy( flounder, 'removeListeners' );
+        flounder                = new Flounder( document.body );
+        const removeListenersSpy  = sinon.spy( flounder, 'removeListeners' );
 
-        let refs        = flounder.refs;
+        const refs        = flounder.refs;
         refs.selected.click();
 
-        let firstCheck = refs.wrapper.className.indexOf( 'open' );
+        const firstCheck = refs.wrapper.className.indexOf( 'open' );
         flounder.componentWillUnmount();
         refs.selected.click();
 
-        let secondCheck = refs.wrapper.className.indexOf( 'open' );
+        const secondCheck = refs.wrapper.className.indexOf( 'open' );
 
         assert.equal( firstCheck, secondCheck, 'events are removed' );
         assert.equal( removeListenersSpy.callCount, 1 );
@@ -62,16 +65,19 @@ describe( 'componentWillUnmount', () =>
 
     it( 'should run this.onComponentWillUnmount()', () =>
     {
-        flounder                = new Flounder( document.body );
-        let onComponentWillUnmountSpy   = sinon.stub( flounder, 'onComponentWillUnmount', () => {} );
+        flounder                        = new Flounder( document.body );
+        let elSpy = sinon.stub( flounder, 'onComponentWillUnmount', noop );
 
         flounder.componentWillUnmount();
-        assert.equal( onComponentWillUnmountSpy.callCount, 1 );
+        assert.equal( elSpy.callCount, 1 );
         flounder.onComponentWillUnmount.restore();
 
-        onComponentWillUnmountSpy   = sinon.stub( flounder, 'onComponentWillUnmount', () => { a + b } );
+        elSpy   = sinon.stub( flounder, 'onComponentWillUnmount', () =>
+        {
+            a + b // eslint-disable-line
+        } );
 
-        let consoleSpy = sinon.stub( console, 'warn', () => {} );
+        const consoleSpy = sinon.stub( console, 'warn', noop );
         flounder.componentWillUnmount();
         assert.equal( consoleSpy.callCount, 1 );
 
@@ -104,24 +110,24 @@ describe( 'constructor', () =>
 
     it( 'shouldn\'t run if there is no target', () =>
     {
-        let consoleSpy  = sinon.stub( console, 'warn', () => {} );
+        const consoleSpy  = sinon.stub( console, 'warn', noop );
         flounder        = new Flounder();
 
         assert.equal( consoleSpy.callCount, 1 );
         console.warn.restore();
 
-        assert.throws( () => new Flounder( 'moon' ), 'Flounder - No target element found.' );
+        assert.throws( () => new Flounder( 'moon' ) );
     } );
 
 
 
     it( 'should make a single flounder from a target(s)', () =>
     {
-        flounder = new Flounder( 'select' );
-        assert.ok( flounder instanceof Flounder, 'a single target makes a flounder' );
+        flounder = new Flounder( 'select' );
+        assert.ok( flounder instanceof Flounder );
 
 
-        let consoleSpy  = sinon.stub( console, 'warn', () => {} );
+        const consoleSpy  = sinon.stub( console, 'warn', noop );
         flounder        = new Flounder( 'div' );
         assert.equal( consoleSpy.callCount, 1 );
 
@@ -130,13 +136,13 @@ describe( 'constructor', () =>
 
 
 
-    it( 'should destroy any previously added flounder on the same element', () =>
+    it( 'should destroy any previous flounder on the same element', () =>
     {
-        let flounderBackup  = document.body.flounder;
-        let flounder        = new Flounder( 'body' );
+        const flounderBackup  = document.body.flounder;
+        const flounder        = new Flounder( 'body' );
         assert.notDeepEqual( flounder, flounderBackup );
     } );
-});
+} );
 
 
 /**
@@ -150,22 +156,39 @@ describe( 'constructor', () =>
  */
 describe( 'filterSearchResults', () =>
 {
-    let flounder        = new Flounder( 'div', { data: [ 'a', 'b', 'c' ], search: true } );
+    const flounder        = new Flounder( 'div', {
+        data : [
+            'a',
+            'b',
+            'c'
+        ],
+        search : true
+    } );
 
     it( 'should find all matching field and unhide them', () =>
     {
-        let e               = { target: { value: 'a' } };
+        const e               = {
+            target : {
+                value : 'a'
+            }
+        };
         flounder.filterSearchResults( e );
 
-        assert.equal( flounder.refs.wrapper.querySelectorAll( `.${classes.SEARCH_HIDDEN}` ).length, 2 );
+        const wrapper = flounder.refs.wrapper;
+        assert.equal( wrapper.querySelectorAll(
+                                    `.${classes.SEARCH_HIDDEN}` ).length, 2 );
     } );
 
 
 
     it( 'should reset the field if there in nothing in the input', () =>
     {
-        let e               = { target: { value: '' } };
-        let searchResetSpy  = sinon.stub( flounder, 'fuzzySearchReset', () => {} );
+        const e              = {
+            target : {
+                value : ''
+            }
+        };
+        sinon.stub( flounder, 'fuzzySearchReset', noop );
 
         flounder.filterSearchResults( e );
 
@@ -178,7 +201,8 @@ describe( 'filterSearchResults', () =>
 /**
  * ## fuzzySearch
  *
- * filters events to determine the correct actions, based on events from the search box
+ * filters events to determine the correct actions, based on events from the
+ * search box
  *
  * @param {Object} e event object
  *
@@ -186,22 +210,25 @@ describe( 'filterSearchResults', () =>
  */
 describe( 'fuzzySearch', () =>
 {
-    let data = [
+    const data = [
         'doge',
         'moon',
         'such'
     ];
 
-    let flounder    = new Flounder( document.body, {
-                                                        multipleTags    : true,
-                                                        data            : data,
-                                                        defaultIndex    : 0,
-                                                        search          : true
-                                                    } );
-    let e = {
-        keyCode : 77,
-        preventDefault : e => e,
-        target  : { value : 'm  ' }
+    const flounder    = new Flounder( document.body, {
+        multipleTags    : true,
+        data            : data,
+        defaultIndex    : 0,
+        search          : true
+    } );
+
+    const e = {
+        keyCode         : 77,
+        preventDefault  : e => e,
+        target          : {
+            value : 'm  '
+        }
     };
 
 
@@ -214,22 +241,23 @@ describe( 'fuzzySearch', () =>
 
     it( 'should correctly filter data elements', () =>
     {
-        let flounderRefs = flounder.refs;
+        const flounderRefs = flounder.refs;
 
         flounderRefs.search.click();
         flounder.fuzzySearch( e );
 
-        let hiddenOptions = flounderRefs.optionsListWrapper.querySelectorAll( '.' + classes.SEARCH_HIDDEN );
+        const hiddenOptions = flounderRefs.optionsListWrapper.querySelectorAll(
+                                            `.${classes.SEARCH_HIDDEN}` );
 
-        assert.deepEqual( hiddenOptions[ 0 ], flounderRefs.data[ 0 ], 'correctly filters data elements' );
+        assert.deepEqual( hiddenOptions[ 0 ], flounderRefs.data[ 0 ] );
     } );
 
 
 
     it( 'should correctly report failed running of user .onInputChange()', () =>
     {
-        sinon.stub( flounder, 'onInputChange', () => { a+ b } );
-        sinon.stub( console, 'warn', () => {} );
+        sinon.stub( flounder, 'onInputChange', () => { a+ b } ); // eslint-disable-line
+        sinon.stub( console, 'warn', noop );
         flounder.toggleList.justOpened = true;
 
         flounder.fuzzySearch( e );
@@ -256,18 +284,20 @@ describe( 'fuzzySearch', () =>
 
         utils.addClass( flounder.refs.wrapper, classes.OPEN );
         flounder.fuzzySearch( e );
-        assert.equal( utils.hasClass( flounder.refs.wrapper, classes.OPEN ), false );
+        assert.equal( utils.hasClass( flounder.refs.wrapper, classes.OPEN ),
+                                                                    false );
 
         e.keyCode = keycodes.ESCAPE;
 
         utils.addClass( flounder.refs.wrapper, classes.OPEN );
         flounder.fuzzySearch( e );
-        assert.equal( utils.hasClass( flounder.refs.wrapper, classes.OPEN ), false );
+        assert.equal( utils.hasClass( flounder.refs.wrapper, classes.OPEN ),
+                                                                    false );
     } );
 
 
 
-    it( 'should go to the last tag when backspace is hit in an empty searchbox', () =>
+    it( 'should go to the last tag on backspace in an empty searchbox', () =>
     {
         e.keyCode = keycodes.BACKSPACE;
 
@@ -275,30 +305,36 @@ describe( 'fuzzySearch', () =>
 
         flounder.fuzzySearch( e );
 
-        flounder.refs.multiTagWrapper.innerHTML = '<span class="flounder__multiple--select--tag" aria-label="Deselect All" tabindex="0"><a class="flounder__multiple__tag__close" data-index="1"></a>All</span><span class="flounder__multiple--select--tag" aria-label="Deselect Tags" tabindex="0"><a class="flounder__multiple__tag__close" data-index="2"></a>Tags</span>';
-        sinon.spy( flounder.refs.multiTagWrapper.lastChild, 'focus' );
+        const lastTag = flounder.refs.multiTagWrapper.lastChild;
+
+        flounder.refs.multiTagWrapper.innerHTML = '<span class="flounder__multiple--select--tag" aria-label="Deselect All" tabindex="0"><a class="flounder__multiple__tag__close" data-index="1"></a>All</span><span class="flounder__multiple--select--tag" aria-label="Deselect Tags" tabindex="0"><a class="flounder__multiple__tag__close" data-index="2"></a>Tags</span>'; // eslint-disable-line
+        sinon.spy( lastTag, 'focus' );
 
         flounder.fuzzySearch( e );
 
-        assert.equal( flounder.refs.multiTagWrapper.lastChild.focus.callCount, 1 );
+        assert.equal( lastTag.focus.callCount, 1 );
     } );
 
 
 
     it( 'should totally ignore up and down', () =>
     {
-        let flounderRefs    = flounder.refs;
-        let hiddenOptions1  = flounderRefs.optionsListWrapper.querySelectorAll( '.' + classes.SEARCH_HIDDEN );
-        e.keyCode           = keycodes.UP;
+        const flounderRefs    = flounder.refs;
+        const wrapper         = flounderRefs.optionsListWrapper;
+        const hiddenOptions1  = wrapper.querySelectorAll(
+                                                `.${classes.SEARCH_HIDDEN}` );
+        e.keyCode             = keycodes.UP;
 
         flounder.fuzzySearch( e );
-        let hiddenOptions2 = flounderRefs.optionsListWrapper.querySelectorAll( '.' + classes.SEARCH_HIDDEN );
+        const hiddenOptions2 = wrapper.querySelectorAll(
+                                                `.${classes.SEARCH_HIDDEN}` );
         assert.equal( hiddenOptions1.length, hiddenOptions2.length );
 
         e.keyCode = keycodes.DOWN;
         flounder.fuzzySearch( e );
 
-        let hiddenOptions3 = flounderRefs.optionsListWrapper.querySelectorAll( '.' + classes.SEARCH_HIDDEN );
+        const hiddenOptions3 = wrapper.querySelectorAll(
+                                                `.${classes.SEARCH_HIDDEN}` );
         assert.equal( hiddenOptions1.length, hiddenOptions3.length );
     } );
 } );
@@ -314,12 +350,16 @@ describe( 'fuzzySearch', () =>
  */
 describe( 'fuzzySearchReset', () =>
 {
-    let data = [
+    const data = [
         'doge',
         'moon'
     ];
 
-    let flounder    = new Flounder( document.body, { data : data, defaultIndex : 0, search : true } );
+    const flounder    = new Flounder( document.body, {
+        data         : data,
+        defaultIndex : 0,
+        search       : true
+    } );
 
     it( 'should exist', () =>
     {
@@ -331,18 +371,24 @@ describe( 'fuzzySearchReset', () =>
     it( 'should correctly reset all search elements', () =>
     {
 
-        let flounderRefs = flounder.refs;
+        const flounderRefs = flounder.refs;
 
         flounderRefs.search.click();
-        flounder.fuzzySearch( { keyCode : 77,
-                                preventDefault : e => e,
-                                target  : { value : 'm  ' }
-                                } );
-        flounder.fuzzySearchReset();
-        let hiddenOptions = flounderRefs.optionsListWrapper.querySelectorAll( '.' + classes.SEARCH_HIDDEN );
+        flounder.fuzzySearch( {
+            keyCode         : 77,
+            preventDefault  : e => e,
+            target          : {
+                value : 'm  '
+            }
+        } );
 
-        assert.equal( flounderRefs.search.value, '', 'correctly blanks the search input' );
-        assert.equal( hiddenOptions.length, 0, 'correctly resets search filtered elements' );
+        flounder.fuzzySearchReset();
+        const wrapper = flounderRefs.optionsListWrapper;
+        const hiddenOptions = wrapper.querySelectorAll(
+                                                `.${classes.SEARCH_HIDDEN}` );
+
+        assert.equal( flounderRefs.search.value, '' );
+        assert.equal( hiddenOptions.length, 0 );
     } );
 } );
 
@@ -361,7 +407,14 @@ describe( 'fuzzySearchReset', () =>
 describe( 'init', () =>
 {
 
-    let flounder = new Flounder( document.body, { moon: 'doge', data: [ 1, 2, 3 ] } );
+    const flounder = new Flounder( document.body, {
+        moon : 'doge',
+        data : [
+            1,
+            2,
+            3
+        ]
+    } );
 
     it( 'should exist', () =>
     {
@@ -374,7 +427,9 @@ describe( 'init', () =>
     {
         assert.equal( flounder.search, false );
 
-        let searchyFlounder = new Flounder( document.querySelector( 'div' ), { search: true  } );
+        const searchyFlounder = new Flounder( document.querySelector( 'div' ), {
+            search : true
+        } );
 
         assert.equal( searchyFlounder.search instanceof Sole, true );
     } );
@@ -383,8 +438,8 @@ describe( 'init', () =>
 
     it( 'should create flounder refs on targets', () =>
     {
-        let oTarget = flounder.originalTarget.flounder instanceof Flounder;
-        let target  = flounder.target.flounder instanceof Flounder;
+        const oTarget = flounder.originalTarget.flounder instanceof Flounder;
+        const target  = flounder.target.flounder instanceof Flounder;
 
         assert.ok( oTarget === true && target === true, 'creates all refs' );
     } );
@@ -394,20 +449,21 @@ describe( 'init', () =>
     it( 'should set the inital props, target, and environment', () =>
     {
         assert.equal( flounder.props.moon, 'doge' );
-        assert.deepEqual( document.body, flounder.target );
+        assert.deepEqual( document.body, flounder.target );
     } );
 
 
 
     it( 'should warn when the user functions dont work', () =>
     {
-        sinon.stub( console, 'warn', () => {} );
+        sinon.stub( console, 'warn', noop );
 
-        let func = () => { a + b };
+        let func = () => { a + b }; // eslint-disable-line
 
-        new Flounder( document.querySelector( 'div' ), { onInit : func,
-                                                         onComponentDidMount : func
-                                                     } );
+        new Flounder( document.querySelector( 'div' ), {
+            onInit              : func,
+            onComponentDidMount : func
+        } );
 
         assert( console.warn.callCount, 2 );
 
@@ -434,13 +490,19 @@ describe( 'init', () =>
  */
 describe( 'initializeOptions', () =>
 {
-    let data = [
+    const data = [
         'doge',
         'moon',
         'wow'
     ];
 
-    let flounder = new Flounder( document.body, { data: data, multiple: 'doge', classes: { MAIN: 'cat' } } );
+    const flounder = new Flounder( document.body, {
+        data        : data,
+        multiple    : 'doge',
+        classes     : {
+            MAIN : 'cat'
+        }
+    } );
 
     it( 'should exist', () =>
     {
@@ -448,7 +510,7 @@ describe( 'initializeOptions', () =>
     } );
 
 
-    it( 'should transfer all props to flounder (classes get a `Class` suffix)', () =>
+    it( 'should transfer all props to flounder', () =>
     {
         assert.deepEqual( flounder.data, data );
         assert.equal( flounder.multiple, 'doge' );
@@ -456,13 +518,13 @@ describe( 'initializeOptions', () =>
     } );
 
 
-    let f2Options = {
+    const f2Options = {
         data            : data,
         defaultEmpty    : true,
         multipleTags    : true
     };
 
-    let flounder2 = new Flounder( document.body, f2Options );
+    const flounder2 = new Flounder( document.body, f2Options );
 
 
     it( 'should have an empty placeholder if set empty', () =>
@@ -490,14 +552,19 @@ describe( 'initializeOptions', () =>
  */
 describe( 'onRender', () =>
 {
-    let data = [
+    const data = [
         'doge',
         'moon',
         'wow'
     ];
 
-    let flounder = new Flounder( document.body, { data: data, classes: { flounder: 'cat' } } );
-    sinon.stub( flounder, 'addListeners', () => {} );
+    const flounder = new Flounder( document.body, {
+        data    : data,
+        classes : {
+            flounder : 'cat'
+        }
+    } );
+    sinon.stub( flounder, 'addListeners', noop );
 
     it( 'should exist', () =>
     {
@@ -511,10 +578,15 @@ describe( 'onRender', () =>
         flounder.isIos = true;
 
         flounder.onRender();
-        assert.equal( utils.hasClass( flounder.refs.select, classes.HIDDEN_IOS ), true );
+        assert.equal(
+            utils.hasClass( flounder.refs.select, classes.HIDDEN_IOS ), true );
 
-        let flounder2 = new Flounder( document.body, { data: data, multiple: true } );
-        assert.equal( utils.hasClass( flounder2.refs.select, classes.HIDDEN_IOS ), false );
+        const flounder2 = new Flounder( document.body, {
+            data     : data,
+            multiple : true
+        } );
+        assert.equal(
+        utils.hasClass( flounder2.refs.select, classes.HIDDEN_IOS ), false );
 
         flounder.isIos = false;
     } );
@@ -539,12 +611,14 @@ describe( 'onRender', () =>
  */
 describe( 'sortData', () =>
 {
-    let data = [
+    const data = [
         'doge',
         'moon'
     ];
 
-    let flounder    = new Flounder( document.body, { data : data } );
+    const flounder    = new Flounder( document.body, {
+        data : data
+    } );
 
 
     it( 'should exist', () =>
@@ -554,20 +628,20 @@ describe( 'sortData', () =>
 
 
 
-    let sortedData  = flounder.sortData( [
-                                    'doge',
-                                    {
-                                        text:'moon',
-                                        value: 'moon'
-                                    },
-                                    {
-                                        header: 'moin!',
-                                        data: [ 1, 2, 3 ]
-                                    } ] );
+    const sortedData  = flounder.sortData( [
+        'doge',
+        {
+            text    : 'moon',
+            value   : 'moon'
+        },
+        {
+            header  : 'moin!',
+            data    : [ 1, 2, 3 ]
+        } ] );
 
-    assert.ok( sortedData[0].index === 0 && sortedData[0].text === 'doge', 'sets simple text' );
-    assert.ok( sortedData[1].index === 1 && sortedData[1].text === 'moon', 'sets data objects' );
-    assert.ok( sortedData[2].index === 2 && sortedData[2].text === 1, 'sets header info' );
+    assert.ok( sortedData[ 0 ].index === 0 && sortedData[ 0 ].text === 'doge' );
+    assert.ok( sortedData[ 1 ].index === 1 && sortedData[ 1 ].text === 'moon' );
+    assert.ok( sortedData[ 2 ].index === 2 && sortedData[ 2 ].text === 1 );
 } );
 
 
@@ -590,26 +664,26 @@ describe( 'find', () =>
 
     it( 'should accept an array and return an arrays of flounders', () =>
     {
-        let flounders = Flounder.find( [ document.body ] );
-        assert.ok( Array.isArray( flounders ), 'multiple targets returns an array' );
-        assert.ok( flounders[0] instanceof Flounder, 'of flounders' );
+        const flounders = Flounder.find( [ document.body ] );
+        assert.ok( Array.isArray( flounders ) );
+        assert.ok( flounders[ 0 ] instanceof Flounder, 'of flounders' );
     } );
 
 
 
     it( 'should accept a string and return an arrays of flounders', () =>
     {
-        let flounders = Flounder.find( 'div' );
-        assert.ok( Array.isArray( flounders ), 'multiple targets returns an array' );
-        assert.ok( flounders[0] instanceof Flounder, 'of flounders' );
+        const flounders = Flounder.find( 'div' );
+        assert.ok( Array.isArray( flounders ) );
+        assert.ok( flounders[ 0 ] instanceof Flounder, 'of flounders' );
     } );
 
 
     it( 'should accept a DOM element and return an arrays of flounders', () =>
     {
-        let flounders = Flounder.find( document.body );
-        assert.ok( Array.isArray( flounders ), 'multiple targets returns an array' );
-        assert.ok( flounders[0] instanceof Flounder, 'of flounders' );
+        const flounders = Flounder.find( document.body );
+        assert.ok( Array.isArray( flounders ) );
+        assert.ok( flounders[ 0 ] instanceof Flounder, 'of flounders' );
     } );
 } );
 
