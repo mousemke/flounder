@@ -489,6 +489,9 @@ Change Log
 + default
     + placeholder tweak for the flounder-react
 
++ config
+    + added configurable noMoreOptionsMessage && noMoreResultsMessage messages
+
 + api
     + onSelect changed to onChange.  Deprication warning added.  Will be removed 2.0.0
 
