@@ -182,30 +182,23 @@ const api = {
                 {
                     const lastEl = count === tags.length - 1;
 
-                    if ( el )
+                    if ( !silent && lastEl )
                     {
+                        el = el.children;
+                        el = el[ 0 ];
 
-                        if ( !silent && lastEl )
-                        {
-                            el = el.children;
-                            el = el[ 0 ];
-
-                            el.click();
-                        }
-                        else
-                        {
-                            el.removeEventListener( 'click',
-                                                        this.removeMultiTag );
-                            el.remove();
-
-                            if ( lastEl )
-                            {
-                                this.setTextMultiTagIndent();
-                                this.addPlaceholder();
-                            }
-                        }
+                        el.click();
+                    }
+                    else
+                    {
+                        el.removeEventListener( 'click',
+                                                    this.removeMultiTag );
+                        el.remove();
                     }
                 } );
+
+                this.setTextMultiTagIndent();
+                this.addPlaceholder();
             }
         }
     },

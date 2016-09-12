@@ -19,7 +19,7 @@ const noop = () =>
  *
  * adds the listeners for onFirstTouch
  *
- * @return _Void_
+ * @return {Void} void
  */
 describe( 'addFirstTouchListeners', () =>
 {
@@ -96,7 +96,7 @@ describe( 'addHoverClass', () =>
  *
  * adds listeners on render
  *
- * @return _Void_
+ * @return {Void} void
  */
 describe( 'addListeners', () =>
 {
@@ -176,7 +176,7 @@ describe( 'addListeners', () =>
  * @param {Array} selectedOptions currently selected options
  * @param {DOMElement} multiTagWrapper parent element of the tags
  *
- * @return _Void_
+ * @return {Void} void
  */
 describe( 'addMultipleTags', () =>
 {
@@ -231,7 +231,7 @@ describe( 'addMultipleTags', () =>
  *
  * adds listeners to the options
  *
- * @return _Void_
+ * @return {Void} void
  */
 describe( 'addOptionsListeners', () =>
 {
@@ -289,7 +289,7 @@ describe( 'addOptionsListeners', () =>
  * called on body click, this determines what (if anything) should be
  * refilled into the the placeholder position
  *
- * @return _Void_
+ * @return {Void} void
  */
 describe( 'addPlaceholder', () =>
 {
@@ -364,7 +364,7 @@ describe( 'addPlaceholder', () =>
  *
  * adds listeners to the search box
  *
- * @return _Void_
+ * @return {Void} void
  */
 describe( 'addSearchListeners', () =>
 {
@@ -418,7 +418,7 @@ describe( 'addSearchListeners', () =>
  * adds a listener to the selectbox to allow for seeking through the native
  * selectbox on keypress
  *
- * @return _Void_
+ * @return {Void} void
  */
 describe( 'addSelectKeyListener', () =>
 {
@@ -487,7 +487,7 @@ describe( 'addSelectKeyListener', () =>
  *
  * @param  {Object} e event object
  *
- * @return _Void_
+ * @return {Void} void
  */
 describe( 'catchBodyClick', () =>
 {
@@ -584,7 +584,7 @@ describe( 'checkClickTarget', () =>
  * @param {Object} e event object
  * @param {Object} refs element references
  *
- * @return _Void_
+ * @return {Void} void
  */
 describe( 'checkEnterOnSearch', () =>
 {
@@ -722,7 +722,7 @@ describe( 'checkEnterOnSearch', () =>
  *
  * checks flounder focused keypresses and filters all but space and enter
  *
- * @return _Void_
+ * @return {Void} void
  */
 
 describe( 'checkFlounderKeypress', () =>
@@ -896,7 +896,7 @@ describe( 'checkFlounderKeypress', () =>
  *
  * @param {Object} e event object
  *
- * @return _Void_
+ * @return {Void} void
  */
 describe( 'checkMultiTagKeydown', () =>
 {
@@ -1044,7 +1044,7 @@ describe( 'checkMultiTagKeydown', () =>
  * @param {Number} keyCode keyclode from te keypress event
  * @param {Number} index index of currently focused tag
  *
- * @return _Void_
+ * @return {Void} void
  */
 describe( 'checkMultiTagKeydownNavigate', () =>
 {
@@ -1161,7 +1161,7 @@ describe( 'checkMultiTagKeydownNavigate', () =>
  * @param {Function} focusSearch function to focus on the search field
  * @param {Number} index index of currently focused tag
  *
- * @return _Void_
+ * @return {Void} void
  */
 describe( 'checkMultiTagKeydownRemove', () =>
 {
@@ -1256,7 +1256,7 @@ describe( 'checkMultiTagKeydownRemove', () =>
  *
  * @param {Object} e event object
  *
- * @return _Void_
+ * @return {Void} void
  */
 describe( 'clearPlaceholder', () =>
 {
@@ -1278,7 +1278,7 @@ describe( 'clearPlaceholder', () =>
  *
  * @param {Object} e event object
  *
- * @return _Void_
+ * @return {Void} void
  */
 describe( 'clickSet', () =>
 {
@@ -1340,7 +1340,7 @@ describe( 'clickSet', () =>
  * @param  {Array} selectedOptions currently selected options
  * @param  {DOMElement} selected div to display currently selected options
  *
- * @return _Void_
+ * @return {Void} void
  */
 describe( 'displayMultipleTags', () =>
 {
@@ -1392,7 +1392,7 @@ describe( 'displayMultipleTags', () =>
  * @param {DOMElement} selected display area for the selected option(s)
  * @param {Object} refs element references
  *
- * @return _Void_
+ * @return {Void} void
  */
 describe( 'displaySelected', () =>
 {
@@ -1426,7 +1426,7 @@ describe( 'displaySelected', () =>
  * on interaction with the raw select box, the target will be diverted to
  * the corresponding flounder list element
  *
- * @return _Void_
+ * @return {Void} void
  */
 describe( 'divertTarget', () =>
 {
@@ -1543,7 +1543,7 @@ describe( 'divertTarget', () =>
  *
  * @param {Object} e event object
  *
- * @return _Void_
+ * @return {Void} void
  */
 describe( 'firstTouchController', () =>
 {
@@ -1604,7 +1604,7 @@ describe( 'removeHoverClass', () =>
  *
  * removes event listeners from flounder.  normally pre unload
  *
- * @return _Void_
+ * @return {Void} void
  */
 describe( 'removeListeners', () =>
 {
@@ -1685,7 +1685,7 @@ describe( 'removeListeners', () =>
  *
  * @param  {Object} e event object
  *
- * @return _Void_
+ * @return {Void} void
  */
 describe( 'removeMultiTag', () =>
 {
@@ -1803,7 +1803,7 @@ describe( 'removeMultiTag', () =>
  *
  * removes event listeners on the data divs
  *
- * @return _Void_
+ * @return {Void} void
  */
 describe( 'removeOptionsListeners', () =>
 {
@@ -1864,7 +1864,7 @@ describe( 'removeOptionsListeners', () =>
  *
  * removes the listeners from the search input
  *
- * @return _Void_
+ * @return {Void} void
  */
 describe( 'removeSearchListeners', () =>
 {
@@ -1915,7 +1915,7 @@ describe( 'removeSearchListeners', () =>
  *
  * removes the [[this.selectedClass]] from all data
  *
- * @return _Void_
+ * @return {Void} void
  */
 describe( 'removeSelectedClass', () =>
 {
@@ -1948,7 +1948,7 @@ describe( 'removeSelectedClass', () =>
  *
  * sets the selected property to false for all data
  *
- * @return _Void_
+ * @return {Void} void
  */
 describe( 'removeSelectedValue', () =>
 {
@@ -1978,7 +1978,7 @@ describe( 'removeSelectedValue', () =>
  *
  * disables the event listener on the native select box
  *
- * @return _Void_
+ * @return {Void} void
  */
 describe( 'removeSelectKeyListener', () =>
 {
@@ -2027,7 +2027,7 @@ describe( 'removeSelectKeyListener', () =>
  *
  * @param {Object} e event object
  *
- * @return _Void_
+ * @return {Void} void
  */
 describe( 'setKeypress', () =>
 {
@@ -2177,7 +2177,7 @@ describe( 'setKeypress', () =>
  * sets the element after the keypress.  if the element is hidden for some
  * reason, it passes the event back to setKeypress to process the next element
  *
- * @return _Void_
+ * @return {Void} void
  */
 describe( 'setKeypressElement', () =>
 {
@@ -2231,7 +2231,7 @@ describe( 'setKeypressElement', () =>
  * @param {Object} obj possible event object
  * @param {Object} e event object
  *
- * @return _Void_
+ * @return {Void} void
  */
 describe( 'setSelectValue', () =>
 {
@@ -2325,7 +2325,7 @@ describe( 'setSelectValue', () =>
  *
  * processes the setting of a value after a keypress event
  *
- * @return _Void_
+ * @return {Void} void
  */
 describe( 'setSelectValueButton', () =>
 {
@@ -2353,6 +2353,23 @@ describe( 'setSelectValueButton', () =>
         assert.equal( utils.scrollTo.callCount, 1 );
         utils.scrollTo.restore();
     } );
+
+
+    it( 'should not do anything if it\'s a multipleTag Flounder', () =>
+    {
+        document.body.flounder = null;
+        const flounder = new Flounder( document.body, {
+            data            : [ 1, 2, 3 ],
+            multipleTags    : true
+        } );
+
+        sinon.stub( flounder, 'removeSelectedClass', noop );
+
+        const res = flounder.setSelectValueButton();
+
+        assert.equal( res, false );
+        assert.equal( flounder.removeSelectedClass.callCount, 0 );
+    } );
 } );
 
 
@@ -2364,7 +2381,7 @@ describe( 'setSelectValueButton', () =>
  *
  * @param {Object} e event object
  *
- * @return _Void_
+ * @return {Void} void
  */
 describe( 'setSelectValueClick', () =>
 {
@@ -2398,7 +2415,7 @@ describe( 'setSelectValueClick', () =>
  *
  * sets the text-indent on the search field to go around selected tags
  *
- * @return _Void_
+ * @return {Void} void
  */
 describe( 'setTextMultiTagIndent', () =>
 {
@@ -2450,9 +2467,8 @@ describe( 'setTextMultiTagIndent', () =>
  * @param {Object} refs contains the references of the elements in flounder
  * @param {DOMElement} wrapper wrapper of flounder
  *
- * @return _Void_
+ * @return {Void} void
  */
-
 describe( 'toggleClosed', () =>
 {
     it( 'should close the options list and remove necessary listeners', () =>
@@ -2575,7 +2591,7 @@ describe( 'toggleClosed', () =>
  *
  * @param {String} force toggle can be forced by passing 'open' or 'close'
  *
- * @return _Void_
+ * @return {Void} void
  */
 describe( 'toggleList', () =>
 {
@@ -2615,7 +2631,7 @@ describe( 'toggleList', () =>
  *
  * toggleList wrapper for search.  only triggered if flounder is closed
  *
- * @return _Void_
+ * @return {Void} void
  */
 describe( 'toggleListSearchClick', () =>
 {
@@ -2654,7 +2670,7 @@ describe( 'toggleListSearchClick', () =>
  * @param {Object} refs contains the references of the elements in flounder
  * @param {DOMElement} wrapper wrapper of flounder
  *
- * @return _Void_
+ * @return {Void} void
  */
 describe( 'toggleOpen', () =>
 {

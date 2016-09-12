@@ -26,13 +26,13 @@ class Flounder
     {
         const classes = this.classes;
         const elProps = {
-            className : classes.NO_RESULTS
+            className : `${classes.OPTION}  ${classes.NO_RESULTS}`
         };
 
         const noMoreOptionsEl   = this.refs.noMoreOptionsEl ||
                                             utils.constructElement( elProps );
 
-        noMoreOptionsEl.innerHTML = 'No more recipients to add.';
+        noMoreOptionsEl.innerHTML = this.noMoreOptionsMessage;
         this.refs.optionsList.appendChild( noMoreOptionsEl );
 
         this.refs.noMoreOptionsEl = noMoreOptionsEl;

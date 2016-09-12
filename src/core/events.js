@@ -578,11 +578,8 @@ const events = {
         {
             const firstChild = el.firstChild;
 
-            if ( firstChild )
-            {
-                firstChild.removeEventListener( 'click', this.removeMultiTag );
-                el.removeEventListener( 'keydown', this.checkMultiTagKeydown );
-            }
+            firstChild.removeEventListener( 'click', this.removeMultiTag );
+            el.removeEventListener( 'keydown', this.checkMultiTagKeydown );
         } );
 
         multiTagWrapper.innerHTML = '';
@@ -1210,7 +1207,6 @@ const events = {
         {
             offset += utils.getElWidth( e, this.setTextMultiTagIndent, this );
         } );
-
 
         /* istanbul ignore next */
         search.style.textIndent = offset > 0 ? `${offset}px` : '';

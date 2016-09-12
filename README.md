@@ -134,6 +134,7 @@ If flounder is fed an element that already has a flounder, it will destroy it an
     multiple                : false,
     multipleTags            : false,
     multipleMessage         : '(Multiple Items Selected)',
+    noMoreOptionsMessage    : 'No more options to add.',
     onChange                : function( e, valueArray ){},
     onClose                 : function( e, valueArray ){},
     onComponentDidMount     : function(){},
@@ -170,6 +171,8 @@ If flounder is fed an element that already has a flounder, it will destroy it an
 + `multipleTags` - (boolean) Determines how a multi-select box is displayed
 
 + `multipleMessage` - (string) If there are no tags, this is the message that will be displayed in the selected area when there are multiple options selected
+
++ `noMoreOptionsMessage` - message to display when there are no option left (default : 'No more options to add.' )
 
 + `onChange` - (function) Triggered when the selection is changed
 

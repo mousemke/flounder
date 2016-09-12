@@ -13,6 +13,7 @@ export const defaultOptions = {
     multiple                : false,
     multipleTags            : false,
     multipleMessage         : '(Multiple Items Selected)',
+    noMoreOptionsMessage    : 'No more options to add.',
     onChange                : function( e, selectedValues ){},  // eslint-disable-line
     onClose                 : function( e, selectedValues ){},  // eslint-disable-line
     onComponentDidMount     : function(){},                     // eslint-disable-line
