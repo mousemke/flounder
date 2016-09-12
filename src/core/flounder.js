@@ -50,13 +50,13 @@ class Flounder
     {
         const classes = this.classes;
         const elProps = {
-            className : classes.NO_RESULTS
+            className : `${classes.OPTION}  ${classes.NO_RESULTS}`
         };
 
         const noResultsEl = this.refs.noResultsEl ||
                                             utils.constructElement( elProps );
 
-        noResultsEl.innerHTML = 'No matches found';
+        noResultsEl.innerHTML = this.noMoreResultsMessage;
         this.refs.optionsList.appendChild( noResultsEl );
 
         this.refs.noResultsEl = noResultsEl;
@@ -526,6 +526,7 @@ class Flounder
             this.refs.noResultsEl = undefined;
         }
     }
+
 
     /**
      * ## removeNoMoreOptionsMessage

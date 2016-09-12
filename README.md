@@ -134,7 +134,8 @@ If flounder is fed an element that already has a flounder, it will destroy it an
     multiple                : false,
     multipleTags            : false,
     multipleMessage         : '(Multiple Items Selected)',
-    noMoreOptionsMessage    : 'No more options to add.',
+    noMoreOptionsMessage    : 'No more options to add',
+    noMoreResultsMessage    : 'No matches found',
     onChange                : function( e, valueArray ){},
     onClose                 : function( e, valueArray ){},
     onComponentDidMount     : function(){},
@@ -172,7 +173,9 @@ If flounder is fed an element that already has a flounder, it will destroy it an
 
 + `multipleMessage` - (string) If there are no tags, this is the message that will be displayed in the selected area when there are multiple options selected
 
-+ `noMoreOptionsMessage` - message to display when there are no option left (default : 'No more options to add.' )
++ `noMoreOptionsMessage` - message to display when there are no option left (default : 'No more options to add' )
+
++ `noMoreResultsMessage` - message to display when there are no results left after a search (default : 'No matches found' )
 
 + `onChange` - (function) Triggered when the selection is changed
 
