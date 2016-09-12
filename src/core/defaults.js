@@ -38,12 +38,14 @@ const defaults = {
      *
      * sets the initial default value
      *
-     * @param {String} defaultProp default passed from this.props
-     * @param {Object} data this.props.data
+     * @param {Object} context flounder this
+     * @param {Object} configObj props
+     * @param {Array} originalData data array
+     * @param {Boolean} rebuild rebuild or not
      *
      * @return {Void} void
      */
-    setDefaultOption( self, configObj = {}, originalData, rebuild = false )
+    setDefaultOption( context, configObj = {}, originalData, rebuild = false )
     {
         /**
          * ## setIndexDefault
@@ -78,6 +80,8 @@ const defaults = {
          *
          * sets a placeholder as the default option.  This inserts an empty
          * option first and sets that as default
+         *
+         * @param {Object} flounder flounder
          *
          * @return {Object} default settings
          */
@@ -125,6 +129,9 @@ const defaults = {
          * sets a specified index as the default. This only works correctly if
          * it is a valid value, otherwise it returns null
          *
+         * @param {Array} data array of data objects
+         * @param {String} val value to set
+         *
          * @return {Object} default settings
          */
         function setValueDefault( data, val )
@@ -164,7 +171,7 @@ const defaults = {
          */
         function checkDefaultPriority()
         {
-            const data = self.sortData( originalData );
+            const data = context.sortData( originalData );
 
             if ( ( configObj.multipleTags || configObj.multiple )
                     && !configObj.defaultIndex
@@ -183,14 +190,14 @@ const defaults = {
 
             if ( placeholder || placeholder === '' || data.length === 0 )
             {
-                return setPlaceholderDefault( self, data );
+                return setPlaceholderDefault( context, data );
             }
 
             let def;
 
             if ( rebuild )
             {
-                const val = self.refs.selected.getAttribute( 'data-value' );
+                const val = context.refs.selected.getAttribute( 'data-value' );
                 def     = setValueDefault( data, val );
 
                 if ( def )
@@ -219,7 +226,11 @@ const defaults = {
      *
      * checks the data object for header options, and sorts it accordingly
      *
-     * @return _Boolean_ hasHeaders
+     * @param {Array} data array of data objects
+     * @param {Array} res sorted data
+     * @param {Number} i index for flattening the array
+     *
+     * @return {Boolean} hasHeaders
      */
     sortData( data, res = [], i = 0 )
     {

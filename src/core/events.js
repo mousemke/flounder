@@ -32,7 +32,9 @@ const events = {
      *
      * adds a hover class to an element
      *
-     * @return Void_
+     * @param {Object} e event object
+     *
+     * @return {Void} void
      */
     addHoverClass( e )
     {
@@ -44,6 +46,8 @@ const events = {
      * ## addListeners
      *
      * adds listeners on render
+     *
+     * @param {Object} refs DOM element references
      *
      * @return {Void} void
      */
@@ -272,7 +276,7 @@ const events = {
      * @param  {Object} e event object
      * @param  {DOMElement} target click target
      *
-     * @return _Boolean_
+     * @return {Boolean}click flouncer or not
      */
     checkClickTarget( e, target )
     {
@@ -354,6 +358,8 @@ const events = {
      *
      * checks flounder focused keypresses and filters all but space and enter
      *
+     * @param {Object} e event object
+     *
      * @return {Void} void
      */
     checkFlounderKeypress( e )
@@ -414,12 +420,20 @@ const events = {
         const index                 = nativeSlice.call( children, 0 )
                                                             .indexOf( target );
 
+        /**
+         * ## focusSearch
+         *
+         * focus' on the search input
+         *
+         * @return {Void}  void
+         */
         function focusSearch()
         {
             refs.search.focus();
             self.clearPlaceholder();
             self.toggleListSearchClick( e );
         }
+
 
         if ( keyCode === keycodes.LEFT || keyCode === keycodes.RIGHT ||
             keyCode === keycodes.BACKSPACE )
@@ -553,7 +567,8 @@ const events = {
      * handles the display and management of tags
      *
      * @param  {Array} selectedOptions currently selected options
-     * @param  {DOMElement} selected div to display currently selected options
+     * @param  {DOMElement} multiTagWrapper div to display
+     *                                       currently selected options
      *
      * @return {Void} void
      */
@@ -726,7 +741,8 @@ const events = {
      *
      * removes a hover class from an element
      *
-     * @return Void_
+     * @param {Object} e event object
+     * @return {Void} void
      */
     removeHoverClass( e )
     {
@@ -735,8 +751,6 @@ const events = {
 
 
     /**
-
-
      * ## removeListeners
      *
      * removes event listeners from flounder.  normally pre unload
@@ -885,6 +899,8 @@ const events = {
      *
      * removes the [[this.selectedClass]] from all data
      *
+     * @param {Array} data array of data objects
+     *
      * @return {Void} void
      */
     removeSelectedClass( data )
@@ -902,6 +918,8 @@ const events = {
      * ## removeSelectedValue
      *
      * sets the selected property to false for all data
+     *
+     * @param {Array} data array of data objects
      *
      * @return {Void} void
      */
@@ -1205,7 +1223,7 @@ const events = {
      * post toggleList, this runs it the list should be closed
      *
      * @param {Object} e event object
-     * @param {DOMElement} optionsListWrapper the options list
+     * @param {DOMElement} optionsList the options list
      * @param {Object} refs contains the references of the elements in flounder
      * @param {DOMElement} wrapper wrapper of flounder
      * @param {Boolean} exit prevents refocus. used while tabbing away
@@ -1214,7 +1232,8 @@ const events = {
      */
     toggleClosed( e,
                     optionsList,
-                    refs, wrapper = this.refs.wrapper,
+                    refs,
+                    wrapper = this.refs.wrapper,
                     exit = false
                 )
     {
@@ -1258,6 +1277,7 @@ const events = {
      *
      * on click of flounder--selected, this shows or hides the options list
      *
+     * @param {Object} e event object
      * @param {String} force toggle can be forced by passing 'open' or 'close'
      *
      * @return {Void} void
@@ -1295,6 +1315,8 @@ const events = {
      *
      * toggleList wrapper for search.  only triggered if flounder is closed
      *
+     * @param {Object} e event object
+     *
      * @return {Void} void
      */
     toggleListSearchClick( e )
@@ -1314,9 +1336,8 @@ const events = {
      * post toggleList, this runs it the list should be opened
      *
      * @param {Object} e event object
-     * @param {DOMElement} optionsListWrapper the options list
+     * @param {DOMElement} optionsList the options list
      * @param {Object} refs contains the references of the elements in flounder
-     * @param {DOMElement} wrapper wrapper of flounder
      *
      * @return {Void} void
      */
