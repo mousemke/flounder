@@ -485,6 +485,7 @@ Change Log
 + Flounder
     + last of the `0.8.5` changes merged in
     + added eslint requirements
+    + removed duplicate methods
 
 + default
     + placeholder tweak for the flounder-react

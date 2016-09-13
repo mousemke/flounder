@@ -141,6 +141,54 @@ const events = {
 
 
     /**
+     * ## addNoMoreOptionsMessage
+     *
+     * Adding 'No More Options' message to the option list
+     *
+     * @return {Void} void
+     */
+    addNoMoreOptionsMessage()
+    {
+        const classes = this.classes;
+        const elProps = {
+            className : `${classes.OPTION}  ${classes.NO_RESULTS}`
+        };
+
+        const noMoreOptionsEl   = this.refs.noMoreOptionsEl ||
+                                            utils.constructElement( elProps );
+
+        noMoreOptionsEl.innerHTML = this.noMoreOptionsMessage;
+        this.refs.optionsList.appendChild( noMoreOptionsEl );
+
+        this.refs.noMoreOptionsEl = noMoreOptionsEl;
+    },
+
+
+    /**
+     * ## addNoResultsMessage
+     *
+     * Adding 'No Results' message to the option list
+     *
+     * @return {Void} void
+     */
+    addNoResultsMessage()
+    {
+        const classes = this.classes;
+        const elProps = {
+            className : `${classes.OPTION}  ${classes.NO_RESULTS}`
+        };
+
+        const noResultsEl = this.refs.noResultsEl ||
+                                            utils.constructElement( elProps );
+
+        noResultsEl.innerHTML = this.noMoreResultsMessage;
+        this.refs.optionsList.appendChild( noResultsEl );
+
+        this.refs.noResultsEl = noResultsEl;
+    },
+
+
+    /**
      * ## addPlaceholder
      *
      * determines what (if anything) should be refilled into the the
@@ -835,6 +883,14 @@ const events = {
             } );
         }
 
+        this.removeNoMoreOptionsMessage();
+        this.removeNoResultsMessage();
+
+        if ( this.lastSearchEvent  )
+        {
+            this.fuzzySearch( this.lastSearchEvent );
+        }
+
         this.setTextMultiTagIndent();
 
         selected.setAttribute( 'data-value', value );
@@ -871,6 +927,44 @@ const events = {
                                                         this.removeHoverClass );
             }
         } );
+    },
+
+
+    /**
+     * ## removeNoResultsMessage
+     *
+     * Removing 'No Results' message from the option list
+     *
+     * @return {Void} void
+     */
+    removeNoResultsMessage()
+    {
+        const noResultsEl =  this.refs.noResultsEl;
+
+        if ( this.refs.optionsList && noResultsEl )
+        {
+            this.refs.optionsList.removeChild( noResultsEl );
+            this.refs.noResultsEl = undefined;
+        }
+    },
+
+
+    /**
+     * ## removeNoMoreOptionsMessage
+     *
+     * Removing 'No More options' message from the option list
+     *
+     * @return {Void} void
+     */
+    removeNoMoreOptionsMessage()
+    {
+        const noMoreOptionsEl =  this.refs.noMoreOptionsEl;
+
+        if ( this.refs.optionsList && noMoreOptionsEl )
+        {
+            this.refs.optionsList.removeChild( noMoreOptionsEl );
+            this.refs.noMoreOptionsEl = undefined;
+        }
     },
 
 
