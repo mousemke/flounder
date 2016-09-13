@@ -195,6 +195,51 @@ describe( 'filterSearchResults', () =>
         assert.equal( flounder.fuzzySearchReset.callCount, 1 );
         flounder.fuzzySearchReset.restore();
     } );
+
+
+    it( 'should add the no results el if there are no results', () =>
+    {
+        const e              = {
+            target : {
+                value : '676876876'
+            }
+        };
+
+        sinon.stub( flounder, 'addNoResultsMessage', noop );
+        sinon.stub( flounder, 'removeNoResultsMessage', noop );
+
+        flounder.filterSearchResults( e );
+
+        assert.equal( flounder.addNoResultsMessage.callCount, 1 );
+        assert.equal( flounder.removeNoResultsMessage.callCount, 0 );
+
+        flounder.addNoResultsMessage.restore();
+        flounder.removeNoResultsMessage.restore();
+    } );
+
+
+    it( 'should add ignore no results el if there are no options', () =>
+    {
+        const e              = {
+            target : {
+                value : '676876876'
+            }
+        };
+        flounder.addNoMoreOptionsMessage();
+
+        sinon.stub( flounder, 'addNoResultsMessage', noop );
+        sinon.stub( flounder, 'removeNoResultsMessage', noop );
+
+        flounder.filterSearchResults( e );
+
+        assert.equal( flounder.addNoResultsMessage.callCount, 0 );
+        assert.equal( flounder.removeNoResultsMessage.callCount, 0 );
+
+        flounder.addNoResultsMessage.restore();
+        flounder.removeNoResultsMessage.restore();
+
+        flounder.removeNoMoreOptionsMessage();
+    } );
 } );
 
 
@@ -504,6 +549,7 @@ describe( 'initializeOptions', () =>
         }
     } );
 
+
     it( 'should exist', () =>
     {
         assert.ok( flounder.initializeOptions, 'exists' );
@@ -521,8 +567,10 @@ describe( 'initializeOptions', () =>
     const f2Options = {
         data            : data,
         defaultEmpty    : true,
-        multipleTags    : true
+        multipleTags    : true,
+        onSelect        : noop
     };
+
 
     const flounder2 = new Flounder( document.body, f2Options );
 
@@ -538,6 +586,23 @@ describe( 'initializeOptions', () =>
         assert.equal( flounder2.multipleTags, true );
         assert.equal( flounder2.search instanceof Sole, true );
         assert.equal( flounder2.multiple, true );
+    } );
+
+
+    it( 'should reassign onSelect to onChange and give a warning', () =>
+    {
+        sinon.stub( console, 'warn', noop );
+
+        assert.equal( typeof flounder2.onSelect, 'function' );
+        assert.equal( typeof flounder2.onChange, 'function' );
+
+        assert.equal( console.warn.callCount, 0 );
+
+        flounder2.onSelect( {} );
+
+        assert.equal( console.warn.callCount, 1 );
+
+        console.warn.restore();
     } );
 } );
 

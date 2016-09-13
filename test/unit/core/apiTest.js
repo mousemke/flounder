@@ -167,6 +167,7 @@ describe( 'destroy', () =>
         flounder.originalTarget[ 0 ] = {
             className : classes.PLACEHOLDER
         };
+
         sinon.stub( flounder.originalTarget, 'removeChild', noop );
         flounder.destroy();
 
@@ -176,15 +177,28 @@ describe( 'destroy', () =>
     } );
 
 
-    it( 'should detect that it has already been removed', () =>
+    it( 'should detect that an input/select has already been removed', () =>
     {
         flounder    = new Flounder( document.querySelector( 'INPUT' ), {} );
         const wrapper = flounder.refs.wrapper;
 
         wrapper.parentNode.removeChild( wrapper );
 
-        assert.throws( flounder.destroy,
-                        ' : this flounder may have already been removed' );
+        assert.throws( flounder.destroy.bind( flounder ),
+                        /: this flounder may have already been removed/ );
+    } );
+
+
+    it( 'should detect that a non input/select has already been removed', () =>
+    {
+        document.body.flounder = null;
+        flounder    = new Flounder( document.body, {} );
+        const wrapper = flounder.refs.wrapper;
+
+        wrapper.parentNode.removeChild( wrapper );
+
+        assert.throws( flounder.destroy.bind( flounder ),
+                        /: this flounder may have already been removed/ );
     } );
 } );
 
@@ -744,6 +758,7 @@ describe( 'loadDataFromUrl', () =>
     it( 'should report something if the callback goes wrong', () =>
     {
         sinon.stub( console, 'warn', noop );
+
         flounder.loadDataFromUrl( '["1","2","3"]', () =>
         {
             a + b; // eslint-disable-line

@@ -284,6 +284,54 @@ describe( 'addOptionsListeners', () =>
 
 
 /**
+ * ## addNoMoreOptionsMessage
+ *
+ * Adding 'No More Options' message to the option list
+ *
+ * @return {Void} void
+ */
+describe( 'addNoMoreOptionsMessage', () =>
+{
+    it( 'should add a addNoMoreOptions message', () =>
+    {
+        document.body.flounder = null;
+        const flounder = new Flounder( document.body, {
+            data : [ 1, 2, 3 ]
+        } );
+
+        flounder.addNoMoreOptionsMessage();
+
+        assert.equal( typeof flounder.refs.noMoreOptionsEl, 'object' );
+    } );
+} );
+
+
+
+/**
+ * ## addNoResultsMessage
+ *
+ * Adding 'No Results' message to the option list
+ *
+ * @return {Void} void
+ */
+describe( 'addNoResultsMessage', () =>
+{
+    it( 'should add a addNoResults message', () =>
+    {
+        document.body.flounder = null;
+        const flounder = new Flounder( document.body, {
+            data : [ 1, 2, 3 ]
+        } );
+
+        flounder.addNoResultsMessage();
+
+        assert.equal( typeof flounder.refs.noResultsEl, 'object' );
+    } );
+} );
+
+
+
+/**
  * ## addPlaceholder
  *
  * called on body click, this determines what (if anything) should be
@@ -1759,6 +1807,7 @@ describe( 'removeMultiTag', () =>
     } );
 
 
+
     it( 'should catch onChange failures', () =>
     {
         document.body.flounder = null;
@@ -1854,6 +1903,56 @@ describe( 'removeOptionsListeners', () =>
         assert.equal( flounder.addHoverClass.callCount, 0 );
         assert.equal( flounder.removeHoverClass.callCount, 0 );
         assert.equal( flounder.clickSet.callCount, 0 );
+    } );
+} );
+
+
+
+/**
+ * ## addNoMoreOptionsMessage
+ *
+ * Adding 'No More Options' message to the option list
+ *
+ * @return {Void} void
+ */
+describe( 'removeNoMoreOptionsMessage', () =>
+{
+    it( 'should remove the noMoreOptions message', () =>
+    {
+        document.body.flounder = null;
+        const flounder = new Flounder( document.body, {
+            data : [ 1, 2, 3 ]
+        } );
+
+        flounder.addNoMoreOptionsMessage();
+        flounder.removeNoMoreOptionsMessage();
+
+        assert.equal( typeof flounder.refs.noMoreOptionsEl, 'undefined' );
+    } );
+} );
+
+
+
+/**
+ * ## addNoResultsMessage
+ *
+ * Adding 'No Results' message to the option list
+ *
+ * @return {Void} void
+ */
+describe( 'removeNoResultsMessage', () =>
+{
+    it( 'should remove the noResults message', () =>
+    {
+        document.body.flounder = null;
+        const flounder = new Flounder( document.body, {
+            data : [ 1, 2, 3 ]
+        } );
+
+        flounder.addNoResultsMessage();
+        flounder.removeNoResultsMessage();
+
+        assert.equal( typeof flounder.refs.noResultsEl, 'undefined' );
     } );
 } );
 
@@ -2717,6 +2816,23 @@ describe( 'toggleOpen', () =>
     } );
 
 
+    it( 'should add a no more options message if all are selected', () =>
+    {
+        document.body.flounder  = null;
+        const flounder          = new Flounder( document.body, {
+            data            : [ 1 ],
+            multipleTags    : true,
+            placeholder     : 'moon'
+        } );
+
+        flounder.setByValue( 1 );
+        flounder.toggleOpen( {}, {}, flounder.refs );
+
+        assert.equal( typeof flounder.refs.noMoreOptionsEl, 'object' );
+    } );
+
+
+
     it( 'should correctly handle onOpen failures', () =>
     {
         document.body.flounder  = null;
@@ -2761,7 +2877,7 @@ describe( 'toggleOpen', () =>
     it( 'should skip everything if not ready', () =>
     {
         const select        = document.querySelector( 'SELECT' );
-        select.innerHTML = '<option value="2">2</option><option value="3" disabled>3</option>'; // eslint-disable-line
+        select.innerHTML    = '<option value="2">2</option><option value="3" disabled>3</option>'; // eslint-disable-line
         select.flounder     = null;
         const flounder      = new Flounder( select );
         flounder.ready      = false;

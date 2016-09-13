@@ -155,7 +155,6 @@ class Flounder
      */
     fuzzySearch( e )
     {
-        this.lastSearchEvent = e;
         this.fuzzySearch.previousValue = this.fuzzySearch.previousValue || '';
 
         try
@@ -298,44 +297,41 @@ class Flounder
     {
         const props = this.props = this.props || {};
 
-        if ( props.onSelect )
-        {
-            props.onChange = props.onSelect;
-
-            console.warn( `Please use onChange.  onSelect has been depricated
-                                            and will be removed in 2.0.0` );
-
-            this.onSelect = function()
-            {
-                console.warn( `Please use onChange. onSelect has been
-                                    depricated and will be removed in 2.0.0` );
-                this.onChange( ...arguments );
-            };
-        }
-
         for ( const opt in defaultOptions )
         {
-            if ( defaultOptions.hasOwnProperty( opt ) )
+            // depreciated @todo remove @2.0.0
+            if ( opt === 'onChange' && props.onSelect )
             {
-                if ( opt === 'classes' )
-                {
-                    this.classes            = {};
-                    const defaultClasses    = defaultOptions[ opt ];
-                    const propClasses       = typeof props[ opt ] === 'object' ?
-                                                            props[ opt ] : {};
+                this.onChange = props.onSelect;
 
-                    for ( const clss in defaultClasses )
-                    {
-                        this.classes[ clss ] = propClasses[ clss ] ?
-                                                        propClasses[ clss ] :
-                                                        defaultClasses[ clss ];
-                    }
-                }
-                else
+                console.warn( `Please use onChange.  onSelect has been
+                                    depricated and will be removed in 2.0.0` );
+
+                this.onSelect = function()
                 {
-                    this[ opt ] = props[ opt ] !== undefined ? props[ opt ] :
-                                                     defaultOptions[ opt ];
+                    console.warn( `Please use onChange. onSelect has been
+                                    depricated and will be removed in 2.0.0` );
+                    this.onChange( ...arguments );
+                };
+            }
+            else if ( opt === 'classes' )
+            {
+                this.classes            = {};
+                const defaultClasses    = defaultOptions[ opt ];
+                const propClasses       = typeof props[ opt ] === 'object' ?
+                                                        props[ opt ] : {};
+
+                for ( const clss in defaultClasses )
+                {
+                    this.classes[ clss ] = propClasses[ clss ] ?
+                                                    propClasses[ clss ] :
+                                                    defaultClasses[ clss ];
                 }
+            }
+            else
+            {
+                this[ opt ] = props[ opt ] !== undefined ? props[ opt ] :
+                                                 defaultOptions[ opt ];
             }
         }
 
@@ -351,11 +347,6 @@ class Flounder
             this.search         = true;
             this.multiple       = true;
             this.selectedClass  += `  ${this.classes.SELECTED_HIDDEN}`;
-
-            if ( this.placeholder === undefined )
-            {
-                this.placeholder = defaultOptions.placeholder;
-            }
         }
     }
 

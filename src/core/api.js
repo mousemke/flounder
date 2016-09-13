@@ -500,39 +500,31 @@ const api = {
     {
         const classes = this.classes;
 
-        try
+        utils.http.get( url ).then( data =>
         {
-            utils.http.get( url ).then( data =>
+            if ( data )
             {
-                if ( data )
-                {
-                    this.data = JSON.parse( data );
+                this.data = JSON.parse( data );
 
-                    if ( callback )
-                    {
-                        callback( this.data );
-                    }
-                }
-                else
+                if ( callback )
                 {
-                    console.warn( 'no data recieved' );
+                    callback( this.data );
                 }
-            } ).catch( e =>
+            }
+            else
             {
-                console.warn( 'something happened: ', e );
-                this.rebuild( [ {
-                    text        : '',
-                    value       : '',
-                    index       : 0,
-                    extraClass  : classes.LOADING_FAILED
-                } ] );
-            } );
-        }
-        catch ( e )
+                console.warn( 'no data recieved' );
+            }
+        } ).catch( e =>
         {
-            console.warn( `something happened.
-                                    check your loadDataFromUrl callback `, e );
-        }
+            console.warn( 'something happened: ', e );
+            this.rebuild( [ {
+                text        : '',
+                value       : '',
+                index       : 0,
+                extraClass  : classes.LOADING_FAILED
+            } ] );
+        } );
 
         return [ {
             text        : '',

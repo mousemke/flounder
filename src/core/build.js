@@ -269,7 +269,6 @@ const build = {
 
         originalData.forEach( ( dataObj, i ) =>
         {
-            /* istanbul ignore next */
             const dataObjType = typeof dataObj;
 
             if ( dataObjType !== 'object' )

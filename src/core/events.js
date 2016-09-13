@@ -885,12 +885,6 @@ const events = {
 
         this.removeNoMoreOptionsMessage();
         this.removeNoResultsMessage();
-
-        if ( this.lastSearchEvent  )
-        {
-            this.fuzzySearch( this.lastSearchEvent );
-        }
-
         this.setTextMultiTagIndent();
 
         selected.setAttribute( 'data-value', value );
@@ -931,6 +925,25 @@ const events = {
 
 
     /**
+     * ## removeNoMoreOptionsMessage
+     *
+     * Removing 'No More options' message from the option list
+     *
+     * @return {Void} void
+     */
+    removeNoMoreOptionsMessage()
+    {
+        const noMoreOptionsEl =  this.refs.noMoreOptionsEl;
+
+        if ( this.refs.optionsList && noMoreOptionsEl )
+        {
+            this.refs.optionsList.removeChild( noMoreOptionsEl );
+            this.refs.noMoreOptionsEl = undefined;
+        }
+    },
+
+
+    /**
      * ## removeNoResultsMessage
      *
      * Removing 'No Results' message from the option list
@@ -948,24 +961,6 @@ const events = {
         }
     },
 
-
-    /**
-     * ## removeNoMoreOptionsMessage
-     *
-     * Removing 'No More options' message from the option list
-     *
-     * @return {Void} void
-     */
-    removeNoMoreOptionsMessage()
-    {
-        const noMoreOptionsEl =  this.refs.noMoreOptionsEl;
-
-        if ( this.refs.optionsList && noMoreOptionsEl )
-        {
-            this.refs.optionsList.removeChild( noMoreOptionsEl );
-            this.refs.noMoreOptionsEl = undefined;
-        }
-    },
 
 
     /**
@@ -1323,7 +1318,7 @@ const events = {
     toggleClosed( e,
                     optionsList,
                     refs,
-                    wrapper = this.refs.wrapper,
+                    wrapper,
                     exit = false
                 )
     {
@@ -1462,8 +1457,15 @@ const events = {
             refs.search.focus();
         }
 
+        let optionCount = refs.data.length;
+
+        if ( this.props.placeholder )
+        {
+            optionCount--;
+        }
+
         if ( refs.multiTagWrapper && refs.multiTagWrapper.childNodes.length ===
-                                            refs.optionsList.childNodes.length )
+                                            optionCount )
         {
             this.removeNoResultsMessage();
             this.addNoMoreOptionsMessage();

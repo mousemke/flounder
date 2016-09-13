@@ -220,49 +220,6 @@ const defaults = {
         originalData    = originalData || configObj.data || [];
 
         return checkDefaultPriority();
-    },
-
-
-    /**
-     * ## sortData
-     *
-     * checks the data object for header options, and sorts it accordingly
-     *
-     * @param {Array} data array of data objects
-     * @param {Array} res sorted data
-     * @param {Number} i index for flattening the array
-     *
-     * @return {Boolean} hasHeaders
-     */
-    sortData( data, res = [], i = 0 )
-    {
-        data.forEach( d =>
-        {
-            if ( d.header )
-            {
-                res = this.sortData( d.data, res, i );
-            }
-            else
-            {
-                if ( typeof d !== 'object' )
-                {
-                    d = {
-                        text    : d,
-                        value   : d,
-                        index   : i
-                    };
-                }
-                else
-                {
-                    d.index = i;
-                }
-
-                res.push( d );
-                i++;
-            }
-        } );
-
-        return res;
     }
 };
 
