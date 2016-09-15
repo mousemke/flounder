@@ -362,3 +362,8 @@
     display:                        block;
     content:                        'Data load failed';
 }
+
+.flounder__no-results
+{
+    cursor:                         initial;
+}

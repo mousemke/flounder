@@ -1,15 +1,15 @@
 /*!
- * Flounder JavaScript Stylable Selectbox v1.0.1
- * https://github.com/sociomantic-tsunami/flounder
- *
- * Copyright 2015-2016 Sociomantic Labs and other contributors
- * Released under the MIT license
- * https://github.com/sociomantic-tsunami/flounder/license
- *
- * Date: Mon Aug 22 2016
- * "This, so far, is the best Flounder ever"
- */
-(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+                        * Flounder JavaScript Stylable Selectbox v1.1.0
+                        * https://github.com/sociomantic-tsunami/flounder
+                        *
+                        * Copyright 2015-2016 Sociomantic Labs and other contributors
+                        * Released under the MIT license
+                        * https://github.com/sociomantic-tsunami/flounder/license
+                        *
+                        * Date: Thu Sep 15 2016
+                        *
+                        * "This, so far, is the best Flounder ever"
+                        */(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 "use strict";
 
 // rawAsap provides everything we need except exception management.
@@ -1084,11 +1084,8 @@ Object.defineProperty(exports, "__esModule", {
 
 var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; }; /* globals console */
 
-var _classes = require('./classes');
-
-var _classes2 = _interopRequireDefault(_classes);
 
 var _utils = require('./utils');
 
@@ -1110,7 +1107,7 @@ var api = {
      * @param {String} url address to get the data from
      * @param {Function} callback function to run after getting the data
      *
-     * @return _Void_
+     * @return {Void} void
      */
 
     buildFromUrl: function buildFromUrl(url, callback) {
@@ -1136,9 +1133,11 @@ var api = {
      * programatically sets selected by index.  If there are not enough elements
      * to match the index, then nothing is selected. Fires the onClick event
      *
-     * @param {Mixed} index index to set flounder to.  _Number, or Array of numbers_
+     * @param {Mixed} index index to set flounder to.
+     *                                          _Number, or Array of numbers_
+     * @param {Boolean} multiple multiSelect or not
      *
-     * return _Void_
+     * @return {Void} void
      */
     clickByIndex: function clickByIndex(index, multiple) {
         return this.setByIndex(index, multiple, false);
@@ -1149,11 +1148,14 @@ var api = {
      * ## clickByText
      *
      * programatically sets selected by text string.  If the text string
-     * is not matched to an element, nothing will be selected. Fires the onClick event
+     * is not matched to an element, nothing will be selected. Fires the
+     * onClick event
      *
-     * @param {Mixed} text text to set flounder to.  _String, or Array of strings_
+     * @param {Mixed} text text to set flounder to.
+     *                                         _String, or Array of strings_
+     * @param {Boolean} multiple multiSelect or not
      *
-     * return _Void_
+     * @return {Void} void
      */
     clickByText: function clickByText(text, multiple) {
         return this.setByText(text, multiple, false);
@@ -1164,11 +1166,14 @@ var api = {
      * ## clickByValue
      *
      * programatically sets selected by value string.  If the value string
-     * is not matched to an element, nothing will be selected. Fires the onClick event
+     * is not matched to an element, nothing will be selected. Fires the
+     * onClick event
      *
-     * @param {Mixed} value value to set flounder to.  _String, or Array of strings_
+     * @param {Mixed} value value to set flounder to.
+     *                                      _String, or Array of strings_
+     * @param {Boolean} multiple multiSelect or not
      *
-     * return _Void_
+     * @return {Void} void
      */
     clickByValue: function clickByValue(value, multiple) {
         return this.setByValue(value, multiple, false);
@@ -1180,12 +1185,13 @@ var api = {
      *
      * removes flounder and all it`s events from the dom
      *
-     * @return _Void_
+     * @return {Void} void
      */
     destroy: function destroy() {
         this.componentWillUnmount();
 
         var refs = this.refs;
+        var classes = this.classes;
         var originalTarget = this.originalTarget;
         var tagName = originalTarget.tagName;
 
@@ -1195,7 +1201,7 @@ var api = {
             if (tagName === 'SELECT') {
                 var firstOption = originalTarget[0];
 
-                if (firstOption && _utils2.default.hasClass(firstOption, _classes2.default.PLACEHOLDER)) {
+                if (firstOption && _utils2.default.hasClass(firstOption, classes.PLACEHOLDER)) {
                     originalTarget.removeChild(firstOption);
                 }
             } else {
@@ -1203,9 +1209,10 @@ var api = {
             }
 
             try {
+                var _classes = this.classes;
                 target.parentNode.removeChild(target);
                 originalTarget.tabIndex = 0;
-                _utils2.default.removeClass(originalTarget, _classes2.default.HIDDEN);
+                _utils2.default.removeClass(originalTarget, _classes.HIDDEN);
             } catch (e) {
                 throw ' : this flounder may have already been removed';
             }
@@ -1228,19 +1235,41 @@ var api = {
      *
      * deslects all data
      *
-     * @return _Void_
+     * @param {Boolean} silent stifle the onChange event
+     *
+     * @return {Void} void
      */
-    deselectAll: function deselectAll() {
-        this.removeSelectedClass();
-        this.removeSelectedValue();
+    deselectAll: function deselectAll(silent) {
+        var _this2 = this;
 
-        var multiTagWrapper = this.refs.multiTagWrapper;
+        if (this.multiple) {
+            this.removeSelectedClass();
+            this.removeSelectedValue();
 
-        if (multiTagWrapper) {
-            var tags = nativeSlice.call(multiTagWrapper.children);
-            tags.forEach(function (el) {
-                return el.children[0].click();
-            });
+            var multiTagWrapper = this.refs.multiTagWrapper;
+
+            if (multiTagWrapper) {
+                (function () {
+                    var tags = nativeSlice.call(multiTagWrapper.children);
+
+                    tags.forEach(function (el, count) {
+                        var lastEl = count === tags.length - 1;
+
+                        if (!silent && lastEl) {
+                            el = el.children;
+                            el = el[0];
+
+                            el.click();
+                        } else {
+                            el.removeEventListener('click', _this2.removeMultiTag);
+                            el.remove();
+                        }
+                    });
+
+                    _this2.setTextMultiTagIndent();
+                    _this2.addPlaceholder();
+                })();
+            }
         }
     },
 
@@ -1252,23 +1281,24 @@ var api = {
      *
      * @param {Boolean} bool disable or enable
      *
-     * @return _Void_
+     * @return {Void} void
      */
     disable: function disable(bool) {
         var refs = this.refs;
+        var classes = this.classes;
         var flounder = refs.flounder;
         var selected = refs.selected;
 
         if (bool) {
             refs.flounder.removeEventListener('keydown', this.checkFlounderKeypress);
             refs.selected.removeEventListener('click', this.toggleList);
-            _utils2.default.addClass(selected, _classes2.default.DISABLED);
-            _utils2.default.addClass(flounder, _classes2.default.DISABLED);
+            _utils2.default.addClass(selected, classes.DISABLED);
+            _utils2.default.addClass(flounder, classes.DISABLED);
         } else {
             refs.flounder.addEventListener('keydown', this.checkFlounderKeypress);
             refs.selected.addEventListener('click', this.toggleList);
-            _utils2.default.removeClass(selected, _classes2.default.DISABLED);
-            _utils2.default.removeClass(flounder, _classes2.default.DISABLED);
+            _utils2.default.removeClass(selected, classes.DISABLED);
+            _utils2.default.removeClass(flounder, classes.DISABLED);
         }
     },
 
@@ -1278,19 +1308,20 @@ var api = {
      *
      * disables the options with the given index
      *
-     * @param {Mixed} i index of the option
+     * @param {Mixed} index index of the option
      * @param {Boolean} reenable enables the option instead
      *
-     * return _Void_
+     * @return {Void} void
      */
     disableByIndex: function disableByIndex(index, reenable) {
-        var _this2 = this;
+        var _this3 = this;
 
         var refs = this.refs;
 
         if (typeof index !== 'string' && index.length) {
-            var _ret = function () {
-                var disableByIndex = _this2.disableByIndex.bind(_this2);
+            var _ret2 = function () {
+                var disableByIndex = _this3.disableByIndex.bind(_this3);
+
                 return {
                     v: index.map(function (_i) {
                         return disableByIndex(_i, reenable);
@@ -1298,34 +1329,35 @@ var api = {
                 };
             }();
 
-            if ((typeof _ret === 'undefined' ? 'undefined' : _typeof(_ret)) === "object") return _ret.v;
-        } else {
-            var data = refs.data;
-            var length = data.length;
-
-            if (index < 0) {
-                var _length = data.length;
-                index = _length + index;
-            }
-
-            var el = data[index];
-
-            if (el) {
-                var opt = refs.selectOptions[index];
-
-                if (reenable) {
-                    opt.disabled = false;
-                    _utils2.default.removeClass(el, _classes2.default.DISABLED);
-                } else {
-                    opt.disabled = true;
-                    _utils2.default.addClass(el, _classes2.default.DISABLED);
-                }
-
-                return [el, opt];
-            } else {
-                console.warn('Flounder - No element to disable.');
-            }
+            if ((typeof _ret2 === 'undefined' ? 'undefined' : _typeof(_ret2)) === "object") return _ret2.v;
         }
+
+        var data = refs.data;
+        var length = data.length;
+
+        if (index < 0) {
+            length = data.length;
+            index = length + index;
+        }
+
+        var el = data[index];
+
+        if (el) {
+            var opt = refs.selectOptions[index];
+            var classes = this.classes;
+
+            if (reenable) {
+                opt.disabled = false;
+                _utils2.default.removeClass(el, classes.DISABLED);
+            } else {
+                opt.disabled = true;
+                _utils2.default.addClass(el, classes.DISABLED);
+            }
+
+            return [el, opt];
+        }
+
+        console.warn('Flounder - No element to disable.');
     },
 
 
@@ -1334,17 +1366,17 @@ var api = {
      *
      * disables THE FIRST option that has the given value
      *
-     * @param {Mixed} value value of the option
+     * @param {Mixed} text value of the option
      * @param {Boolean} reenable enables the option instead
      *
-     * return _Void_
+     * @return {Void} void
      */
     disableByText: function disableByText(text, reenable) {
-        var _this3 = this;
+        var _this4 = this;
 
         if (typeof text !== 'string' && text.length) {
-            var _ret2 = function () {
-                var disableByText = _this3.disableByText.bind(_this3);
+            var _ret3 = function () {
+                var disableByText = _this4.disableByText.bind(_this4);
                 var res = text.map(function (_v) {
                     return disableByText(_v, reenable);
                 });
@@ -1354,28 +1386,22 @@ var api = {
                 };
             }();
 
-            if ((typeof _ret2 === 'undefined' ? 'undefined' : _typeof(_ret2)) === "object") return _ret2.v;
-        } else {
-            var _ret3 = function () {
-                var res = [];
-
-                _this3.refs.data.forEach(function (el, i) {
-                    var _elText = el.innerHTML;
-
-                    if (_elText === text) {
-                        res.push(i);
-                    }
-                });
-
-                res = res.length === 1 ? res[0] : res;
-
-                return {
-                    v: _this3.disableByIndex(res, reenable)
-                };
-            }();
-
             if ((typeof _ret3 === 'undefined' ? 'undefined' : _typeof(_ret3)) === "object") return _ret3.v;
         }
+
+        var res = [];
+
+        this.refs.data.forEach(function (el, i) {
+            var elText = el.innerHTML;
+
+            if (elText === text) {
+                res.push(i);
+            }
+        });
+
+        res = res.length === 1 ? res[0] : res;
+
+        return this.disableByIndex(res, reenable);
     },
 
 
@@ -1387,14 +1413,14 @@ var api = {
      * @param {Mixed} value value of the option
      * @param {Boolean} reenable enables the option instead
      *
-     * return _Void_
+     * @return {Void} void
      */
     disableByValue: function disableByValue(value, reenable) {
-        var _this4 = this;
+        var _this5 = this;
 
         if (typeof value !== 'string' && value.length) {
             var _ret4 = function () {
-                var disableByValue = _this4.disableByValue.bind(_this4);
+                var disableByValue = _this5.disableByValue.bind(_this5);
                 var res = value.map(function (_v) {
                     return disableByValue(_v, reenable);
                 });
@@ -1405,17 +1431,17 @@ var api = {
             }();
 
             if ((typeof _ret4 === 'undefined' ? 'undefined' : _typeof(_ret4)) === "object") return _ret4.v;
-        } else {
-            var _res = this.refs.selectOptions.map(function (el, i) {
-                return '' + el.value === '' + value ? i : null;
-            }).filter(function (a) {
-                return !!a || a === 0 ? true : false;
-            });
-
-            _res = _res.length === 1 ? _res[0] : _res;
-
-            return this.disableByIndex(_res, reenable);
         }
+
+        var res = this.refs.selectOptions.map(function (el, i) {
+            return '' + el.value === '' + value ? i : null;
+        }).filter(function (a) {
+            return !!a || a === 0;
+        });
+
+        res = res.length === 1 ? res[0] : res;
+
+        return this.disableByIndex(res, reenable);
     },
 
 
@@ -1466,28 +1492,31 @@ var api = {
      *
      * returns the option and div tags related to an option
      *
-     * @param {Number} _i index to return
+     * @param {Number} index index to return
      *
-     * @return _Object_ option and div tage
+     * @return {Object} option and div tage
      */
-    getData: function getData(_i) {
-        var _this5 = this;
+    getData: function getData(index) {
+        var _this6 = this;
 
         var refs = this.refs;
 
-        if (typeof _i === 'number') {
-            return { option: refs.selectOptions[_i], div: refs.data[_i] };
-        } else if (_i && _i.length && typeof _i !== 'string') {
-            return _i.map(function (i) {
-                return _this5.getData(i);
+        if (typeof index === 'number') {
+            return {
+                option: refs.selectOptions[index],
+                div: refs.data[index]
+            };
+        } else if (index && index.length && typeof index !== 'string') {
+            return index.map(function (i) {
+                return _this6.getData(i);
             });
-        } else if (!_i) {
+        } else if (!index) {
             return refs.selectOptions.map(function (el, i) {
-                return _this5.getData(i);
+                return _this6.getData(i);
             });
-        } else {
-            console.warn('Flounder - Illegal parameter type.');
         }
+
+        console.warn('Flounder - Illegal parameter type.');
     },
 
 
@@ -1496,16 +1525,16 @@ var api = {
      *
      * returns the currently selected data of a SELECT box
      *
-     * @return _Void_
+     * @return {Void} void
      */
     getSelected: function getSelected() {
-        var _el = this.refs.select;
-        var opts = [],
-            opt = void 0;
-        var _data = _el.options;
+        var el = this.refs.select;
+        var opts = [];
+        var data = el.options;
+        var classes = this.classes;
 
-        nativeSlice.call(_data).forEach(function (el) {
-            if (el.selected && !_utils2.default.hasClass(el, _classes2.default.PLACEHOLDER)) {
+        nativeSlice.call(data).forEach(function (el) {
+            if (el.selected && !_utils2.default.hasClass(el, classes.PLACEHOLDER)) {
                 opts.push(el);
             }
         });
@@ -1519,7 +1548,7 @@ var api = {
      *
      * returns the values of the currently selected data
      *
-     * @return _Void_
+     * @return {Void} void
      */
     getSelectedValues: function getSelectedValues() {
         return this.getSelected().map(function (_v) {
@@ -1536,28 +1565,30 @@ var api = {
      * @param {String} url address to get the data from
      * @param {Function} callback function to run after getting the data
      *
-     * @return _Void_
+     * @return {Void} void
      */
     loadDataFromUrl: function loadDataFromUrl(url, callback) {
-        var _this6 = this;
+        var _this7 = this;
+
+        var classes = this.classes;
 
         _utils2.default.http.get(url).then(function (data) {
             if (data) {
-                _this6.data = JSON.parse(data);
+                _this7.data = JSON.parse(data);
 
                 if (callback) {
-                    callback(_this6.data);
+                    callback(_this7.data);
                 }
             } else {
                 console.warn('no data recieved');
             }
         }).catch(function (e) {
             console.warn('something happened: ', e);
-            _this6.rebuild([{
+            _this7.rebuild([{
                 text: '',
                 value: '',
                 index: 0,
-                extraClass: _classes2.default.LOADING_FAILED
+                extraClass: classes.LOADING_FAILED
             }]);
         });
 
@@ -1565,7 +1596,7 @@ var api = {
             text: '',
             value: '',
             index: 0,
-            extraClass: _classes2.default.LOADING
+            extraClass: classes.LOADING
         }];
     },
 
@@ -1576,8 +1607,9 @@ var api = {
      * after editing the data, this can be used to rebuild them
      *
      * @param {Array} data array with option information
+     * @param {Object} props options object
      *
-     * @return _Object_ rebuilt flounder object
+     * @return {Object} rebuilt flounder object
      */
     rebuild: function rebuild(data, props) {
         if (props || !props && (typeof data === 'string' || data && typeof data.length !== 'number')) {
@@ -1587,25 +1619,28 @@ var api = {
         data = this.data = data || this.data;
         props = this.props;
         var refs = this.refs;
-        var _select = refs.select;
+        var select = refs.select;
 
         this.deselectAll();
         this.removeOptionsListeners();
+
         refs.select.innerHTML = '';
         refs.select = false;
-        this._default = (0, _defaults.setDefaultOption)(this, props, data, true);
+        this.defaultObj = (0, _defaults.setDefaultOption)(this, props, data, true);
+
         refs.optionsList.innerHTML = '';
 
-        var _buildData = this.buildData(this._default, this.data, refs.optionsList, _select);
+        var _buildData = this.buildData(this.defaultObj, this.data, refs.optionsList, select);
 
         var _buildData2 = _slicedToArray(_buildData, 2);
 
         refs.data = _buildData2[0];
         refs.selectOptions = _buildData2[1];
 
-        refs.select = _select;
+        refs.select = select;
 
         this.addOptionsListeners();
+
         this.data = data;
 
         this.displaySelected(refs.selected, refs);
@@ -1617,15 +1652,18 @@ var api = {
     /**
      * ## setByIndex
      *
-     * programatically sets the value by index.  If there are not enough elements
-     * to match the index, then nothing is selected.
+     * programatically sets the value by index.  If there are not enough
+     * elements to match the index, then nothing is selected.
      *
-     * @param {Mixed} index index to set flounder to.  _Number, or Array of numbers_
+     * @param {Mixed} index index to set flounder to.
+     *                                          _Number, or Array of numbers_
+     * @param {Boolean} multiple multiSelect or not
+     * @param {Boolean} programmatic fire onChange and toggle menu or not
      *
-     * return _Void_
+     * @return {Void} void
      */
     setByIndex: function setByIndex(index, multiple) {
-        var _this7 = this;
+        var _this8 = this;
 
         var programmatic = arguments.length <= 2 || arguments[2] === undefined ? true : arguments[2];
 
@@ -1633,7 +1671,8 @@ var api = {
 
         if (typeof index !== 'string' && index.length) {
             var _ret5 = function () {
-                var setByIndex = _this7.setByIndex.bind(_this7);
+                var setByIndex = _this8.setByIndex.bind(_this8);
+
                 return {
                     v: index.map(function (_i) {
                         return setByIndex(_i, multiple, programmatic);
@@ -1642,30 +1681,28 @@ var api = {
             }();
 
             if ((typeof _ret5 === 'undefined' ? 'undefined' : _typeof(_ret5)) === "object") return _ret5.v;
-        } else {
-            var data = this.data;
-            var length = data.length;
-
-            if (index < 0) {
-                var _length2 = data.length;
-                index = _length2 + index;
-            }
-
-            var el = refs.data[index];
-
-            if (el) {
-                var isOpen = _utils2.default.hasClass(refs.wrapper, _classes2.default.OPEN);
-                this.toggleList(isOpen ? 'close' : 'open');
-                this.___forceMultiple = multiple && this.multiple;
-
-                this.___programmaticClick = programmatic;
-                el.click();
-
-                return el;
-            }
-
-            return null;
         }
+
+        var data = this.data;
+        var length = data.length;
+
+        if (index < 0) {
+            length = data.length;
+            index = length + index;
+        }
+
+        var el = refs.data[index];
+
+        if (el) {
+            this.forceMultiple = multiple && this.multiple;
+            this.programmaticClick = programmatic;
+
+            el.click();
+
+            return el;
+        }
+
+        return null;
     },
 
 
@@ -1675,18 +1712,22 @@ var api = {
      * programatically sets the text by string.  If the text string
      * is not matched to an element, nothing will be selected
      *
-     * @param {Mixed} text text to set flounder to.  _String, or Array of strings_
+     * @param {Mixed} text text to set flounder to.
+     *                                            _String, or Array of strings_
+     * @param {Boolean} multiple multiSelect or not
+     * @param {Boolean} programmatic fire onChange and toggle menu or not
      *
-     * return _Void_
+     * @return {Void} void
      */
     setByText: function setByText(text, multiple) {
-        var _this8 = this;
+        var _this9 = this;
 
         var programmatic = arguments.length <= 2 || arguments[2] === undefined ? true : arguments[2];
 
         if (typeof text !== 'string' && text.length) {
             var _ret6 = function () {
-                var setByText = _this8.setByText.bind(_this8);
+                var setByText = _this9.setByText.bind(_this9);
+
                 return {
                     v: text.map(function (_i) {
                         return setByText(_i, multiple, programmatic);
@@ -1695,26 +1736,20 @@ var api = {
             }();
 
             if ((typeof _ret6 === 'undefined' ? 'undefined' : _typeof(_ret6)) === "object") return _ret6.v;
-        } else {
-            var _ret7 = function () {
-                var res = [];
-                text = '' + text;
-
-                _this8.refs.data.forEach(function (el, i) {
-                    var _elText = el.innerHTML;
-
-                    if (_elText === text) {
-                        res.push(i);
-                    }
-                });
-
-                return {
-                    v: _this8.setByIndex(res, multiple, programmatic)
-                };
-            }();
-
-            if ((typeof _ret7 === 'undefined' ? 'undefined' : _typeof(_ret7)) === "object") return _ret7.v;
         }
+
+        var res = [];
+        text = '' + text;
+
+        this.refs.data.forEach(function (el, i) {
+            var elText = el.innerHTML;
+
+            if (elText === text) {
+                res.push(i);
+            }
+        });
+
+        return this.setByIndex(res, multiple, programmatic);
     },
 
 
@@ -1724,18 +1759,22 @@ var api = {
      * programatically sets the value by string.  If the value string
      * is not matched to an element, nothing will be selected
      *
-     * @param {Mixed} value value to set flounder to.  _String, or Array of strings_
+     * @param {Mixed} value value to set flounder to.
+     *                                           _String, or Array of strings_
+     * @param {Boolean} multiple multiSelect or not
+     * @param {Boolean} programmatic fire onChange and toggle menu or not
      *
-     * return _Void_
+     * @return {Void} void
      */
     setByValue: function setByValue(value, multiple) {
-        var _this9 = this;
+        var _this10 = this;
 
         var programmatic = arguments.length <= 2 || arguments[2] === undefined ? true : arguments[2];
 
         if (typeof value !== 'string' && value.length) {
-            var _ret8 = function () {
-                var setByValue = _this9.setByValue.bind(_this9);
+            var _ret7 = function () {
+                var setByValue = _this10.setByValue.bind(_this10);
+
                 return {
                     v: value.map(function (_i) {
                         return setByValue(_i, multiple, programmatic);
@@ -1743,35 +1782,30 @@ var api = {
                 };
             }();
 
-            if ((typeof _ret8 === 'undefined' ? 'undefined' : _typeof(_ret8)) === "object") return _ret8.v;
-        } else {
-            var values = this.refs.selectOptions.map(function (el, i) {
-                return '' + el.value === '' + value ? i : null;
-            }).filter(function (a) {
-                return a === 0 || !!a;
-            });
-
-            return this.setByIndex(values, multiple, programmatic);
+            if ((typeof _ret7 === 'undefined' ? 'undefined' : _typeof(_ret7)) === "object") return _ret7.v;
         }
+
+        var values = this.refs.selectOptions.map(function (el, i) {
+            return '' + el.value === '' + value ? i : null;
+        }).filter(function (a) {
+            return a === 0 || !!a;
+        });
+
+        return this.setByIndex(values, multiple, programmatic);
     }
 };
 
 exports.default = api;
 
-},{"./classes":14,"./defaults":15,"./utils":20}],13:[function(require,module,exports){
+},{"./defaults":15,"./utils":20}],13:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; }; /* globals document */
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
-
-var _classes = require('./classes');
-
-var _classes2 = _interopRequireDefault(_classes);
 
 var _defaults = require('./defaults');
 
@@ -1780,6 +1814,8 @@ var _utils = require('./utils');
 var _utils2 = _interopRequireDefault(_utils);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var nativeSlice = Array.prototype.slice;
 
 var build = {
 
@@ -1790,14 +1826,15 @@ var build = {
      *
      * @param {DOMElement} el option element to add description to
      * @param {String} text description
+     * @param {String} CSS class to apply
      *
-     * @return _Void_
+     * @return {Void} void
      */
 
     addOptionDescription: function addOptionDescription(el, text) {
         var div = document.createElement('div');
         div.innerHTML = text;
-        div.className = _classes2.default.DESCRIPTION;
+        div.className = this.classes.DESCRIPTION;
         el.appendChild(div);
     },
 
@@ -1807,18 +1844,21 @@ var build = {
      *
      * checks if a search box is required and attaches it or not
      *
+     * @param {Object} searchSibling next sibling to mount the input to
      * @param {Object} flounder main element reference
      *
-     * @return _Mixed_ search node or false
+     * @return {Mixed} search node or false
      */
-    addSearch: function addSearch(flounder) {
+    addSearch: function addSearch(searchSibling, flounder) {
         if (this.search) {
+            var classes = this.classes;
             var search = _utils2.default.constructElement({
                 tagname: 'input',
                 type: 'text',
-                className: _classes2.default.SEARCH
+                className: classes.SEARCH
             });
-            flounder.appendChild(search);
+
+            flounder.insertBefore(search, searchSibling);
 
             return search;
         }
@@ -1833,14 +1873,14 @@ var build = {
      * binds this to whatever functions need it.  Arrow functions cannot be used
      * here due to the react extension needing them as well;
      *
-     * @return _Void_
+     * @return {Void} void
      */
     bindThis: function bindThis() {
         var _this = this;
 
-        ['catchBodyClick', 'checkClickTarget', 'checkFlounderKeypress', 'checkMultiTagKeydown', 'clearPlaceholder', 'clickSet', 'divertTarget', 'displayMultipleTags', 'firstTouchController', 'fuzzySearch', 'removeMultiTag', 'setKeypress', 'setSelectValue', 'toggleList', 'toggleListSearchClick'].forEach(function (func) {
+        ['addHoverClass', 'catchBodyClick', 'checkClickTarget', 'checkFlounderKeypress', 'checkMultiTagKeydown', 'clearPlaceholder', 'clickSet', 'divertTarget', 'displayMultipleTags', 'firstTouchController', 'fuzzySearch', 'removeHoverClass', 'removeMultiTag', 'setKeypress', 'setSelectValue', 'toggleList', 'toggleListSearchClick'].forEach(function (func) {
             _this[func] = _this[func].bind(_this);
-            _this[func].___isBound = true;
+            _this[func].isBound = true;
         });
     },
 
@@ -1858,13 +1898,20 @@ var build = {
     buildArrow: function buildArrow(props, constructElement) {
         if (props.disableArrow) {
             return false;
-        } else {
-            var arrow = constructElement({ className: _classes2.default.ARROW });
-            var arrowInner = constructElement({ className: _classes2.default.ARROW_INNER });
-            arrow.appendChild(arrowInner);
-
-            return arrow;
         }
+
+        var classes = this.classes;
+        var arrow = constructElement({
+            className: classes.ARROW
+        });
+
+        var arrowInner = constructElement({
+            className: classes.ARROW_INNER
+        });
+
+        arrow.appendChild(arrowInner);
+
+        return arrow;
     },
 
 
@@ -1875,42 +1922,43 @@ var build = {
      * if it already exists
      *
      * @param {Mixed} defaultValue default entry (string or number)
-     * @param {Array} data array with optino information
+     * @param {Array} originalData array with optino information
      * @param {Object} optionsList reference to the div option wrapper
      * @param {Object} select reference to the select box
      *
-     * @return _Array_ refs to both container elements
+     * @return {Array} refs to both container elements
      */
     buildData: function buildData(defaultValue, originalData, optionsList, select) {
+        var self = this;
         var index = 0;
         var data = [];
         var selectOptions = [];
         var constructElement = _utils2.default.constructElement;
-        var addOptionDescription = this.addOptionDescription;
         var selectedClass = this.selectedClass;
         var escapeHTML = _utils2.default.escapeHTML;
         var addClass = _utils2.default.addClass;
         var refs = this.refs;
         var selectRef = refs.select;
         var allowHTML = this.allowHTML;
+        var classes = this.classes;
 
         /**
          * ## buildDiv
          *
          * builds an individual div tag for a flounder dropdown
          *
-         * @param {Object} dataObj [description]
+         * @param {Object} dataObj data object
          * @param {Number} i index
          *
-         * @return _DOMElement_
+         * @return {DOMElement} built div
          */
-        var buildDiv = function buildDiv(dataObj, i) {
+        function buildDiv(dataObj, i) {
             dataObj.index = i;
 
             var extraClass = i === defaultValue.index ? '  ' + selectedClass : '';
 
             var res = {
-                className: _classes2.default.OPTION + extraClass,
+                className: classes.OPTION + extraClass,
                 'data-index': i
             };
 
@@ -1924,14 +1972,15 @@ var build = {
             data.innerHTML = allowHTML ? dataObj.text : escapeHTML(dataObj.text);
 
             if (dataObj.description) {
-                addOptionDescription(data, dataObj.description);
+                self.addOptionDescription(data, dataObj.description, classes.DESCRIPTION);
             }
 
             data.className += dataObj.extraClass ? '  ' + dataObj.extraClass : '';
+
             data.setAttribute('role', 'option');
 
             return data;
-        };
+        }
 
         /**
          * ## buildOption
@@ -1941,16 +1990,21 @@ var build = {
          * @param {Object} dataObj option build properties
          * @param {Number} i index
          *
-         * @return _DOMElement_
+         * @return {DOMElement} build option tag
          */
-        var buildOption = function buildOption(dataObj, i) {
+        function buildOption(dataObj, i) {
             var selectOption = void 0;
 
             if (!selectRef) {
-                var selectOptionClass = _classes2.default.OPTION_TAG + '  ' + (dataObj.extraClass || '');
-                selectOption = constructElement({ tagname: 'option',
+                var extra = dataObj.extraClass || '';
+                var selectOptionClass = classes.OPTION_TAG + '  ' + extra;
+
+                selectOption = constructElement({
+                    tagname: 'option',
                     className: selectOptionClass.trim(),
-                    value: dataObj.value });
+                    value: dataObj.value
+                });
+
                 var escapedText = escapeHTML(dataObj.text);
                 selectOption.innerHTML = escapedText;
 
@@ -1967,10 +2021,10 @@ var build = {
                 selectChild.setAttribute('value', selectChild.value);
 
                 if (selectChild.disabled === true && data[i]) {
-                    addClass(data[i], _classes2.default.DISABLED);
+                    addClass(data[i], classes.DISABLED);
                 }
 
-                addClass(selectChild, _classes2.default.OPTION_TAG);
+                addClass(selectChild, classes.OPTION_TAG);
             }
 
             if (i === defaultValue.index) {
@@ -1978,17 +2032,15 @@ var build = {
             }
 
             if (selectOption.getAttribute('disabled')) {
-                addClass(data[i], _classes2.default.DISABLED);
+                addClass(data[i], classes.DISABLED);
             }
 
             return selectOption;
-        };
+        }
 
         originalData.forEach(function (dataObj, i) {
             /* istanbul ignore next */
-            var dataObjType = typeof dataObj === 'undefined' ? 'undefined' : _typeof(dataObj);
-
-            if (dataObjType !== 'object') {
+            if ((typeof dataObj === 'undefined' ? 'undefined' : _typeof(dataObj)) !== 'object') {
                 dataObj = originalData[i] = {
                     text: dataObj,
                     value: dataObj
@@ -1997,17 +2049,24 @@ var build = {
 
             if (dataObj.header) {
                 (function () {
-                    var section = constructElement({ tagname: 'div',
-                        className: _classes2.default.SECTION });
-                    var header = constructElement({ tagname: 'div',
-                        className: _classes2.default.HEADER });
+                    var section = constructElement({
+                        tagname: 'div',
+                        className: classes.SECTION
+                    });
+
+                    var header = constructElement({
+                        tagname: 'div',
+                        className: classes.HEADER
+                    });
+
                     header.textContent = dataObj.header;
                     section.appendChild(header);
                     optionsList.appendChild(section);
 
                     var dataObjData = dataObj.data;
                     dataObjData.forEach(function (d, i) {
-                        if (typeof d !== 'object') {
+                        /* istanbul ignore next */
+                        if ((typeof d === 'undefined' ? 'undefined' : _typeof(d)) !== 'object') {
                             d = dataObjData[i] = {
                                 text: d,
                                 value: d
@@ -2037,18 +2096,26 @@ var build = {
      *
      * builds flounder
      *
-     * @return _Void_
+     * @return {Void} void
      */
     buildDom: function buildDom() {
         var props = this.props;
+        var classes = this.classes;
         this.refs = {};
 
         var constructElement = _utils2.default.constructElement;
 
-        var wrapperClass = _classes2.default.MAIN_WRAPPER;
-        var wrapper = _utils2.default.constructElement({ className: this.wrapperClass ? wrapperClass + '  ' + this.wrapperClass : wrapperClass });
-        var flounderClass = _classes2.default.MAIN;
-        var flounder = constructElement({ className: this.flounderClass ? flounderClass + '  ' + this.flounderClass : flounderClass });
+        var wrapper = _utils2.default.constructElement({
+            className: classes.MAIN_WRAPPER
+        });
+
+        var flounderClass = classes.MAIN;
+
+        var flounderClasses = this.multipleTags ? flounderClass + ' ' + classes.MULTIPLE_TAG_FLOUNDER : flounderClass;
+
+        var flounder = constructElement({
+            className: flounderClasses
+        });
 
         flounder.setAttribute('aria-hidden', true);
         flounder.tabIndex = 0;
@@ -2058,15 +2125,30 @@ var build = {
         select.tabIndex = -1;
 
         var data = this.data;
-        var defaultValue = this._default = (0, _defaults.setDefaultOption)(this, this.props, data);
 
-        var selected = constructElement({ className: _classes2.default.SELECTED_DISPLAYED,
-            'data-value': defaultValue.value, 'data-index': defaultValue.index || -1 });
+        this.defaultObj = (0, _defaults.setDefaultOption)(this, this.props, data);
+        var defaultValue = this.defaultObj;
 
-        var multiTagWrapper = this.multipleTags ? constructElement({ className: _classes2.default.MULTI_TAG_LIST }) : null;
+        var selectedDisplayedClasses = this.multipleTags ? classes.SELECTED_DISPLAYED + ' ' + classes.MULTIPLE_SELECTED : classes.SELECTED_DISPLAYED;
 
-        var optionsListWrapper = constructElement({ className: _classes2.default.OPTIONS_WRAPPER + '  ' + _classes2.default.HIDDEN });
-        var optionsList = constructElement({ className: _classes2.default.LIST });
+        var selected = constructElement({
+            className: selectedDisplayedClasses,
+            'data-value': defaultValue.value,
+            'data-index': defaultValue.index
+        });
+
+        var multiTagWrapper = this.multipleTags ? constructElement({
+            className: classes.MULTI_TAG_LIST
+        }) : null;
+
+        var optionsListWrapper = constructElement({
+            className: classes.OPTIONS_WRAPPER + '  ' + classes.HIDDEN
+        });
+
+        var optionsList = constructElement({
+            className: classes.LIST
+        });
+
         optionsList.setAttribute('role', 'listbox');
         optionsListWrapper.appendChild(optionsList);
 
@@ -2083,22 +2165,30 @@ var build = {
             }
         });
 
-        var search = this.addSearch(flounder);
+        var searchLocation = this.multipleTags ? optionsListWrapper : selected;
 
-        var selectOptions = void 0;
+        var search = this.addSearch(searchLocation, flounder);
 
-        var _buildData = this.buildData(defaultValue, data, optionsList, select);
+        var built = this.buildData(defaultValue, data, optionsList, select);
 
-        var _buildData2 = _slicedToArray(_buildData, 2);
-
-        data = _buildData2[0];
-        selectOptions = _buildData2[1];
-
+        data = built[0];
+        var selectOptions = built[1];
 
         this.target.appendChild(wrapper);
 
-        this.refs = { wrapper: wrapper, flounder: flounder, selected: selected, arrow: arrow, optionsListWrapper: optionsListWrapper,
-            search: search, multiTagWrapper: multiTagWrapper, optionsList: optionsList, select: select, data: data, selectOptions: selectOptions };
+        this.refs = {
+            wrapper: wrapper,
+            flounder: flounder,
+            selected: selected,
+            arrow: arrow,
+            optionsListWrapper: optionsListWrapper,
+            search: search,
+            multiTagWrapper: multiTagWrapper,
+            optionsList: optionsList,
+            select: select,
+            data: data,
+            selectOptions: selectOptions
+        };
 
         if (this.multipleTags) {
             var selectedOptions = this.getSelected();
@@ -2121,17 +2211,18 @@ var build = {
      *
      * @param {String} option tag to grab text to add to the tag and role
      *
-     * @return _DOMElement_ option tag
+     * @return {DOMElement} option tag
      */
     buildMultiTag: function buildMultiTag(option) {
+        var classes = this.classes;
         var optionText = option.innerHTML;
         var span = document.createElement('SPAN');
-        span.className = _classes2.default.MULTIPLE_SELECT_TAG;
+        span.className = classes.MULTIPLE_SELECT_TAG;
         span.setAttribute('aria-label', 'Close');
         span.setAttribute('tabindex', 0);
 
         var a = document.createElement('A');
-        a.className = _classes2.default.MULTIPLE_TAG_CLOSE;
+        a.className = classes.MULTIPLE_TAG_CLOSE;
         a.setAttribute('data-index', option.index);
 
         span.appendChild(a);
@@ -2150,7 +2241,7 @@ var build = {
      *
      * @param {DOMElement} wrapper main wrapper element
      *
-     * @return _DOMElement_ select box
+     * @return {DOMElement} select box
      */
     initSelectBox: function initSelectBox(wrapper) {
         var _this2 = this;
@@ -2158,10 +2249,11 @@ var build = {
         var target = this.target;
         var refs = this.refs;
         var select = refs.select;
+        var classes = this.classes;
 
         if (target.tagName === 'SELECT') {
-            _utils2.default.addClass(target, _classes2.default.SELECT_TAG);
-            _utils2.default.addClass(target, _classes2.default.HIDDEN);
+            _utils2.default.addClass(target, classes.SELECT_TAG);
+            _utils2.default.addClass(target, classes.HIDDEN);
 
             select = target;
 
@@ -2172,10 +2264,10 @@ var build = {
             if (target.length > 0 && !this.selectDataOverride) {
                 (function () {
                     _this2.refs.select = select;
-                    var data = [],
-                        selectOptions = [];
+                    var data = [];
+                    var selectOptions = [];
 
-                    Array.prototype.slice.call(target.children, 0).forEach(function (optionEl) {
+                    nativeSlice.call(target.children, 0).forEach(function (optionEl) {
                         selectOptions.push(optionEl);
                         data.push({
                             text: optionEl.innerHTML,
@@ -2192,9 +2284,13 @@ var build = {
             }
 
             this.target = target.parentNode;
-            _utils2.default.addClass(target, _classes2.default.HIDDEN);
+            _utils2.default.addClass(target, classes.HIDDEN);
         } else {
-            select = _utils2.default.constructElement({ tagname: 'SELECT', className: _classes2.default.SELECT_TAG + '  ' + _classes2.default.HIDDEN });
+            select = _utils2.default.constructElement({
+                tagname: 'SELECT',
+                className: classes.SELECT_TAG + '  ' + classes.HIDDEN
+            });
+
             wrapper.appendChild(select);
         }
 
@@ -2210,12 +2306,12 @@ var build = {
      *
      * @param {DOMElement} select select element
      *
-     * @return _Void_
+     * @return {Void} void
      */
     popInSelectElements: function popInSelectElements(select) {
         _utils2.default.removeAllChildren(select);
 
-        this.originalChildren.forEach(function (_el, i) {
+        this.originalChildren.forEach(function (_el) {
             select.appendChild(_el);
         });
     },
@@ -2229,11 +2325,13 @@ var build = {
      *
      * @param {DOMElement} select select element
      *
-     * @return _Void_
+     * @return {Void} void
      */
     popOutSelectElements: function popOutSelectElements(select) {
         var res = [];
-        var children = this.originalChildren = Array.prototype.slice.call(select.children, 0);
+
+        this.originalChildren = nativeSlice.call(select.children, 0);
+        var children = this.originalChildren;
 
         children.forEach(function (_el, i) {
             res[i] = _el.cloneNode(true);
@@ -2251,15 +2349,16 @@ var build = {
      *
      * after editing the data, this can be used to rebuild them
      *
+     * @param {Array} data flounder data options
      * @param {Object} props object containing config options
      *
-     * @return _Object_ rebuilt flounder object
+     * @return {Object} rebuilt flounder object
      */
     reconfigure: function reconfigure(data, props) {
         if (data && typeof data !== 'string' && typeof data.length === 'number') {
             props = props = props || this.props;
             props.data = data;
-        } else if (!props && typeof data === 'object') {
+        } else if (!props && (typeof data === 'undefined' ? 'undefined' : _typeof(data)) === 'object') {
             props = data;
             props.data = props.data || this.data;
         } else {
@@ -2278,7 +2377,7 @@ var build = {
      *
      * @param {DOMElement} target  the actual to-be-flounderized element
      *
-     * @return _Void_
+     * @return {Void} void
      */
     setTarget: function setTarget(target) {
         target = target.nodeType === 1 ? target : document.querySelector(target);
@@ -2287,7 +2386,8 @@ var build = {
         target.flounder = this;
 
         if (target.tagName === 'INPUT') {
-            _utils2.default.addClass(target, _classes2.default.HIDDEN);
+            var classes = this.classes;
+            _utils2.default.addClass(target, classes.HIDDEN);
             target.setAttribute('aria-hidden', true);
             target.tabIndex = -1;
             target = target.parentNode;
@@ -2299,43 +2399,46 @@ var build = {
 
 exports.default = build;
 
-},{"./classes":14,"./defaults":15,"./utils":20}],14:[function(require,module,exports){
-"use strict";
+},{"./defaults":15,"./utils":20}],14:[function(require,module,exports){
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
 var classes = {
-    ARROW: "flounder__arrow--wrapper",
-    ARROW_INNER: "flounder__arrow--inner",
-    DESCRIPTION: "flounder__option--description",
-    DISABLED: "flounder__disabled",
-    DISABLED_OPTION: "flounder__disabled--option",
-    HEADER: "flounder__header",
-    HIDDEN: "flounder--hidden",
-    HIDDEN_IOS: "flounder--hidden--ios",
-    HOVER: "flounder__hover",
-    LIST: "flounder__list",
-    LOADING: "flounder__loading",
-    LOADING_FAILED: "flounder__loading--failed",
-    MAIN: "flounder",
-    MAIN_WRAPPER: "flounder--wrapper  flounder__input--select",
-    MULTI_TAG_LIST: "flounder__multi--tag--list",
-    MULTIPLE_SELECT_TAG: "flounder__multiple--select--tag",
-    MULTIPLE_TAG_CLOSE: "flounder__multiple__tag__close",
-    OPEN: "open",
-    OPTION: "flounder__option",
-    OPTION_TAG: "flounder--option--tag",
-    OPTIONS_WRAPPER: "flounder__list--wrapper",
-    PLACEHOLDER: "flounder__placeholder",
-    PLUG: "flounder__ios--plug",
-    SECTION: "flounder__section",
-    SELECTED: "flounder__option--selected",
-    SELECTED_HIDDEN: "flounder__option--selected--hidden",
-    SELECTED_DISPLAYED: "flounder__option--selected--displayed",
-    SEARCH: "flounder__input--search",
-    SEARCH_HIDDEN: "flounder--search--hidden",
-    SELECT_TAG: "flounder--select--tag"
+    ARROW: 'flounder__arrow--wrapper',
+    ARROW_INNER: 'flounder__arrow--inner',
+    DESCRIPTION: 'flounder__option--description',
+    DISABLED: 'flounder__disabled',
+    DISABLED_OPTION: 'flounder__disabled--option',
+    HEADER: 'flounder__header',
+    HIDDEN: 'flounder--hidden',
+    HIDDEN_IOS: 'flounder--hidden--ios',
+    HOVER: 'flounder__hover',
+    LIST: 'flounder__list',
+    LOADING: 'flounder__loading',
+    LOADING_FAILED: 'flounder__loading--failed',
+    MAIN: 'flounder',
+    MAIN_WRAPPER: 'flounder--wrapper  flounder__input--select',
+    MULTIPLE_TAG_FLOUNDER: 'flounder--multiple',
+    MULTI_TAG_LIST: 'flounder__multi--tag--list',
+    MULTIPLE_SELECT_TAG: 'flounder__multiple--select--tag',
+    MULTIPLE_SELECTED: 'flounder__multiple--selected',
+    MULTIPLE_TAG_CLOSE: 'flounder__multiple__tag__close',
+    NO_RESULTS: 'flounder__no-results',
+    OPEN: 'open',
+    OPTION: 'flounder__option',
+    OPTION_TAG: 'flounder--option--tag',
+    OPTIONS_WRAPPER: 'flounder__list--wrapper',
+    PLACEHOLDER: 'flounder__placeholder',
+    PLUG: 'flounder__ios--plug',
+    SECTION: 'flounder__section',
+    SELECTED: 'flounder__option--selected',
+    SELECTED_HIDDEN: 'flounder__option--selected--hidden',
+    SELECTED_DISPLAYED: 'flounder__option--selected--displayed',
+    SEARCH: 'flounder__input--search',
+    SEARCH_HIDDEN: 'flounder--search--hidden',
+    SELECT_TAG: 'flounder--select--tag'
 };
 
 exports.default = classes;
@@ -2348,24 +2451,19 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.setDefaultOption = exports.defaultOptions = undefined;
 
-var _classes = require('./classes');
-
-var _classes2 = _interopRequireDefault(_classes);
-
 var _utils = require('./utils');
 
 var _utils2 = _interopRequireDefault(_utils);
+
+var _classes = require('./classes');
+
+var _classes2 = _interopRequireDefault(_classes);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var defaultOptions = exports.defaultOptions = {
     allowHTML: false,
-    classes: {
-        flounder: '',
-        hidden: 'flounder--hidden',
-        selected: 'flounder__option--selected',
-        wrapper: ''
-    },
+    classes: _classes2.default,
     data: [],
     defaultEmpty: false,
     defaultIndex: false,
@@ -2375,14 +2473,16 @@ var defaultOptions = exports.defaultOptions = {
     multiple: false,
     multipleTags: false,
     multipleMessage: '(Multiple Items Selected)',
-    onClose: function onClose(e, selectedValues) {},
-    onComponentDidMount: function onComponentDidMount() {},
-    onComponentWillUnmount: function onComponentWillUnmount() {},
-    onFirstTouch: function onFirstTouch(e) {},
-    onInit: function onInit() {},
-    onInputChange: function onInputChange(e) {},
-    onOpen: function onOpen(e, selectedValues) {},
-    onSelect: function onSelect(e, selectedValues) {},
+    noMoreOptionsMessage: 'No more options to add.',
+    noMoreResultsMessage: 'No matches found',
+    onChange: function onChange(e, selectedValues) {}, // eslint-disable-line
+    onClose: function onClose(e, selectedValues) {}, // eslint-disable-line
+    onComponentDidMount: function onComponentDidMount() {}, // eslint-disable-line
+    onComponentWillUnmount: function onComponentWillUnmount() {}, // eslint-disable-line
+    onFirstTouch: function onFirstTouch(e) {}, // eslint-disable-line
+    onInit: function onInit() {}, // eslint-disable-line
+    onInputChange: function onInputChange(e) {}, // eslint-disable-line
+    onOpen: function onOpen(e, selectedValues) {}, // eslint-disable-line
     openOnHover: false,
     placeholder: 'Please choose an option',
     search: false,
@@ -2398,35 +2498,41 @@ var defaults = {
      *
      * sets the initial default value
      *
-     * @param {String or Number}    defaultProp         default passed from this.props
-     * @param {Object}              data                this.props.data
+     * @param {Object} context flounder this
+     * @param {Object} configObj props
+     * @param {Array} originalData data array
+     * @param {Boolean} rebuild rebuild or not
      *
-     * @return _Void_
+     * @return {Void} void
      */
-    setDefaultOption: function setDefaultOption(self) {
+    setDefaultOption: function setDefaultOption(context) {
         var configObj = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
-        var data = arguments[2];
+        var originalData = arguments[2];
         var rebuild = arguments.length <= 3 || arguments[3] === undefined ? false : arguments[3];
 
         /**
          * ## setIndexDefault
          *
-         * sets a specified indexas the default option. This only works correctly
-         * if it is a valid index, otherwise it returns null
+         * sets a specified index as the default option. This only works
+         * correctly if it is a valid index, otherwise it returns null
+         *
+         * @param {Array} data option data
+         * @param {Number} index index
          *
          * @return {Object} default settings
          */
-        var setIndexDefault = function setIndexDefault(_data, index) {
+        function setIndexDefault(data, index) {
             var defaultIndex = index || index === 0 ? index : configObj.defaultIndex;
-            var defaultOption = _data[defaultIndex];
+            var defaultOption = data[defaultIndex];
 
             if (defaultOption) {
                 defaultOption.index = defaultIndex;
+
                 return defaultOption;
             }
 
             return null;
-        };
+        }
 
         /**
          * ## setPlaceholderDefault
@@ -2434,36 +2540,42 @@ var defaults = {
          * sets a placeholder as the default option.  This inserts an empty
          * option first and sets that as default
          *
+         * @param {Object} flounder flounder
+         *
          * @return {Object} default settings
          */
-        var setPlaceholderDefault = function setPlaceholderDefault(self, _data) {
-            var refs = self.refs;
+        function setPlaceholderDefault(flounder) {
+            var refs = flounder.refs;
+            var classes = flounder.classes;
             var select = refs.select;
             var placeholder = configObj.placeholder;
 
-            var _default = {
+            var defaultObj = {
                 text: placeholder || placeholder === '' ? placeholder : defaultOptions.placeholder,
                 value: '',
                 index: 0,
-                extraClass: _classes2.default.HIDDEN + '  ' + _classes2.default.PLACEHOLDER
+                extraClass: classes.HIDDEN + '  ' + classes.PLACEHOLDER
             };
 
             if (select) {
-                var escapedText = self.allowHTML ? _default.text : _utils2.default.escapeHTML(_default.text);
+                var escapedText = flounder.allowHTML ? defaultObj.text : _utils2.default.escapeHTML(defaultObj.text);
 
-                var defaultOption = _utils2.default.constructElement({ tagname: 'option',
-                    className: _classes2.default.OPTION_TAG,
-                    value: _default.value });
+                var defaultOption = _utils2.default.constructElement({
+                    tagname: 'option',
+                    className: classes.OPTION_TAG,
+                    value: defaultObj.value
+                });
+
                 defaultOption.innerHTML = escapedText;
 
                 select.insertBefore(defaultOption, select[0]);
-                self.refs.selectOptions.unshift(defaultOption);
+                flounder.refs.selectOptions.unshift(defaultOption);
             }
 
-            data.unshift(_default);
+            originalData.unshift(defaultObj);
 
-            return _default;
-        };
+            return defaultObj;
+        }
 
         /**
          * ## setValueDefault
@@ -2471,13 +2583,16 @@ var defaults = {
          * sets a specified index as the default. This only works correctly if
          * it is a valid value, otherwise it returns null
          *
+         * @param {Array} data array of data objects
+         * @param {String} val value to set
+         *
          * @return {Object} default settings
          */
-        var setValueDefault = function setValueDefault(_data, _val) {
-            var defaultProp = _val || '' + configObj.defaultValue;
+        function setValueDefault(data, val) {
+            var defaultProp = val || '' + configObj.defaultValue;
             var index = void 0;
 
-            _data.forEach(function (dataObj, i) {
+            data.forEach(function (dataObj, i) {
                 var dataObjValue = '' + dataObj.value;
 
                 if (dataObjValue === defaultProp) {
@@ -2485,15 +2600,16 @@ var defaults = {
                 }
             });
 
-            var defaultValue = index >= 0 ? _data[index] : null;
+            var defaultValue = index >= 0 ? data[index] : null;
 
             if (defaultValue) {
                 defaultValue.index = index;
+
                 return defaultValue;
             }
 
             return null;
-        };
+        }
 
         /**
          * ## checkDefaultPriority
@@ -2502,8 +2618,8 @@ var defaults = {
          *
          * @return {Object} default data object
          */
-        var checkDefaultPriority = function checkDefaultPriority() {
-            var _data = self.sortData(data);
+        function checkDefaultPriority() {
+            var data = context.sortData(originalData);
 
             if ((configObj.multipleTags || configObj.multiple) && !configObj.defaultIndex && !configObj.defaultValue) {
                 configObj.placeholder = configObj.placeholder || defaultOptions.placeholder;
@@ -2515,15 +2631,15 @@ var defaults = {
 
             var placeholder = configObj.placeholder;
 
-            if (placeholder || placeholder === '' || _data.length === 0) {
-                return setPlaceholderDefault(self, _data);
+            if (placeholder || placeholder === '' || data.length === 0) {
+                return setPlaceholderDefault(context, data);
             }
 
             var def = void 0;
 
             if (rebuild) {
-                var val = self.refs.selected.getAttribute('data-value');
-                def = setValueDefault(_data, val);
+                var val = context.refs.selected.getAttribute('data-value');
+                def = setValueDefault(data, val);
 
                 if (def) {
                     return def;
@@ -2531,54 +2647,16 @@ var defaults = {
             }
 
             // default prio
-            def = configObj.defaultIndex ? setIndexDefault(_data) : null;
-            def = !def && configObj.defaultValue ? setValueDefault(_data) : def;
-            def = !def ? setIndexDefault(_data, 0) : def;
+            def = configObj.defaultIndex ? setIndexDefault(data) : null;
+            def = !def && configObj.defaultValue ? setValueDefault(data) : def;
+            def = !def ? setIndexDefault(data, 0) : def;
 
             return def;
-        };
+        }
 
-        data = data || configObj.data || [];
+        originalData = originalData || configObj.data || [];
 
         return checkDefaultPriority();
-    },
-
-
-    /**
-     * ## sortData
-     *
-     * checks the data object for header options, and sorts it accordingly
-     *
-     * @return _Boolean_ hasHeaders
-     */
-    sortData: function sortData(data) {
-        var _this = this;
-
-        var res = arguments.length <= 1 || arguments[1] === undefined ? [] : arguments[1];
-        var i = arguments.length <= 2 || arguments[2] === undefined ? 0 : arguments[2];
-
-        var self = this;
-
-        data.forEach(function (d) {
-            if (d.header) {
-                res = _this.sortData(d.data, res, i);
-            } else {
-                if (typeof d !== 'object') {
-                    d = {
-                        text: d,
-                        value: d,
-                        index: i
-                    };
-                } else {
-                    d.index = i;
-                }
-
-                res.push(d);
-                i++;
-            }
-        });
-
-        return res;
     }
 };
 
@@ -2593,15 +2671,8 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; }; /* globals console, document, setTimeout, window */
 
-var _classes = require('./classes');
-
-var _classes2 = _interopRequireDefault(_classes);
-
-var _search2 = require('./search');
-
-var _search3 = _interopRequireDefault(_search2);
 
 var _utils = require('./utils');
 
@@ -2622,7 +2693,7 @@ var events = {
      *
      * adds the listeners for onFirstTouch
      *
-     * @return _Void_
+     * @return {Void} void
      */
 
     addFirstTouchListeners: function addFirstTouchListeners() {
@@ -2641,10 +2712,12 @@ var events = {
      *
      * adds a hover class to an element
      *
-     * @return Void_
+     * @param {Object} e event object
+     *
+     * @return {Void} void
      */
-    addHoverClass: function addHoverClass() {
-        _utils2.default.addClass(this, _classes2.default.HOVER);
+    addHoverClass: function addHoverClass(e) {
+        _utils2.default.addClass(e.target, this.classes.HOVER);
     },
 
 
@@ -2653,7 +2726,9 @@ var events = {
      *
      * adds listeners on render
      *
-     * @return _Void_
+     * @param {Object} refs DOM element references
+     *
+     * @return {Void} void
      */
     addListeners: function addListeners(refs) {
         var ios = this.isIos;
@@ -2687,7 +2762,7 @@ var events = {
      * @param {Array} selectedOptions currently selected options
      * @param {DOMElement} multiTagWrapper parent element of the tags
      *
-     * @return _Void_
+     * @return {Void} void
      */
     addMultipleTags: function addMultipleTags(selectedOptions, multiTagWrapper) {
         var _this = this;
@@ -2716,12 +2791,12 @@ var events = {
      *
      * adds listeners to the options
      *
-     * @return _Void_
+     * @return {Void} void
      */
     addOptionsListeners: function addOptionsListeners() {
         var _this2 = this;
 
-        this.refs.data.forEach(function (dataObj, i) {
+        this.refs.data.forEach(function (dataObj) {
             if (dataObj.tagName === 'DIV') {
                 dataObj.addEventListener('mouseenter', _this2.addHoverClass);
                 dataObj.addEventListener('mouseleave', _this2.removeHoverClass);
@@ -2733,12 +2808,56 @@ var events = {
 
 
     /**
+     * ## addNoMoreOptionsMessage
+     *
+     * Adding 'No More Options' message to the option list
+     *
+     * @return {Void} void
+     */
+    addNoMoreOptionsMessage: function addNoMoreOptionsMessage() {
+        var classes = this.classes;
+        var elProps = {
+            className: classes.OPTION + '  ' + classes.NO_RESULTS
+        };
+
+        var noMoreOptionsEl = this.refs.noMoreOptionsEl || _utils2.default.constructElement(elProps);
+
+        noMoreOptionsEl.innerHTML = this.noMoreOptionsMessage;
+        this.refs.optionsList.appendChild(noMoreOptionsEl);
+
+        this.refs.noMoreOptionsEl = noMoreOptionsEl;
+    },
+
+
+    /**
+     * ## addNoResultsMessage
+     *
+     * Adding 'No Results' message to the option list
+     *
+     * @return {Void} void
+     */
+    addNoResultsMessage: function addNoResultsMessage() {
+        var classes = this.classes;
+        var elProps = {
+            className: classes.OPTION + '  ' + classes.NO_RESULTS
+        };
+
+        var noResultsEl = this.refs.noResultsEl || _utils2.default.constructElement(elProps);
+
+        noResultsEl.innerHTML = this.noMoreResultsMessage;
+        this.refs.optionsList.appendChild(noResultsEl);
+
+        this.refs.noResultsEl = noResultsEl;
+    },
+
+
+    /**
      * ## addPlaceholder
      *
      * determines what (if anything) should be refilled into the the
      * placeholder position
      *
-     * @return _Void_
+     * @return {Void} void
      */
     addPlaceholder: function addPlaceholder() {
         var selectedValues = this.getSelectedValues();
@@ -2779,10 +2898,16 @@ var events = {
      *
      * adds listeners to the search box
      *
-     * @return _Void_
+     * @return {Void} void
      */
     addSearchListeners: function addSearchListeners() {
         var search = this.refs.search;
+        var multiTagWrapper = this.refs.multiTagWrapper;
+
+        if (multiTagWrapper) {
+            multiTagWrapper.addEventListener('click', this.toggleListSearchClick);
+        }
+
         search.addEventListener('click', this.toggleListSearchClick);
         search.addEventListener('focus', this.toggleListSearchClick);
         search.addEventListener('keyup', this.fuzzySearch);
@@ -2796,7 +2921,7 @@ var events = {
      * adds a listener to the selectbox to allow for seeking through the native
      * selectbox on keypress
      *
-     * @return _Void_
+     * @return {Void} void
      */
     addSelectKeyListener: function addSelectKeyListener() {
         var refs = this.refs;
@@ -2808,11 +2933,13 @@ var events = {
         // weird shit
         // http://stackoverflow.com/questions/34660500/mobile-safari-multi-select-bug
         if (this.isIos) {
+            var classes = this.classes;
             var firstOption = select.children[0];
 
             var plug = document.createElement('OPTION');
             plug.disabled = true;
-            plug.className = _classes2.default.PLUG;
+            plug.setAttribute('disabled', true);
+            plug.className = classes.PLUG;
             select.insertBefore(plug, firstOption);
         }
 
@@ -2827,7 +2954,7 @@ var events = {
      *
      * @param  {Object} e event object
      *
-     * @return _Void_
+     * @return {Void} void
      */
     catchBodyClick: function catchBodyClick(e) {
         if (!this.checkClickTarget(e)) {
@@ -2845,7 +2972,7 @@ var events = {
      * @param  {Object} e event object
      * @param  {DOMElement} target click target
      *
-     * @return _Boolean_
+     * @return {Boolean}click flouncer or not
      */
     checkClickTarget: function checkClickTarget(e, target) {
         target = target || e.target;
@@ -2869,13 +2996,13 @@ var events = {
     /**
      * ## checkEnterOnSearch
      *
-     * if enter is pressed in the searchox, if there is only one option matching,
-     * this selects it
+     * if enter is pressed in the searchox, if there is only one option
+     * matching, this selects it
      *
      * @param {Object} e event object
      * @param {Object} refs element references
      *
-     * @return _Void_
+     * @return {Void} void
      */
     checkEnterOnSearch: function checkEnterOnSearch(e, refs) {
         var _this3 = this;
@@ -2885,7 +3012,6 @@ var events = {
         if (val && val !== '') {
             var _ret = function () {
                 var res = [];
-                var options = refs.data.length;
                 var selected = _this3.getSelected();
                 var matches = _this3.search.isThereAnythingRelatedTo(val);
 
@@ -2900,6 +3026,7 @@ var events = {
 
                 if (res.length === 1) {
                     var el = res[0];
+
                     _this3.setByIndex(el.index, _this3.multiple);
 
                     if (_this3.multipleTags) {
@@ -2915,9 +3042,9 @@ var events = {
             }();
 
             if ((typeof _ret === 'undefined' ? 'undefined' : _typeof(_ret)) === "object") return _ret.v;
-        } else {
-            return false;
         }
+
+        return false;
     },
 
 
@@ -2926,11 +3053,14 @@ var events = {
      *
      * checks flounder focused keypresses and filters all but space and enter
      *
-     * @return _Void_
+     * @param {Object} e event object
+     *
+     * @return {Void} void
      */
     checkFlounderKeypress: function checkFlounderKeypress(e) {
         var keyCode = e.keyCode;
         var refs = this.refs;
+        var classes = this.classes;
 
         if (keyCode === _keycodes2.default.TAB) {
             var optionsList = refs.optionsListWrapper;
@@ -2939,14 +3069,15 @@ var events = {
             this.addPlaceholder();
             this.toggleClosed(e, optionsList, refs, wrapper, true);
         } else if (keyCode === _keycodes2.default.ENTER || keyCode === _keycodes2.default.SPACE && e.target.tagName !== 'INPUT') {
-            if (keyCode === _keycodes2.default.ENTER && this.search && _utils2.default.hasClass(refs.wrapper, _classes2.default.OPEN)) {
+            if (keyCode === _keycodes2.default.ENTER && this.search && _utils2.default.hasClass(refs.wrapper, classes.OPEN)) {
                 return this.checkEnterOnSearch(e, refs);
             }
 
             e.preventDefault();
             this.toggleList(e);
-        } else if (keyCode >= 48 && keyCode <= 57 || keyCode >= 65 && keyCode <= 90) // letters - allows native behavior
-            {
+        }
+        // letters - allows native behavior
+        else if (keyCode >= 48 && keyCode <= 57 || keyCode >= 65 && keyCode <= 90) {
                 if (refs.search && e.target.tagName === 'INPUT') {
                     refs.selected.innerHTML = '';
                 }
@@ -2962,7 +3093,7 @@ var events = {
      *
      * @param {Object} e event object
      *
-     * @return _Void_
+     * @return {Void} void
      */
     checkMultiTagKeydown: function checkMultiTagKeydown(e) {
         var keyCode = e.keyCode;
@@ -2972,6 +3103,13 @@ var events = {
         var target = e.target;
         var index = nativeSlice.call(children, 0).indexOf(target);
 
+        /**
+         * ## focusSearch
+         *
+         * focus' on the search input
+         *
+         * @return {Void}  void
+         */
         function focusSearch() {
             refs.search.focus();
             self.clearPlaceholder();
@@ -3003,7 +3141,7 @@ var events = {
      * @param {Number} keyCode keyclode from te keypress event
      * @param {Number} index index of currently focused tag
      *
-     * @return _Void_
+     * @return {Void} void
      */
     checkMultiTagKeydownNavigate: function checkMultiTagKeydownNavigate(focusSearch, keyCode, index) {
         var children = this.refs.multiTagWrapper.children;
@@ -3030,7 +3168,7 @@ var events = {
      * @param {Function} focusSearch function to focus on the search field
      * @param {Number} index index of currently focused tag
      *
-     * @return _Void_
+     * @return {Void} void
      */
     checkMultiTagKeydownRemove: function checkMultiTagKeydownRemove(target, focusSearch, index) {
         var children = this.refs.multiTagWrapper.children;
@@ -3053,22 +3191,22 @@ var events = {
      *
      * @param {Object} e event object
      *
-     * @return _Void_
+     * @return {Void} void
      */
     clearPlaceholder: function clearPlaceholder() {
-        var selected = this.refs.selected;
-        selected.innerHTML = '';
+        this.refs.selected.innerHTML = '';
     },
 
 
     /**
      * ## clickSet
      *
-     * when a flounder option is clicked on it needs to set the option as selected
+     * when a flounder option is clicked on it needs to set the option as
+     * selected
      *
      * @param {Object} e event object
      *
-     * @return _Void_
+     * @return {Void} void
      */
     clickSet: function clickSet(e) {
         e.preventDefault();
@@ -3076,9 +3214,11 @@ var events = {
 
         this.setSelectValue({}, e);
 
-        if (!this.multiple || !e[this.multiSelect]) {
+        if (!this.programmaticClick) {
             this.toggleList(e);
         }
+
+        this.programmaticClick = false;
     },
 
 
@@ -3088,9 +3228,10 @@ var events = {
      * handles the display and management of tags
      *
      * @param  {Array} selectedOptions currently selected options
-     * @param  {DOMElement} selected div to display currently selected options
+     * @param  {DOMElement} multiTagWrapper div to display
+     *                                       currently selected options
      *
-     * @return _Void_
+     * @return {Void} void
      */
     displayMultipleTags: function displayMultipleTags(selectedOptions, multiTagWrapper) {
         var _this4 = this;
@@ -3122,7 +3263,7 @@ var events = {
      * @param {DOMElement} selected display area for the selected option(s)
      * @param {Object} refs element references
      *
-     * @return _Void_
+     * @return {Void} void
      */
     displaySelected: function displaySelected(selected, refs) {
         var value = [];
@@ -3134,13 +3275,13 @@ var events = {
 
         if (!multipleTags && selectedLength === 1) {
             index = selectedOption[0].index;
-            value = selectedOption[0].value;
             selected.innerHTML = refs.data[index].innerHTML;
+            value = selectedOption[0].value;
         } else if (!multipleTags && selectedLength === 0) {
-            var defaultValue = this._default;
-            index = defaultValue.index;
-            value = defaultValue.value;
+            var defaultValue = this.defaultObj;
+            index = defaultValue.index || -1;
             selected.innerHTML = defaultValue.text;
+            value = defaultValue.value;
         } else {
             if (multipleTags) {
                 selected.innerHTML = '';
@@ -3170,14 +3311,15 @@ var events = {
      * on interaction with the raw select box, the target will be diverted to
      * the corresponding flounder list element
      *
-     * @return _Void_
+     * @return {Void} void
      */
     divertTarget: function divertTarget(e) {
         // weird shit
         // http://stackoverflow.com/questions/34660500/mobile-safari-multi-select-bug
         if (this.isIos) {
             var select = this.refs.select;
-            var plug = select.querySelector('.' + _classes2.default.PLUG);
+            var classes = this.classes;
+            var plug = select.querySelector('.' + classes.PLUG);
 
             if (plug) {
                 select.removeChild(plug);
@@ -3186,7 +3328,7 @@ var events = {
 
         var index = e.target.selectedIndex;
 
-        var _e = {
+        var event = {
             type: e.type,
             target: this.data[index]
         };
@@ -3196,7 +3338,7 @@ var events = {
             e.stopPropagation();
         }
 
-        this.setSelectValue(_e);
+        this.setSelectValue(event);
 
         if (!this.multiple) {
             this.toggleList(e, 'close');
@@ -3212,7 +3354,7 @@ var events = {
      *
      * @param {Object} e event object
      *
-     * @return _Void_
+     * @return {Void} void
      */
     firstTouchController: function firstTouchController(e) {
         var refs = this.refs;
@@ -3237,10 +3379,11 @@ var events = {
      *
      * removes a hover class from an element
      *
-     * @return Void_
+     * @param {Object} e event object
+     * @return {Void} void
      */
-    removeHoverClass: function removeHoverClass() {
-        _utils2.default.removeClass(this, _classes2.default.HOVER);
+    removeHoverClass: function removeHoverClass(e) {
+        _utils2.default.removeClass(e.target, this.classes.HOVER);
     },
 
 
@@ -3249,7 +3392,7 @@ var events = {
      *
      * removes event listeners from flounder.  normally pre unload
      *
-     * @return _Void_
+     * @return {Void} void
      */
     removeListeners: function removeListeners() {
         var refs = this.refs;
@@ -3276,11 +3419,12 @@ var events = {
     /**
      * ## removeMultiTag
      *
-     * removes a multi selection tag on click; fixes all references to value and state
+     * removes a multi selection tag on click; fixes all references to value
+     * and state
      *
      * @param  {Object} e event object
      *
-     * @return _Void_
+     * @return {Void} void
      */
     removeMultiTag: function removeMultiTag(e) {
         e.preventDefault();
@@ -3288,11 +3432,11 @@ var events = {
 
         var value = void 0;
         var index = void 0;
+        var classes = this.classes;
         var refs = this.refs;
         var select = refs.select;
         var selected = refs.selected;
         var target = e.target;
-        var defaultValue = this._default;
         var data = this.refs.data;
         var targetIndex = target.getAttribute('data-index');
 
@@ -3300,8 +3444,8 @@ var events = {
 
         var selectedOptions = this.getSelected();
 
-        _utils2.default.removeClass(data[targetIndex], _classes2.default.SELECTED_HIDDEN);
-        _utils2.default.removeClass(data[targetIndex], _classes2.default.SELECTED);
+        _utils2.default.removeClass(data[targetIndex], classes.SELECTED_HIDDEN);
+        _utils2.default.removeClass(data[targetIndex], classes.SELECTED);
 
         target.removeEventListener('click', this.removeMultiTag);
 
@@ -3322,15 +3466,17 @@ var events = {
             });
         }
 
+        this.removeNoMoreOptionsMessage();
+        this.removeNoResultsMessage();
         this.setTextMultiTagIndent();
 
         selected.setAttribute('data-value', value);
         selected.setAttribute('data-index', index);
 
         try {
-            this.onSelect(e, this.getSelectedValues());
+            this.onChange(e, this.getSelectedValues());
         } catch (e) {
-            console.warn('something may be wrong in "onSelect"', e);
+            console.warn('something may be wrong in "onChange"', e);
         }
     },
 
@@ -3340,7 +3486,7 @@ var events = {
      *
      * removes event listeners on the data divs
      *
-     * @return _Void_
+     * @return {Void} void
      */
     removeOptionsListeners: function removeOptionsListeners() {
         var _this5 = this;
@@ -3357,11 +3503,45 @@ var events = {
 
 
     /**
+     * ## removeNoMoreOptionsMessage
+     *
+     * Removing 'No More options' message from the option list
+     *
+     * @return {Void} void
+     */
+    removeNoMoreOptionsMessage: function removeNoMoreOptionsMessage() {
+        var noMoreOptionsEl = this.refs.noMoreOptionsEl;
+
+        if (this.refs.optionsList && noMoreOptionsEl) {
+            this.refs.optionsList.removeChild(noMoreOptionsEl);
+            this.refs.noMoreOptionsEl = undefined;
+        }
+    },
+
+
+    /**
+     * ## removeNoResultsMessage
+     *
+     * Removing 'No Results' message from the option list
+     *
+     * @return {Void} void
+     */
+    removeNoResultsMessage: function removeNoResultsMessage() {
+        var noResultsEl = this.refs.noResultsEl;
+
+        if (this.refs.optionsList && noResultsEl) {
+            this.refs.optionsList.removeChild(noResultsEl);
+            this.refs.noResultsEl = undefined;
+        }
+    },
+
+
+    /**
      * ## removeSearchListeners
      *
      * removes the listeners from the search input
      *
-     * @return _Void_
+     * @return {Void} void
      */
     removeSearchListeners: function removeSearchListeners() {
         var search = this.refs.search;
@@ -3377,14 +3557,16 @@ var events = {
      *
      * removes the [[this.selectedClass]] from all data
      *
-     * @return _Void_
+     * @param {Array} data array of data objects
+     *
+     * @return {Void} void
      */
     removeSelectedClass: function removeSelectedClass(data) {
         var _this6 = this;
 
         data = data || this.refs.data;
 
-        data.forEach(function (dataObj, i) {
+        data.forEach(function (dataObj) {
             _utils2.default.removeClass(dataObj, _this6.selectedClass);
         });
     },
@@ -3395,7 +3577,9 @@ var events = {
      *
      * sets the selected property to false for all data
      *
-     * @return _Void_
+     * @param {Array} data array of data objects
+     *
+     * @return {Void} void
      */
     removeSelectedValue: function removeSelectedValue(data) {
         data = data || this.refs.data;
@@ -3412,7 +3596,7 @@ var events = {
      *
      * disables the event listener on the native select box
      *
-     * @return _Void_
+     * @return {Void} void
      */
     removeSelectKeyListener: function removeSelectKeyListener() {
         var select = this.refs.select;
@@ -3427,7 +3611,7 @@ var events = {
      *
      * @param {Object} e event object
      *
-     * @return _Void_
+     * @return {Void} void
      */
     setKeypress: function setKeypress(e) {
         var refs = this.refs;
@@ -3443,21 +3627,22 @@ var events = {
 
                 this.addPlaceholder();
                 this.toggleClosed(e, optionsList, refs, wrapper, true);
+
                 return false;
             }
 
             if (keyCode === _keycodes2.default.ENTER || keyCode === _keycodes2.default.ESCAPE || keyCode === _keycodes2.default.SPACE) {
                 this.toggleList(e);
+
                 return false;
             }
 
             if (keyCode === _keycodes2.default.UP || keyCode === _keycodes2.default.DOWN) {
                 if (!window.sidebar) {
                     e.preventDefault();
-                    var _search = refs.search;
 
-                    if (_search) {
-                        _search.value = '';
+                    if (refs.search) {
+                        refs.search.value = '';
                     }
 
                     increment = keyCode - 39;
@@ -3481,7 +3666,7 @@ var events = {
      * @param {Object} e event object
      * @param {Number} increment amount to change the index by
      *
-     * @return _Void_
+     * @return {Void} void
      */
     setKeypressElement: function setKeypressElement(e, increment) {
         var refs = this.refs;
@@ -3496,12 +3681,13 @@ var events = {
             index = dataMaxIndex;
         }
 
-        selectTag.selectedIndex = index;
-
+        var classes = this.classes;
         var hasClass = _utils2.default.hasClass;
         var dataAtIndex = data[index];
 
-        if (hasClass(dataAtIndex, _classes2.default.HIDDEN) || hasClass(dataAtIndex, _classes2.default.SELECTED_HIDDEN) || hasClass(dataAtIndex, _classes2.default.SEARCH_HIDDEN) || hasClass(dataAtIndex, _classes2.default.DISABLED)) {
+        selectTag.selectedIndex = index;
+
+        if (hasClass(dataAtIndex, classes.HIDDEN) || hasClass(dataAtIndex, classes.SELECTED_HIDDEN) || hasClass(dataAtIndex, classes.SEARCH_HIDDEN) || hasClass(dataAtIndex, classes.DISABLED)) {
             this.setKeypress(e);
         }
     },
@@ -3510,15 +3696,15 @@ var events = {
     /**
      * ## setSelectValue
      *
-     * sets the selected value in flounder.  when activated by a click, the event
-     * object is moved to the second variable.  this gives us the ability to
-     * discern between triggered events (keyup) and processed events (click)
-     * for the sake of choosing our targets
+     * sets the selected value in flounder.  when activated by a click,
+     * the event object is moved to the second variable.  this gives us the
+     * ability to discern between triggered events (keyup) and processed events
+     * (click) for the sake of choosing our targets
      *
      * @param {Object} obj possible event object
      * @param {Object} e event object
      *
-     * @return _Void_
+     * @return {Void} void
      */
     setSelectValue: function setSelectValue(obj, e) {
         var refs = this.refs;
@@ -3535,7 +3721,7 @@ var events = {
 
         this.displaySelected(refs.selected, refs);
 
-        if (!this.___programmaticClick) {
+        if (!this.programmaticClick) {
             // tab, shift, ctrl, alt, caps, cmd
             var nonKeys = [9, 16, 17, 18, 20, 91];
 
@@ -3544,15 +3730,14 @@ var events = {
                     this.toggleList.justOpened = false;
                 } else {
                     try {
-                        this.onSelect(e, this.getSelectedValues());
+                        this.onChange(e, this.getSelectedValues());
                     } catch (e) {
-                        console.warn('something may be wrong in "onSelect"', e);
+                        console.warn('something may be wrong in onChange', e);
                     }
                 }
             }
+            this.programmaticClick = false;
         }
-
-        this.___programmaticClick = false;
     },
 
 
@@ -3561,15 +3746,18 @@ var events = {
      *
      * processes the setting of a value after a keypress event
      *
-     * @return _Void_
+     * @return {Void} void
      */
     setSelectValueButton: function setSelectValueButton() {
         var refs = this.refs;
         var data = refs.data;
-        var select = refs.select;
         var selectedClass = this.selectedClass;
 
         var selectedOption = void 0;
+
+        if (this.multipleTags) {
+            return false;
+        }
 
         this.removeSelectedClass(data);
 
@@ -3593,28 +3781,25 @@ var events = {
      *
      * @param {Object} e event object
      *
-     * @return _Void_
+     * @return {Void} void
      */
     setSelectValueClick: function setSelectValueClick(e) {
-        var _multiple = this.multiple;
+        var multiple = this.multiple;
         var refs = this.refs;
         var selectedClass = this.selectedClass;
-        var index = void 0,
-            selectedOption = void 0;
 
-        if ((!_multiple || _multiple && !this.multipleTags && !e[this.multiSelect]) && !this.___forceMultiple) {
+        if ((!multiple || multiple && !this.multipleTags && !e[this.multiSelect]) && !this.forceMultiple) {
             this.deselectAll();
         }
 
-        this.___forceMultiple = false;
+        this.forceMultiple = false;
         var target = e.target;
 
         _utils2.default.toggleClass(target, selectedClass);
-        index = target.getAttribute('data-index');
+        var index = target.getAttribute('data-index');
+        var selectedOption = refs.selectOptions[index];
 
-        selectedOption = refs.selectOptions[index];
-
-        selectedOption.selected = selectedOption.selected === true ? false : true;
+        selectedOption.selected = selectedOption.selected !== true;
 
         var firstOption = refs.selectOptions[0];
 
@@ -3630,7 +3815,7 @@ var events = {
      *
      * sets the text-indent on the search field to go around selected tags
      *
-     * @return _Void_
+     * @return {Void} void
      */
     setTextMultiTagIndent: function setTextMultiTagIndent() {
         var _this7 = this;
@@ -3640,7 +3825,7 @@ var events = {
 
         var offset = 0;
 
-        nativeSlice.call(refs.multiTagWrapper.children, 0).forEach(function (e, i) {
+        nativeSlice.call(refs.multiTagWrapper.children, 0).forEach(function (e) {
             offset += _utils2.default.getElWidth(e, _this7.setTextMultiTagIndent, _this7);
         });
 
@@ -3660,14 +3845,17 @@ var events = {
      * @param {DOMElement} wrapper wrapper of flounder
      * @param {Boolean} exit prevents refocus. used while tabbing away
      *
-     * @return _Void_
+     * @return {Void} void
      */
     toggleClosed: function toggleClosed(e, optionsList, refs, wrapper) {
         var exit = arguments.length <= 4 || arguments[4] === undefined ? false : arguments[4];
 
-        _utils2.default.addClass(optionsList, _classes2.default.HIDDEN);
+        var classes = this.classes;
+
+        _utils2.default.addClass(refs.optionsListWrapper, classes.HIDDEN);
         this.removeSelectKeyListener();
-        _utils2.default.removeClass(wrapper, _classes2.default.OPEN);
+
+        _utils2.default.removeClass(wrapper, classes.OPEN);
 
         var qsHTML = document.querySelector('html');
         qsHTML.removeEventListener('click', this.catchBodyClick);
@@ -3696,15 +3884,19 @@ var events = {
      *
      * on click of flounder--selected, this shows or hides the options list
      *
+     * @param {Object} e event object
      * @param {String} force toggle can be forced by passing 'open' or 'close'
      *
-     * @return _Void_
+     * @return {Void} void
      */
     toggleList: function toggleList(e, force) {
+        var classes = this.classes;
         var refs = this.refs;
+
         var optionsList = refs.optionsListWrapper;
+
         var wrapper = refs.wrapper;
-        var isHidden = _utils2.default.hasClass(optionsList, _classes2.default.HIDDEN);
+        var isHidden = _utils2.default.hasClass(optionsList, classes.HIDDEN);
         var type = e.type;
 
         if (type === 'mouseleave' || force === 'close' || !isHidden) {
@@ -3725,10 +3917,14 @@ var events = {
      *
      * toggleList wrapper for search.  only triggered if flounder is closed
      *
-     * @return _Void_
+     * @param {Object} e event object
+     *
+     * @return {Void} void
      */
     toggleListSearchClick: function toggleListSearchClick(e) {
-        if (!_utils2.default.hasClass(this.refs.wrapper, _classes2.default.OPEN)) {
+        var classes = this.classes;
+
+        if (!_utils2.default.hasClass(this.refs.wrapper, classes.OPEN)) {
             this.toggleList(e, 'open');
         }
     },
@@ -3742,16 +3938,17 @@ var events = {
      * @param {Object} e event object
      * @param {DOMElement} optionsList the options list
      * @param {Object} refs contains the references of the elements in flounder
-     * @param {DOMElement} wrapper wrapper of flounder
      *
-     * @return _Void_
+     * @return {Void} void
      */
-    toggleOpen: function toggleOpen(e, optionsList, refs, wrapper) {
+    toggleOpen: function toggleOpen(e, optionsList, refs) {
         this.addSelectKeyListener();
 
         if (!this.isIos || this.search || this.multipleTags === true) {
-            _utils2.default.removeClass(optionsList, _classes2.default.HIDDEN);
-            _utils2.default.addClass(wrapper, _classes2.default.OPEN);
+            var classes = this.classes;
+
+            _utils2.default.removeClass(refs.optionsListWrapper, classes.HIDDEN);
+            _utils2.default.addClass(refs.wrapper, classes.OPEN);
 
             var qsHTML = document.querySelector('html');
 
@@ -3770,6 +3967,17 @@ var events = {
             refs.search.focus();
         }
 
+        var optionCount = refs.data.length;
+
+        if (this.props.placeholder) {
+            optionCount--;
+        }
+
+        if (refs.multiTagWrapper && refs.multiTagWrapper.childNodes.length === optionCount) {
+            this.removeNoResultsMessage();
+            this.addNoMoreOptionsMessage();
+        }
+
         if (this.ready) {
             try {
                 this.onOpen(e, this.getSelectedValues());
@@ -3782,14 +3990,17 @@ var events = {
 
 exports.default = events;
 
-},{"./classes":14,"./keycodes":18,"./search":19,"./utils":20}],17:[function(require,module,exports){
+},{"./keycodes":18,"./utils":20}],17:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /* globals console, document */
+
 
 var _defaults = require('./defaults');
 
@@ -3809,10 +4020,6 @@ var _events = require('./events');
 
 var _events2 = _interopRequireDefault(_events);
 
-var _classes2 = require('./classes');
-
-var _classes3 = _interopRequireDefault(_classes2);
-
 var _search = require('./search');
 
 var _search2 = _interopRequireDefault(_search);
@@ -3829,6 +4036,12 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+/**
+ * main flounder class
+ *
+ * @return {Object} Flounder instance
+ */
+
 var Flounder = function () {
     _createClass(Flounder, [{
         key: 'componentWillUnmount',
@@ -3838,13 +4051,13 @@ var Flounder = function () {
          *
          * on unmount, removes events
          *
-         * @return _Void_
+         * @return {Void} void
          */
         value: function componentWillUnmount() {
             try {
                 this.onComponentWillUnmount();
             } catch (e) {
-                console.warn('something may be wrong in "onComponentWillUnmount"', e);
+                console.warn('something may be wrong in\n                                        "onComponentWillUnmount"', e);
             }
 
             this.removeListeners();
@@ -3859,10 +4072,10 @@ var Flounder = function () {
          *
          * filters and sets up the main init
          *
-         * @param {DOMElement, String, Array} target flounder mount point
+         * @param {Mixed} target flounder mount point _DOMElement, String, Array_
          * @param {Object} props passed options
          *
-         * @return _Object_ new flounder object
+         * @return {Object} new flounder object
          */
 
     }]);
@@ -3879,7 +4092,7 @@ var Flounder = function () {
 
             if ((target.length || target.length === 0) && target.tagName !== 'SELECT') {
                 if (target.length > 1) {
-                    console.warn('Flounder - More than one element found. Dropping all but the first.');
+                    console.warn('Flounder - More than one element found.\n                                                Dropping all but the first.');
                 } else if (target.length === 0) {
                     throw 'Flounder - No target element found.';
                 }
@@ -3902,7 +4115,7 @@ var Flounder = function () {
      *
      * @param {Object} e event object
      *
-     * @return _Void_
+     * @return {Void} void
      */
 
 
@@ -3913,21 +4126,30 @@ var Flounder = function () {
 
             var val = e.target.value.trim();
 
-            this.fuzzySearch.__previousValue = val;
+            this.fuzzySearch.previousValue = val;
 
             var matches = this.search.isThereAnythingRelatedTo(val) || [];
 
             if (val !== '') {
                 (function () {
                     var data = _this.refs.data;
+                    var classes = _this.classes;
 
-                    data.forEach(function (el, i) {
-                        _utils2.default.addClass(el, _classes3.default.SEARCH_HIDDEN);
+                    data.forEach(function (el) {
+                        _utils2.default.addClass(el, classes.SEARCH_HIDDEN);
                     });
 
                     matches.forEach(function (e) {
-                        _utils2.default.removeClass(data[e.i], _classes3.default.SEARCH_HIDDEN);
+                        _utils2.default.removeClass(data[e.i], classes.SEARCH_HIDDEN);
                     });
+
+                    if (!_this.refs.noMoreOptionsEl) {
+                        if (matches.length === 0) {
+                            _this.addNoResultsMessage();
+                        } else {
+                            _this.removeNoResultsMessage();
+                        }
+                    }
                 })();
             } else {
                 this.fuzzySearchReset();
@@ -3937,17 +4159,18 @@ var Flounder = function () {
         /**
          * ## fuzzySearch
          *
-         * filters events to determine the correct actions, based on events from the search box
+         * filters events to determine the correct actions, based on events from
+         * the search box
          *
          * @param {Object} e event object
          *
-         * @return _Void_
+         * @return {Void} void
          */
 
     }, {
         key: 'fuzzySearch',
         value: function fuzzySearch(e) {
-            this.fuzzySearch.__previousValue = this.fuzzySearch.__previousValue || '';
+            this.fuzzySearch.previousValue = this.fuzzySearch.previousValue || '';
 
             try {
                 this.onInputChange(e);
@@ -3961,7 +4184,7 @@ var Flounder = function () {
                 var keyCode = e.keyCode;
 
                 if (keyCode !== _keycodes2.default.UP && keyCode !== _keycodes2.default.DOWN && keyCode !== _keycodes2.default.ENTER && keyCode !== _keycodes2.default.ESCAPE) {
-                    if (this.multipleTags && keyCode === _keycodes2.default.BACKSPACE && this.fuzzySearch.__previousValue === '') {
+                    if (this.multipleTags && keyCode === _keycodes2.default.BACKSPACE && this.fuzzySearch.previousValue === '') {
                         var lastTag = this.refs.multiTagWrapper.lastChild;
 
                         if (lastTag) {
@@ -3985,16 +4208,17 @@ var Flounder = function () {
          *
          * resets all options to visible
          *
-         * @return _Void_
+         * @return {Void} void
          */
 
     }, {
         key: 'fuzzySearchReset',
         value: function fuzzySearchReset() {
             var refs = this.refs;
+            var classes = this.classes;
 
             refs.data.forEach(function (dataObj) {
-                _utils2.default.removeClass(dataObj, _classes3.default.SEARCH_HIDDEN);
+                _utils2.default.removeClass(dataObj, classes.SEARCH_HIDDEN);
             });
 
             refs.search.value = '';
@@ -4008,16 +4232,18 @@ var Flounder = function () {
          * @param {DOMElement} target flounder mount point
          * @param {Object} props passed options
          *
-         * @return _Object_ new flounder object
+         * @return {Object} new flounder object
          */
 
     }, {
         key: 'init',
         value: function init(target, props) {
             this.props = props;
-            this.setTarget(target);
+
             this.bindThis();
             this.initializeOptions();
+
+            this.setTarget(target);
 
             if (this.search) {
                 this.search = new _search2.default(this);
@@ -4037,6 +4263,7 @@ var Flounder = function () {
             var isIos = _utils$setPlatform.isIos;
             var multiSelect = _utils$setPlatform.multiSelect;
 
+
             this.isOsx = isOsx;
             this.isIos = isIos;
             this.multiSelect = multiSelect;
@@ -4045,12 +4272,14 @@ var Flounder = function () {
             try {
                 this.onComponentDidMount();
             } catch (e) {
-                console.warn('something may be wrong in "onComponentDidMount"', e);
+                console.warn('something may be wrong in onComponentDidMount', e);
             }
 
             this.ready = true;
 
-            return this.refs.flounder.flounder = this.originalTarget.flounder = this.target.flounder = this;
+            this.originalTarget.flounder = this.target.flounder = this;
+
+            return this.refs.flounder.flounder = this;
         }
 
         /**
@@ -4059,7 +4288,7 @@ var Flounder = function () {
          * inserts the initial options into the flounder object, setting defaults
          * when necessary
          *
-         * @return _Void_
+         * @return {Void} void
          */
 
     }, {
@@ -4068,17 +4297,30 @@ var Flounder = function () {
             var props = this.props = this.props || {};
 
             for (var opt in _defaults.defaultOptions) {
-                if (opt !== 'classes') {
-                    this[opt] = props[opt] !== undefined ? props[opt] : _defaults.defaultOptions[opt];
-                } else {
-                    var _classes = _defaults.defaultOptions[opt];
-                    var propsClasses = props.classes;
+                // depreciated @todo remove @2.0.0
+                if (opt === 'onChange' && props.onSelect) {
+                    this.onChange = props.onSelect;
 
-                    for (var clss in _classes) {
-                        this[clss + 'Class'] = propsClasses && propsClasses[clss] !== undefined ? propsClasses[clss] : _classes[clss];
+                    console.warn('Please use onChange.  onSelect has been\n                                    depricated and will be removed in 2.0.0');
+
+                    this.onSelect = function () {
+                        console.warn('Please use onChange. onSelect has been\n                                    depricated and will be removed in 2.0.0');
+                        this.onChange.apply(this, arguments);
+                    };
+                } else if (opt === 'classes') {
+                    this.classes = {};
+                    var defaultClasses = _defaults.defaultOptions[opt];
+                    var propClasses = _typeof(props[opt]) === 'object' ? props[opt] : {};
+
+                    for (var clss in defaultClasses) {
+                        this.classes[clss] = propClasses[clss] ? propClasses[clss] : defaultClasses[clss];
                     }
+                } else {
+                    this[opt] = props[opt] !== undefined ? props[opt] : _defaults.defaultOptions[opt];
                 }
             }
+
+            this.selectedClass = this.classes.SELECTED;
 
             if (props.defaultEmpty) {
                 this.placeholder = '';
@@ -4087,9 +4329,7 @@ var Flounder = function () {
             if (this.multipleTags) {
                 this.search = true;
                 this.multiple = true;
-                this.selectedClass += '  ' + _classes3.default.SELECTED_HIDDEN;
-
-                this.placeholder = this.placeholder === '' ? this.placeholder : _defaults.defaultOptions.placeholder;
+                this.selectedClass += '  ' + this.classes.SELECTED_HIDDEN;
             }
         }
 
@@ -4098,7 +4338,7 @@ var Flounder = function () {
          *
          * attaches necessary events to the built DOM
          *
-         * @return _Void_
+         * @return {Void} void
          */
 
     }, {
@@ -4106,15 +4346,15 @@ var Flounder = function () {
         value: function onRender() {
             var props = this.props;
             var refs = this.refs;
-            var data = refs.data;
 
             if (!!this.isIos && !this.multiple) {
                 var sel = refs.select;
-                _utils2.default.removeClass(sel, _classes3.default.HIDDEN);
-                _utils2.default.addClass(sel, _classes3.default.HIDDEN_IOS);
+                var classes = this.classes;
+                _utils2.default.removeClass(sel, classes.HIDDEN);
+                _utils2.default.addClass(sel, classes.HIDDEN_IOS);
             }
 
-            this.addListeners(refs);
+            this.addListeners(refs, props);
         }
 
         /**
@@ -4122,7 +4362,11 @@ var Flounder = function () {
          *
          * checks the data object for header options, and sorts it accordingly
          *
-         * @return _Boolean_ hasHeaders
+         * @param {Array} data flounder data options
+         * @param {Array} res results
+         * @param {Number} i index
+         *
+         * @return {Boolean} hasHeaders
          */
 
     }, {
@@ -4137,7 +4381,8 @@ var Flounder = function () {
                 if (d.header) {
                     res = _this2.sortData(d.data, res, i);
                 } else {
-                    if (typeof d !== 'object') {
+                    /* istanbul ignore next */
+                    if ((typeof d === 'undefined' ? 'undefined' : _typeof(d)) !== 'object') {
                         d = {
                             text: d,
                             value: d,
@@ -4164,7 +4409,7 @@ var Flounder = function () {
  *
  * accepts array-like objects and selector strings to make multiple flounders
  *
- * @param {Array or String} flounder target(s)
+ * @param {Mixed} targets target(s) _Array or String_
  * @param {Object} props passed options
  *
  * @return {Array} array of flounders
@@ -4204,7 +4449,7 @@ _utils2.default.extendClass(Flounder, _api2.default, _build2.default, _events2.d
 
 exports.default = Flounder;
 
-},{"./api":12,"./build":13,"./classes":14,"./defaults":15,"./events":16,"./keycodes":18,"./search":19,"./utils":20,"./version":21}],18:[function(require,module,exports){
+},{"./api":12,"./build":13,"./defaults":15,"./events":16,"./keycodes":18,"./search":19,"./utils":20,"./version":21}],18:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -4260,7 +4505,7 @@ var defaults = exports.defaults = {
      * params to test for score
      *
      * called as:
-     * score += this.scoreThis( search[ param ], weights[ param ] );
+     * score += this.scoreThis( search[ param ], weights[ param ] );
      */
     scoreProperties: ['text', 'textFlat', 'textSplit', 'value', 'valueFlat', 'valueSplit', 'description', 'descriptionSplit'],
 
@@ -4268,7 +4513,7 @@ var defaults = exports.defaults = {
      * params to test with startsWith
      *
      * called as:
-     * score += startsWith( query, search[ param ], weights[ param + `StartsWith` ] );
+     * startsWith( query, search[ param ], weights[ param + 'StartsWith' ] );
      */
     startsWithProperties: ['text', 'value'],
 
@@ -4309,7 +4554,7 @@ var Sole = exports.Sole = function () {
          * @param {Object} a result
          * @param {Object} b result to compare with
          *
-         * @return _Number_ comparison result
+         * @return {Number} comparison result
          */
         value: function compareScoreCards(a, b) {
             if (a && a.score && b && b.score) {
@@ -4333,9 +4578,9 @@ var Sole = exports.Sole = function () {
          *
          * initial setup of Sole object
          *
-         * @param {Object} options option object
+         * @param {Object} flounder option object
          *
-         * @return _Object_ this
+         * @return {Object} this
          */
 
     }]);
@@ -4361,7 +4606,7 @@ var Sole = exports.Sole = function () {
      *
      * @param {String} string string to be escaped
      *
-     * return _String_ escaped string
+     * @return {String} escaped string
      */
 
 
@@ -4374,12 +4619,13 @@ var Sole = exports.Sole = function () {
         /**
          * ## getResultWeights
          *
-         * after the data is prepared this is mapped through the data to get weighted results
+         * after the data is prepared this is mapped through the data to get
+         * weighted results
          *
-         * @param  {Object} data object
+         * @param  {Object} d object
          * @param  {Number} i index
          *
-         * @return _Object_ res weighted results
+         * @return {Object} res weighted results
          */
 
     }, {
@@ -4388,7 +4634,11 @@ var Sole = exports.Sole = function () {
             var _this = this;
 
             var score = 0;
-            var res = { i: i, d: d };
+            var res = {
+                i: i,
+                d: d
+            };
+
             var search = d.search = d.search || {};
             var weights = defaults.weights;
             var dText = '' + d.text;
@@ -4423,13 +4673,15 @@ var Sole = exports.Sole = function () {
          *
          * removes the items that have recieved a score lower than the set minimum
          *
-         * @return _Boolean_ under the minimum or not
+         * @param {Object} d score object
+         *
+         * @return {Boolean} the minimum or not
          */
 
     }, {
         key: 'isItemAboveMinimum',
         value: function isItemAboveMinimum(d) {
-            return d.score >= defaults.minimumScore ? true : false;
+            return d.score >= defaults.minimumScore;
         }
 
         /**
@@ -4441,7 +4693,7 @@ var Sole = exports.Sole = function () {
          *
          * @param {Array} query  array of words to search the content for
          *
-         * @return _Array_ results returns array of relevant search results
+         * @return {Array} results returns array of relevant search results
          */
 
     }, {
@@ -4449,7 +4701,7 @@ var Sole = exports.Sole = function () {
         value: function isThereAnythingRelatedTo() {
             var query = arguments.length <= 0 || arguments[0] === undefined ? '' : arguments[0];
 
-            var ratedResults = void 0;
+            var ratedRes = void 0;
 
             query = query.length ? query : '' + query;
 
@@ -4459,27 +4711,28 @@ var Sole = exports.Sole = function () {
                 var data = this.flounder.data;
                 data = this.flounder.sortData(data);
 
-                ratedResults = this.ratedResults = data.map(this.getResultWeights);
+                ratedRes = this.ratedRes = data.map(this.getResultWeights);
             } else {
                 return false;
             }
 
-            ratedResults.sort(this.compareScoreCards);
-            ratedResults = ratedResults.filter(this.isItemAboveMinimum);
+            ratedRes.sort(this.compareScoreCards);
+            ratedRes = ratedRes.filter(this.isItemAboveMinimum);
 
-            return this.ratedResults = ratedResults;
+            return this.ratedRes = ratedRes;
         }
 
         /**
          * ## startsWith
          *
-         * checks the beginning of the given text to see if the query matches exactly
+         * checks the beginning of the given text to see if the query matches
+         * exactly
          *
          * @param {String} query string to search for
          * @param {String} value string to search in
          * @param {Integer} weight amount of points to give an exact match
          *
-         * @return _Integer_ points to award
+         * @return {Integer} points to award
          */
 
     }, {
@@ -4511,7 +4764,7 @@ var Sole = exports.Sole = function () {
          * @param {Boolean} noPunishment when passed true, this does not give
          *                               negative points for non-matches
          *
-         * @return _Integer_ the final weight adjusted score
+         * @return {Integer} the final weight adjusted score
          */
 
     }, {
@@ -4529,12 +4782,11 @@ var Sole = exports.Sole = function () {
                     if (typeof target === 'string') {
                         queryWord = new RegExp(queryWord, 'g');
                         count = (target.match(queryWord) || []).length;
-                    } else if (target[0]) // array.  what if the words obj has the word length?
-                        {
-                            target.forEach(function (word) {
-                                count = word.indexOf(queryWord) !== -1 ? 1 : 0;
-                            });
-                        } else {
+                    } else if (target[0]) {
+                        target.forEach(function (word) {
+                            count = word.indexOf(queryWord) !== -1 ? 1 : 0;
+                        });
+                    } else {
                         count = target[queryWord] || 0.000001;
                     }
 
@@ -4562,10 +4814,6 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _classes = require('/Library/WebServer/Documents/flounder/src/core/classes');
-
-var _classes2 = _interopRequireDefault(_classes);
-
 var _http = require('microbejs/src/modules/http');
 
 var _http2 = _interopRequireDefault(_http);
@@ -4578,29 +4826,31 @@ var utils = {
      *
      * on the quest to nuke jquery, a wild helper function appears
      *
-     * @param {DOMElement} _el target element
-     * @param {String} _class class to add
+     * @param {DOMElement} el target element
+     * @param {String} clss class to add
      *
-     * @return _Void_
+     * @return {Void} void
      */
 
-    addClass: function addClass(_el, _class) {
-        if (typeof _class !== 'string' && _class.length) {
-            _class.forEach(function (_c) {
-                utils.addClass(_el, _c);
+    addClass: function addClass(el, clss) {
+        if (typeof clss !== 'string' && clss.length) {
+            clss.forEach(function (c) {
+                utils.addClass(el, c);
             });
 
             return true;
         }
 
-        var _elClass = _el.className;
-        var _elClassLength = _elClass.length;
+        var elClass = el.className;
+        var elClassLength = elClass.length;
 
-        if (!utils.hasClass(_el, _class) && _elClass.slice(0, _class.length + 1) !== _class + ' ' && _elClass.slice(_elClassLength - _class.length - 1, _elClassLength) !== ' ' + _class) {
-            _elClass += '  ' + _class;
+        var className = elClass.slice(elClassLength - clss.length - 1, elClassLength);
+
+        if (!utils.hasClass(el, clss) && elClass.slice(0, clss.length + 1) !== clss + ' ' && className !== ' ' + clss) {
+            elClass += '  ' + clss;
         }
 
-        _el.className = _elClass.trim();
+        el.className = elClass.trim();
     },
 
 
@@ -4609,18 +4859,18 @@ var utils = {
      *
      * attached data attributes and others (seperately)
      *
-     * @param {DOMElement} _el element to assign attributes
-     * @param {Object} _elObj contains the attributes to attach
+     * @param {DOMElement} el element to assign attributes
+     * @param {Object} elObj contains the attributes to attach
      *
-     * @return _Void_
+     * @return {Void} void
      */
-    attachAttributes: function attachAttributes(_el, _elObj) {
-        if (_elObj) {
-            for (var att in _elObj) {
+    attachAttributes: function attachAttributes(el, elObj) {
+        if (elObj) {
+            for (var att in elObj) {
                 if (att.slice(0, 5) === 'data-') {
-                    _el.setAttribute(att, _elObj[att]);
+                    el.setAttribute(att, elObj[att]);
                 } else {
-                    _el[att] = _elObj[att];
+                    el[att] = elObj[att];
                 }
             }
         } else {
@@ -4632,16 +4882,16 @@ var utils = {
     /**
      * ## constructElement
      *
-     * @param {Object} _elObj object carrying properties to transfer
+     * @param {Object} elObj object carrying properties to transfer
      *
-     * @return _Element_
+     * @return {Element} new element
      */
-    constructElement: function constructElement(_elObj) {
-        var _el = document.createElement(_elObj.tagname || 'div');
+    constructElement: function constructElement(elObj) {
+        var el = document.createElement(elObj.tagname || 'div');
 
-        utils.attachAttributes(_el, _elObj);
+        utils.attachAttributes(el, elObj);
 
-        return _el;
+        return el;
     },
 
 
@@ -4650,19 +4900,28 @@ var utils = {
      *
      * extends a class from an object.  returns the original reference
      *
-     * @param {Class} _extend class to be extended
+     * @param {Class} extend class to be extended
      * @param {Class} objects objects to extend the class with
      *
      * @return {Class} modified class object
      */
-    extendClass: function extendClass(_extend) {
-        _extend = _extend.prototype;
+    extendClass: function extendClass(extend) {
+        extend = extend.prototype;
 
-        var merge = function merge(obj) {
+        /**
+         * ## merge
+         *
+         * combines two objects
+         *
+         * @param {Object} obj object to combine with extend
+         *
+         * @return {Obj} newly combined object
+         */
+        function merge(obj) {
             for (var prop in obj) {
-                _extend[prop] = obj[prop];
+                extend[prop] = obj[prop];
             }
-        };
+        }
 
         for (var _len = arguments.length, objects = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
             objects[_key - 1] = arguments[_key];
@@ -4673,7 +4932,7 @@ var utils = {
             merge(obj);
         }
 
-        return _extend;
+        return extend;
     },
 
 
@@ -4684,7 +4943,7 @@ var utils = {
      *
      * @param {String} string unescaped string
      *
-     * @return _Void_
+     * @return {Void} void
      */
     escapeHTML: function escapeHTML(string) {
         return String(string).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -4697,24 +4956,27 @@ var utils = {
      * gets the width adjusted for margins
      *
      * @param {DOMElement} el target element
+     * @param {Function} cb callback
+     * @param {Object} context transferred this
+     * @param {Number} timeout time to wait in ms
      *
-     * @return _Integer_ adjusted width
+     * @return {Integer} adjusted width
      */
-    getElWidth: function getElWidth(el, _cb, context) {
+    getElWidth: function getElWidth(el, cb, context) {
         var timeout = arguments.length <= 3 || arguments[3] === undefined ? 1500 : arguments[3];
 
         var style = window.getComputedStyle(el);
 
-        if (el.offsetWidth === 0 && this.__checkWidthAgain !== true) {
-            if (_cb && context) {
+        if (el.offsetWidth === 0 && this.checkWidthAgain !== true) {
+            if (cb && context) {
                 /* istanbul ignore next */
-                setTimeout(_cb.bind(context), timeout);
-                this.__checkWidthAgain = true;
+                setTimeout(cb.bind(context), timeout);
+                this.checkWidthAgain = true;
             } else {
                 throw 'Flounder getElWidth error: no callback given.';
             }
         } else {
-            this.__checkWidthAgain = false;
+            this.checkWidthAgain = false;
         }
 
         return el.offsetWidth + parseInt(style['margin-left']) + parseInt(style['margin-right']);
@@ -4726,15 +4988,16 @@ var utils = {
      *
      * on the quest to nuke jquery, a wild helper function appears
      *
-     * @param {DOMElement} _el target element
-     * @param {String} _class class to check
+     * @param {DOMElement} el target element
+     * @param {String} clss class to check
      *
-     * @return _Void_
+     * @return {Void} void
      */
-    hasClass: function hasClass(_el, _class) {
-        var _elClass = _el.className;
-        var regex = new RegExp('(^' + _class + ' )|( ' + _class + '$)|( ' + _class + ' )|(^' + _class + '$)');
-        return !!_elClass.match(regex);
+    hasClass: function hasClass(el, clss) {
+        var elClass = el.className;
+        var regex = new RegExp('(^' + clss + ' )|( ' + clss + '$)|( ' + clss + ' )|(^' + clss + '$)'); // eslint-disable-line
+
+        return !!elClass.match(regex);
     },
 
 
@@ -4748,21 +5011,21 @@ var utils = {
      *
      * @param {Object} windowObj window, but allows for as testing override
      *
-     * @return _Void_
+     * @return {Void} void
      */
     iosVersion: function iosVersion() {
         var windowObj = arguments.length <= 0 || arguments[0] === undefined ? window : arguments[0];
 
         if (/iPad|iPhone|iPod/.test(windowObj.navigator.platform)) {
-            if (!!windowObj.indexedDB) {
+            if (windowObj.indexedDB) {
                 return '8+';
-            }
-            if (!!windowObj.SpeechSynthesisUtterance) {
+            } else if (windowObj.SpeechSynthesisUtterance) {
                 return '7';
             }
-            if (!!windowObj.webkitAudioContext) {
+            if (windowObj.webkitAudioContext) {
                 return '6';
             }
+
             return '5-';
         }
 
@@ -4777,7 +5040,7 @@ var utils = {
      *
      * @param {DOMElement} target target element
      *
-     * @return _Void_
+     * @return {Void} void
      */
     removeAllChildren: function removeAllChildren(target) {
         Array.prototype.slice.call(target.children, 0).forEach(function (el) {
@@ -4791,14 +5054,14 @@ var utils = {
      *
      * on the quest to nuke jquery, a wild helper function appears
      *
-     * @param {DOMElement} _el target element
-     * @param {String} _class class to remove
+     * @param {DOMElement} el target element
+     * @param {String} clss class to remove
      *
-     * @return _Void_
+     * @return {Void} void
      */
-    removeClass: function removeClass(el, _class) {
-        if (typeof _class !== 'string' && _class.length) {
-            _class.forEach(function (_c) {
+    removeClass: function removeClass(el, clss) {
+        if (typeof clss !== 'string' && clss.length) {
+            clss.forEach(function (_c) {
                 utils.removeClass(el, _c);
             });
 
@@ -4807,16 +5070,16 @@ var utils = {
 
         var baseClass = el.className;
         var baseClassLength = baseClass.length;
-        var classLength = _class.length;
+        var classLength = clss.length;
 
-        if (baseClass === _class) {
+        if (baseClass === clss) {
             baseClass = '';
-        } else if (baseClass.slice(0, classLength + 1) === _class + ' ') {
+        } else if (baseClass.slice(0, classLength + 1) === clss + ' ') {
             baseClass = baseClass.slice(classLength + 1, baseClassLength);
-        } else if (baseClass.slice(baseClassLength - classLength - 1, baseClassLength) === ' ' + _class) {
+        } else if (baseClass.slice(baseClassLength - classLength - 1, baseClassLength) === ' ' + clss) {
             baseClass = baseClass.slice(0, baseClassLength - classLength - 1);
-        } else if (baseClass.indexOf(' ' + _class + ' ') !== -1) {
-            baseClass = baseClass.replace(' ' + _class + ' ', ' ');
+        } else if (baseClass.indexOf(' ' + clss + ' ') !== -1) {
+            baseClass = baseClass.replace(' ' + clss + ' ', ' ');
         }
 
         el.className = baseClass.trim();
@@ -4830,7 +5093,7 @@ var utils = {
      *
      * @param {DOMElement} element element to check
      *
-     *@return _Void_
+     * @return {Void} void
      */
     scrollTo: function scrollTo(element) {
         if (element) {
@@ -4858,16 +5121,21 @@ var utils = {
      *
      * @param {Object} windowObj window, but allows for as testing override
      *
-     * @return _Void_
+     * @return {Void} void
      */
     setPlatform: function setPlatform() {
         var windowObj = arguments.length <= 0 || arguments[0] === undefined ? window : arguments[0];
 
-        var isOsx = windowObj.navigator.platform.indexOf('Mac') === -1 ? false : true;
+        var platform = windowObj.navigator.platform;
+        var isOsx = platform.indexOf('Mac') !== -1;
         var isIos = utils.iosVersion(windowObj);
         var multiSelect = isOsx ? 'metaKey' : 'ctrlKey';
 
-        return { isOsx: isOsx, isIos: isIos, multiSelect: multiSelect };
+        return {
+            isOsx: isOsx,
+            isIos: isIos,
+            multiSelect: multiSelect
+        };
     },
 
 
@@ -4879,7 +5147,7 @@ var utils = {
      * @param  {DOMElement} _el target to toggle class on
      * @param  {String} _class class to toggle on/off
      *
-     * @return _Void_
+     * @return {Void} void
      */
     toggleClass: function toggleClass(_el, _class) {
         if (utils.hasClass(_el, _class)) {
@@ -4888,15 +5156,17 @@ var utils = {
             utils.addClass(_el, _class);
         }
     }
-};
+}; /* globals document, window, setTimeout*/
+
 
 (0, _http2.default)(utils);
 
 exports.default = utils;
 
-},{"/Library/WebServer/Documents/flounder/src/core/classes":14,"microbejs/src/modules/http":3}],21:[function(require,module,exports){
+},{"microbejs/src/modules/http":3}],21:[function(require,module,exports){
 'use strict';
 
-module.exports = '1.0.1';
+/* global module */
+module.exports = '1.1.0';
 
 },{}]},{},[17]);
