@@ -396,6 +396,7 @@ class Flounder
             }
             else
             {
+                /* istanbul ignore next */
                 if ( typeof d !== 'object' )
                 {
                     d = {

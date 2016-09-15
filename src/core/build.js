@@ -269,9 +269,8 @@ const build = {
 
         originalData.forEach( ( dataObj, i ) =>
         {
-            const dataObjType = typeof dataObj;
-
-            if ( dataObjType !== 'object' )
+            /* istanbul ignore next */
+            if ( typeof dataObj !== 'object' )
             {
                 dataObj = originalData[ i ] = {
                     text    : dataObj,
@@ -298,6 +297,7 @@ const build = {
                 const dataObjData = dataObj.data;
                 dataObjData.forEach( ( d, i ) =>
                 {
+                    /* istanbul ignore next */
                     if ( typeof d !== 'object' )
                     {
                         d = dataObjData[ i ] = {
