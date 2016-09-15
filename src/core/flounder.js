@@ -1,15 +1,18 @@
-
+/* globals console, document */
 import { defaultOptions }   from './defaults';
 import utils                from './utils';
 import api                  from './api';
 import build                from './build';
 import events               from './events';
-import classes              from './classes';
 import Search               from './search';
 import version              from './version';
 import keycodes             from './keycodes';
 
-
+/**
+ * main flounder class
+ *
+ * @return {Object} Flounder instance
+ */
 class Flounder
 {
     /**
@@ -17,7 +20,7 @@ class Flounder
      *
      * on unmount, removes events
      *
-     * @return _Void_
+     * @return {Void} void
      */
     componentWillUnmount()
     {
@@ -25,9 +28,10 @@ class Flounder
         {
             this.onComponentWillUnmount();
         }
-        catch( e )
+        catch ( e )
         {
-            console.warn( `something may be wrong in "onComponentWillUnmount"`, e );
+            console.warn( `something may be wrong in
+                                        "onComponentWillUnmount"`, e );
         }
 
         this.removeListeners();
@@ -44,10 +48,10 @@ class Flounder
      *
      * filters and sets up the main init
      *
-     * @param {DOMElement, String, Array} target flounder mount point
+     * @param {Mixed} target flounder mount point _DOMElement, String, Array_
      * @param {Object} props passed options
      *
-     * @return _Object_ new flounder object
+     * @return {Object} new flounder object
      */
     constructor( target, props )
     {
@@ -57,16 +61,18 @@ class Flounder
         }
         else
         {
-            if ( typeof target === `string` )
+            if ( typeof target === 'string' )
             {
                 target = document.querySelectorAll( target );
             }
 
-            if ( ( target.length || target.length === 0 ) && target.tagName !== `SELECT`)
+            if ( ( target.length || target.length === 0 ) &&
+                        target.tagName !== 'SELECT' )
             {
                 if ( target.length > 1 )
                 {
-                    console.warn( 'Flounder - More than one element found. Dropping all but the first.' );
+                    console.warn( `Flounder - More than one element found.
+                                                Dropping all but the first.` );
                 }
                 else if ( target.length === 0 )
                 {
@@ -93,21 +99,22 @@ class Flounder
      *
      * @param {Object} e event object
      *
-     * @return _Void_
+     * @return {Void} void
      */
     filterSearchResults( e )
     {
-        let val = e.target.value.trim();
+        const val = e.target.value.trim();
 
-        this.fuzzySearch.__previousValue = val;
+        this.fuzzySearch.previousValue = val;
 
-        let matches = this.search.isThereAnythingRelatedTo( val ) || [];
+        const matches = this.search.isThereAnythingRelatedTo( val ) || [];
 
         if ( val !== '' )
         {
-            let data    = this.refs.data;
+            const data    = this.refs.data;
+            const classes = this.classes;
 
-            data.forEach( ( el, i ) =>
+            data.forEach( el =>
             {
                 utils.addClass( el, classes.SEARCH_HIDDEN );
             } );
@@ -116,6 +123,18 @@ class Flounder
             {
                 utils.removeClass( data[ e.i ], classes.SEARCH_HIDDEN );
             } );
+
+            if ( !this.refs.noMoreOptionsEl )
+            {
+                if ( matches.length === 0 )
+                {
+                    this.addNoResultsMessage();
+                }
+                else
+                {
+                    this.removeNoResultsMessage();
+                }
+            }
         }
         else
         {
@@ -127,38 +146,39 @@ class Flounder
     /**
      * ## fuzzySearch
      *
-     * filters events to determine the correct actions, based on events from the search box
+     * filters events to determine the correct actions, based on events from
+     * the search box
      *
      * @param {Object} e event object
      *
-     * @return _Void_
+     * @return {Void} void
      */
     fuzzySearch( e )
     {
-        this.fuzzySearch.__previousValue = this.fuzzySearch.__previousValue || '';
+        this.fuzzySearch.previousValue = this.fuzzySearch.previousValue || '';
 
         try
         {
             this.onInputChange( e );
         }
-        catch( e )
+        catch ( e )
         {
-            console.warn( `something may be wrong in "onInputChange"`, e );
+            console.warn( 'something may be wrong in "onInputChange"', e );
         }
 
         if ( !this.toggleList.justOpened )
         {
             e.preventDefault();
 
-            let keyCode = e.keyCode;
+            const keyCode = e.keyCode;
 
             if ( keyCode !== keycodes.UP && keyCode !== keycodes.DOWN &&
                     keyCode !== keycodes.ENTER && keyCode !== keycodes.ESCAPE )
             {
                 if ( this.multipleTags && keyCode === keycodes.BACKSPACE &&
-                        this.fuzzySearch.__previousValue === '' )
+                        this.fuzzySearch.previousValue === '' )
                 {
-                    let lastTag = this.refs.multiTagWrapper.lastChild;
+                    const lastTag = this.refs.multiTagWrapper.lastChild;
 
                     if ( lastTag )
                     {
@@ -170,10 +190,11 @@ class Flounder
                     this.filterSearchResults( e );
                 }
             }
-            else if ( keyCode === keycodes.ESCAPE || keyCode === keycodes.ENTER )
+            else if ( keyCode === keycodes.ESCAPE ||
+                                            keyCode === keycodes.ENTER )
             {
                 this.fuzzySearchReset();
-                this.toggleList( e, `close` );
+                this.toggleList( e, 'close' );
                 this.addPlaceholder();
             }
         }
@@ -189,18 +210,19 @@ class Flounder
      *
      * resets all options to visible
      *
-     * @return _Void_
+     * @return {Void} void
      */
     fuzzySearchReset()
     {
-        let refs = this.refs;
+        const refs    = this.refs;
+        const classes = this.classes;
 
         refs.data.forEach( dataObj =>
         {
             utils.removeClass( dataObj, classes.SEARCH_HIDDEN );
         } );
 
-        refs.search.value = ``;
+        refs.search.value = '';
     }
 
 
@@ -212,14 +234,16 @@ class Flounder
      * @param {DOMElement} target flounder mount point
      * @param {Object} props passed options
      *
-     * @return _Object_ new flounder object
+     * @return {Object} new flounder object
      */
     init( target, props )
     {
         this.props = props;
-        this.setTarget( target );
+
         this.bindThis();
         this.initializeOptions();
+
+        this.setTarget( target );
 
         if ( this.search )
         {
@@ -230,13 +254,15 @@ class Flounder
         {
             this.onInit();
         }
-        catch( e )
+        catch ( e )
         {
-            console.warn( `something may be wrong in "onInit"`, e );
+            console.warn( 'something may be wrong in "onInit"', e );
         }
 
         this.buildDom();
-        let { isOsx, isIos, multiSelect } = utils.setPlatform();
+
+        const { isOsx, isIos, multiSelect } = utils.setPlatform();
+
         this.isOsx          = isOsx;
         this.isIos          = isIos;
         this.multiSelect    = multiSelect;
@@ -246,14 +272,16 @@ class Flounder
         {
             this.onComponentDidMount();
         }
-        catch( e )
+        catch ( e )
         {
-            console.warn( `something may be wrong in "onComponentDidMount"`, e );
+            console.warn( 'something may be wrong in onComponentDidMount', e );
         }
 
         this.ready = true;
 
-        return this.refs.flounder.flounder = this.originalTarget.flounder = this.target.flounder = this;
+        this.originalTarget.flounder = this.target.flounder = this;
+
+        return this.refs.flounder.flounder = this;
     }
 
 
@@ -263,45 +291,62 @@ class Flounder
      * inserts the initial options into the flounder object, setting defaults
      * when necessary
      *
-     * @return _Void_
+     * @return {Void} void
      */
     initializeOptions()
     {
-        let props = this.props = this.props || {};
+        const props = this.props = this.props || {};
 
-        for ( let opt in defaultOptions )
+        for ( const opt in defaultOptions )
         {
-            if ( opt !== `classes` )
+            // depreciated @todo remove @2.0.0
+            if ( opt === 'onChange' && props.onSelect )
             {
-                this[ opt ] = props[ opt ] !== undefined ? props[ opt ] : defaultOptions[ opt ];
+                this.onChange = props.onSelect;
+
+                console.warn( `Please use onChange.  onSelect has been
+                                    depricated and will be removed in 2.0.0` );
+
+                this.onSelect = function()
+                {
+                    console.warn( `Please use onChange. onSelect has been
+                                    depricated and will be removed in 2.0.0` );
+                    this.onChange( ...arguments );
+                };
+            }
+            else if ( opt === 'classes' )
+            {
+                this.classes            = {};
+                const defaultClasses    = defaultOptions[ opt ];
+                const propClasses       = typeof props[ opt ] === 'object' ?
+                                                        props[ opt ] : {};
+
+                for ( const clss in defaultClasses )
+                {
+                    this.classes[ clss ] = propClasses[ clss ] ?
+                                                    propClasses[ clss ] :
+                                                    defaultClasses[ clss ];
+                }
             }
             else
             {
-                let classes         = defaultOptions[ opt ];
-                let propsClasses    = props.classes;
-
-                for ( let clss in classes )
-                {
-                    this[ `${clss}Class` ] = propsClasses && propsClasses[ clss ] !== undefined ?
-                                                propsClasses[ clss ] :
-                                                classes[ clss ];
-                }
+                this[ opt ] = props[ opt ] !== undefined ? props[ opt ] :
+                                                 defaultOptions[ opt ];
             }
         }
 
+        this.selectedClass = this.classes.SELECTED;
+
         if ( props.defaultEmpty )
         {
-            this.placeholder = ``;
+            this.placeholder = '';
         }
 
         if ( this.multipleTags )
         {
             this.search         = true;
             this.multiple       = true;
-            this.selectedClass  += `  ${classes.SELECTED_HIDDEN}`;
-
-            this.placeholder    = this.placeholder === '' ? this.placeholder
-                                                    : defaultOptions.placeholder;
+            this.selectedClass  += `  ${this.classes.SELECTED_HIDDEN}`;
         }
     }
 
@@ -311,22 +356,22 @@ class Flounder
      *
      * attaches necessary events to the built DOM
      *
-     * @return _Void_
+     * @return {Void} void
      */
     onRender()
     {
-        let props   = this.props;
-        let refs    = this.refs;
-        let data    = refs.data;
+        const props   = this.props;
+        const refs    = this.refs;
 
-        if ( !!this.isIos && !this.multiple )
+        if ( !!this.isIos && !this.multiple )
         {
-            let sel     = refs.select;
+            const sel     = refs.select;
+            const classes = this.classes;
             utils.removeClass( sel, classes.HIDDEN );
             utils.addClass( sel, classes.HIDDEN_IOS );
         }
 
-        this.addListeners( refs );
+        this.addListeners( refs, props );
     }
 
 
@@ -335,7 +380,11 @@ class Flounder
      *
      * checks the data object for header options, and sorts it accordingly
      *
-     * @return _Boolean_ hasHeaders
+     * @param {Array} data flounder data options
+     * @param {Array} res results
+     * @param {Number} i index
+     *
+     * @return {Boolean} hasHeaders
      */
     sortData( data, res = [], i = 0 )
     {
@@ -347,7 +396,8 @@ class Flounder
             }
             else
             {
-                if ( typeof d !== `object` )
+                /* istanbul ignore next */
+                if ( typeof d !== 'object' )
                 {
                     d = {
                         text    : d,
@@ -375,14 +425,14 @@ class Flounder
  *
  * accepts array-like objects and selector strings to make multiple flounders
  *
- * @param {Array or String} flounder target(s)
+ * @param {Mixed} targets target(s) _Array or String_
  * @param {Object} props passed options
  *
  * @return {Array} array of flounders
  */
 Flounder.find = function( targets, props )
 {
-    if ( typeof targets === `string` )
+    if ( typeof targets === 'string' )
     {
         targets = document.querySelectorAll( targets );
     }
@@ -391,7 +441,8 @@ Flounder.find = function( targets, props )
         targets = [ targets ];
     }
 
-    return Array.prototype.slice.call( targets, 0 ).map( el => new Flounder( el, props ) );
+    return Array.prototype.slice.call( targets, 0 )
+                                .map( el => new Flounder( el, props ) );
 };
 
 
@@ -400,14 +451,14 @@ Flounder.find = function( targets, props )
  *
  * sets version with getters and no setters for the sake of being read-only
  */
-Object.defineProperty( Flounder, `version`, {
+Object.defineProperty( Flounder, 'version', {
     get : function()
     {
         return version;
     }
 } );
 
-Object.defineProperty( Flounder.prototype, `version`, {
+Object.defineProperty( Flounder.prototype, 'version', {
     get : function()
     {
         return version;

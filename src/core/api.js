@@ -1,5 +1,4 @@
-
-import classes              from './classes';
+/* globals console */
 import utils                from './utils';
 import { setDefaultOption } from './defaults';
 
@@ -15,7 +14,7 @@ const api = {
      * @param {String} url address to get the data from
      * @param {Function} callback function to run after getting the data
      *
-     * @return _Void_
+     * @return {Void} void
      */
     buildFromUrl( url, callback )
     {
@@ -41,9 +40,11 @@ const api = {
      * programatically sets selected by index.  If there are not enough elements
      * to match the index, then nothing is selected. Fires the onClick event
      *
-     * @param {Mixed} index index to set flounder to.  _Number, or Array of numbers_
+     * @param {Mixed} index index to set flounder to.
+     *                                          _Number, or Array of numbers_
+     * @param {Boolean} multiple multiSelect or not
      *
-     * return _Void_
+     * @return {Void} void
      */
     clickByIndex( index, multiple )
     {
@@ -55,11 +56,14 @@ const api = {
      * ## clickByText
      *
      * programatically sets selected by text string.  If the text string
-     * is not matched to an element, nothing will be selected. Fires the onClick event
+     * is not matched to an element, nothing will be selected. Fires the
+     * onClick event
      *
-     * @param {Mixed} text text to set flounder to.  _String, or Array of strings_
+     * @param {Mixed} text text to set flounder to.
+     *                                         _String, or Array of strings_
+     * @param {Boolean} multiple multiSelect or not
      *
-     * return _Void_
+     * @return {Void} void
      */
     clickByText( text, multiple )
     {
@@ -71,11 +75,14 @@ const api = {
      * ## clickByValue
      *
      * programatically sets selected by value string.  If the value string
-     * is not matched to an element, nothing will be selected. Fires the onClick event
+     * is not matched to an element, nothing will be selected. Fires the
+     * onClick event
      *
-     * @param {Mixed} value value to set flounder to.  _String, or Array of strings_
+     * @param {Mixed} value value to set flounder to.
+     *                                      _String, or Array of strings_
+     * @param {Boolean} multiple multiSelect or not
      *
-     * return _Void_
+     * @return {Void} void
      */
     clickByValue( value, multiple )
     {
@@ -88,25 +95,27 @@ const api = {
      *
      * removes flounder and all it`s events from the dom
      *
-     * @return _Void_
+     * @return {Void} void
      */
     destroy()
     {
         this.componentWillUnmount();
 
-        let refs                = this.refs;
-        let originalTarget      = this.originalTarget;
-        let tagName             =  originalTarget.tagName;
+        const refs                = this.refs;
+        const classes             = this.classes;
+        const originalTarget      = this.originalTarget;
+        const tagName             =  originalTarget.tagName;
 
-        if ( tagName === `INPUT` || tagName === `SELECT` )
+        if ( tagName === 'INPUT' || tagName === 'SELECT' )
         {
             let target = originalTarget.nextElementSibling;
 
-            if ( tagName === `SELECT` )
+            if ( tagName === 'SELECT' )
             {
-                let firstOption = originalTarget[0];
+                const firstOption = originalTarget[ 0 ];
 
-                if ( firstOption && utils.hasClass( firstOption, classes.PLACEHOLDER ) )
+                if ( firstOption &&
+                            utils.hasClass( firstOption, classes.PLACEHOLDER ) )
                 {
                     originalTarget.removeChild( firstOption );
                 }
@@ -118,30 +127,32 @@ const api = {
 
             try
             {
+                const classes = this.classes;
                 target.parentNode.removeChild( target );
                 originalTarget.tabIndex = 0;
                 utils.removeClass( originalTarget, classes.HIDDEN );
             }
-            catch( e )
+            catch ( e )
             {
-                throw ` : this flounder may have already been removed`;
+                throw ' : this flounder may have already been removed';
             }
         }
         else
         {
             try
             {
-                let wrapper = refs.wrapper;
-                let parent  = wrapper.parentNode;
+                const wrapper = refs.wrapper;
+                const parent  = wrapper.parentNode;
                 parent.removeChild( wrapper );
             }
-            catch( e )
+            catch ( e )
             {
-                throw ` : this flounder may have already been removed`;
+                throw ' : this flounder may have already been removed';
             }
         }
 
-        refs.flounder.flounder  = originalTarget.flounder = this.target.flounder = null;
+        refs.flounder.flounder  = originalTarget.flounder =
+                                                    this.target.flounder = null;
     },
 
 
@@ -150,20 +161,45 @@ const api = {
      *
      * deslects all data
      *
-     * @return _Void_
+     * @param {Boolean} silent stifle the onChange event
+     *
+     * @return {Void} void
      */
-    deselectAll()
+    deselectAll( silent )
     {
-        this.removeSelectedClass();
-        this.removeSelectedValue();
-
-
-        let multiTagWrapper = this.refs.multiTagWrapper;
-
-        if ( multiTagWrapper )
+        if ( this.multiple )
         {
-            let tags = nativeSlice.call( multiTagWrapper.children );
-            tags.forEach( el => el.children[0].click() );
+            this.removeSelectedClass();
+            this.removeSelectedValue();
+
+            const multiTagWrapper = this.refs.multiTagWrapper;
+
+            if ( multiTagWrapper )
+            {
+                const tags = nativeSlice.call( multiTagWrapper.children );
+
+                tags.forEach( ( el, count ) =>
+                {
+                    const lastEl = count === tags.length - 1;
+
+                    if ( !silent && lastEl )
+                    {
+                        el = el.children;
+                        el = el[ 0 ];
+
+                        el.click();
+                    }
+                    else
+                    {
+                        el.removeEventListener( 'click',
+                                                    this.removeMultiTag );
+                        el.remove();
+                    }
+                } );
+
+                this.setTextMultiTagIndent();
+                this.addPlaceholder();
+            }
         }
     },
 
@@ -175,25 +211,28 @@ const api = {
      *
      * @param {Boolean} bool disable or enable
      *
-     * @return _Void_
+     * @return {Void} void
      */
     disable( bool )
     {
-        let refs        = this.refs;
-        let flounder    = refs.flounder;
-        let selected    = refs.selected;
+        const refs        = this.refs;
+        const classes     = this.classes;
+        const flounder    = refs.flounder;
+        const selected    = refs.selected;
 
         if ( bool )
         {
-            refs.flounder.removeEventListener( `keydown`, this.checkFlounderKeypress );
-            refs.selected.removeEventListener( `click`, this.toggleList );
+            refs.flounder.removeEventListener( 'keydown',
+                                                this.checkFlounderKeypress );
+            refs.selected.removeEventListener( 'click', this.toggleList );
             utils.addClass( selected, classes.DISABLED );
             utils.addClass( flounder, classes.DISABLED );
         }
         else
         {
-            refs.flounder.addEventListener( `keydown`, this.checkFlounderKeypress );
-            refs.selected.addEventListener( `click`, this.toggleList );
+            refs.flounder.addEventListener( 'keydown',
+                                                this.checkFlounderKeypress );
+            refs.selected.addEventListener( 'click', this.toggleList );
             utils.removeClass( selected, classes.DISABLED );
             utils.removeClass( flounder, classes.DISABLED );
         }
@@ -205,55 +244,53 @@ const api = {
      *
      * disables the options with the given index
      *
-     * @param {Mixed} i index of the option
+     * @param {Mixed} index index of the option
      * @param {Boolean} reenable enables the option instead
      *
-     * return _Void_
+     * @return {Void} void
      */
     disableByIndex( index, reenable )
     {
-        let refs = this.refs;
+        const refs = this.refs;
 
-        if ( typeof index !== `string` && index.length )
+        if ( typeof index !== 'string' && index.length )
         {
-            let disableByIndex = this.disableByIndex.bind( this );
+            const disableByIndex = this.disableByIndex.bind( this );
+
             return index.map( _i => disableByIndex( _i, reenable ) );
         }
-        else
+
+        const data  = refs.data;
+        let length  = data.length;
+
+        if ( index < 0 )
         {
-            let data    = refs.data;
-            let length  = data.length;
+            length  = data.length;
+            index = length + index;
+        }
 
-            if ( index < 0 )
+        const el = data[ index ];
+
+        if ( el )
+        {
+            const opt     = refs.selectOptions[ index ];
+            const classes = this.classes;
+
+            if ( reenable )
             {
-                let length  = data.length;
-                index = length + index;
-            }
-
-            let el = data[ index ];
-
-            if ( el )
-            {
-                let opt = refs.selectOptions[ index ];
-
-                if ( reenable )
-                {
-                    opt.disabled = false;
-                    utils.removeClass( el, classes.DISABLED );
-                }
-                else
-                {
-                    opt.disabled = true;
-                    utils.addClass( el, classes.DISABLED );
-                }
-
-                return [ el, opt ];
+                opt.disabled = false;
+                utils.removeClass( el, classes.DISABLED );
             }
             else
             {
-                console.warn( 'Flounder - No element to disable.' );
+                opt.disabled = true;
+                utils.addClass( el, classes.DISABLED );
             }
+
+            return [ el, opt ];
         }
+
+        console.warn( 'Flounder - No element to disable.' );
     },
 
 
@@ -262,38 +299,36 @@ const api = {
      *
      * disables THE FIRST option that has the given value
      *
-     * @param {Mixed} value value of the option
+     * @param {Mixed} text value of the option
      * @param {Boolean} reenable enables the option instead
      *
-     * return _Void_
+     * @return {Void} void
      */
     disableByText( text, reenable )
     {
-        if ( typeof text !== `string` && text.length )
+        if ( typeof text !== 'string' && text.length )
         {
-            let disableByText = this.disableByText.bind( this );
-            let res = text.map( _v => disableByText( _v, reenable ) );
+            const disableByText = this.disableByText.bind( this );
+            const res = text.map( _v => disableByText( _v, reenable ) );
 
-            return res.length === 1 ? res[0] : res;
+            return res.length === 1 ? res[ 0 ] : res;
         }
-        else
-        {
-            let res     = [];
 
-            this.refs.data.forEach( function( el, i )
+        let res     = [];
+
+        this.refs.data.forEach( ( el, i ) =>
+        {
+            const elText = el.innerHTML;
+
+            if ( elText === text )
             {
-                let _elText = el.innerHTML;
+                res.push( i );
+            }
+        } );
 
-                if ( _elText === text )
-                {
-                    res.push( i );
-                }
-            } );
+        res = res.length === 1 ? res[ 0 ] : res;
 
-            res = res.length === 1 ? res[0] : res;
-
-            return this.disableByIndex( res, reenable );
-        }
+        return this.disableByIndex( res, reenable );
     },
 
 
@@ -305,28 +340,26 @@ const api = {
      * @param {Mixed} value value of the option
      * @param {Boolean} reenable enables the option instead
      *
-     * return _Void_
+     * @return {Void} void
      */
     disableByValue( value, reenable )
     {
-        if ( typeof value !== `string` && value.length )
+        if ( typeof value !== 'string' && value.length )
         {
-            let disableByValue = this.disableByValue.bind( this );
-            let res = value.map( _v => disableByValue( _v, reenable ) );
+            const disableByValue = this.disableByValue.bind( this );
+            const res = value.map( _v => disableByValue( _v, reenable ) );
 
             return res.length === 1 ? res[ 0 ] : res;
         }
-        else
+
+        let res = this.refs.selectOptions.map( ( el, i ) =>
         {
-            let res = this.refs.selectOptions.map( function( el, i )
-            {
-                return `${el.value}` === `${value}` ? i : null;
-            } ).filter( a => !!a || a === 0 ? true : false );
+            return `${el.value}` === `${value}` ? i : null;
+        } ).filter( a => !!a || a === 0 );
 
-            res = res.length === 1 ? res[0] : res;
+        res = res.length === 1 ? res[ 0 ] : res;
 
-            return this.disableByIndex( res, reenable );
-        }
+        return this.disableByIndex( res, reenable );
     },
 
 
@@ -380,36 +413,37 @@ const api = {
      *
      * returns the option and div tags related to an option
      *
-     * @param {Number} _i index to return
+     * @param {Number} index index to return
      *
-     * @return _Object_ option and div tage
+     * @return {Object} option and div tage
      */
-    getData( _i )
+    getData( index )
     {
-        let refs = this.refs;
+        const refs = this.refs;
 
-        if ( typeof _i === `number` )
+        if ( typeof index === 'number' )
         {
-            return { option : refs.selectOptions[ _i ], div : refs.data[ _i ] };
+            return {
+                option  : refs.selectOptions[ index ],
+                div     : refs.data[ index ]
+            };
         }
-        else if ( _i && _i.length && typeof _i !== `string` )
+        else if ( index && index.length && typeof index !== 'string' )
         {
-            return _i.map( i =>
+            return index.map( i =>
             {
                 return this.getData( i );
             } );
         }
-        else if ( !_i )
+        else if ( !index )
         {
             return refs.selectOptions.map( ( el, i ) =>
             {
                 return this.getData( i );
             } );
         }
-        else
-        {
-            console.warn( 'Flounder - Illegal parameter type.' );
-        }
+
+        console.warn( 'Flounder - Illegal parameter type.' );
     },
 
 
@@ -418,15 +452,16 @@ const api = {
      *
      * returns the currently selected data of a SELECT box
      *
-     * @return _Void_
+     * @return {Void} void
      */
     getSelected()
     {
-        let _el         = this.refs.select;
-        let opts        = [], opt;
-        let _data       = _el.options;
+        const el        = this.refs.select;
+        const opts      = [];
+        const data      = el.options;
+        const classes   = this.classes;
 
-        nativeSlice.call( _data ).forEach( el =>
+        nativeSlice.call( data ).forEach( el =>
         {
             if ( el.selected && !utils.hasClass( el, classes.PLACEHOLDER ) )
             {
@@ -443,11 +478,11 @@ const api = {
      *
      * returns the values of the currently selected data
      *
-     * @return _Void_
+     * @return {Void} void
      */
     getSelectedValues()
     {
-        return this.getSelected().map( _v => _v.value )
+        return this.getSelected().map( _v => _v.value );
     },
 
 
@@ -459,10 +494,12 @@ const api = {
      * @param {String} url address to get the data from
      * @param {Function} callback function to run after getting the data
      *
-     * @return _Void_
+     * @return {Void} void
      */
     loadDataFromUrl( url, callback )
     {
+        const classes = this.classes;
+
         utils.http.get( url ).then( data =>
         {
             if ( data )
@@ -476,22 +513,22 @@ const api = {
             }
             else
             {
-                console.warn( `no data recieved` );
+                console.warn( 'no data recieved' );
             }
         } ).catch( e =>
         {
-            console.warn( `something happened: `, e );
+            console.warn( 'something happened: ', e );
             this.rebuild( [ {
-                        text        : ``,
-                        value       : ``,
-                        index       : 0,
-                        extraClass  : classes.LOADING_FAILED
-                    } ] );
+                text        : '',
+                value       : '',
+                index       : 0,
+                extraClass  : classes.LOADING_FAILED
+            } ] );
         } );
 
         return [ {
-            text        : ``,
-            value       : ``,
+            text        : '',
+            value       : '',
             index       : 0,
             extraClass  : classes.LOADING
         } ];
@@ -504,33 +541,38 @@ const api = {
      * after editing the data, this can be used to rebuild them
      *
      * @param {Array} data array with option information
+     * @param {Object} props options object
      *
-     * @return _Object_ rebuilt flounder object
+     * @return {Object} rebuilt flounder object
      */
     rebuild( data, props )
     {
-        if ( props || !props && ( typeof data === `string` ||
-            ( data && typeof data.length !== `number` ) ) )
+        if ( props || !props && ( typeof data === 'string' ||
+                                data && typeof data.length !== 'number' ) )
         {
             return this.reconfigure( data, props );
         }
 
-        data            = this.data = data || this.data;
+        data            = this.data = data || this.data;
         props           = this.props;
-        let refs        = this.refs;
-        let _select     = refs.select;
+        const refs      = this.refs;
+        const select    = refs.select;
 
         this.deselectAll();
         this.removeOptionsListeners();
-        refs.select.innerHTML       = ``;
-        refs.select                 = false;
-        this._default               = setDefaultOption( this, props, data, true );
-        refs.optionsList.innerHTML  = ``;
 
-        [ refs.data, refs.selectOptions ] = this.buildData( this._default, this.data, refs.optionsList, _select );
-        refs.select                 = _select;
+        refs.select.innerHTML       = '';
+        refs.select         = false;
+        this.defaultObj     = setDefaultOption( this, props, data, true );
+
+        refs.optionsList.innerHTML  = '';
+
+        [ refs.data, refs.selectOptions ] = this.buildData( this.defaultObj,
+                                        this.data, refs.optionsList, select );
+        refs.select                 = select;
 
         this.addOptionsListeners();
+
         this.data = data;
 
         this.displaySelected( refs.selected, refs );
@@ -542,49 +584,49 @@ const api = {
     /**
      * ## setByIndex
      *
-     * programatically sets the value by index.  If there are not enough elements
-     * to match the index, then nothing is selected.
+     * programatically sets the value by index.  If there are not enough
+     * elements to match the index, then nothing is selected.
      *
-     * @param {Mixed} index index to set flounder to.  _Number, or Array of numbers_
+     * @param {Mixed} index index to set flounder to.
+     *                                          _Number, or Array of numbers_
+     * @param {Boolean} multiple multiSelect or not
+     * @param {Boolean} programmatic fire onChange and toggle menu or not
      *
-     * return _Void_
+     * @return {Void} void
      */
     setByIndex( index, multiple, programmatic = true )
     {
-        let refs = this.refs;
+        const refs = this.refs;
 
-        if ( typeof index !== `string` && index.length )
+        if ( typeof index !== 'string' && index.length )
         {
-            let setByIndex = this.setByIndex.bind( this );
+            const setByIndex = this.setByIndex.bind( this );
+
             return index.map( _i => setByIndex( _i, multiple, programmatic ) );
         }
-        else
+
+        const data    = this.data;
+        let length    = data.length;
+
+        if ( index < 0 )
         {
-            let data    = this.data;
-            let length  = data.length;
-
-            if ( index < 0 )
-            {
-                let length  = data.length;
-                index = length + index;
-            }
-
-            let el = refs.data[ index ];
-
-            if ( el )
-            {
-                let isOpen = utils.hasClass( refs.wrapper, classes.OPEN );
-                this.toggleList( isOpen ? `close` : `open` );
-                this.___forceMultiple       = multiple && this.multiple;
-
-                this.___programmaticClick   = programmatic;
-                el.click();
-
-                return el;
-            }
-
-            return null;
+            length  = data.length;
+            index = length + index;
         }
+
+        const el = refs.data[ index ];
+
+        if ( el )
+        {
+            this.forceMultiple     = multiple && this.multiple;
+            this.programmaticClick = programmatic;
+
+            el.click();
+
+            return el;
+        }
+
+        return null;
     },
 
 
@@ -594,34 +636,36 @@ const api = {
      * programatically sets the text by string.  If the text string
      * is not matched to an element, nothing will be selected
      *
-     * @param {Mixed} text text to set flounder to.  _String, or Array of strings_
+     * @param {Mixed} text text to set flounder to.
+     *                                            _String, or Array of strings_
+     * @param {Boolean} multiple multiSelect or not
+     * @param {Boolean} programmatic fire onChange and toggle menu or not
      *
-     * return _Void_
+     * @return {Void} void
      */
     setByText( text, multiple, programmatic = true )
     {
-        if ( typeof text !== `string` && text.length )
+        if ( typeof text !== 'string' && text.length )
         {
-            let setByText = this.setByText.bind( this );
+            const setByText = this.setByText.bind( this );
+
             return text.map( _i => setByText( _i, multiple, programmatic ) );
         }
-        else
+
+        const res = [];
+        text    = `${text}`;
+
+        this.refs.data.forEach( ( el, i ) =>
         {
-            let res = [];
-            text    = `${text}`;
+            const elText = el.innerHTML;
 
-            this.refs.data.forEach( function( el, i )
+            if ( elText === text )
             {
-                let _elText = el.innerHTML;
+                res.push( i );
+            }
+        } );
 
-                if ( _elText === text )
-                {
-                    res.push( i );
-                }
-            } );
-
-            return this.setByIndex( res, multiple, programmatic );
-        }
+        return this.setByIndex( res, multiple, programmatic );
     },
 
 
@@ -631,26 +675,28 @@ const api = {
      * programatically sets the value by string.  If the value string
      * is not matched to an element, nothing will be selected
      *
-     * @param {Mixed} value value to set flounder to.  _String, or Array of strings_
+     * @param {Mixed} value value to set flounder to.
+     *                                           _String, or Array of strings_
+     * @param {Boolean} multiple multiSelect or not
+     * @param {Boolean} programmatic fire onChange and toggle menu or not
      *
-     * return _Void_
+     * @return {Void} void
      */
     setByValue( value, multiple, programmatic = true )
     {
-        if ( typeof value !== `string` && value.length )
+        if ( typeof value !== 'string' && value.length )
         {
-            let setByValue = this.setByValue.bind( this );
+            const setByValue = this.setByValue.bind( this );
+
             return value.map( _i => setByValue( _i, multiple, programmatic ) );
         }
-        else
-        {
-            let values = this.refs.selectOptions.map( function( el, i )
-            {
-                return `${el.value}` === `${value}` ? i : null;
-            } ).filter( a => a === 0 || !!a );
 
-            return this.setByIndex( values, multiple, programmatic );
-        }
+        const values = this.refs.selectOptions.map( ( el, i ) =>
+        {
+            return `${el.value}` === `${value}` ? i : null;
+        } ).filter( a => a === 0 || !!a );
+
+        return this.setByIndex( values, multiple, programmatic );
     }
 };
 

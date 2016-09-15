@@ -1,4 +1,4 @@
-Flounder.js 1.0.1
+Flounder.js 1.1.0
 =================
 
 [![Flounder build status](https://travis-ci.org/sociomantic-tsunami/flounder.svg)](https://travis-ci.org)
@@ -91,10 +91,39 @@ If flounder is fed an element that already has a flounder, it will destroy it an
 {
     allowHTML               : false,
     classes                 : {
-        flounder    : 'class--to--give--the--main--flounder--element',
-        hidden      : 'class--to--denote--hidden',
-        selected    : 'class--to--denote--selected--option',
-        wrapper     : 'additional--class--to--give--the--wrapper'
+        ARROW                 : `class-for-arrow-wrapper`,
+        ARROW_INNER           : `class-for-arrow-inner`,
+        DESCRIPTION           : `class-for-option-description`,
+        DISABLED              : `class-for-disabled`,
+        DISABLED_OPTION       : `class-for-disabled-option`,
+        HEADER                : `class-for-header`,
+        HIDDEN                : `class-for-hidden`,
+        HIDDEN_IOS            : `class-for-hidden-ios`,
+        HOVER                 : `class-for-hover`,
+        LIST                  : `class-for-list`,
+        LOADING               : `class-for-loading`,
+        LOADING_FAILED        : `class-for-loading-failed`,
+        MAIN                  : `class-for-flounder`,
+        MAIN_WRAPPER          : `class-for-wrapper`,
+        MULTIPLE_TAG_FLOUNDER : `class-for-multiple`,
+        MULTI_TAG_LIST        : `class-for-multi-tag-list`,
+        MULTIPLE_SELECT_TAG   : `class-for-multiple-select-tag`,
+        MULTIPLE_SELECTED     : `class-for-multiple-selected`,
+        MULTIPLE_TAG_CLOSE    : `class-for-multiple-tag-close`,
+        NO_RESULTS            : `class-for-no-results`,
+        OPEN                  : `class-for-open`,
+        OPTION                : `class-for-option`,
+        OPTION_TAG            : `class-for-option-tag`,
+        OPTIONS_WRAPPER       : `class-for-list-wrapper`,
+        PLACEHOLDER           : `class-for-placeholder`,
+        PLUG                  : `class-for-ios-plug`,
+        SECTION               : `class-for-section`,
+        SELECTED              : `class-for-option-selected`,
+        SELECTED_HIDDEN       : `class-for-option-selected-hidden`,
+        SELECTED_DISPLAYED    : `class-for-option-selected-displayed`,
+        SEARCH                : `class-for-input-search`,
+        SEARCH_HIDDEN         : `class-for-search-hidden`,
+        SELECT_TAG            : `class-for-select-tag`
     },
     data                    : dataObject,
     defaultEmpty            : true,
@@ -105,6 +134,9 @@ If flounder is fed an element that already has a flounder, it will destroy it an
     multiple                : false,
     multipleTags            : false,
     multipleMessage         : '(Multiple Items Selected)',
+    noMoreOptionsMessage    : 'No more options to add',
+    noMoreResultsMessage    : 'No matches found',
+    onChange                : function( e, valueArray ){},
     onClose                 : function( e, valueArray ){},
     onComponentDidMount     : function(){},
     onComponentWillUnmount  : function(){},
@@ -112,7 +144,6 @@ If flounder is fed an element that already has a flounder, it will destroy it an
     onInit                  : function(){},
     onInputChange           : function( e ){},
     onOpen                  : function( e, valueArray ){},
-    onSelect                : function( e, valueArray ){}
     openOnHover             : false,
     placeholder             : 'Please choose an option',
     search                  : false,
@@ -122,7 +153,7 @@ If flounder is fed an element that already has a flounder, it will destroy it an
 
 + `allowHTML`- (boolean) Renders the data text as HTML.  With this option enabled, any api call that must compare text will need the exact html in order to be a match
 
-+ `classes`- (object) Contains configurable classes for various elements.  The are additional classes, not replacement classes.
++ `classes`- (object) Custom CSS classes for Flounder DOM elements (overrides defaults; only the classes specified will be overridden).
 
 + `data` - (array) select box options to build in the select box.  Can be organized various ways
 
@@ -142,6 +173,12 @@ If flounder is fed an element that already has a flounder, it will destroy it an
 
 + `multipleMessage` - (string) If there are no tags, this is the message that will be displayed in the selected area when there are multiple options selected
 
++ `noMoreOptionsMessage` - message to display when there are no option left (default : 'No more options to add' )
+
++ `noMoreResultsMessage` - message to display when there are no results left after a search (default : 'No matches found' )
+
++ `onChange` - (function) Triggered when the selection is changed
+
 + `onClose` - (function) Triggered when the selectbox is closed
 
 + `onComponentDidMount` - (function) Triggered when the selectbox is finished building
@@ -155,8 +192,6 @@ If flounder is fed an element that already has a flounder, it will destroy it an
 + `onInputChange` - (function) Triggered when someone types in a search box.  note: this will do nothing if search is not enabled.
 
 + `onOpen` - (function) Triggered when the selectbox is opened
-
-+ `onSelect` - (function) Triggered when an option is selected
 
 + `openOnHover` - (boolean) replaces click to open action with hover
 
@@ -238,7 +273,7 @@ this.buildFromUrl( url, callback )
 this.clickByIndex( index, multiple* )
 this.clickByText( text, multiple* )
 this.clickByValue( value, multiple* )
-this.deselectAll()
+this.deselectAll( silent )
 this.destroy()
 this.disable( bool* )
 this.disableByIndex( index )
@@ -269,7 +304,7 @@ this.setByValue( value, multiple* )
 
 + `clickByValue( value, multiple )` sets the item with the passed value as selected.  If multiple is true and it is a multi-select box, it is selected additionally.  Otherwise it's selected instead. This accepts arrays as well.  Without multiple equaling true it will only select the last option. This fires the onClick event
 
-+ `deselectAll()` deselects all data
++ `deselectAll( silent )` deselects all data.  Fires one change event when done deselecting all.  while `silent` = true, this event will be suppressed
 
 + `destroy()` removes event listeners, then flounder.  this will return the element to it's original state
 
@@ -315,11 +350,11 @@ npm scripts
 
 + `build` runs `bash`, `gulp` and `test:unit:coverage:cli`
 
-+ `demo` builds the demo
-
 + `gulp` runs bash and compiles flounder
 
-+ `test` runs the `nyan` tests
++ `lint` checks the code with eslint
+
++ `test` runs ling and then a coverage test
 
 + `test:unit:coverage` runs the `istanbul` tests and opens the browser report
 
@@ -443,6 +478,24 @@ See more examples on the [demo page](./demo/index.html)
 
 Change Log
 ==========
+
+1.1.0
+-----
+
++ Flounder
+    + last of the `0.8.5` changes merged in
+    + added eslint requirements
+    + removed duplicate methods
+
++ default
+    + placeholder tweak for the flounder-react
+
++ config
+    + added configurable noMoreOptionsMessage && noMoreResultsMessage messages
+
++ api
+    + onSelect changed to onChange.  Deprication warning added.  Will be removed 2.0.0
+
 
 1.0.1
 -----

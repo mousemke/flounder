@@ -1,4 +1,4 @@
-
+/* globals describe, it */
 import version  from '/core/version';
 import assert   from 'assert';
 import _package from '../../../package.json';

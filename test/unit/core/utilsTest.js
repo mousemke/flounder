@@ -1,9 +1,6 @@
-
+/* globals describe, it, document, window */
 import utils        from '/core/utils';
-import µ            from 'microbejs/dist/microbe.http';
-
 import assert       from 'assert';
-import sinon        from 'sinon';
 
 
 /**
@@ -14,11 +11,11 @@ import sinon        from 'sinon';
  * @param {DOMElement} _el target element
  * @param {String} _class class to add
  *
- * @return _Void_
+ * @return {Void} void
  */
 describe( 'addClass', () =>
 {
-    let body = document.body;
+    const body = document.body;
 
     it( 'should exist', () =>
     {
@@ -27,16 +24,16 @@ describe( 'addClass', () =>
     } );
 
 
-    it( 'should add as many classes passed to it without adding anything twice', () =>
+    it( 'should add as many classes passed to it once', () =>
     {
         utils.addClass( body, [ 'moon', 'doge' ] );
-        assert.equal( body.className, 'moon  doge', 'adds an array of classes' );
+        assert.equal( body.className, 'moon  doge' );
 
         utils.addClass( body, 'brains' );
-        assert.equal( body.className, 'moon  doge  brains', 'adds a single class' );
+        assert.equal( body.className, 'moon  doge  brains' );
 
         utils.addClass( body, 'brains' );
-        assert.equal( body.className, 'moon  doge  brains', 'only adds a class once' );
+        assert.equal( body.className, 'moon  doge  brains' );
     } );
 } );
 
@@ -49,11 +46,11 @@ describe( 'addClass', () =>
  * @param {DOMElement} _el element to assign attributes
  * @param {Object} _elObj contains the attributes to attach
  *
- * @return _Void_
+ * @return {Void} void
  */
 describe( 'attachAttributes', () =>
 {
-    let body = document.body;
+    const body = document.body;
 
     it( 'should exist', () =>
     {
@@ -63,8 +60,10 @@ describe( 'attachAttributes', () =>
 
     it( 'should attach data attributes', () =>
     {
-        utils.attachAttributes( body, { 'data-moon' : 'doge' } );
-        assert.equal( body.getAttribute( 'data-moon' ), 'doge', 'adds a data-attribute' );
+        utils.attachAttributes( body, {
+            'data-moon' : 'doge'
+        } );
+        assert.equal( body.getAttribute( 'data-moon' ), 'doge' );
     } );
 
 
@@ -76,11 +75,17 @@ describe( 'attachAttributes', () =>
 
     it( 'should attach properties', () =>
     {
-        utils.attachAttributes( body, { 'moon' : 'doge' } );
+        utils.attachAttributes( body, {
+            'moon' : 'doge'
+        } );
         assert.equal( body.moon, 'doge', 'adds a property' );
 
-        utils.attachAttributes( body, { 'data-moon' : 'moon', moon : 'maymay' } );
-        assert.ok( body.getAttribute( 'data-moon' ) === 'moon' && body.moon === 'maymay', 'adds multiple attributes' );
+        utils.attachAttributes( body, {
+            'data-moon' : 'moon',
+            moon        : 'maymay'
+        } );
+        assert.ok( body.getAttribute( 'data-moon' ) === 'moon' &&
+                                                    body.moon === 'maymay' );
     } );
 } );
 
@@ -111,9 +116,12 @@ describe( 'constructElement', () =>
 
     it( 'should add data attributes and properties where appropriate', () =>
     {
-        newEl = utils.constructElement( { 'data-moon' : 'moon', moon : 'maymay' } );
+        newEl = utils.constructElement( {
+            'data-moon' : 'moon',
+            moon        : 'maymay'
+        } );
 
-        assert.equal( newEl.getAttribute( 'data-moon' ), 'moon', 'adds a data-attribute' );
+        assert.equal( newEl.getAttribute( 'data-moon' ), 'moon' );
         assert.equal( newEl.moon, 'maymay', 'adds a property' );
     } );
 } );
@@ -131,9 +139,15 @@ describe( 'constructElement', () =>
  */
 describe( 'extendClass', () =>
 {
+    /**
+     * example class
+     */
     class Test
     {
-        constructor( props )
+        /**
+         * example constructor
+         */
+        constructor()
         {
         }
     }
@@ -146,17 +160,32 @@ describe( 'extendClass', () =>
 
     it( 'should extend as many complex objects as passed to it', () =>
     {
-        utils.extendClass( Test, { moon: 'doge' } );
+        utils.extendClass( Test, {
+            moon : 'doge'
+        } );
 
-        let test = new Test;
+        const test = new Test();
         assert.equal( test.moon, 'doge', 'extends a class with a property' );
-        let func = function(){ return 'doge'; };
+        const func = () => 'doge';
 
-        utils.extendClass( Test, { m : func } );
+        utils.extendClass( Test, {
+            m : func
+        } );
         assert.equal( test.m, func, 'extends a class with a function' );
 
-        utils.extendClass( Test, { a: 1 }, { b: 2 }, { c: 3 } );
-        assert.ok( test.a === 1 && test.b === 2 && test.c === 3, 'adds a multiple objects' );
+        utils.extendClass( Test,
+            {
+                a : 1
+            },
+            {
+                b : 2
+            },
+            {
+                c : 3
+            }
+        );
+
+        assert.ok( test.a === 1 && test.b === 2 && test.c === 3 );
     } );
 } );
 
@@ -168,7 +197,7 @@ describe( 'extendClass', () =>
  *
  * @param {String} string unescaped string
  *
- * @return _Void_
+ * @return {Void} void
  */
 describe( 'escapeHTML', () =>
 {
@@ -180,10 +209,11 @@ describe( 'escapeHTML', () =>
 
     it( 'should properly escape html strings', () =>
     {
-        let html = '<div id="qunit-fixture"></div>';
+        const html = '<div id="qunit-fixture"></div>';
 
-        let escaped = utils.escapeHTML( html );
-        assert.equal( escaped, '&lt;div id=&quot;qunit-fixture&quot;&gt;&lt;/div&gt;', 'escapes an html string' );
+        const escaped = utils.escapeHTML( html );
+        assert.equal( escaped,
+                '&lt;div id=&quot;qunit-fixture&quot;&gt;&lt;/div&gt;' );
     } );
 } );
 
@@ -207,20 +237,29 @@ describe( 'getElWidth', () =>
 
     it( 'should correctly grab an element\'s width', () =>
     {
-        let body            = document.body;
+        /**
+         * noop
+         *
+         * @return {Void} void
+         */
+        function noop()
+        {}
+
+        const body            = document.body;
 
         body.offsetWidth    = 0;
-        assert.throws( utils.getElWidth.bind( utils, body ), 'Flounder getElWidth error: no callback given' );
-        utils.getElWidth( body, ()=>{}, utils );
+        assert.throws( utils.getElWidth.bind( utils, body ) );
+        utils.getElWidth( body, noop, utils );
 
         body.offsetWidth    = 1000;
-        let bodyWidth       = utils.getElWidth( body, ()=>{}, utils, 200 );
-        let style           = window.getComputedStyle( body );
+        const bodyWidth       = utils.getElWidth( body, noop, utils, 200 );
+        const style           = window.getComputedStyle( body );
 
-        let vanillaBodyWidth = body.offsetWidth + parseInt( style[ 'margin-left' ] ) +
+        const vanillaBodyWidth = body.offsetWidth +
+                                parseInt( style[ 'margin-left' ] ) +
                                 parseInt( style[ 'margin-right' ] );
 
-        assert.equal( bodyWidth, vanillaBodyWidth, 'correctly grabs an element\'s width' );
+        assert.equal( bodyWidth, vanillaBodyWidth );
     } );
 } );
 
@@ -233,7 +272,7 @@ describe( 'getElWidth', () =>
  * @param {DOMElement} _el target element
  * @param {String} _class class to check
  *
- * @return _Void_
+ * @return {Void} void
  */
 describe( 'hasClass', () =>
 {
@@ -245,7 +284,7 @@ describe( 'hasClass', () =>
 
     it( 'should correctly detect classes', () =>
     {
-        let body        = document.body;
+        const body      = document.body;
 
         utils.addClass( body, 'mooney-moon' );
         let hasClassBool = utils.hasClass( body, 'mooney-moon' );
@@ -265,7 +304,7 @@ describe( 'hasClass', () =>
  *
  * @param {Object} windowObj window, but allows for as testing override
  *
- * @return _Void_
+ * @return {Void} void
  */
 describe( 'iosVersion', () =>
 {
@@ -282,10 +321,29 @@ describe( 'iosVersion', () =>
 
     it( 'should register as various ios devices with the right params', () =>
     {
-        assert.equal( utils.iosVersion( { navigator: { platform : 'iPad' } } ), '5-' );
-        assert.equal( utils.iosVersion( { indexedDB : true, navigator: { platform : 'iPad' } } ), '8+' );
-        assert.equal( utils.iosVersion( { SpeechSynthesisUtterance: true, navigator: { platform : 'iPad' } } ), '7' );
-        assert.equal( utils.iosVersion( { webkitAudioContext: true, navigator: { platform : 'iPad' } } ), '6' );
+        assert.equal( utils.iosVersion( {
+            navigator : {
+                platform : 'iPad'
+            }
+        } ), '5-' );
+        assert.equal( utils.iosVersion( {
+            indexedDB : true,
+            navigator : {
+                platform : 'iPad'
+            }
+        } ), '8+' );
+        assert.equal( utils.iosVersion( {
+            SpeechSynthesisUtterance    : true,
+            navigator                   : {
+                platform : 'iPad'
+            }
+        } ), '7' );
+        assert.equal( utils.iosVersion( {
+            webkitAudioContext  : true,
+            navigator           : {
+                platform : 'iPad'
+            }
+        } ), '6' );
     } );
 } );
 
@@ -297,7 +355,7 @@ describe( 'iosVersion', () =>
  *
  * @param {DOMElement} target target element
  *
- * @return _Void_
+ * @return {Void} void
  */
 describe( 'removeAllChildren', () =>
 {
@@ -309,12 +367,12 @@ describe( 'removeAllChildren', () =>
 
     it( 'should remove all child elements from an element passed to it', () =>
     {
-        let body        = document.body;
-        let testDiv     = document.createElement( 'DIV' );
+        const body      = document.body;
+        const testDiv   = document.createElement( 'DIV' );
         body.appendChild( testDiv );
 
         let div;
-        for ( var i = 0, lenI = 10; i < lenI; i++ )
+        for ( let i = 0, lenI = 10; i < lenI; i++ )
         {
             div = document.createElement( 'DIV' );
             testDiv.appendChild( div );
@@ -335,7 +393,7 @@ describe( 'removeAllChildren', () =>
  * @param {DOMElement} _el target element
  * @param {String} _class class to remove
  *
- * @return _Void_
+ * @return {Void} void
  */
 describe( 'removeClass', () =>
 {
@@ -347,19 +405,20 @@ describe( 'removeClass', () =>
 
     it( 'should remove the correct classes', () =>
     {
-        window.utils = utils;
-        let body = document.querySelector( 'body' );
+        window.utils    = utils;
+        const body      = document.querySelector( 'body' );
 
         utils.addClass( body, [ 'brains', 'moon', 'doge' ] );
         utils.removeClass( body, [ 'moon', 'doge' ] );
-        assert.ok( body.className.indexOf( 'moon' ) === -1 && body.className.indexOf( 'doge' ) === -1, 'removes an array of classes' );
+        assert.ok( body.className.indexOf( 'moon' ) === -1 &&
+                                    body.className.indexOf( 'doge' ) === -1 );
 
         utils.removeClass( body, 'brains' );
-        assert.equal( body.className.indexOf( 'brains' ), -1, 'removes a single class' );
+        assert.equal( body.className.indexOf( 'brains' ), -1 );
 
         utils.addClass( body, [ 'brains', 'moon', 'doge' ] );
         utils.removeClass( body, 'moon' );
-        assert.equal( body.className.indexOf( 'moon' ), -1, 'removes a middle class' );
+        assert.equal( body.className.indexOf( 'moon' ), -1 );
     } );
 } );
 
@@ -371,19 +430,19 @@ describe( 'removeClass', () =>
  *
  * @param {DOMElement} element element to check
  *
- * @return _Void_
+ * @return {Void} void
  */
 describe( 'scrollTo', () =>
 {
     it( 'should check the bounds and either scroll up or down', () =>
     {
-        let element = {
-            offsetHeight: 10,
-            offsetTop   : 150,
-            parentNode: {
-                parentNode: {
-                    scrollTop   : 7,
-                    offsetHeight: 100
+        const element = {
+            offsetHeight    : 10,
+            offsetTop       : 150,
+            parentNode      : {
+                parentNode      : {
+                    scrollTop       : 7,
+                    offsetHeight    : 100
                 }
             }
         };
@@ -399,9 +458,9 @@ describe( 'scrollTo', () =>
 
     it( 'should ignore everything if the element doesnt exist', () =>
     {
-        let element = null;
+        const element = null;
 
-        let res = utils.scrollTo( element );
+        const res = utils.scrollTo( element );
         assert.equal( res, false );
     } );
 } );
@@ -415,7 +474,7 @@ describe( 'scrollTo', () =>
  *
  * @param {Object} windowObj window, but allows for as testing override
  *
- * @return _Void_
+ * @return {Void} void
  */
 describe( 'setPlatform', () =>
 {
@@ -427,12 +486,36 @@ describe( 'setPlatform', () =>
 
     it( 'should be able to determine the platform conditions', () =>
     {
-        assert.equal( utils.setPlatform( { navigator : { platform: 'Mac' } } ).isOsx, true );
-        assert.equal( utils.setPlatform( { navigator : { platform: 'Linux' } } ).isOsx, false );
-        assert.equal( utils.setPlatform( { navigator : { platform: 'Linux - iPad' } } ).isIos, '5-' );
-        assert.equal( utils.setPlatform( { navigator : { platform: 'Linux - Android' } } ).isIos, false );
-        assert.equal( utils.setPlatform( { navigator : { platform: 'Mac' } } ).multiSelect, 'metaKey' );
-        assert.equal( utils.setPlatform( { navigator : { platform: 'Linux' } } ).multiSelect, 'ctrlKey' );
+        assert.equal( utils.setPlatform( {
+            navigator : {
+                platform : 'Mac'
+            }
+        } ).isOsx, true );
+        assert.equal( utils.setPlatform( {
+            navigator : {
+                platform : 'Linux'
+            }
+        } ).isOsx, false );
+        assert.equal( utils.setPlatform( {
+            navigator : {
+                platform : 'Linux - iPad'
+            }
+        } ).isIos, '5-' );
+        assert.equal( utils.setPlatform( {
+            navigator : {
+                platform : 'Linux - Android'
+            }
+        } ).isIos, false );
+        assert.equal( utils.setPlatform( {
+            navigator : {
+                platform : 'Mac'
+            }
+        } ).multiSelect, 'metaKey' );
+        assert.equal( utils.setPlatform( {
+            navigator : {
+                platform : 'Linux'
+            }
+        } ).multiSelect, 'ctrlKey' );
     } );
 } );
 
@@ -445,7 +528,7 @@ describe( 'setPlatform', () =>
  * @param  {DOMElement} _el target to toggle class on
  * @param  {String} _class class to toggle on/off
  *
- * @return _Void_
+ * @return {Void} void
  */
 describe( 'toggleClass', () =>
 {
@@ -454,19 +537,19 @@ describe( 'toggleClass', () =>
         assert.ok( utils.toggleClass, 'exists' );
     } );
 
-    let select = document.querySelector( 'SELECT' );
+    const select = document.querySelector( 'SELECT' );
     utils.removeClass( select, 'doge' );
 
     it( 'should add classes when necessary', () =>
     {
         utils.toggleClass( select, 'doge' );
-        assert.equal( utils.hasClass( select, 'doge' ), true, 'adds a class' );
+        assert.equal( utils.hasClass( select, 'doge' ), true );
     } );
 
 
     it( 'should remove classes when necessary', () =>
     {
         utils.toggleClass( select, 'doge' );
-        assert.equal( utils.hasClass( select, 'doge' ), false, 'removes a class' );
+        assert.equal( utils.hasClass( select, 'doge' ), false );
     } );
 } );

@@ -1,6 +1,6 @@
-
+/* globals describe, it, document, beforeEach, afterEach, console,
+window, setTimeout */
 import Flounder     from '/core/flounder';
-import events       from '/core/events';
 
 import classes      from '/core/classes';
 import utils        from '/core/utils';
@@ -10,8 +10,8 @@ import assert       from 'assert';
 import sinon        from 'sinon';
 import simulant     from 'simulant';
 
-
-const nativeSlice = Array.prototype.slice;
+const noop = () =>
+{};
 
 
 /**
@@ -19,16 +19,16 @@ const nativeSlice = Array.prototype.slice;
  *
  * adds the listeners for onFirstTouch
  *
- * @return _Void_
+ * @return {Void} void
  */
 describe( 'addFirstTouchListeners', () =>
 {
-    let flounder    = new Flounder( document.body, {} );
+    const flounder    = new Flounder( document.body, {} );
     flounder.firstTouchController( {} );
 
-    let refs        = flounder.refs;
+    const refs        = flounder.refs;
 
-    sinon.stub( flounder, 'firstTouchController', () => {} );
+    sinon.stub( flounder, 'firstTouchController', noop );
 
     flounder.addFirstTouchListeners();
 
@@ -45,7 +45,9 @@ describe( 'addFirstTouchListeners', () =>
     it( 'should bind mouseenter to the wrapper if openOnHover is set', () =>
     {
         document.body.flounder = null;
-        let flounder    = new Flounder( document.body, { openOnHover: true } );
+        const flounder    = new Flounder( document.body, {
+            openOnHover : true
+        } );
 
         flounder.firstTouchController( {} );
 
@@ -76,8 +78,13 @@ describe( 'addHoverClass', () =>
 {
     it( 'should add a hover class to it\'s triggered element', () =>
     {
-        let el = document.createElement( 'DIV' );
-        events.addHoverClass.call( el );
+        document.body.flounder = null;
+        const flounder    = new Flounder( document.body );
+
+        const el = document.createElement( 'DIV' );
+        flounder.addHoverClass( {
+            target : el
+        } );
         assert.equal( utils.hasClass( el, classes.HOVER ), true );
     } );
 } );
@@ -89,7 +96,7 @@ describe( 'addHoverClass', () =>
  *
  * adds listeners on render
  *
- * @return _Void_
+ * @return {Void} void
  */
 describe( 'addListeners', () =>
 {
@@ -102,12 +109,12 @@ describe( 'addListeners', () =>
         flounder    = new Flounder( document.body, {} );
         flounder.removeListeners( {} );
 
-        sinon.stub( flounder, 'divertTarget', () => {} );
-        sinon.stub( flounder, 'toggleList', () => {} );
-        sinon.stub( flounder, 'checkFlounderKeypress', () => {} );
-        sinon.stub( flounder, 'addFirstTouchListeners', () => {} );
-        sinon.stub( flounder, 'addOptionsListeners', () => {} );
-        sinon.stub( flounder, 'addSearchListeners', () => {} );
+        sinon.stub( flounder, 'divertTarget', noop );
+        sinon.stub( flounder, 'toggleList', noop );
+        sinon.stub( flounder, 'checkFlounderKeypress', noop );
+        sinon.stub( flounder, 'addFirstTouchListeners', noop );
+        sinon.stub( flounder, 'addOptionsListeners', noop );
+        sinon.stub( flounder, 'addSearchListeners', noop );
     } );
 
 
@@ -124,7 +131,7 @@ describe( 'addListeners', () =>
 
     it( 'should react on change, click, and keydown events', () =>
     {
-        let refs        = flounder.refs;
+        const refs        = flounder.refs;
         flounder.isIos  = false;
 
         flounder.addListeners( refs );
@@ -143,7 +150,7 @@ describe( 'addListeners', () =>
 
     it( 'should bind mouseenter to the wrapper if openOnHover is set', () =>
     {
-        let refs        = flounder.refs;
+        const refs        = flounder.refs;
 
         flounder.isIos  = true;
         flounder.props.openOnHover = true;
@@ -169,21 +176,21 @@ describe( 'addListeners', () =>
  * @param {Array} selectedOptions currently selected options
  * @param {DOMElement} multiTagWrapper parent element of the tags
  *
- * @return _Void_
+ * @return {Void} void
  */
 describe( 'addMultipleTags', () =>
 {
-    let flounder    = new Flounder( document.body, {} );
+    const flounder    = new Flounder( document.body, {} );
 
-    sinon.stub( flounder, 'removeMultiTag', () => {} );
-    sinon.stub( flounder, 'checkMultiTagKeydown', () => {} );
+    sinon.stub( flounder, 'removeMultiTag', noop );
+    sinon.stub( flounder, 'checkMultiTagKeydown', noop );
 
-    let select          = document.createElement( 'SELECT' );
-    let multiTagWrapper = document.createElement( 'DIV' );
+    const select          = document.createElement( 'SELECT' );
+    const multiTagWrapper = document.createElement( 'DIV' );
 
     it( 'should add a tag with event listeners for each selected value', () =>
     {
-        let options = [ {}, {}, {} ].map( ( el, i ) =>
+        const options = [ {}, {}, {} ].map( ( el, i ) =>
         {
             el = document.createElement( 'OPTION' );
             el.selected = true;
@@ -197,14 +204,14 @@ describe( 'addMultipleTags', () =>
 
         flounder.addMultipleTags( options, multiTagWrapper );
 
-        assert.equal( options[0].selected, false );
+        assert.equal( options[ 0 ].selected, false );
         assert.equal( multiTagWrapper.children.length, 2 );
     } );
 
 
     it( 'should have the proper events bound to it', () =>
     {
-        let firstChild = multiTagWrapper.children[0];
+        const firstChild = multiTagWrapper.children[ 0 ];
 
         simulant.fire( firstChild, 'keydown' );
         simulant.fire( firstChild.firstChild, 'click' );
@@ -224,7 +231,7 @@ describe( 'addMultipleTags', () =>
  *
  * adds listeners to the options
  *
- * @return _Void_
+ * @return {Void} void
  */
 describe( 'addOptionsListeners', () =>
 {
@@ -233,15 +240,17 @@ describe( 'addOptionsListeners', () =>
     beforeEach( () =>
     {
         document.body.flounder = null;
-        flounder = new Flounder( document.body, { data: [ 1, 2, 3 ] } );
+        flounder = new Flounder( document.body, {
+            data : [ 1, 2, 3 ]
+        } );
 
         flounder.removeOptionsListeners();
 
-        flounder.refs.data[1] = document.createElement( 'NOTADIV' );
+        flounder.refs.data[ 1 ] = document.createElement( 'NOTADIV' );
 
-        sinon.stub( flounder, 'addHoverClass', () => {} );
-        sinon.stub( flounder, 'removeHoverClass', () => {} );
-        sinon.stub( flounder, 'clickSet', () => {} );
+        sinon.stub( flounder, 'addHoverClass', noop );
+        sinon.stub( flounder, 'removeHoverClass', noop );
+        sinon.stub( flounder, 'clickSet', noop );
     } );
 
 
@@ -253,17 +262,17 @@ describe( 'addOptionsListeners', () =>
     } );
 
 
-    it( 'should add hover and click listeners on each data div (and only divs)', () =>
+    it( 'should add hover and click listeners on each data div', () =>
     {
         flounder.addOptionsListeners();
 
-        let firstData = flounder.refs.data[0];
+        const firstData = flounder.refs.data[ 0 ];
 
         simulant.fire( firstData, 'mouseenter' );
         simulant.fire( firstData, 'mouseleave' );
         simulant.fire( firstData, 'click' );
 
-        simulant.fire( flounder.refs.data[1], 'click' );
+        simulant.fire( flounder.refs.data[ 1 ], 'click' );
 
 
         assert.equal( flounder.addHoverClass.callCount, 1 );
@@ -275,12 +284,60 @@ describe( 'addOptionsListeners', () =>
 
 
 /**
+ * ## addNoMoreOptionsMessage
+ *
+ * Adding 'No More Options' message to the option list
+ *
+ * @return {Void} void
+ */
+describe( 'addNoMoreOptionsMessage', () =>
+{
+    it( 'should add a addNoMoreOptions message', () =>
+    {
+        document.body.flounder = null;
+        const flounder = new Flounder( document.body, {
+            data : [ 1, 2, 3 ]
+        } );
+
+        flounder.addNoMoreOptionsMessage();
+
+        assert.equal( typeof flounder.refs.noMoreOptionsEl, 'object' );
+    } );
+} );
+
+
+
+/**
+ * ## addNoResultsMessage
+ *
+ * Adding 'No Results' message to the option list
+ *
+ * @return {Void} void
+ */
+describe( 'addNoResultsMessage', () =>
+{
+    it( 'should add a addNoResults message', () =>
+    {
+        document.body.flounder = null;
+        const flounder = new Flounder( document.body, {
+            data : [ 1, 2, 3 ]
+        } );
+
+        flounder.addNoResultsMessage();
+
+        assert.equal( typeof flounder.refs.noResultsEl, 'object' );
+    } );
+} );
+
+
+
+/**
  * ## addPlaceholder
  *
  * called on body click, this determines what (if anything) should be
  * refilled into the the placeholder position
  *
- * @return _Void_
+ * @return {Void} void
  */
 describe( 'addPlaceholder', () =>
 {
@@ -290,10 +347,10 @@ describe( 'addPlaceholder', () =>
     {
         document.body.flounder = null;
         flounder = new Flounder( document.body, {
-                                                    data: [ 1, 2, 3 ],
-                                                    multiple: true,
-                                                    placeholder: 'moon'
-                                                } );
+            data        : [ 1, 2, 3 ],
+            multiple    : true,
+            placeholder : 'moon'
+        } );
     } );
 
     it( 'should add the placeholder if there is nothing selected', () =>
@@ -329,7 +386,8 @@ describe( 'addPlaceholder', () =>
         flounder.setByIndex( 3, true );
         flounder.addPlaceholder();
 
-        assert.equal( flounder.refs.selected.innerHTML, flounder.multipleMessage );
+        assert.equal(
+                flounder.refs.selected.innerHTML, flounder.multipleMessage );
     } );
 
 
@@ -337,10 +395,10 @@ describe( 'addPlaceholder', () =>
     {
         document.body.flounder = null;
         flounder = new Flounder( document.body, {
-                                                    data: [ 1, 2, 3 ],
-                                                    multipleTags: true,
-                                                    placeholder: 'moon'
-                                                } );
+            data            : [ 1, 2, 3 ],
+            multipleTags    : true,
+            placeholder     : 'moon'
+        } );
         flounder.setByIndex( 2 );
         flounder.addPlaceholder();
         assert.equal( flounder.refs.selected.innerHTML, '' );
@@ -354,7 +412,7 @@ describe( 'addPlaceholder', () =>
  *
  * adds listeners to the search box
  *
- * @return _Void_
+ * @return {Void} void
  */
 describe( 'addSearchListeners', () =>
 {
@@ -363,14 +421,17 @@ describe( 'addSearchListeners', () =>
     beforeEach( () =>
     {
         document.body.flounder = null;
-        flounder = new Flounder( document.body, { data: [ 1, 2, 3 ], search: true } );
+        flounder = new Flounder( document.body, {
+            data    : [ 1, 2, 3 ],
+            search  : true
+        } );
 
         flounder.removeSearchListeners();
 
 
-        sinon.stub( flounder, 'toggleListSearchClick', () => {} );
-        sinon.stub( flounder, 'fuzzySearch', () => {} );
-        sinon.stub( flounder, 'clearPlaceholder', () => {} );
+        sinon.stub( flounder, 'toggleListSearchClick', noop );
+        sinon.stub( flounder, 'fuzzySearch', noop );
+        sinon.stub( flounder, 'clearPlaceholder', noop );
     } );
 
 
@@ -385,7 +446,7 @@ describe( 'addSearchListeners', () =>
     it( 'should add the correct events and functions', () =>
     {
         flounder.addSearchListeners();
-        let search = flounder.refs.search;
+        const search = flounder.refs.search;
 
         simulant.fire( search, 'click' );
         simulant.fire( search, 'keyup' );
@@ -405,7 +466,7 @@ describe( 'addSearchListeners', () =>
  * adds a listener to the selectbox to allow for seeking through the native
  * selectbox on keypress
  *
- * @return _Void_
+ * @return {Void} void
  */
 describe( 'addSelectKeyListener', () =>
 {
@@ -414,13 +475,16 @@ describe( 'addSelectKeyListener', () =>
     beforeEach( () =>
     {
         document.body.flounder = null;
-        flounder = new Flounder( document.body, { data: [ 1, 2, 3 ], search: true } );
+        flounder = new Flounder( document.body, {
+            data   : [ 1, 2, 3 ],
+            search : true
+        } );
 
         flounder.removeSelectKeyListener();
 
 
-        sinon.stub( flounder, 'setSelectValue', () => {} );
-        sinon.stub( flounder, 'setKeypress', () => {} );
+        sinon.stub( flounder, 'setSelectValue', noop );
+        sinon.stub( flounder, 'setKeypress', noop );
     } );
 
 
@@ -434,7 +498,7 @@ describe( 'addSelectKeyListener', () =>
     it( 'should add the correct events and functions', () =>
     {
         flounder.addSelectKeyListener();
-        let select = flounder.refs.select;
+        const select = flounder.refs.select;
 
         simulant.fire( select, 'keydown' );
         simulant.fire( select, 'keyup' );
@@ -445,16 +509,17 @@ describe( 'addSelectKeyListener', () =>
     } );
 
 
-    it( 'should insert a plug option element into the select box for ios weirdness', () =>
+    it( 'should insert a plug element into the select box', () =>
     {
         flounder.isIos = true;
 
         flounder.addSelectKeyListener();
 
-        let select  = flounder.refs.select;
-        let plug    = select.children[0];
+        const select  = flounder.refs.select;
+        const plug    = select.children[ 0 ];
 
         assert.equal( plug.tagName, 'OPTION' );
+
         assert.equal( plug.disabled, true );
         assert.equal( plug.className, classes.PLUG );
         assert.deepEqual( plug.parentNode, select );
@@ -470,17 +535,19 @@ describe( 'addSelectKeyListener', () =>
  *
  * @param  {Object} e event object
  *
- * @return _Void_
+ * @return {Void} void
  */
 describe( 'catchBodyClick', () =>
 {
     document.body.flounder = null;
-    let flounder = new Flounder( document.body, { data: [ 1, 2, 3 ] } );
+    const flounder = new Flounder( document.body, {
+        data : [ 1, 2, 3 ]
+    } );
 
-    sinon.stub( flounder, 'toggleList', () => {} );
-    sinon.stub( flounder, 'addPlaceholder', () => {} );
+    sinon.stub( flounder, 'toggleList', noop );
+    sinon.stub( flounder, 'addPlaceholder', noop );
 
-    it( 'should run toggleList and addPlaceholder if clicked off flounder', () =>
+    it( 'should toggleList() and addPlaceholder if clicked off flounder', () =>
     {
         sinon.stub( flounder, 'checkClickTarget', () => false );
 
@@ -521,27 +588,36 @@ describe( 'catchBodyClick', () =>
 describe( 'checkClickTarget', () =>
 {
     document.body.flounder = null;
-    let flounder = new Flounder( document.body, { data: [ 1, 2, 3 ] } );
+    const flounder = new Flounder( document.body, {
+        data : [ 1, 2, 3 ]
+    } );
 
     it( 'should return true if the click is inside flounder', () =>
     {
-        let el = flounder.refs.data[1];
+        const el = flounder.refs.data[ 1 ];
 
-        assert.equal( flounder.checkClickTarget( { target: el } ), true );
+        assert.equal( flounder.checkClickTarget( {
+            target : el
+        } ), true );
     } );
 
 
     it( 'should return false if the click is not inside flounder', () =>
     {
-        assert.equal( flounder.checkClickTarget( { target: document.body } ), false );
+        assert.equal( flounder.checkClickTarget( {
+            target : document.body
+
+        } ), false );
     } );
 
 
     it( 'should return false if the element is not in the DOM', () =>
     {
-        let el = document.createElement( 'DIV' );
+        const el = document.createElement( 'DIV' );
 
-        assert.equal( flounder.checkClickTarget( { target: el } ), false );
+        assert.equal( flounder.checkClickTarget( {
+            target : el
+        } ), false );
     } );
 } );
 
@@ -556,17 +632,25 @@ describe( 'checkClickTarget', () =>
  * @param {Object} e event object
  * @param {Object} refs element references
  *
- * @return _Void_
+ * @return {Void} void
  */
 describe( 'checkEnterOnSearch', () =>
 {
     it( 'should skip the whole thing if there is no value', () =>
     {
         document.body.flounder = null;
-        let flounder    = new Flounder( document.body, { data: [ 1, 2, 3 ], search: true } );
-        let refs        = flounder.refs;
+        const flounder    = new Flounder( document.body, {
+            data    : [ 1, 2, 3 ],
+            search  : true
+        } );
 
-        let e = { target: { value: '' } };
+        const refs        = flounder.refs;
+
+        const e = {
+            target : {
+                value : ''
+            }
+        };
 
         assert.equal( flounder.checkEnterOnSearch( e, refs ), false );
     } );
@@ -575,33 +659,47 @@ describe( 'checkEnterOnSearch', () =>
     it( 'should select the option if there is only one entry', () =>
     {
         document.body.flounder = null;
-        let flounder    = new Flounder( document.body, { data: [ 1, 2, 3 ], search: true } );
-        let refs        = flounder.refs;
+        const flounder    = new Flounder( document.body, {
+            data    : [ 1, 2, 3 ],
+            search  : true
+        } );
 
-        sinon.stub( refs.search, 'focus', () => {} );
+        const refs        = flounder.refs;
 
-        let e = { target: { value: '2' } };
+        sinon.stub( refs.search, 'focus', noop );
 
-        let res = flounder.checkEnterOnSearch( e, refs );
+        const e = {
+            target : {
+                value : '2'
+            }
+        };
+
+        const res = flounder.checkEnterOnSearch( e, refs );
 
         assert.equal( res.length, 1 );
-        assert.equal( refs.search.focus.callCount, 1 );
-
-        refs.search.focus.restore();
+        assert.equal( flounder.getSelected()[ 0 ].value, 2 );
     } );
 
 
     it( 'should only select the option if there is only one left', () =>
     {
         document.body.flounder = null;
-        let flounder    = new Flounder( document.body, { data: [ 1, 2, 3 ], search: true } );
-        let refs        = flounder.refs;
+        const flounder    = new Flounder( document.body, {
+            data    : [ 1, 2, 3 ],
+            search  : true
+        } );
 
-        sinon.stub( refs.search, 'focus', () => {} );
+        const refs        = flounder.refs;
 
-        let e = { target: { value: '4' } };
+        sinon.stub( refs.search, 'focus', noop );
 
-        let res = flounder.checkEnterOnSearch( e, refs );
+        const e = {
+            target : {
+                value : '4'
+            }
+        };
+
+        const res = flounder.checkEnterOnSearch( e, refs );
 
         assert.equal( res.length, 0 );
         assert.equal( refs.search.focus.callCount, 0 );
@@ -610,23 +708,33 @@ describe( 'checkEnterOnSearch', () =>
     } );
 
 
-    it( 'should only refocus on search if multipleTags is active', done =>
+    it( 'should only refocus on search if multipletags is active', done =>
     {
         document.body.flounder = null;
-        let flounder    = new Flounder( document.body, { data: [ 1, 2, 3 ], multipleTags: true } );
-        let refs        = flounder.refs;
 
-        sinon.stub( refs.search, 'focus', () => {} );
+        const opt         = {
+            data            : [ 1, 2, 3 ],
+            multipleTags    : true
+        };
 
-        let e = { target: { value: '2' } };
+        const flounder    = new Flounder( document.body, opt );
+        const refs        = flounder.refs;
 
-        let res = flounder.checkEnterOnSearch( e, refs );
+        sinon.stub( refs.search, 'focus', noop );
+
+        const e = {
+            target : {
+                value : '2'
+            }
+        };
+
+        const res = flounder.checkEnterOnSearch( e, refs );
 
         assert.equal( res.length, 1 );
 
-        setTimeout( function()
+        setTimeout( () =>
         {
-            assert.equal( refs.search.focus.callCount, 2 );
+            assert.equal( refs.search.focus.callCount, 1 );
             refs.search.focus.restore();
             done();
         }, 300 );
@@ -636,12 +744,20 @@ describe( 'checkEnterOnSearch', () =>
     it( 'should exclude items that are already selected', () =>
     {
         document.body.flounder = null;
-        let flounder    = new Flounder( document.body, { data: [ 1, 2, 3 ], search: true } );
-        let refs        = flounder.refs;
+        const flounder    = new Flounder( document.body, {
+            data    : [ 1, 2, 3 ],
+            search  : true
+        } );
+
+        const refs        = flounder.refs;
 
         flounder.setByValue( '2' );
-        let e = { target: { value: '2' } };
-        let res = flounder.checkEnterOnSearch( e, refs );
+        const e = {
+            target : {
+                value : '2'
+            }
+        };
+        const res = flounder.checkEnterOnSearch( e, refs );
 
         assert.equal( res.length, 0 );
     } );
@@ -654,23 +770,31 @@ describe( 'checkEnterOnSearch', () =>
  *
  * checks flounder focused keypresses and filters all but space and enter
  *
- * @return _Void_
+ * @return {Void} void
  */
+
 describe( 'checkFlounderKeypress', () =>
 {
-    document.body.flounder = null;
-    let flounder    = new Flounder( document.body, { data: [ 1, 2, 3 ], search: true } );
-    let refs        = flounder.refs;
-
-
     it( 'should close the menu and add the placeholder on tab', () =>
     {
-        let e = { keyCode: keycodes.TAB, target: { value: 2 }, preventDefault: () => {} };
+        document.body.flounder = null;
+        const flounder    = new Flounder( document.body, {
+            data    : [ 1, 2, 3 ],
+            search  : true
+        } );
 
-        sinon.stub( flounder, 'addPlaceholder', () => {} );
-        sinon.stub( flounder, 'toggleClosed', () => {} );
+        const e = {
+            keyCode         : keycodes.TAB,
+            target          : {
+                value : 2
+            },
+            preventDefault  : noop
+        };
 
-        let res = flounder.checkFlounderKeypress( e );
+        sinon.stub( flounder, 'addPlaceholder', noop );
+        sinon.stub( flounder, 'toggleClosed', noop );
+
+        flounder.checkFlounderKeypress( e );
 
         assert.equal( flounder.addPlaceholder.callCount, 1 );
         assert.equal( flounder.toggleClosed.callCount, 1 );
@@ -682,9 +806,23 @@ describe( 'checkFlounderKeypress', () =>
 
     it( 'should toggle open on enter', () =>
     {
-        let e = { keyCode: keycodes.ENTER, target: { value: 2 }, preventDefault: () => {} };
+        document.body.flounder = null;
+        const flounder    = new Flounder( document.body, {
+            data    : [ 1, 2, 3 ],
+            search  : true
+        } );
 
-        let res = flounder.checkFlounderKeypress( e );
+        const refs        = flounder.refs;
+
+        const e = {
+            keyCode : keycodes.ENTER,
+            target  : {
+                value   : 2
+            },
+            preventDefault : noop
+        };
+
+        flounder.checkFlounderKeypress( e );
 
         assert.equal( utils.hasClass( refs.wrapper, classes.OPEN ), true );
     } );
@@ -692,18 +830,46 @@ describe( 'checkFlounderKeypress', () =>
 
     it( 'should toggle enter if search is enabled', () =>
     {
-        let e = { keyCode: keycodes.ENTER, target: { value: 2 }, preventDefault: () => {} };
+        document.body.flounder = null;
+        const flounder    = new Flounder( document.body, {
+            data    : [ 1, 2, 3 ],
+            search  : true
+        } );
+        const refs        = flounder.refs;
+        refs.wrapper.className += '  open';
 
-        let res = flounder.checkFlounderKeypress( e );
+        const e = {
+            keyCode         : keycodes.ENTER,
+            target          : {
+                value : 2
+            },
+            preventDefault  : noop
+        };
 
-        assert.equal( res[0].value, '2' );
+        const res = flounder.checkFlounderKeypress( e );
+
+        assert.equal( res[ 0 ].value, '2' );
         assert.equal( res.length, 1 );
     } );
 
 
     it( 'should toggle the list open with space', () =>
     {
-        let e = { keyCode: keycodes.SPACE, target: { tagName: 'MOON' }, preventDefault: () => {} };
+        document.body.flounder = null;
+        const flounder    = new Flounder( document.body, {
+            data    : [ 1, 2, 3 ],
+            search  : true
+        } );
+
+        const refs        = flounder.refs;
+
+        const e = {
+            keyCode : keycodes.SPACE,
+            target  : {
+                tagName : 'MOON'
+            },
+            preventDefault : noop
+        };
 
         flounder.checkFlounderKeypress( e );
 
@@ -713,24 +879,55 @@ describe( 'checkFlounderKeypress', () =>
 
     it( 'should pass normal letters through', () =>
     {
-        let e = { keyCode: 49, target: { tagName: 'INPUT' } };
+        document.body.flounder = null;
+        const flounder    = new Flounder( document.body, {
+            data    : [ 1, 2, 3 ],
+            search  : true
+        } );
+
+        const refs        = flounder.refs;
+
+        let e = {
+            keyCode : 49,
+            target  : {
+                tagName : 'INPUT'
+            }
+        };
         flounder.checkFlounderKeypress( e );
 
         assert.equal( refs.selected.innerHTML, '' );
 
-        e = { keyCode: 70, target: { tagName: 'INPUT' } };
+        e = {
+            keyCode : 70,
+            target  : {
+                tagName : 'INPUT'
+            }
+        };
         flounder.checkFlounderKeypress( e );
     } );
 
 
     it( 'should do nothing if it doesnt hit the above conditions', () =>
     {
+        document.body.flounder = null;
+        const flounder    = new Flounder( document.body, {
+            data    : [ 1, 2, 3 ],
+            search  : true
+        } );
+
+        const refs        = flounder.refs;
+
         refs.selected.innerHTML = 'moon';
 
-        let e = { keyCode: 49, target: {} };
+        let e = {
+            keyCode : 49,
+            target  : {}
+        };
         flounder.checkFlounderKeypress( e );
 
-        e = { keyCode: 0 };
+        e = {
+            keyCode : 0
+        };
         flounder.checkFlounderKeypress( e );
 
         assert.equal( refs.selected.innerHTML, 'moon' );
@@ -747,7 +944,7 @@ describe( 'checkFlounderKeypress', () =>
  *
  * @param {Object} e event object
  *
- * @return _Void_
+ * @return {Void} void
  */
 describe( 'checkMultiTagKeydown', () =>
 {
@@ -755,29 +952,34 @@ describe( 'checkMultiTagKeydown', () =>
     {
         document.body.flounder = null;
 
-        let flounder    = new Flounder( document.body, { data: [ 1, 2, 3 ], multipleTags : true } );
-        let refs        = flounder.refs;
+        const flounder    = new Flounder( document.body, {
+            data            : [ 1, 2, 3 ],
+            multipleTags    : true
+        } );
+        const refs        = flounder.refs;
 
         flounder.setByIndex( 1 );
         flounder.setByIndex( 2 );
 
-        sinon.stub( flounder, 'checkMultiTagKeydownNavigate', () => {} );
-        sinon.stub( flounder, 'checkMultiTagKeydownRemove', () => {} );
+        sinon.stub( flounder, 'checkMultiTagKeydownNavigate', noop );
+        sinon.stub( flounder, 'checkMultiTagKeydownRemove', noop );
 
-        let children    = refs.multiTagWrapper.children;
-        let target      = children[ 0 ];
+        const children    = refs.multiTagWrapper.children;
+        const target      = children[ 0 ];
 
-        flounder.checkMultiTagKeydown( {    keyCode         : 39,
-                                            target          : target,
-                                            preventDefault  : () => {},
-                                            stopPropagation : () => {}
-                                        } );
+        flounder.checkMultiTagKeydown( {
+            keyCode         : 39,
+            target          : target,
+            preventDefault  : noop,
+            stopPropagation : noop
+        } );
 
-        flounder.checkMultiTagKeydown( {    keyCode         : 37,
-                                            target          : target,
-                                            preventDefault  : () => {},
-                                            stopPropagation : () => {}
-                                        } );
+        flounder.checkMultiTagKeydown( {
+            keyCode         : 37,
+            target          : target,
+            preventDefault  : noop,
+            stopPropagation : noop
+        } );
 
         assert.equal( flounder.checkMultiTagKeydownNavigate.callCount, 2 );
         assert.equal( flounder.checkMultiTagKeydownRemove.callCount, 0 );
@@ -788,23 +990,27 @@ describe( 'checkMultiTagKeydown', () =>
     {
         document.body.flounder = null;
 
-        let flounder    = new Flounder( document.body, { data: [ 1, 2, 3 ], multipleTags : true } );
-        let refs        = flounder.refs;
+        const flounder    = new Flounder( document.body, {
+            data            : [ 1, 2, 3 ],
+            multipleTags    : true
+        } );
+        const refs        = flounder.refs;
 
         flounder.setByIndex( 1 );
         flounder.setByIndex( 2 );
 
-        sinon.stub( flounder, 'checkMultiTagKeydownNavigate', () => {} );
-        sinon.stub( flounder, 'checkMultiTagKeydownRemove', () => {} );
+        sinon.stub( flounder, 'checkMultiTagKeydownNavigate', noop );
+        sinon.stub( flounder, 'checkMultiTagKeydownRemove', noop );
 
-        let children    = refs.multiTagWrapper.children;
-        let target      = children[ 0 ];
+        const children    = refs.multiTagWrapper.children;
+        const target      = children[ 0 ];
 
-        flounder.checkMultiTagKeydown( {    keyCode         : 8,
-                                            target          : target,
-                                            preventDefault  : () => {},
-                                            stopPropagation : () => {}
-                                        } );
+        flounder.checkMultiTagKeydown( {
+            keyCode         : 8,
+            target          : target,
+            preventDefault  : noop,
+            stopPropagation : noop
+        } );
 
         assert.equal( flounder.checkMultiTagKeydownNavigate.callCount, 0 );
         assert.equal( flounder.checkMultiTagKeydownRemove.callCount, 1 );
@@ -815,24 +1021,28 @@ describe( 'checkMultiTagKeydown', () =>
     {
         document.body.flounder = null;
 
-        let flounder    = new Flounder( document.body, { data: [ 1, 2, 3 ], multipleTags : true } );
-        let refs        = flounder.refs;
+        const flounder    = new Flounder( document.body, {
+            data            : [ 1, 2, 3 ],
+            multipleTags    : true
+        } );
+        const refs        = flounder.refs;
 
         flounder.setByIndex( 1 );
         flounder.setByIndex( 2 );
 
-        sinon.stub( flounder, 'clearPlaceholder', () => {} );
-        sinon.stub( flounder, 'toggleListSearchClick', () => {} );
+        sinon.stub( flounder, 'clearPlaceholder', noop );
+        sinon.stub( flounder, 'toggleListSearchClick', noop );
 
-        let children    = refs.multiTagWrapper.children;
-        let target      = children[ 0 ];
+        const children    = refs.multiTagWrapper.children;
+        const target      = children[ 0 ];
 
-        flounder.checkMultiTagKeydown( {    keyCode         : 888,
-                                            key             : 'm',
-                                            target          : target,
-                                            preventDefault  : () => {},
-                                            stopPropagation : () => {}
-                                        } );
+        flounder.checkMultiTagKeydown( {
+            keyCode         : 888,
+            key             : 'm',
+            target          : target,
+            preventDefault  : noop,
+            stopPropagation : noop
+        } );
 
         assert.equal( flounder.clearPlaceholder.callCount, 1 );
         assert.equal( flounder.toggleListSearchClick.callCount, 1 );
@@ -843,24 +1053,28 @@ describe( 'checkMultiTagKeydown', () =>
     {
         document.body.flounder = null;
 
-        let flounder    = new Flounder( document.body, { data: [ 1, 2, 3 ], multipleTags : true } );
-        let refs        = flounder.refs;
+        const flounder    = new Flounder( document.body, {
+            data            : [ 1, 2, 3 ],
+            multipleTags    : true
+        } );
+        const refs        = flounder.refs;
 
         flounder.setByIndex( 1 );
         flounder.setByIndex( 2 );
 
-        sinon.stub( flounder, 'clearPlaceholder', () => {} );
-        sinon.stub( flounder, 'toggleListSearchClick', () => {} );
+        sinon.stub( flounder, 'clearPlaceholder', noop );
+        sinon.stub( flounder, 'toggleListSearchClick', noop );
 
-        let children    = refs.multiTagWrapper.children;
-        let target      = children[ 0 ];
+        const children    = refs.multiTagWrapper.children;
+        const target      = children[ 0 ];
 
-        flounder.checkMultiTagKeydown( {    keyCode         : 888,
-                                            key             : 'mkjbkhj',
-                                            target          : target,
-                                            preventDefault  : () => {},
-                                            stopPropagation : () => {}
-                                        } );
+        flounder.checkMultiTagKeydown( {
+            keyCode         : 888,
+            key             : 'mkjbkhj',
+            target          : target,
+            preventDefault  : noop,
+            stopPropagation : noop
+        } );
 
         assert.equal( flounder.clearPlaceholder.callCount, 0 );
         assert.equal( flounder.toggleListSearchClick.callCount, 0 );
@@ -878,7 +1092,7 @@ describe( 'checkMultiTagKeydown', () =>
  * @param {Number} keyCode keyclode from te keypress event
  * @param {Number} index index of currently focused tag
  *
- * @return _Void_
+ * @return {Void} void
  */
 describe( 'checkMultiTagKeydownNavigate', () =>
 {
@@ -886,17 +1100,20 @@ describe( 'checkMultiTagKeydownNavigate', () =>
     {
         document.body.flounder = null;
 
-        let flounder    = new Flounder( document.body, { data: [ 1, 2, 3 ], multipleTags : true } );
-        let refs        = flounder.refs;
+        const flounder    = new Flounder( document.body, {
+            data            : [ 1, 2, 3 ],
+            multipleTags    : true
+        } );
+        const refs        = flounder.refs;
 
         flounder.setByIndex( 1 );
         flounder.setByIndex( 2 );
 
-        let children    = refs.multiTagWrapper.children;
-        let target      = children[ 0 ];
+        const children    = refs.multiTagWrapper.children;
+        const target      = children[ 0 ];
 
-        sinon.stub( target, 'focus', () => {} );
-        let focusSearch = sinon.spy();
+        sinon.stub( target, 'focus', noop );
+        const focusSearch = sinon.spy();
 
         flounder.checkMultiTagKeydownNavigate( focusSearch, 37, 1 );
 
@@ -909,16 +1126,19 @@ describe( 'checkMultiTagKeydownNavigate', () =>
     {
         document.body.flounder = null;
 
-        let flounder    = new Flounder( document.body, { data: [ 1, 2, 3 ], multipleTags : true } );
-        let refs        = flounder.refs;
+        const flounder    = new Flounder( document.body, {
+            data            : [ 1, 2, 3 ],
+            multipleTags    : true
+        } );
+        const refs        = flounder.refs;
 
         flounder.setByIndex( 1 );
 
-        let children    = refs.multiTagWrapper.children;
-        let target      = children[ 0 ];
+        const children    = refs.multiTagWrapper.children;
+        const target      = children[ 0 ];
 
-        sinon.stub( target, 'focus', () => {} );
-        let focusSearch = sinon.spy();
+        sinon.stub( target, 'focus', noop );
+        const focusSearch = sinon.spy();
 
         flounder.checkMultiTagKeydownNavigate( focusSearch, 37, 0 );
 
@@ -931,17 +1151,20 @@ describe( 'checkMultiTagKeydownNavigate', () =>
     {
         document.body.flounder = null;
 
-        let flounder    = new Flounder( document.body, { data: [ 1, 2, 3 ], multipleTags : true } );
-        let refs        = flounder.refs;
+        const flounder    = new Flounder( document.body, {
+            data            : [ 1, 2, 3 ],
+            multipleTags    : true
+        } );
+        const refs        = flounder.refs;
 
         flounder.setByIndex( 1 );
         flounder.setByIndex( 2 );
 
-        let children    = refs.multiTagWrapper.children;
-        let target      = children[ 1 ];
+        const children    = refs.multiTagWrapper.children;
+        const target      = children[ 1 ];
 
-        sinon.stub( target, 'focus', () => {} );
-        let focusSearch = sinon.spy();
+        sinon.stub( target, 'focus', noop );
+        const focusSearch = sinon.spy();
 
         flounder.checkMultiTagKeydownNavigate( focusSearch, 39, 0 );
 
@@ -954,16 +1177,19 @@ describe( 'checkMultiTagKeydownNavigate', () =>
     {
         document.body.flounder = null;
 
-        let flounder    = new Flounder( document.body, { data: [ 1, 2, 3 ], multipleTags : true } );
-        let refs        = flounder.refs;
+        const flounder    = new Flounder( document.body, {
+            data            : [ 1, 2, 3 ],
+            multipleTags    : true
+        } );
+        const refs        = flounder.refs;
 
         flounder.setByIndex( 1 );
 
-        let children    = refs.multiTagWrapper.children;
-        let target      = children[ 0 ];
+        const children    = refs.multiTagWrapper.children;
+        const target      = children[ 0 ];
 
-        sinon.stub( target, 'focus', () => {} );
-        let focusSearch = sinon.spy();
+        sinon.stub( target, 'focus', noop );
+        const focusSearch = sinon.spy();
 
         flounder.checkMultiTagKeydownNavigate( focusSearch, 39, 0 );
 
@@ -983,7 +1209,7 @@ describe( 'checkMultiTagKeydownNavigate', () =>
  * @param {Function} focusSearch function to focus on the search field
  * @param {Number} index index of currently focused tag
  *
- * @return _Void_
+ * @return {Void} void
  */
 describe( 'checkMultiTagKeydownRemove', () =>
 {
@@ -991,39 +1217,50 @@ describe( 'checkMultiTagKeydownRemove', () =>
     {
         document.body.flounder = null;
 
-        let flounder    = new Flounder( document.body, { data: [ 1, 2, 3 ], multipleTags : true } );
-        let refs        = flounder.refs;
+        const flounder    = new Flounder( document.body, {
+            data            : [ 1, 2, 3 ],
+            multipleTags    : true
+        } );
+        const refs        = flounder.refs;
 
         flounder.setByIndex( 1 );
 
-        let children    = refs.multiTagWrapper.children;
-        let target      = children[ 0 ];
-        let focusSearch = sinon.spy();
+        const children    = refs.multiTagWrapper.children;
+        const target      = children[ 0 ];
+        const focusSearch = sinon.spy();
 
-        flounder.checkMultiTagKeydownRemove( target, focusSearch, [ target ], 1 );
+        flounder.checkMultiTagKeydownRemove(
+                                            target,
+                                            focusSearch,
+                                            [ target ],
+                                            1
+                                        );
 
         assert.equal( focusSearch.callCount, 1 );
     } );
 
 
-    it( 'should remove the focused target and focus on the previous tag when there are more then 2', () =>
+    it( 'should focus on the previous tag whn there are meore then 2', () =>
     {
         document.body.flounder = null;
 
-        let flounder    = new Flounder( document.body, { data: [ 1, 2, 3 ], multipleTags : true } );
-        let refs        = flounder.refs;
+        const flounder    = new Flounder( document.body, {
+            data            : [ 1, 2, 3 ],
+            multipleTags    : true
+        } );
+        const refs        = flounder.refs;
 
         flounder.setByIndex( 1 );
         flounder.setByIndex( 2 );
         flounder.setByIndex( 3 );
 
-        let target      = refs.multiTagWrapper.children[ 1 ];
-        let focusSearch = sinon.spy();
+        const target      = refs.multiTagWrapper.children[ 1 ];
+        const focusSearch = sinon.spy();
 
-        sinon.stub( refs.multiTagWrapper.children[ 0 ], 'focus', () => {} );
+        sinon.stub( refs.multiTagWrapper.children[ 0 ], 'focus', noop );
         flounder.checkMultiTagKeydownRemove( target, focusSearch, 1 );
 
-        let children    = refs.multiTagWrapper.children;
+        const children    = refs.multiTagWrapper.children;
         assert.equal( focusSearch.callCount, 0 );
         assert.equal( children[ 0 ].focus.callCount, 1 );
 
@@ -1036,19 +1273,22 @@ describe( 'checkMultiTagKeydownRemove', () =>
             doesnt work, but there were some weird things going on with
             the assertions
      */
-    it( 'should remove the focused target and focus on the new first tag when the first one was removed', () =>
+    it( 'should focus on new first tag when the first one was removed', () =>
     {
         document.body.flounder = null;
 
-        let flounder    = new Flounder( document.body, { data: [ 1, 2, 3 ], multipleTags : true } );
-        let refs        = flounder.refs;
+        const flounder    = new Flounder( document.body, {
+            data            : [ 1, 2, 3 ],
+            multipleTags    : true
+        } );
+        const refs        = flounder.refs;
 
         flounder.setByIndex( 1 );
         flounder.setByIndex( 2 );
         flounder.setByIndex( 3 );
 
-        let target      = refs.multiTagWrapper.children[ 0 ];
-        let focusSearch = sinon.spy();
+        const target      = refs.multiTagWrapper.children[ 0 ];
+        const focusSearch = sinon.spy();
 
         flounder.checkMultiTagKeydownRemove( target, focusSearch, 0 );
 
@@ -1064,16 +1304,16 @@ describe( 'checkMultiTagKeydownRemove', () =>
  *
  * @param {Object} e event object
  *
- * @return _Void_
+ * @return {Void} void
  */
 describe( 'clearPlaceholder', () =>
 {
-    let flounder = new Flounder( document.body, {} );
+    const flounder = new Flounder( document.body, {} );
 
     it( 'should clear the placeholder', () =>
     {
         flounder.clearPlaceholder();
-        assert.equal( flounder.refs.selected.innerHTML, `` );
+        assert.equal( flounder.refs.selected.innerHTML, '' );
     } );
 } );
 
@@ -1086,19 +1326,25 @@ describe( 'clearPlaceholder', () =>
  *
  * @param {Object} e event object
  *
- * @return _Void_
+ * @return {Void} void
  */
 describe( 'clickSet', () =>
 {
-    it( 'should set the clicked div\'s option as selected' , () =>
+    it( 'should set the clicked div\'s option as selected', () =>
     {
-        let flounder    = new Flounder( document.body, {} );
-        flounder.multiple = true;
-        let e           = { preventDefault: sinon.spy(), stopPropagation: sinon.spy() };
-        e[ flounder.multiSelect ] = true;
+        document.body.flounder      = null;
+        const flounder                = new Flounder( document.body, {} );
+        flounder.multiple           = true;
+        flounder.programmaticClick  = true;
+        const e                       = {
+            preventDefault  : sinon.spy(),
+            stopPropagation : sinon.spy()
+        };
 
-        sinon.stub( flounder, 'setSelectValue', () => {} );
-        sinon.stub( flounder, 'toggleList', () => {} );
+        e[ flounder.multiSelect ]   = true;
+
+        sinon.stub( flounder, 'setSelectValue', noop );
+        sinon.stub( flounder, 'toggleList', noop );
 
         flounder.clickSet( e );
 
@@ -1110,13 +1356,17 @@ describe( 'clickSet', () =>
     } );
 
 
-    it( 'should set the clicked div\'s option as selected and toggle the list if it\'s not a multiple select', () =>
+    it( 'should set the clicked div and toggle the list', () =>
     {
-        let flounder    = new Flounder( document.body, {} );
-        let e           = { preventDefault: sinon.spy(), stopPropagation: sinon.spy() };
+        document.body.flounder = null;
+        const flounder    = new Flounder( document.body, {} );
+        const e           = {
+            preventDefault  : sinon.spy(),
+            stopPropagation : sinon.spy()
+        };
 
-        sinon.stub( flounder, 'setSelectValue', () => {} );
-        sinon.stub( flounder, 'toggleList', () => {} );
+        sinon.stub( flounder, 'setSelectValue', noop );
+        sinon.stub( flounder, 'toggleList', noop );
 
         flounder.clickSet( e );
 
@@ -1138,30 +1388,33 @@ describe( 'clickSet', () =>
  * @param  {Array} selectedOptions currently selected options
  * @param  {DOMElement} selected div to display currently selected options
  *
- * @return _Void_
+ * @return {Void} void
  */
 describe( 'displayMultipleTags', () =>
 {
-    let data = [
-            'doge',
-            'moon',
-            'mon',
-            'moin',
-            'main'
-        ];
+    const data = [
+        'doge',
+        'moon',
+        'mon',
+        'moin',
+        'main'
+    ];
 
     document.body.flounder = null;
-    let flounder    = new Flounder( document.body,
-                            { multipleTags : true, data : data } );
+    const flounder    = new Flounder( document.body, {
+        multipleTags    : true,
+        data            : data
+    } );
 
-    let refs            = flounder.refs;
-    let refsData        = refs.data;
-    let multiTagWrapper = refs.multiTagWrapper;
+    const refs            = flounder.refs;
+    const refsData        = refs.data;
+    const multiTagWrapper = refs.multiTagWrapper;
 
 
     it( 'should create a tag for each selection', () =>
     {
-        flounder.displayMultipleTags( [ refsData[ 1 ], refsData[ 2 ] ], multiTagWrapper );
+        flounder.displayMultipleTags( [ refsData[ 1 ], refsData[ 2 ] ],
+                                                            multiTagWrapper );
         assert.equal( refs.multiTagWrapper.children.length, 2 );
     } );
 
@@ -1169,7 +1422,7 @@ describe( 'displayMultipleTags', () =>
     it( 'should re-add the placeholder if there are no tags', () =>
     {
         flounder.deselectAll();
-        flounder.refs.selected.innerHTML = ``;
+        flounder.refs.selected.innerHTML = '';
 
         flounder.displayMultipleTags( [], multiTagWrapper );
 
@@ -1187,22 +1440,25 @@ describe( 'displayMultipleTags', () =>
  * @param {DOMElement} selected display area for the selected option(s)
  * @param {Object} refs element references
  *
- * @return _Void_
+ * @return {Void} void
  */
 describe( 'displaySelected', () =>
 {
     it( 'should display the selected option in refs.selected', () =>
     {
-        let data = [
+        const data = [
             'doge',
             'moon'
         ];
 
-        let flounder    = new Flounder( document.body, { data : data, defaultIndex : 0 } );
+        const flounder    = new Flounder( document.body, {
+            data            : data,
+            defaultIndex    : 0
+        } );
 
         flounder.setByIndex( 1 );
 
-        let refs = flounder.refs;
+        const refs = flounder.refs;
 
         assert.equal( refs.selected.textContent, refs.data[ 1 ].textContent );
     } );
@@ -1218,7 +1474,7 @@ describe( 'displaySelected', () =>
  * on interaction with the raw select box, the target will be diverted to
  * the corresponding flounder list element
  *
- * @return _Void_
+ * @return {Void} void
  */
 describe( 'divertTarget', () =>
 {
@@ -1226,24 +1482,33 @@ describe( 'divertTarget', () =>
     {
         document.body.flounder = null;
 
-        let flounder    = new Flounder( document.body, { data: [ 1, 2, 3 ], multiple : true } );
-        let refs        = flounder.refs;
-        let select      = refs.select;
+        const flounder    = new Flounder( document.body, {
+            data        : [ 1, 2, 3 ],
+            multiple    : true
+        } );
+        const refs        = flounder.refs;
+        const select      = refs.select;
         flounder.isIos  = true;
 
-        let plug        = document.createElement( 'OPTION' );
+        const plug        = document.createElement( 'OPTION' );
         plug.className  = `${classes.PLUG}`;
         select.appendChild( plug );
 
         sinon.spy( select, 'removeChild' );
-        sinon.stub( flounder, 'setSelectValue', () => {} );
+        sinon.stub( flounder, 'setSelectValue', noop );
 
-        flounder.divertTarget( { type: 'moon', target: select } );
+        flounder.divertTarget( {
+            type    : 'moon',
+            target  : select
+        } );
 
         assert.equal( select.removeChild.callCount, 1 );
         assert.equal( flounder.setSelectValue.callCount, 1 );
 
-        flounder.divertTarget( { type: 'moon', target: select } );
+        flounder.divertTarget( {
+            type    : 'moon',
+            target  : select
+        } );
 
         assert.equal( select.removeChild.callCount, 1 );
         assert.equal( flounder.setSelectValue.callCount, 2 );
@@ -1255,23 +1520,26 @@ describe( 'divertTarget', () =>
         let select      = document.querySelector( 'SELECT' );
         select.flounder = null;
 
-        let flounder    = new Flounder( select, {
-                                                    data: [ 1, 2, 3 ],
-                                                    keepChangesOnDestroy: true,
-                                                    selectDataOverride: true
-                                                } );
-        let refs        = flounder.refs;
+        const flounder    = new Flounder( select, {
+            data                    : [ 1, 2, 3 ],
+            keepChangesOnDestroy    : true,
+            selectDataOverride      : true
+        } );
+        const refs        = flounder.refs;
         select          = refs.select;
 
-        let plug        = document.createElement( 'OPTION' );
+        const plug        = document.createElement( 'OPTION' );
         plug.className  = `${classes.PLUG}`;
         select.appendChild( plug );
 
-        sinon.stub( select, 'removeChild', () => {} );
-        sinon.stub( flounder, 'setSelectValue', () => {} );
-        sinon.stub( flounder, 'toggleList', () => {} );
+        sinon.stub( select, 'removeChild', noop );
+        sinon.stub( flounder, 'setSelectValue', noop );
+        sinon.stub( flounder, 'toggleList', noop );
 
-        flounder.divertTarget( { type: 'moon', target: select } );
+        flounder.divertTarget( {
+            type    : 'moon',
+            target  : select
+        } );
 
         assert.equal( select.removeChild.callCount, 0 );
         assert.equal( flounder.setSelectValue.callCount, 1 );
@@ -1283,29 +1551,33 @@ describe( 'divertTarget', () =>
     {
         document.body.flounder = null;
 
-        let flounder    = new Flounder( document.body, { data: [ 1, 2, 3 ], multipleTags : true } );
-        let refs        = flounder.refs;
-        let select      = refs.select;
+        const flounder    = new Flounder( document.body, {
+            data            : [ 1, 2, 3 ],
+            multipleTags    : true
+        } );
 
-        let plug        = document.createElement( 'OPTION' );
+        const select    = flounder.refs.select;
+
+        const plug      = document.createElement( 'OPTION' );
         plug.className  = `${classes.PLUG}`;
         select.appendChild( plug );
 
-        sinon.stub( select, 'removeChild', () => {} );
-        sinon.stub( flounder, 'setSelectValue', () => {} );
-        sinon.stub( flounder, 'toggleList', () => {} );
+        sinon.stub( select, 'removeChild', noop );
+        sinon.stub( flounder, 'setSelectValue', noop );
+        sinon.stub( flounder, 'toggleList', noop );
 
-        let _preventDefault     = sinon.spy();
-        let _stopPropagation    = sinon.spy();
+        const preventDefault     = sinon.spy();
+        const stopPropagation    = sinon.spy();
 
-        flounder.divertTarget( {    type            : 'moon',
-                                    target          : select,
-                                    preventDefault  : _preventDefault,
-                                    stopPropagation : _stopPropagation
-                                } );
+        flounder.divertTarget( {
+            type            : 'moon',
+            target          : select,
+            preventDefault,
+            stopPropagation
+        } );
 
-        assert.equal( _preventDefault.callCount, 1 );
-        assert.equal( _stopPropagation.callCount, 1 );
+        assert.equal( preventDefault.callCount, 1 );
+        assert.equal( stopPropagation.callCount, 1 );
     } );
 } );
 
@@ -1319,7 +1591,7 @@ describe( 'divertTarget', () =>
  *
  * @param {Object} e event object
  *
- * @return _Void_
+ * @return {Void} void
  */
 describe( 'firstTouchController', () =>
 {
@@ -1327,11 +1599,14 @@ describe( 'firstTouchController', () =>
     {
         document.body.flounder = null;
 
-        let flounder    = new Flounder( document.body, { data: [ 1, 2, 3 ], multipleTags : true } );
+        const flounder    = new Flounder( document.body, {
+            data            : [ 1, 2, 3 ],
+            multipleTags    : true
+        } );
 
-        flounder.onFirstTouch = () => a + b;
+        flounder.onFirstTouch = () => a + b; // eslint-disable-line
 
-        sinon.stub( console, 'warn', () => {} );
+        sinon.stub( console, 'warn', noop );
 
         flounder.firstTouchController( {} );
 
@@ -1354,11 +1629,19 @@ describe( 'removeHoverClass', () =>
 {
     it( 'should remove a hover class to it\'s triggered element', () =>
     {
-        let el = document.createElement( 'DIV' );
-        el.className = classes.HOVER;
+        document.body.flounder = null;
 
-        events.removeHoverClass.call( el );
-        assert.equal( utils.hasClass( el, classes.HOVER ), false );
+        const flounder    = new Flounder( document.body, {
+            data : [ 1, 2, 3 ]
+        } );
+
+        const el = document.createElement( 'DIV' );
+        el.className = flounder.classes.HOVER;
+
+        flounder.removeHoverClass( {
+            target : el
+        } );
+        assert.equal( utils.hasClass( el, flounder.classes.HOVER ), false );
     } );
 } );
 
@@ -1369,7 +1652,7 @@ describe( 'removeHoverClass', () =>
  *
  * removes event listeners from flounder.  normally pre unload
  *
- * @return _Void_
+ * @return {Void} void
  */
 describe( 'removeListeners', () =>
 {
@@ -1382,11 +1665,11 @@ describe( 'removeListeners', () =>
         flounder    = new Flounder( document.body, {} );
         flounder.removeListeners( {} );
 
-        sinon.stub( flounder, 'divertTarget', () => {} );
-        sinon.stub( flounder, 'toggleList', () => {} );
-        sinon.stub( flounder, 'checkFlounderKeypress', () => {} );
-        sinon.stub( flounder, 'removeOptionsListeners', () => {} );
-        sinon.stub( flounder, 'removeSearchListeners', () => {} );
+        sinon.stub( flounder, 'divertTarget', noop );
+        sinon.stub( flounder, 'toggleList', noop );
+        sinon.stub( flounder, 'checkFlounderKeypress', noop );
+        sinon.stub( flounder, 'removeOptionsListeners', noop );
+        sinon.stub( flounder, 'removeSearchListeners', noop );
 
         flounder.addListeners( flounder.refs );
     } );
@@ -1404,7 +1687,7 @@ describe( 'removeListeners', () =>
 
     it( 'should react on change, click, and keydown events', () =>
     {
-        let refs        = flounder.refs;
+        const refs        = flounder.refs;
         flounder.isIos  = false;
 
         flounder.removeListeners( refs );
@@ -1424,7 +1707,7 @@ describe( 'removeListeners', () =>
 
     it( 'should bind mouseenter to the wrapper if openOnHover is set', () =>
     {
-        let refs        = flounder.refs;
+        const refs        = flounder.refs;
 
         flounder.isIos  = true;
         flounder.props.openOnHover = true;
@@ -1445,11 +1728,12 @@ describe( 'removeListeners', () =>
 /**
  * ## removeMultiTag
  *
- * removes a multi selection tag on click; fixes all references to value and state
+ * removes a multi selection tag on click; fixes all references to value
+ * and state
  *
  * @param  {Object} e event object
  *
- * @return _Void_
+ * @return {Void} void
  */
 describe( 'removeMultiTag', () =>
 {
@@ -1457,29 +1741,33 @@ describe( 'removeMultiTag', () =>
     {
         document.body.flounder = null;
 
-        let flounder        = new Flounder( document.body, { data: [ 1, 2, 3 ], multipleTags : true } );
-        let refs            = flounder.refs;
-        let multiTagWrapper = refs.multiTagWrapper;
+        const flounder        = new Flounder( document.body, {
+            data            : [ 1, 2, 3 ],
+            multipleTags    : true
+        } );
+        const refs            = flounder.refs;
+        const multiTagWrapper = refs.multiTagWrapper;
 
         flounder.setByIndex( 1 );
         flounder.setByIndex( 2 );
 
-        let _preventDefault     = sinon.spy();
-        let _stopPropagation    = sinon.spy();
+        const preventDefault     = sinon.spy();
+        const stopPropagation    = sinon.spy();
 
-        let target      = multiTagWrapper.children[ 0 ].children[ 0 ];
-        let targetIndex = target.getAttribute( `data-index` );
+        const target      = multiTagWrapper.children[ 0 ].children[ 0 ];
+        const targetIndex = target.getAttribute( 'data-index' );
 
         refs.select[ targetIndex ] = target;
 
-        flounder.removeMultiTag( {  target          : target,
-                                    preventDefault  : _preventDefault,
-                                    stopPropagation : _stopPropagation
-                                } );
+        flounder.removeMultiTag( {
+            target          : target,
+            preventDefault  : preventDefault,
+            stopPropagation : stopPropagation
+        } );
 
         assert.equal( multiTagWrapper.children.length, 1 );
-        assert.equal( _preventDefault.callCount, 1 );
-        assert.equal( _stopPropagation.callCount, 1 );
+        assert.equal( preventDefault.callCount, 1 );
+        assert.equal( stopPropagation.callCount, 1 );
     } );
 
 
@@ -1487,62 +1775,71 @@ describe( 'removeMultiTag', () =>
     {
         document.body.flounder = null;
 
-        let flounder        = new Flounder( document.body, { data: [ 1, 2, 3 ], multipleTags : true } );
-        let refs            = flounder.refs;
-        let multiTagWrapper = refs.multiTagWrapper;
+        const flounder        = new Flounder( document.body, {
+            data            : [ 1, 2, 3 ],
+            multipleTags    : true
+        } );
+        const refs            = flounder.refs;
+        const multiTagWrapper = refs.multiTagWrapper;
 
         flounder.setByIndex( 1 );
 
-        let _preventDefault     = sinon.spy();
-        let _stopPropagation    = sinon.spy();
+        const preventDefault     = sinon.spy();
+        const stopPropagation    = sinon.spy();
 
-        sinon.stub( flounder, 'addPlaceholder', () => {} );
+        sinon.stub( flounder, 'addPlaceholder', noop );
 
-        let target      = multiTagWrapper.children[ 0 ].children[ 0 ];
-        let targetIndex = target.getAttribute( `data-index` );
+        const target      = multiTagWrapper.children[ 0 ].children[ 0 ];
+        const targetIndex = target.getAttribute( 'data-index' );
 
         refs.select[ targetIndex ] = refs.select.options[ targetIndex ];
 
-        flounder.removeMultiTag( {  target          : target,
-                                    preventDefault  : _preventDefault,
-                                    stopPropagation : _stopPropagation
-                                } );
+        flounder.removeMultiTag( {
+            target          : target,
+            preventDefault  : preventDefault,
+            stopPropagation : stopPropagation
+        } );
 
         assert.equal( multiTagWrapper.children.length, 0 );
-        assert.equal( _preventDefault.callCount, 1 );
-        assert.equal( _stopPropagation.callCount, 1 );
+        assert.equal( preventDefault.callCount, 1 );
+        assert.equal( stopPropagation.callCount, 1 );
         assert.equal( flounder.addPlaceholder.callCount, 1 );
     } );
 
 
-    it( 'should catch onSelect failures', () =>
+
+    it( 'should catch onChange failures', () =>
     {
         document.body.flounder = null;
 
-        let flounder        = new Flounder( document.body, { data: [ 1, 2, 3 ], multipleTags : true } );
-        let refs            = flounder.refs;
-        let multiTagWrapper = refs.multiTagWrapper;
+        const flounder        = new Flounder( document.body, {
+            data            : [ 1, 2, 3 ],
+            multipleTags    : true
+        } );
+        const refs            = flounder.refs;
+        const multiTagWrapper = refs.multiTagWrapper;
 
-        flounder.onSelect   =  () => a + b;
+        flounder.onChange   =  () => a + b; // eslint-disable-line
 
         flounder.setByIndex( 1 );
 
-        let _preventDefault     = sinon.spy();
-        let _stopPropagation    = sinon.spy();
-        sinon.stub( console, 'warn', () => {} );
+        const preventDefault     = sinon.spy();
+        const stopPropagation    = sinon.spy();
+        sinon.stub( console, 'warn', noop );
 
-        let target      = multiTagWrapper.children[ 0 ].children[ 0 ];
-        let targetIndex = target.getAttribute( `data-index` );
+        const target      = multiTagWrapper.children[ 0 ].children[ 0 ];
+        const targetIndex = target.getAttribute( 'data-index' );
 
         refs.select[ targetIndex ] = refs.select.options[ targetIndex ];
 
-        flounder.removeMultiTag( {  target          : target,
-                                    preventDefault  : _preventDefault,
-                                    stopPropagation : _stopPropagation
-                                } );
+        flounder.removeMultiTag( {
+            target          : target,
+            preventDefault  : preventDefault,
+            stopPropagation : stopPropagation
+        } );
 
-        assert.equal( _preventDefault.callCount, 1 );
-        assert.equal( _stopPropagation.callCount, 1 );
+        assert.equal( preventDefault.callCount, 1 );
+        assert.equal( stopPropagation.callCount, 1 );
         assert.equal( console.warn.callCount, 1 );
 
         console.warn.restore();
@@ -1555,7 +1852,7 @@ describe( 'removeMultiTag', () =>
  *
  * removes event listeners on the data divs
  *
- * @return _Void_
+ * @return {Void} void
  */
 describe( 'removeOptionsListeners', () =>
 {
@@ -1564,15 +1861,19 @@ describe( 'removeOptionsListeners', () =>
     beforeEach( () =>
     {
         document.body.flounder = null;
-        flounder = new Flounder( document.body, { data: [ 1, 2, 3 ], multipleTags: true, defaultValue: 1 } );
+        flounder = new Flounder( document.body, {
+            data            : [ 1, 2, 3 ],
+            multipleTags    : true,
+            defaultValue    : 1
+        } );
 
         flounder.removeOptionsListeners();
 
-        flounder.refs.data[1] = document.createElement( 'NOTADIV' );
+        flounder.refs.data[ 1 ] = document.createElement( 'NOTADIV' );
 
-        sinon.stub( flounder, 'addHoverClass', () => {} );
-        sinon.stub( flounder, 'removeHoverClass', () => {} );
-        sinon.stub( flounder, 'clickSet', () => {} );
+        sinon.stub( flounder, 'addHoverClass', noop );
+        sinon.stub( flounder, 'removeHoverClass', noop );
+        sinon.stub( flounder, 'clickSet', noop );
 
         flounder.addOptionsListeners();
     } );
@@ -1586,17 +1887,17 @@ describe( 'removeOptionsListeners', () =>
     } );
 
 
-    it( 'should remove hover and click listeners on each data div (and only divs)', () =>
+    it( 'should remove hover and click listeners on each data div', () =>
     {
         flounder.removeOptionsListeners();
 
-        let firstData = flounder.refs.data[0];
+        const firstData = flounder.refs.data[ 0 ];
 
         simulant.fire( firstData, 'mouseenter' );
         simulant.fire( firstData, 'mouseleave' );
         simulant.fire( firstData, 'click' );
 
-        simulant.fire( flounder.refs.data[1], 'click' );
+        simulant.fire( flounder.refs.data[ 1 ], 'click' );
 
 
         assert.equal( flounder.addHoverClass.callCount, 0 );
@@ -1608,11 +1909,61 @@ describe( 'removeOptionsListeners', () =>
 
 
 /**
+ * ## addNoMoreOptionsMessage
+ *
+ * Adding 'No More Options' message to the option list
+ *
+ * @return {Void} void
+ */
+describe( 'removeNoMoreOptionsMessage', () =>
+{
+    it( 'should remove the noMoreOptions message', () =>
+    {
+        document.body.flounder = null;
+        const flounder = new Flounder( document.body, {
+            data : [ 1, 2, 3 ]
+        } );
+
+        flounder.addNoMoreOptionsMessage();
+        flounder.removeNoMoreOptionsMessage();
+
+        assert.equal( typeof flounder.refs.noMoreOptionsEl, 'undefined' );
+    } );
+} );
+
+
+
+/**
+ * ## addNoResultsMessage
+ *
+ * Adding 'No Results' message to the option list
+ *
+ * @return {Void} void
+ */
+describe( 'removeNoResultsMessage', () =>
+{
+    it( 'should remove the noResults message', () =>
+    {
+        document.body.flounder = null;
+        const flounder = new Flounder( document.body, {
+            data : [ 1, 2, 3 ]
+        } );
+
+        flounder.addNoResultsMessage();
+        flounder.removeNoResultsMessage();
+
+        assert.equal( typeof flounder.refs.noResultsEl, 'undefined' );
+    } );
+} );
+
+
+
+/**
  * ## removeSearchListeners
  *
  * removes the listeners from the search input
  *
- * @return _Void_
+ * @return {Void} void
  */
 describe( 'removeSearchListeners', () =>
 {
@@ -1621,11 +1972,15 @@ describe( 'removeSearchListeners', () =>
     beforeEach( () =>
     {
         document.body.flounder = null;
-        flounder = new Flounder( document.body, { data: [ 1, 2, 3 ], search: true } );
+        flounder = new Flounder( document.body, {
+            data    : [ 1, 2, 3 ],
+            search  : true
+        } );
 
-        sinon.stub( flounder, 'toggleListSearchClick', () => {} );
-        sinon.stub( flounder, 'fuzzySearch', () => {} );
-        sinon.stub( flounder, 'clearPlaceholder', () => {} );
+
+        sinon.stub( flounder, 'toggleListSearchClick', noop );
+        sinon.stub( flounder, 'fuzzySearch', noop );
+        sinon.stub( flounder, 'clearPlaceholder', noop );
     } );
 
 
@@ -1640,7 +1995,7 @@ describe( 'removeSearchListeners', () =>
     it( 'should remove the correct events and functions', () =>
     {
         flounder.removeSearchListeners();
-        let search = flounder.refs.search;
+        const search = flounder.refs.search;
 
         simulant.fire( search, 'click' );
         simulant.fire( search, 'keyup' );
@@ -1659,7 +2014,7 @@ describe( 'removeSearchListeners', () =>
  *
  * removes the [[this.selectedClass]] from all data
  *
- * @return _Void_
+ * @return {Void} void
  */
 describe( 'removeSelectedClass', () =>
 {
@@ -1668,17 +2023,20 @@ describe( 'removeSelectedClass', () =>
 
         document.body.flounder = null;
 
-        let flounder        = new Flounder( document.body, { data: [ 1, 2, 3 ], multipleTags : true } );
-        let refs            = flounder.refs;
-        let multiTagWrapper = refs.multiTagWrapper;
+        const flounder        = new Flounder( document.body, {
+            data            : [ 1, 2, 3 ],
+            multipleTags    : true
+        } );
+        const refs            = flounder.refs;
 
         flounder.setByIndex( 1 );
         flounder.setByIndex( 2 );
 
         flounder.removeSelectedClass();
-        let selected = refs.optionsList.querySelectorAll( '.flounder__option--selected' );
+        const selected = refs.optionsList.querySelectorAll(
+                                            '.flounder__option--selected' );
 
-        assert.equal( selected.length, 0, 'selected class is removed from divs' );
+        assert.equal( selected.length, 0 );
     } );
 } );
 
@@ -1689,7 +2047,7 @@ describe( 'removeSelectedClass', () =>
  *
  * sets the selected property to false for all data
  *
- * @return _Void_
+ * @return {Void} void
  */
 describe( 'removeSelectedValue', () =>
 {
@@ -1698,16 +2056,17 @@ describe( 'removeSelectedValue', () =>
 
         document.body.flounder = null;
 
-        let flounder        = new Flounder( document.body, { data: [ 1, 2, 3 ], multipleTags : true } );
-        let refs            = flounder.refs;
-        let multiTagWrapper = refs.multiTagWrapper;
+        const flounder        = new Flounder( document.body, {
+            data            : [ 1, 2, 3 ],
+            multipleTags    : true
+        } );
 
         flounder.setByIndex( 1 );
         flounder.setByIndex( 2 );
 
         flounder.removeSelectedValue();
 
-        assert.equal( flounder.getSelected().length, 0, 'selected is set to false for options' );
+        assert.equal( flounder.getSelected().length, 0 );
     } );
 } );
 
@@ -1718,7 +2077,7 @@ describe( 'removeSelectedValue', () =>
  *
  * disables the event listener on the native select box
  *
- * @return _Void_
+ * @return {Void} void
  */
 describe( 'removeSelectKeyListener', () =>
 {
@@ -1727,11 +2086,15 @@ describe( 'removeSelectKeyListener', () =>
     beforeEach( () =>
     {
         document.body.flounder = null;
-        flounder = new Flounder( document.body, { data: [ 1, 2, 3 ], search: true } );
+        flounder = new Flounder( document.body, {
+            data    : [ 1, 2, 3 ],
+            search  : true
+        } );
+
 
         flounder.removeSelectKeyListener();
 
-        sinon.stub( flounder, 'setSelectValue', () => {} );
+        sinon.stub( flounder, 'setSelectValue', noop );
 
         flounder.addSelectKeyListener();
     } );
@@ -1746,7 +2109,7 @@ describe( 'removeSelectKeyListener', () =>
     it( 'should remove the keyup function', () =>
     {
         flounder.removeSelectKeyListener();
-        let select = flounder.refs.select;
+        const select = flounder.refs.select;
 
         simulant.fire( select, 'keyup' );
 
@@ -1763,21 +2126,26 @@ describe( 'removeSelectKeyListener', () =>
  *
  * @param {Object} e event object
  *
- * @return _Void_
+ * @return {Void} void
  */
 describe( 'setKeypress', () =>
 {
     it( 'should close the menu and add the placeholder on tab', () =>
     {
         document.body.flounder = null;
-        let flounder = new Flounder( document.body, { data: [ 1, 2, 3 ], search: true } );
+        const flounder = new Flounder( document.body, {
+            data    : [ 1, 2, 3 ],
+            search  : true
+        } );
 
-        let e = { keyCode: keycodes.TAB };
+        const e = {
+            keyCode : keycodes.TAB
+        };
 
-        sinon.stub( flounder, 'addPlaceholder', () => {} );
-        sinon.stub( flounder, 'toggleClosed', () => {} );
+        sinon.stub( flounder, 'addPlaceholder', noop );
+        sinon.stub( flounder, 'toggleClosed', noop );
 
-        let res = flounder.setKeypress( e );
+        flounder.setKeypress( e );
 
         assert.equal( flounder.addPlaceholder.callCount, 1 );
         assert.equal( flounder.toggleClosed.callCount, 1 );
@@ -1790,12 +2158,18 @@ describe( 'setKeypress', () =>
     it( 'should ignore the keypress if it is a non character key', () =>
     {
         document.body.flounder = null;
-        let flounder = new Flounder( document.body, { data: [ 1, 2, 3 ], search: true } );
+        const flounder = new Flounder( document.body, {
+            data    : [ 1, 2, 3 ],
+            search  : true
+        } );
 
-        sinon.stub( flounder, 'setKeypressElement', () => {} );
-        sinon.stub( flounder, 'toggleList', () => {} );
 
-        let res = flounder.setKeypress( { keyCode: 16 } );
+        sinon.stub( flounder, 'setKeypressElement', noop );
+        sinon.stub( flounder, 'toggleList', noop );
+
+        const res = flounder.setKeypress( {
+            keyCode : 16
+        } );
 
         assert.equal( flounder.setKeypressElement.callCount, 0 );
         assert.equal( flounder.toggleList.callCount, 0 );
@@ -1809,17 +2183,25 @@ describe( 'setKeypress', () =>
         let res;
 
         document.body.flounder = null;
-        let flounder = new Flounder( document.body, { data: [ 1, 2, 3 ] } );
+        const flounder = new Flounder( document.body, {
+            data : [ 1, 2, 3 ]
+        } );
 
-        sinon.stub( flounder, 'toggleList', () => {} );
+        sinon.stub( flounder, 'toggleList', noop );
 
-        res = flounder.setKeypress( { keyCode: keycodes.ENTER } );
+        res = flounder.setKeypress( {
+            keyCode : keycodes.ENTER
+        } );
         assert.equal( res, false );
 
-        res = flounder.setKeypress( { keyCode: keycodes.SPACE } );
+        res = flounder.setKeypress( {
+            keyCode : keycodes.SPACE
+        } );
         assert.equal( res, false );
 
-        res = flounder.setKeypress( { keyCode: keycodes.ESCAPE } );
+        res = flounder.setKeypress( {
+            keyCode : keycodes.ESCAPE
+        } );
         assert.equal( res, false );
 
         assert.equal( flounder.toggleList.callCount, 3 );
@@ -1829,39 +2211,59 @@ describe( 'setKeypress', () =>
     it( 'should change the selected element on up and down', () =>
     {
         document.body.flounder = null;
-        let flounder = new Flounder( document.body, { data: [ 1, 2, 3 ] } );
+        let flounder = new Flounder( document.body, {
+            data : [ 1, 2, 3 ]
+        } );
 
-        sinon.stub( flounder, 'setKeypressElement', () => {} );
-        let _preventDefault = sinon.spy();
+        sinon.stub( flounder, 'setKeypressElement', noop );
+        const preventDefault = sinon.spy();
 
-        flounder.setKeypress( { keyCode: keycodes.UP, preventDefault: _preventDefault } );
+        flounder.setKeypress( {
+            keyCode         : keycodes.UP,
+            preventDefault  : preventDefault
+        } );
 
         window.sidebar = true;
-        flounder.setKeypress( { keyCode: keycodes.DOWN, preventDefault: _preventDefault } );
+        flounder.setKeypress( {
+            keyCode         : keycodes.DOWN,
+            preventDefault  : preventDefault
+        } );
 
-        assert.equal( _preventDefault.callCount, 1 );
+        assert.equal( preventDefault.callCount, 1 );
         assert.equal( flounder.setKeypressElement.callCount, 2 );
 
         document.body.flounder = null;
-        flounder = new Flounder( document.body, { data: [ 1, 2, 3 ], search: true } );
+        flounder = new Flounder( document.body, {
+            data    : [ 1, 2, 3 ],
+            search  : true
+        } );
+
 
         window.sidebar = false;
-        sinon.stub( flounder, 'setKeypressElement', () => {} );
-        flounder.setKeypress( { keyCode: keycodes.DOWN, preventDefault: _preventDefault } );
+        sinon.stub( flounder, 'setKeypressElement', noop );
+        flounder.setKeypress( {
+            keyCode         : keycodes.DOWN,
+            preventDefault  : preventDefault
+        } );
     } );
 
 
     it( 'should pass anything else through unaffected', () =>
     {
         document.body.flounder = null;
-        let flounder = new Flounder( document.body, { data: [ 1, 2, 3 ] } );
+        const flounder = new Flounder( document.body, {
+            data : [ 1, 2, 3 ]
+        } );
 
-        sinon.stub( flounder, 'setKeypressElement', () => {} );
-        let _preventDefault = sinon.spy();
+        sinon.stub( flounder, 'setKeypressElement', noop );
+        const preventDefault = sinon.spy();
 
-        flounder.setKeypress( { keyCode: 999, preventDefault: _preventDefault } );
+        flounder.setKeypress( {
+            keyCode         : 999,
+            preventDefault  : preventDefault
+        } );
 
-        assert.equal( _preventDefault.callCount, 0 );
+        assert.equal( preventDefault.callCount, 0 );
         assert.equal( flounder.setKeypressElement.callCount, 0 );
     } );
 } );
@@ -1874,16 +2276,20 @@ describe( 'setKeypress', () =>
  * sets the element after the keypress.  if the element is hidden for some
  * reason, it passes the event back to setKeypress to process the next element
  *
- * @return _Void_
+ * @return {Void} void
  */
 describe( 'setKeypressElement', () =>
 {
-    it( 'should rotate from top to bottom and bottom to top when min and max are reached', () =>
+    it( 'should rotate top to bottom and bottom to top on min and max', () =>
     {
         document.body.flounder = null;
-        let flounder = new Flounder( document.body, { data: [ 1, 2, 3 ], search: true } );
+        const flounder = new Flounder( document.body, {
+            data    : [ 1, 2, 3 ],
+            search  : true
+        } );
 
-        sinon.stub( flounder, 'setKeypress', () => {} );
+
+        sinon.stub( flounder, 'setKeypress', noop );
 
         flounder.setKeypressElement( {}, 9 );
         flounder.setKeypressElement( {}, -9 );
@@ -1895,9 +2301,13 @@ describe( 'setKeypressElement', () =>
     it( 'should skip disabled and hidden items', () =>
     {
         document.body.flounder = null;
-        let flounder = new Flounder( document.body, { data: [ 1, 2, 3 ], search: true } );
+        const flounder = new Flounder( document.body, {
+            data    : [ 1, 2, 3 ],
+            search  : true
+        } );
 
-        sinon.stub( flounder, 'setKeypress', () => {} );
+
+        sinon.stub( flounder, 'setKeypress', noop );
 
         flounder.disableByIndex( 1 );
         flounder.setByIndex( 0 );
@@ -1920,17 +2330,19 @@ describe( 'setKeypressElement', () =>
  * @param {Object} obj possible event object
  * @param {Object} e event object
  *
- * @return _Void_
+ * @return {Void} void
  */
 describe( 'setSelectValue', () =>
 {
-    it( 'should decide whether or not it\'s a click or keypress by where the event object is' , () =>
+    it( 'should decide whether it\'s a click or keypress', () =>
     {
         document.body.flounder = null;
-        let flounder = new Flounder( document.body, { data: [ 1, 2, 3 ] } );
+        const flounder = new Flounder( document.body, {
+            data : [ 1, 2, 3 ]
+        } );
 
-        sinon.stub( flounder, 'setSelectValueClick', () => {} );
-        sinon.stub( flounder, 'setSelectValueButton', () => {} );
+        sinon.stub( flounder, 'setSelectValueClick', noop );
+        sinon.stub( flounder, 'setSelectValueButton', noop );
 
         flounder.setSelectValue( null, {} );
         flounder.setSelectValue( {} );
@@ -1940,57 +2352,68 @@ describe( 'setSelectValue', () =>
     } );
 
 
-    it( 'should only run onSelect if it is not a programatic click' , () =>
+    it( 'should only run onChange if it is not a programatic click', () =>
     {
         document.body.flounder = null;
-        let flounder = new Flounder( document.body, { data: [ 1, 2, 3 ] } );
+        const flounder = new Flounder( document.body, {
+            data : [ 1, 2, 3 ]
+        } );
 
-        sinon.stub( flounder, 'setSelectValueClick', () => {} );
+        sinon.stub( flounder, 'setSelectValueClick', noop );
+        sinon.stub( flounder, 'onChange', noop );
 
-        flounder.___programmaticClick = true;
+        flounder.programmaticClick = true;
         flounder.setSelectValue( null, {} );
 
-        assert.equal( flounder.___programmaticClick, false );
         assert.equal( flounder.setSelectValueClick.callCount, 1 );
 
-        sinon.stub( flounder, 'onSelect', () => {} );
+        flounder.programmaticClick = false;
         flounder.setSelectValue( null, {} );
 
-        assert.equal( flounder.onSelect.callCount, 1 );
+        assert.equal( flounder.setSelectValueClick.callCount, 2 );
+        assert.equal( flounder.onChange.callCount, 1 );
     } );
 
 
-    it( 'should warn when onSelect fails' , () =>
+    it( 'should warn when onChange fails', () =>
     {
         document.body.flounder = null;
-        let flounder = new Flounder( document.body, { data: [ 1, 2, 3 ] } );
+        const flounder = new Flounder( document.body, {
+            data : [ 1, 2, 3 ]
+        } );
 
-        sinon.stub( flounder, 'setSelectValueButton', () => {} );
-        sinon.stub( flounder, 'onSelect', () => a + b );
-        sinon.stub( console, 'warn', () => {} );
+        sinon.stub( flounder, 'setSelectValueButton', noop );
+        sinon.stub( flounder, 'onChange', () => a + b ); // eslint-disable-line
+        sinon.stub( console, 'warn', noop );
 
-        flounder.setSelectValue( { keyCode: 99 } );
+        flounder.setSelectValue( {
+            keyCode : 99
+        } );
 
         assert.equal( console.warn.callCount, 1 );
-        assert.equal( flounder.onSelect.callCount, 1 );
+        assert.equal( flounder.onChange.callCount, 1 );
 
         console.warn.restore();
     } );
 
 
-    it( 'should ignore the keypress if the list was just opened' , () =>
+    it( 'should ignore the keypress if the list was just opened', () =>
     {
         document.body.flounder = null;
-        let flounder = new Flounder( document.body, { data: [ 1, 2, 3 ] } );
+        const flounder = new Flounder( document.body, {
+            data : [ 1, 2, 3 ]
+        } );
 
-        sinon.stub( flounder, 'setSelectValueButton', () => {} );
-        sinon.stub( flounder, 'onSelect', () => {} );
+        sinon.stub( flounder, 'setSelectValueButton', noop );
+        sinon.stub( flounder, 'onChange', noop );
 
         flounder.toggleList.justOpened = true;
-        flounder.setSelectValue( { keyCode: 99 } );
+        flounder.setSelectValue( {
+            keyCode : 99
+        } );
 
         assert.equal( flounder.toggleList.justOpened, false );
-        assert.equal( flounder.onSelect.callCount, 0 );
+        assert.equal( flounder.onChange.callCount, 0 );
     } );
 } );
 
@@ -2001,27 +2424,50 @@ describe( 'setSelectValue', () =>
  *
  * processes the setting of a value after a keypress event
  *
- * @return _Void_
+ * @return {Void} void
  */
 describe( 'setSelectValueButton', () =>
 {
-    it( 'should remove the selected class and scroll to the selected option' , () =>
+    it( 'should remove the selected class and scroll to selected option', () =>
     {
         document.body.flounder = null;
-        let flounder = new Flounder( document.body, { data: [ 1, 2, 3 ], defaultIndex: 1 } );
+        const flounder = new Flounder( document.body, {
+            data            : [ 1, 2, 3 ],
+            defaultIndex    : 1
+        } );
 
         sinon.spy( flounder, 'removeSelectedClass' );
-        sinon.stub( utils, 'scrollTo', () => {} );
+        sinon.stub( utils, 'scrollTo', noop );
 
         flounder.setSelectValueButton();
         assert.equal( flounder.removeSelectedClass.callCount, 1 );
 
-        sinon.stub( flounder, 'getSelected', () => { return []; } );
+        sinon.stub( flounder, 'getSelected', () =>
+        {
+            return [];
+        } );
         flounder.setSelectValueButton();
 
         assert.equal( flounder.removeSelectedClass.callCount, 2 );
         assert.equal( utils.scrollTo.callCount, 1 );
         utils.scrollTo.restore();
+    } );
+
+
+    it( 'should not do anything if it\'s a multipleTag Flounder', () =>
+    {
+        document.body.flounder = null;
+        const flounder = new Flounder( document.body, {
+            data            : [ 1, 2, 3 ],
+            multipleTags    : true
+        } );
+
+        sinon.stub( flounder, 'removeSelectedClass', noop );
+
+        const res = flounder.setSelectValueButton();
+
+        assert.equal( res, false );
+        assert.equal( flounder.removeSelectedClass.callCount, 0 );
     } );
 } );
 
@@ -2034,23 +2480,27 @@ describe( 'setSelectValueButton', () =>
  *
  * @param {Object} e event object
  *
- * @return _Void_
+ * @return {Void} void
  */
 describe( 'setSelectValueClick', () =>
 {
     it( 'should toggle the selected value', () =>
     {
-        document.body.flounder = null;
-        let flounder    = new Flounder( document.body, { data: [ 1, 2, 3 ] } );
-        let refs        = flounder.refs;
+        document.body.flounder  = null;
+        const flounder          = new Flounder( document.body, {
+            data : [ 1, 2, 3 ]
+        } );
+        const refs        = flounder.refs;
 
-        sinon.stub( flounder, 'deselectAll', () => {} );
+        sinon.stub( flounder, 'deselectAll', noop );
 
-        let res1 = utils.hasClass( refs.data[ 0 ], flounder.selectedClass );
+        const res1 = utils.hasClass( refs.data[ 0 ], flounder.selectedClass );
 
-        flounder.setSelectValueClick( { target: refs.data[ 0 ] } );
+        flounder.setSelectValueClick( {
+            target : refs.data[ 0 ]
+        } );
 
-        let res2 = utils.hasClass( refs.data[ 0 ], flounder.selectedClass );
+        const res2 = utils.hasClass( refs.data[ 0 ], flounder.selectedClass );
 
         assert.equal( res1, !res2 );
         assert.equal( flounder.deselectAll.callCount, 1 );
@@ -2064,7 +2514,7 @@ describe( 'setSelectValueClick', () =>
  *
  * sets the text-indent on the search field to go around selected tags
  *
- * @return _Void_
+ * @return {Void} void
  */
 describe( 'setTextMultiTagIndent', () =>
 {
@@ -2072,27 +2522,35 @@ describe( 'setTextMultiTagIndent', () =>
     {
         document.body.flounder = null;
 
-        let data = [
+        const data = [
             'doge',
             'moon'
         ];
 
-        let flounder    = new Flounder( document.body, { data : data, defaultIndex : 0, multipleTags : true } );
-        let refs = flounder.refs;
+        const flounder    = new Flounder( document.body, {
+            data            : data,
+            defaultIndex    : 0,
+            multipleTags    : true
+        } );
+        const refs = flounder.refs;
 
-        let span = document.createElement( 'SPAN' );
+        const span = document.createElement( 'SPAN' );
         span.className = 'flounder__multiple--select--tag';
-        span.innerHTML = '<a class="flounder__multiple__tag__close" data-index="1"></a>doge';
+        span.innerHTML =
+            '<a class="flounder__multiple__tag__close" data-index="1"></a>doge';
 
         refs.multiTagWrapper.appendChild( span );
 
         flounder.setTextMultiTagIndent();
 
-        let style       = window.getComputedStyle( span );
+        const style       = window.getComputedStyle( span );
 
-        let spanOffset  = span.offsetWidth + parseInt( style[ 'margin-left' ] ) + parseInt( style[ 'margin-right' ] );
+        const spanOffset  = span.offsetWidth +
+                                        parseInt( style[ 'margin-left' ] ) +
+                                        parseInt( style[ 'margin-right' ] );
 
-        assert.equal( refs.search.style.textIndent, spanOffset > 0 ? `${spanOffset}px` : `` );
+        assert.equal( refs.search.style.textIndent,
+                                    spanOffset > 0 ? `${spanOffset}px` : '' );
     } );
 } );
 
@@ -2108,24 +2566,27 @@ describe( 'setTextMultiTagIndent', () =>
  * @param {Object} refs contains the references of the elements in flounder
  * @param {DOMElement} wrapper wrapper of flounder
  *
- * @return _Void_
+ * @return {Void} void
  */
-
 describe( 'toggleClosed', () =>
 {
     it( 'should close the options list and remove necessary listeners', () =>
     {
         document.body.flounder  = null;
-        let flounder            = new Flounder( document.body, { data: [ 1, 2, 3 ], search: true } );
-        let refs                = flounder.refs;
+        const flounder            = new Flounder( document.body, {
+            data    : [ 1, 2, 3 ],
+            search  : true
+        } );
 
-        sinon.stub( utils, 'addClass', () => {} );
-        sinon.stub( utils, 'removeClass', () => {} );
+        const refs                = flounder.refs;
 
-        sinon.stub( flounder, 'removeSelectKeyListener', () => {} );
-        sinon.stub( flounder, 'fuzzySearchReset', () => {} );
-        sinon.stub( refs.flounder, 'focus', () => {} );
-        sinon.stub( flounder, 'onClose', () => {} );
+        sinon.stub( utils, 'addClass', noop );
+        sinon.stub( utils, 'removeClass', noop );
+
+        sinon.stub( flounder, 'removeSelectKeyListener', noop );
+        sinon.stub( flounder, 'fuzzySearchReset', noop );
+        sinon.stub( refs.flounder, 'focus', noop );
+        sinon.stub( flounder, 'onClose', noop );
 
         flounder.toggleClosed( {}, {}, refs, refs.wrapper );
 
@@ -2144,14 +2605,16 @@ describe( 'toggleClosed', () =>
     it( 'should correctly handle onClose failures', () =>
     {
         document.body.flounder  = null;
-        let flounder            = new Flounder( document.body, { data: [ 1, 2, 3 ] } );
-        let refs                = flounder.refs;
+        const flounder            = new Flounder( document.body, {
+            data : [ 1, 2, 3 ]
+        } );
+        const refs                = flounder.refs;
 
-        sinon.stub( utils, 'addClass', () => {} );
-        sinon.stub( utils, 'removeClass', () => {} );
+        sinon.stub( utils, 'addClass', noop );
+        sinon.stub( utils, 'removeClass', noop );
 
-        sinon.stub( console, 'warn', () => {} );
-        sinon.stub( flounder, 'onClose', () => a + b );
+        sinon.stub( console, 'warn', noop );
+        sinon.stub( flounder, 'onClose', () => a + b ); // eslint-disable-line
 
         flounder.toggleClosed( {}, {}, refs, refs.wrapper );
 
@@ -2166,13 +2629,15 @@ describe( 'toggleClosed', () =>
     it( 'should skip focus on exit bool', () =>
     {
         document.body.flounder  = null;
-        let flounder            = new Flounder( document.body, { data: [ 1, 2, 3 ] } );
-        let refs                = flounder.refs;
+        const flounder            = new Flounder( document.body, {
+            data : [ 1, 2, 3 ]
+        } );
+        const refs                = flounder.refs;
 
-        sinon.stub( utils, 'addClass', () => {} );
-        sinon.stub( utils, 'removeClass', () => {} );
+        sinon.stub( utils, 'addClass', noop );
+        sinon.stub( utils, 'removeClass', noop );
 
-        sinon.stub( refs.flounder, 'focus', () => {} );
+        sinon.stub( refs.flounder, 'focus', noop );
 
         flounder.toggleClosed( {}, {}, refs, refs.wrapper, true );
 
@@ -2187,18 +2652,25 @@ describe( 'toggleClosed', () =>
     it( 'should skip everything if not ready', () =>
     {
         document.body.flounder  = null;
-        let flounder            = new Flounder( document.body, { data: [
-                                                            { text: 1, value: 1, disabled: true },
-                                                            2,
-                                                            3
-                                                        ] } );
+        const flounder          = new Flounder( document.body, {
+            data : [
+                {
+                    text        : 1,
+                    value       : 1,
+                    disabled    : true
+                },
+                2,
+                3
+            ]
+        } );
+
         flounder.ready          = false;
-        let refs                = flounder.refs;
+        const refs                = flounder.refs;
 
-        sinon.stub( utils, 'addClass', () => {} );
-        sinon.stub( utils, 'removeClass', () => {} );
+        sinon.stub( utils, 'addClass', noop );
+        sinon.stub( utils, 'removeClass', noop );
 
-        sinon.stub( flounder, 'onClose', () => {} );
+        sinon.stub( flounder, 'onClose', noop );
 
         flounder.toggleClosed( {}, {}, refs, refs.wrapper, true );
 
@@ -2218,24 +2690,32 @@ describe( 'toggleClosed', () =>
  *
  * @param {String} force toggle can be forced by passing 'open' or 'close'
  *
- * @return _Void_
+ * @return {Void} void
  */
 describe( 'toggleList', () =>
 {
     it( 'should open and close the list', () =>
     {
         document.body.flounder  = null;
-        let flounder            = new Flounder( document.body, { data: [ 1, 2, 3 ] } );
-        let refs                = flounder.refs;
+        const flounder          = new Flounder( document.body, {
+            data : [ 1, 2, 3 ]
+        } );
 
-        sinon.stub( flounder, 'toggleOpen', () => {} );
-        sinon.stub( flounder, 'toggleClosed', () => {} );
+        sinon.stub( flounder, 'toggleOpen', noop );
+        sinon.stub( flounder, 'toggleClosed', noop );
 
-        flounder.toggleList( { type: 'mouseleave' } );
+        flounder.toggleList( {
+            type : 'mouseleave'
+        } );
+
         flounder.toggleList( {}, 'close' );
 
-        flounder.toggleList( { type: 'mouseenter' } );
-        flounder.toggleList( { type: 'keydown' } );
+        flounder.toggleList( {
+            type : 'mouseenter'
+        } );
+        flounder.toggleList( {
+            type : 'keydown'
+        } );
         flounder.toggleList( {}, 'open' );
 
         assert.equal( flounder.toggleClosed.callCount, 2 );
@@ -2250,18 +2730,20 @@ describe( 'toggleList', () =>
  *
  * toggleList wrapper for search.  only triggered if flounder is closed
  *
- * @return _Void_
+ * @return {Void} void
  */
 describe( 'toggleListSearchClick', () =>
 {
     it( 'should trigger toggleList only if flounder is closed', () =>
     {
         document.body.flounder  = null;
-        let flounder            = new Flounder( document.body, { data: [ 1, 2, 3 ] } );
-        let refs                = flounder.refs;
-        let wrapper             = refs.wrapper;
+        const flounder          = new Flounder( document.body, {
+            data : [ 1, 2, 3 ]
+        } );
+        const refs              = flounder.refs;
+        const wrapper           = refs.wrapper;
 
-        sinon.stub( flounder, 'toggleList', () => {} );
+        sinon.stub( flounder, 'toggleList', noop );
 
         utils.addClass( wrapper, classes.OPEN );
         flounder.toggleListSearchClick( {} );
@@ -2287,22 +2769,26 @@ describe( 'toggleListSearchClick', () =>
  * @param {Object} refs contains the references of the elements in flounder
  * @param {DOMElement} wrapper wrapper of flounder
  *
- * @return _Void_
+ * @return {Void} void
  */
 describe( 'toggleOpen', () =>
 {
     it( 'should open the options list and add necessary listeners', () =>
     {
         document.body.flounder  = null;
-        let flounder            = new Flounder( document.body, { data: [ 1, 2, 3 ], search: true } );
+        let flounder            = new Flounder( document.body, {
+            data    : [ 1, 2, 3 ],
+            search  : true
+        } );
+
         let refs                = flounder.refs;
 
-        sinon.stub( utils, 'addClass', () => {} );
-        sinon.stub( utils, 'removeClass', () => {} );
+        sinon.stub( utils, 'addClass', noop );
+        sinon.stub( utils, 'removeClass', noop );
 
-        sinon.stub( refs.search, 'focus', () => {} );
-        sinon.stub( flounder, 'onOpen', () => {} );
-        sinon.stub( flounder, 'addSelectKeyListener', () => {} );
+        sinon.stub( refs.search, 'focus', noop );
+        sinon.stub( flounder, 'onOpen', noop );
+        sinon.stub( flounder, 'addSelectKeyListener', noop );
 
         flounder.toggleOpen( {}, refs.optionList, refs, refs.wrapper );
 
@@ -2313,12 +2799,15 @@ describe( 'toggleOpen', () =>
         assert.equal( utils.addClass.callCount, 1 );
         assert.equal( utils.removeClass.callCount, 1 );
 
-        flounder            = new Flounder( document.body, { data: [ 1, 2, 3 ] } );
+        flounder            = new Flounder( document.body, {
+            data : [ 1, 2, 3 ]
+        } );
+
         flounder.isIos      = true;
         refs                = flounder.refs;
 
-        sinon.stub( flounder, 'onOpen', () => {} );
-        sinon.stub( flounder, 'addSelectKeyListener', () => {} );
+        sinon.stub( flounder, 'onOpen', noop );
+        sinon.stub( flounder, 'addSelectKeyListener', noop );
 
         flounder.toggleOpen( {}, refs.optionList, refs, refs.wrapper );
 
@@ -2327,30 +2816,52 @@ describe( 'toggleOpen', () =>
     } );
 
 
+    it( 'should add a no more options message if all are selected', () =>
+    {
+        document.body.flounder  = null;
+        const flounder          = new Flounder( document.body, {
+            data            : [ 1 ],
+            multipleTags    : true,
+            placeholder     : 'moon'
+        } );
+
+        flounder.setByValue( 1 );
+        flounder.toggleOpen( {}, {}, flounder.refs );
+
+        assert.equal( typeof flounder.refs.noMoreOptionsEl, 'object' );
+    } );
+
+
+
     it( 'should correctly handle onOpen failures', () =>
     {
         document.body.flounder  = null;
-        let flounder            = new Flounder( document.body, {
-                    classes     : {
-                        wrapper: 'maymay'
+        const flounder          = new Flounder( document.body, {
+            classes : {
+                wrapper : 'maymay'
+            },
+            data    : [
+                {
+                    header : 'header test',
+                    data   : [ {
+                        text    : 1,
+                        value   : 1
                     },
-                    data        : [
-                        {
-                            header : 'header test',
-                            data : [ { text: 1, value: 1 }, 2 ]
-                        },
-                        3
-                    ],
-                    allowHTML   : true,
-                    multiple    : true
-                } );
-        let refs                = flounder.refs;
+                    2 ]
+                },
+                3
+            ],
+            allowHTML   : true,
+            multiple    : true
+        } );
 
-        sinon.stub( utils, 'addClass', () => {} );
-        sinon.stub( utils, 'removeClass', () => {} );
+        const refs                = flounder.refs;
 
-        sinon.stub( console, 'warn', () => {} );
-        sinon.stub( flounder, 'onOpen', () => a + b );
+        sinon.stub( utils, 'addClass', noop );
+        sinon.stub( utils, 'removeClass', noop );
+
+        sinon.stub( console, 'warn', noop );
+        sinon.stub( flounder, 'onOpen', () => a + b ); // eslint-disable-line
 
         flounder.toggleOpen( {}, {}, refs, refs.wrapper );
 
@@ -2365,17 +2876,17 @@ describe( 'toggleOpen', () =>
 
     it( 'should skip everything if not ready', () =>
     {
-        let select      = document.querySelector( 'SELECT' );
-        select.innerHTML = '<option value="2">2</option><option value="3" disabled>3</option>';
-        select.flounder = null;
-        let flounder    = new Flounder( select );
-        flounder.ready  = false;
-        let refs        = flounder.refs;
+        const select        = document.querySelector( 'SELECT' );
+        select.innerHTML    = '<option value="2">2</option><option value="3" disabled>3</option>'; // eslint-disable-line
+        select.flounder     = null;
+        const flounder      = new Flounder( select );
+        flounder.ready      = false;
+        const refs          = flounder.refs;
 
-        sinon.stub( utils, 'addClass', () => {} );
-        sinon.stub( utils, 'removeClass', () => {} );
+        sinon.stub( utils, 'addClass', noop );
+        sinon.stub( utils, 'removeClass', noop );
 
-        sinon.stub( flounder, 'onClose', () => {} );
+        sinon.stub( flounder, 'onClose', noop );
 
         flounder.toggleOpen( {}, {}, refs, refs.wrapper );
 

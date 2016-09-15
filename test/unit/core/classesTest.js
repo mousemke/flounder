@@ -1,4 +1,4 @@
-
+/* globals describe, it */
 import classes from '/core/classes';
 import assert   from 'assert';
 

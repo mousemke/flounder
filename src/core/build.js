@@ -1,7 +1,8 @@
-
-import classes                  from './classes';
+/* globals document */
 import { setDefaultOption }     from './defaults';
 import utils                    from './utils';
+
+const nativeSlice = Array.prototype.slice;
 
 const build = {
 
@@ -12,14 +13,15 @@ const build = {
      *
      * @param {DOMElement} el option element to add description to
      * @param {String} text description
+     * @param {String} CSS class to apply
      *
-     * @return _Void_
+     * @return {Void} void
      */
     addOptionDescription( el, text )
     {
-        let div         = document.createElement( `div` );
+        const div         = document.createElement( 'div' );
         div.innerHTML   = text;
-        div.className   = classes.DESCRIPTION;
+        div.className   = this.classes.DESCRIPTION;
         el.appendChild( div );
     },
 
@@ -29,20 +31,23 @@ const build = {
      *
      * checks if a search box is required and attaches it or not
      *
+     * @param {Object} searchSibling next sibling to mount the input to
      * @param {Object} flounder main element reference
      *
-     * @return _Mixed_ search node or false
+     * @return {Mixed} search node or false
      */
-    addSearch( flounder )
+    addSearch( searchSibling, flounder )
     {
         if ( this.search )
         {
-            let search = utils.constructElement( {
-                                    tagname     : `input`,
-                                    type        : `text`,
-                                    className   : classes.SEARCH
-                                } );
-            flounder.appendChild( search );
+            const classes = this.classes;
+            const search  = utils.constructElement( {
+                tagname     : 'input',
+                type        : 'text',
+                className   : classes.SEARCH
+            } );
+
+            flounder.insertBefore( search, searchSibling );
 
             return search;
         }
@@ -57,30 +62,32 @@ const build = {
      * binds this to whatever functions need it.  Arrow functions cannot be used
      * here due to the react extension needing them as well;
      *
-     * @return _Void_
+     * @return {Void} void
      */
     bindThis()
     {
-        [ 
-            `catchBodyClick`,
-            `checkClickTarget`,
-            `checkFlounderKeypress`,
-            `checkMultiTagKeydown`,
-            `clearPlaceholder`,
-            `clickSet`,
-            `divertTarget`,
-            `displayMultipleTags`,
-            `firstTouchController`,
-            `fuzzySearch`,
-            `removeMultiTag`,
-            `setKeypress`,
-            `setSelectValue`,
-            `toggleList`,
-            `toggleListSearchClick`
+        [
+            'addHoverClass',
+            'catchBodyClick',
+            'checkClickTarget',
+            'checkFlounderKeypress',
+            'checkMultiTagKeydown',
+            'clearPlaceholder',
+            'clickSet',
+            'divertTarget',
+            'displayMultipleTags',
+            'firstTouchController',
+            'fuzzySearch',
+            'removeHoverClass',
+            'removeMultiTag',
+            'setKeypress',
+            'setSelectValue',
+            'toggleList',
+            'toggleListSearchClick'
         ].forEach( func =>
         {
             this[ func ] = this[ func ].bind( this );
-            this[ func ].___isBound = true;
+            this[ func ].isBound = true;
         } );
     },
 
@@ -100,14 +107,19 @@ const build = {
         {
             return false;
         }
-        else
-        {
-            let arrow       = constructElement( { className : classes.ARROW } );
-            let arrowInner  = constructElement( { className : classes.ARROW_INNER } );
-            arrow.appendChild( arrowInner )
 
-            return arrow;
-        }
+        const classes     = this.classes;
+        const arrow       = constructElement( {
+            className : classes.ARROW
+        } );
+
+        const arrowInner  = constructElement( {
+            className : classes.ARROW_INNER
+        } );
+
+        arrow.appendChild( arrowInner );
+
+        return arrow;
     },
 
 
@@ -118,68 +130,74 @@ const build = {
      * if it already exists
      *
      * @param {Mixed} defaultValue default entry (string or number)
-     * @param {Array} data array with optino information
+     * @param {Array} originalData array with optino information
      * @param {Object} optionsList reference to the div option wrapper
      * @param {Object} select reference to the select box
      *
-     * @return _Array_ refs to both container elements
+     * @return {Array} refs to both container elements
      */
     buildData( defaultValue, originalData, optionsList, select )
     {
-        let index                   = 0;
-        let data                    = [];
-        let selectOptions           = [];
-        let constructElement        = utils.constructElement;
-        let addOptionDescription    = this.addOptionDescription;
-        let selectedClass           = this.selectedClass;
-        let escapeHTML              = utils.escapeHTML;
-        let addClass                = utils.addClass;
-        let refs                    = this.refs;
-        let selectRef               = refs.select;
-        let allowHTML               = this.allowHTML;
+        const self              = this;
+        let index               = 0;
+        const data              = [];
+        const selectOptions     = [];
+        const constructElement  = utils.constructElement;
+        const selectedClass     = this.selectedClass;
+        const escapeHTML        = utils.escapeHTML;
+        const addClass          = utils.addClass;
+        const refs              = this.refs;
+        const selectRef         = refs.select;
+        const allowHTML         = this.allowHTML;
+        const classes           = this.classes;
 
         /**
          * ## buildDiv
          *
          * builds an individual div tag for a flounder dropdown
          *
-         * @param {Object} dataObj [description]
+         * @param {Object} dataObj data object
          * @param {Number} i index
          *
-         * @return _DOMElement_
+         * @return {DOMElement} built div
          */
-        let buildDiv = function( dataObj, i )
+        function buildDiv( dataObj, i )
         {
             dataObj.index   = i;
 
-            let extraClass  = i === defaultValue.index ? `  ${selectedClass}` : ``;
+            const extraClass  = i === defaultValue.index ?
+                                                    `  ${selectedClass}` : '';
 
-            let res = {
+            const res = {
                 className       : classes.OPTION + extraClass,
                 'data-index'    : i
             };
 
-            for ( let o in dataObj )
+            for ( const o in dataObj )
             {
-                if ( o !== `text` && o !== `description` )
+                if ( o !== 'text' && o !== 'description' )
                 {
                     res[ o ] = dataObj[ o ];
                 }
             }
 
-            let data        = constructElement( res );
-            data.innerHTML  = allowHTML ? dataObj.text : escapeHTML( dataObj.text );
+            const data        = constructElement( res );
+            data.innerHTML  = allowHTML ? dataObj.text :
+                                            escapeHTML( dataObj.text );
 
             if ( dataObj.description )
             {
-                addOptionDescription( data, dataObj.description );
+                self.addOptionDescription( data, dataObj.description,
+                                                        classes.DESCRIPTION );
             }
 
-            data.className += dataObj.extraClass ? `  ${dataObj.extraClass}` : ``;
-            data.setAttribute( `role`, `option` );
+            data.className += dataObj.extraClass ?
+                                                `  ${dataObj.extraClass}` : '';
+
+            data.setAttribute( 'role', 'option' );
 
             return data;
-        };
+        }
 
 
         /**
@@ -190,35 +208,40 @@ const build = {
          * @param {Object} dataObj option build properties
          * @param {Number} i index
          *
-         * @return _DOMElement_
+         * @return {DOMElement} build option tag
          */
-        let buildOption = function( dataObj, i )
+        function buildOption( dataObj, i )
         {
             let selectOption;
 
             if ( !selectRef )
             {
-                let selectOptionClass   = `${classes.OPTION_TAG}  ${dataObj.extraClass || ''}`;
-                selectOption            = constructElement( { tagname : `option`,
-                                            className   : selectOptionClass.trim(),
-                                            value       : dataObj.value } );
-                let escapedText         = escapeHTML( dataObj.text );
+                const extra             = dataObj.extraClass || '';
+                const selectOptionClass = `${classes.OPTION_TAG}  ${extra}`;
+
+                selectOption            = constructElement( {
+                    tagname     : 'option',
+                    className   : selectOptionClass.trim(),
+                    value       : dataObj.value
+                } );
+
+                const escapedText         = escapeHTML( dataObj.text );
                 selectOption.innerHTML  = escapedText;
 
-                let disabled            = dataObj.disabled;
+                const disabled            = dataObj.disabled;
 
                 if ( disabled )
                 {
-                    selectOption.setAttribute( `disabled`, disabled );
+                    selectOption.setAttribute( 'disabled', disabled );
                 }
 
                 select.appendChild( selectOption );
             }
             else
             {
-                let selectChild     = selectRef.children[ i ];
+                const selectChild     = selectRef.children[ i ];
                 selectOption        = selectChild;
-                selectChild.setAttribute( `value`, selectChild.value );
+                selectChild.setAttribute( 'value', selectChild.value );
 
                 if ( selectChild.disabled === true && data[ i ] )
                 {
@@ -234,22 +257,20 @@ const build = {
             }
 
 
-            if ( selectOption.getAttribute( `disabled` ) )
+            if ( selectOption.getAttribute( 'disabled' ) )
             {
                 addClass( data[ i ], classes.DISABLED );
             }
 
             return selectOption;
-        };
+        }
 
 
 
         originalData.forEach( ( dataObj, i ) =>
         {
             /* istanbul ignore next */
-            let dataObjType = typeof dataObj;
-
-            if ( dataObjType !== `object` )
+            if ( typeof dataObj !== 'object' )
             {
                 dataObj = originalData[ i ] = {
                     text    : dataObj,
@@ -259,18 +280,25 @@ const build = {
 
             if ( dataObj.header )
             {
-                let section = constructElement( { tagname   : `div`,
-                                                className   : classes.SECTION } );
-                let header = constructElement( { tagname    : `div`,
-                                                className   : classes.HEADER } );
+                const section = constructElement( {
+                    tagname     : 'div',
+                    className   : classes.SECTION
+                } );
+
+                const header  = constructElement( {
+                    tagname     : 'div',
+                    className   : classes.HEADER
+                } );
+
                 header.textContent = dataObj.header;
                 section.appendChild( header );
                 optionsList.appendChild( section );
 
-                let dataObjData = dataObj.data;
+                const dataObjData = dataObj.data;
                 dataObjData.forEach( ( d, i ) =>
                 {
-                    if ( typeof d !== `object` )
+                    /* istanbul ignore next */
+                    if ( typeof d !== 'object' )
                     {
                         d = dataObjData[ i ] = {
                             text    : d,
@@ -293,7 +321,6 @@ const build = {
             }
         } );
 
-
         return  [ data, selectOptions ];
     },
 
@@ -303,49 +330,74 @@ const build = {
      *
      * builds flounder
      *
-     * @return _Void_
+     * @return {Void} void
      */
     buildDom()
     {
-        let props               = this.props;
+        const props             = this.props;
+        const classes           = this.classes;
         this.refs               = {};
 
-        let constructElement    = utils.constructElement;
+        const constructElement  = utils.constructElement;
 
-        let wrapperClass        = classes.MAIN_WRAPPER;
-        let wrapper             = utils.constructElement( { className : this.wrapperClass ?
-                                    `${wrapperClass}  ${this.wrapperClass}` : wrapperClass } );
-        let flounderClass       = classes.MAIN;
-        let flounder            = constructElement( { className : this.flounderClass ?
-                                    `${flounderClass}  ${this.flounderClass}` : flounderClass } );
+        const wrapper           = utils.constructElement( {
+            className : classes.MAIN_WRAPPER
+        } );
 
-        flounder.setAttribute( `aria-hidden`, true );
+        const flounderClass     = classes.MAIN;
+
+        const flounderClasses   = this.multipleTags ?
+                        `${flounderClass} ${classes.MULTIPLE_TAG_FLOUNDER}` :
+                        flounderClass;
+
+        const flounder          = constructElement( {
+            className : flounderClasses
+        } );
+
+        flounder.setAttribute( 'aria-hidden', true );
         flounder.tabIndex       = 0;
         wrapper.appendChild( flounder );
 
-        let select              = this.initSelectBox( wrapper );
-        select.tabIndex         = -1;
+        const select        = this.initSelectBox( wrapper );
+        select.tabIndex     = -1;
 
-        let data                = this.data;
-        let defaultValue        = this._default = setDefaultOption( this, this.props, data );
+        let data            = this.data;
 
-        let selected            = constructElement( { className : classes.SELECTED_DISPLAYED,
-                                        'data-value' : defaultValue.value, 'data-index' : defaultValue.index || -1 } );
+        this.defaultObj     = setDefaultOption( this, this.props, data );
+        const defaultValue  = this.defaultObj;
 
-        let multiTagWrapper     = this.multipleTags ? constructElement( { className : classes.MULTI_TAG_LIST } ) : null;
+        const selectedDisplayedClasses = this.multipleTags ?
+                `${classes.SELECTED_DISPLAYED} ${classes.MULTIPLE_SELECTED}` :
+                classes.SELECTED_DISPLAYED;
 
-        let optionsListWrapper  = constructElement( { className : `${classes.OPTIONS_WRAPPER}  ${classes.HIDDEN}` } );
-        let optionsList         = constructElement( { className : classes.LIST } );
-        optionsList.setAttribute( `role`, `listbox` );
+        const selected          = constructElement( {
+            className       : selectedDisplayedClasses,
+            'data-value'    : defaultValue.value,
+            'data-index'    : defaultValue.index
+        } );
+
+        const multiTagWrapper   = this.multipleTags ? constructElement( {
+            className : classes.MULTI_TAG_LIST
+        } ) : null;
+
+        const optionsListWrapper = constructElement( {
+            className : `${classes.OPTIONS_WRAPPER}  ${classes.HIDDEN}`
+        } );
+
+        const optionsList       = constructElement( {
+            className : classes.LIST
+        } );
+
+        optionsList.setAttribute( 'role', 'listbox' );
         optionsListWrapper.appendChild( optionsList );
 
         if ( this.multiple === true )
         {
-            select.setAttribute( `multiple`, `` );
-            optionsList.setAttribute( `aria-multiselectable`, `true` );
+            select.setAttribute( 'multiple', '' );
+            optionsList.setAttribute( 'aria-multiselectable', 'true' );
         }
 
-        let arrow               = this.buildArrow( props, constructElement );
+        const arrow = this.buildArrow( props, constructElement );
 
         [ selected, multiTagWrapper, optionsListWrapper, arrow ].forEach( el =>
         {
@@ -355,20 +407,36 @@ const build = {
             }
         } );
 
-        let search              = this.addSearch( flounder );
+        const searchLocation    = this.multipleTags ? optionsListWrapper :
+                                                                    selected;
 
-        let selectOptions;
+        const search            = this.addSearch( searchLocation, flounder );
 
-        [ data, selectOptions ] = this.buildData( defaultValue, data, optionsList, select );
+
+        const built = this.buildData( defaultValue, data, optionsList, select );
+
+        data                = built[ 0 ];
+        const selectOptions = built[ 1 ];
 
         this.target.appendChild( wrapper );
 
-        this.refs = { wrapper, flounder, selected, arrow, optionsListWrapper,
-                    search, multiTagWrapper, optionsList, select, data, selectOptions };
+        this.refs = {
+            wrapper,
+            flounder,
+            selected,
+            arrow,
+            optionsListWrapper,
+            search,
+            multiTagWrapper,
+            optionsList,
+            select,
+            data,
+            selectOptions
+        };
 
         if ( this.multipleTags )
         {
-            let selectedOptions = this.getSelected();
+            const selectedOptions = this.getSelected();
 
             if ( selectedOptions.length === 0 )
             {
@@ -393,19 +461,20 @@ const build = {
      *
      * @param {String} option tag to grab text to add to the tag and role
      *
-     * @return _DOMElement_ option tag
+     * @return {DOMElement} option tag
      */
     buildMultiTag( option )
     {
-        let optionText  = option.innerHTML;
-        let span        = document.createElement( `SPAN` )
-        span.className  = classes.MULTIPLE_SELECT_TAG;
-        span.setAttribute( `aria-label`, `Close` );
-        span.setAttribute( `tabindex`, 0 );
+        const classes    = this.classes;
+        const optionText = option.innerHTML;
+        const span       = document.createElement( 'SPAN' );
+        span.className   = classes.MULTIPLE_SELECT_TAG;
+        span.setAttribute( 'aria-label', 'Close' );
+        span.setAttribute( 'tabindex', 0 );
 
-        let a           = document.createElement( `A` )
+        const a         = document.createElement( 'A' );
         a.className     = classes.MULTIPLE_TAG_CLOSE;
-        a.setAttribute( `data-index`, option.index );
+        a.setAttribute( 'data-index', option.index );
 
         span.appendChild( a );
 
@@ -423,15 +492,16 @@ const build = {
      *
      * @param {DOMElement} wrapper main wrapper element
      *
-     * @return _DOMElement_ select box
+     * @return {DOMElement} select box
      */
     initSelectBox( wrapper )
     {
-        let target  = this.target;
-        let refs    = this.refs;
-        let select  = refs.select;
+        const target  = this.target;
+        const refs    = this.refs;
+        let select    = refs.select;
+        const classes = this.classes;
 
-        if ( target.tagName === `SELECT` )
+        if ( target.tagName === 'SELECT' )
         {
             utils.addClass( target, classes.SELECT_TAG );
             utils.addClass( target, classes.HIDDEN );
@@ -446,10 +516,10 @@ const build = {
             if ( target.length > 0 && !this.selectDataOverride )
             {
                 this.refs.select    = select;
-                let data            = [],
-                    selectOptions   = [];
+                const data          = [];
+                const selectOptions = [];
 
-                Array.prototype.slice.call( target.children, 0 ).forEach( function( optionEl )
+                nativeSlice.call( target.children, 0 ).forEach( optionEl =>
                 {
                     selectOptions.push( optionEl );
                     data.push( {
@@ -472,7 +542,11 @@ const build = {
         }
         else
         {
-            select = utils.constructElement( { tagname : `SELECT`, className : `${classes.SELECT_TAG}  ${classes.HIDDEN}` } );
+            select = utils.constructElement( {
+                tagname     : 'SELECT',
+                className   : `${classes.SELECT_TAG}  ${classes.HIDDEN}`
+            } );
+
             wrapper.appendChild( select );
         }
 
@@ -488,13 +562,13 @@ const build = {
      *
      * @param {DOMElement} select select element
      *
-     * @return _Void_
+     * @return {Void} void
      */
     popInSelectElements( select )
     {
         utils.removeAllChildren( select );
 
-        this.originalChildren.forEach( function( _el, i )
+        this.originalChildren.forEach( _el =>
         {
             select.appendChild( _el );
         } );
@@ -509,20 +583,22 @@ const build = {
      *
      * @param {DOMElement} select select element
      *
-     * @return _Void_
+     * @return {Void} void
      */
     popOutSelectElements( select )
     {
-        let res = [];
-        let children = this.originalChildren = Array.prototype.slice.call( select.children, 0 );
+        const res = [];
 
-        children.forEach( function( _el, i )
+        this.originalChildren = nativeSlice.call( select.children, 0 );
+        const children = this.originalChildren;
+
+        children.forEach( ( _el, i ) =>
         {
             res[ i ] = _el.cloneNode( true );
             select.removeChild( _el );
         } );
 
-        res.forEach( function( _el )
+        res.forEach( _el =>
         {
             select.appendChild( _el );
         } );
@@ -534,18 +610,20 @@ const build = {
      *
      * after editing the data, this can be used to rebuild them
      *
+     * @param {Array} data flounder data options
      * @param {Object} props object containing config options
      *
-     * @return _Object_ rebuilt flounder object
+     * @return {Object} rebuilt flounder object
      */
     reconfigure( data, props )
     {
-        if ( data && typeof data !== `string` && typeof data.length === `number` )
+        if ( data && typeof data !== 'string' &&
+                                            typeof data.length === 'number' )
         {
             props       = props       = props || this.props;
             props.data  = data;
         }
-        else if ( !props && typeof data === `object` )
+        else if ( !props && typeof data === 'object' )
         {
             props       = data;
             props.data  = props.data || this.data;
@@ -567,19 +645,21 @@ const build = {
      *
      * @param {DOMElement} target  the actual to-be-flounderized element
      *
-     * @return _Void_
+     * @return {Void} void
      */
     setTarget( target )
     {
-        target      = target.nodeType === 1 ? target : document.querySelector( target );
+        target      = target.nodeType === 1 ? target :
+                                            document.querySelector( target );
 
         this.originalTarget = target;
         target.flounder     = this;
 
-        if ( target.tagName === `INPUT` )
+        if ( target.tagName === 'INPUT' )
         {
+            const classes = this.classes;
             utils.addClass( target, classes.HIDDEN );
-            target.setAttribute( `aria-hidden`, true );
+            target.setAttribute( 'aria-hidden', true );
             target.tabIndex = -1;
             target          = target.parentNode;
         }

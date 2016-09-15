@@ -23,18 +23,20 @@ export const defaults = {
      * params to test for score
      *
      * called as:
-     * score += this.scoreThis( search[ param ], weights[ param ] );
+     * score += this.scoreThis( search[ param ], weights[ param ] );
      */
-    scoreProperties     : [ `text`, `textFlat`, `textSplit`, `value`, `valueFlat`,
-                                    `valueSplit`, `description`, `descriptionSplit` ],
+    scoreProperties     : [ 'text', 'textFlat', 'textSplit', 'value',
+                                    'valueFlat', 'valueSplit', 'description',
+                                    'descriptionSplit' ],
 
     /*
      * params to test with startsWith
      *
      * called as:
-     * score += startsWith( query, search[ param ], weights[ param + `StartsWith` ] );
+     * startsWith( query, search[ param ], weights[ param + 'StartsWith' ] );
      */
-    startsWithProperties : [ `text`, `value` ],
+    startsWithProperties : [ 'text', 'value' ],
+
 
     /*
      * scoring weight
@@ -71,7 +73,7 @@ export class Sole
      * @param {Object} a result
      * @param {Object} b result to compare with
      *
-     * @return _Number_ comparison result
+     * @return {Number} comparison result
      */
     compareScoreCards( a, b )
     {
@@ -101,9 +103,9 @@ export class Sole
      *
      * initial setup of Sole object
      *
-     * @param {Object} options option object
+     * @param {Object} flounder option object
      *
-     * @return _Object_ this
+     * @return {Object} this
      */
     constructor( flounder )
     {
@@ -126,53 +128,61 @@ export class Sole
      *
      * @param {String} string string to be escaped
      *
-     * return _String_ escaped string
+     * @return {String} escaped string
      */
     escapeRegExp( string )
     {
-        return string.replace( /[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, `\\$&` );
+        return string.replace( /[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&' );
     }
 
 
     /**
      * ## getResultWeights
      *
-     * after the data is prepared this is mapped through the data to get weighted results
+     * after the data is prepared this is mapped through the data to get
+     * weighted results
      *
-     * @param  {Object} data object
+     * @param  {Object} d object
      * @param  {Number} i index
      *
-     * @return _Object_ res weighted results
+     * @return {Object} res weighted results
      */
     getResultWeights( d, i )
     {
         let score   = 0;
-        let res     = { i : i, d : d };
-        let search  = d.search  = d.search || {};
-        let weights = defaults.weights;
-        let dText   = `${d.text}`;
-        let dValue  = `${d.value}`;
+        const res     = {
+            i : i,
+            d : d
+        };
+
+        const search  = d.search  = d.search || {};
+        const weights = defaults.weights;
+        const dText   = `${d.text}`;
+        const dValue  = `${d.value}`;
 
         search.text             = dText;
         search.textFlat         = dText.toLowerCase();
-        search.textSplit        = search.textFlat.split( ` ` );
+        search.textSplit        = search.textFlat.split( ' ' );
 
         search.value            = dValue;
         search.valueFlat        = dValue.toLowerCase();
-        search.valueSplit       = search.valueFlat.split( ` ` );
+        search.valueSplit       = search.valueFlat.split( ' ' );
 
-        search.description      = d.description ? d.description.toLowerCase() : null;
-        search.descriptionSplit = d.description ? search.description.split( ` ` ) : null;
+        search.description      = d.description ?
+                                            d.description.toLowerCase() : null;
+        search.descriptionSplit = d.description ?
+                                        search.description.split( ' ' ) : null;
 
 
         defaults.scoreProperties.forEach( param =>
         {
-            score += this.scoreThis( search[ param ], weights[ param ] );
+            score += this.scoreThis( search[ param ], weights[ param ] );
         } );
 
         defaults.startsWithProperties.forEach( param =>
         {
-            score += this.startsWith( this.query, search[ param ], weights[ `${param}StartsWith` ] );
+            score += this.startsWith( this.query, search[ param ],
+                                            weights[ `${param}StartsWith` ] );
         } );
 
         res.score = score;
@@ -186,11 +196,13 @@ export class Sole
      *
      * removes the items that have recieved a score lower than the set minimum
      *
-     * @return _Boolean_ under the minimum or not
+     * @param {Object} d score object
+     *
+     * @return {Boolean} the minimum or not
      */
     isItemAboveMinimum( d )
     {
-        return d.score >= defaults.minimumScore ? true : false;
+        return d.score >= defaults.minimumScore;
     }
 
 
@@ -203,54 +215,55 @@ export class Sole
      *
      * @param {Array} query  array of words to search the content for
      *
-     * @return _Array_ results returns array of relevant search results
+     * @return {Array} results returns array of relevant search results
      */
     isThereAnythingRelatedTo( query = '' )
     {
-        let ratedResults;
+        let ratedRes;
 
         query = query.length ? query : `${query}`;
 
         if ( query.length >= defaults.minimumValueLength )
         {
-            this.query      = query.toLowerCase().split( ` ` );
+            this.query  = query.toLowerCase().split( ' ' );
 
-            let data        = this.flounder.data;
-                data        = this.flounder.sortData( data );
+            let data    = this.flounder.data;
+            data        = this.flounder.sortData( data );
 
-            ratedResults    = this.ratedResults = data.map( this.getResultWeights );
+            ratedRes    = this.ratedRes = data.map( this.getResultWeights );
         }
         else
         {
             return false;
         }
 
-        ratedResults.sort( this.compareScoreCards );
-        ratedResults = ratedResults.filter( this.isItemAboveMinimum );
+        ratedRes.sort( this.compareScoreCards );
+        ratedRes = ratedRes.filter( this.isItemAboveMinimum );
 
-        return ( this.ratedResults = ratedResults );
+        return this.ratedRes = ratedRes;
     }
 
 
     /**
      * ## startsWith
      *
-     * checks the beginning of the given text to see if the query matches exactly
+     * checks the beginning of the given text to see if the query matches
+     * exactly
      *
      * @param {String} query string to search for
      * @param {String} value string to search in
      * @param {Integer} weight amount of points to give an exact match
      *
-     * @return _Integer_ points to award
+     * @return {Integer} points to award
      */
     startsWith( query, value, weight )
     {
-        let valLength   = value.length;
-        let queryLength = query.length;
+        const valLength   = value.length;
+        const queryLength = query.length;
 
         if ( queryLength <= valLength )
         {
-            let valStr = value.toLowerCase().slice( 0, queryLength );
+            const valStr = value.toLowerCase().slice( 0, queryLength );
 
             if ( valStr === query )
             {
@@ -274,7 +287,7 @@ export class Sole
      * @param {Boolean} noPunishment when passed true, this does not give
      *                               negative points for non-matches
      *
-     * @return _Integer_ the final weight adjusted score
+     * @return {Integer} the final weight adjusted score
      */
     scoreThis( target, weight, noPunishment )
     {
@@ -287,12 +300,12 @@ export class Sole
                 queryWord = this.escapeRegExp( queryWord );
                 let count = 0;
 
-                if ( typeof target === `string` )
+                if ( typeof target === 'string' )
                 {
-                    queryWord   = new RegExp( queryWord, `g` );
+                    queryWord   = new RegExp( queryWord, 'g' );
                     count       = ( target.match( queryWord ) || [] ).length;
                 }
-                else if ( target[ 0 ] ) // array.  what if the words obj has the word length?
+                else if ( target[ 0 ] )
                 {
                     target.forEach( word =>
                     {

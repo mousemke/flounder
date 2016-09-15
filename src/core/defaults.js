@@ -1,14 +1,9 @@
-import classes              from './classes';
 import utils                from './utils';
+import defaultClasses       from './classes';
 
 export const defaultOptions = {
     allowHTML               : false,
-    classes                 : {
-        flounder    : ``,
-        hidden      : `flounder--hidden`,
-        selected    : `flounder__option--selected`,
-        wrapper     : ``
-    },
+    classes                 : defaultClasses,
     data                    : [],
     defaultEmpty            : false,
     defaultIndex            : false,
@@ -17,59 +12,69 @@ export const defaultOptions = {
     keepChangesOnDestroy    : false,
     multiple                : false,
     multipleTags            : false,
-    multipleMessage         : `(Multiple Items Selected)`,
-    onClose                 : function( e, selectedValues ){},
-    onComponentDidMount     : function(){},
-    onComponentWillUnmount  : function(){},
-    onFirstTouch            : function( e ){},
-    onInit                  : function(){},
-    onInputChange           : function( e ){},
-    onOpen                  : function( e, selectedValues ){},
-    onSelect                : function( e, selectedValues ){},
+    multipleMessage         : '(Multiple Items Selected)',
+    noMoreOptionsMessage    : 'No more options to add.',
+    noMoreResultsMessage    : 'No matches found',
+    onChange                : function( e, selectedValues ){},  // eslint-disable-line
+    onClose                 : function( e, selectedValues ){},  // eslint-disable-line
+    onComponentDidMount     : function(){},                     // eslint-disable-line
+    onComponentWillUnmount  : function(){},                     // eslint-disable-line
+    onFirstTouch            : function( e ){},                  // eslint-disable-line
+    onInit                  : function(){},                     // eslint-disable-line
+    onInputChange           : function( e ){},                  // eslint-disable-line
+    onOpen                  : function( e, selectedValues ){},  // eslint-disable-line
     openOnHover             : false,
-    placeholder             : `Please choose an option`,
+    placeholder             : 'Please choose an option',
     search                  : false,
     selectDataOverride      : false
 };
 
+
+
 const defaults = {
 
     defaultOptions : defaultOptions,
-
 
     /**
      * ## setDefaultOption
      *
      * sets the initial default value
      *
-     * @param {String or Number}    defaultProp         default passed from this.props
-     * @param {Object}              data                this.props.data
+     * @param {Object} context flounder this
+     * @param {Object} configObj props
+     * @param {Array} originalData data array
+     * @param {Boolean} rebuild rebuild or not
      *
-     * @return _Void_
+     * @return {Void} void
      */
-    setDefaultOption( self, configObj = {}, data, rebuild = false )
+    setDefaultOption( context, configObj = {}, originalData, rebuild = false )
     {
         /**
          * ## setIndexDefault
          *
-         * sets a specified indexas the default option. This only works correctly
-         * if it is a valid index, otherwise it returns null
+         * sets a specified index as the default option. This only works
+         * correctly if it is a valid index, otherwise it returns null
+         *
+         * @param {Array} data option data
+         * @param {Number} index index
          *
          * @return {Object} default settings
          */
-        let setIndexDefault = function( _data, index )
+        function setIndexDefault( data, index )
         {
-            let defaultIndex        = index || index === 0 ? index : configObj.defaultIndex;
-            let defaultOption       = _data[ defaultIndex ];
+            const defaultIndex        = index || index === 0 ? index :
+                                                        configObj.defaultIndex;
+            const defaultOption       = data[ defaultIndex ];
 
             if ( defaultOption )
             {
                 defaultOption.index   = defaultIndex;
+
                 return defaultOption;
             }
 
             return null;
-        };
+        }
 
 
         /**
@@ -78,38 +83,46 @@ const defaults = {
          * sets a placeholder as the default option.  This inserts an empty
          * option first and sets that as default
          *
+         * @param {Object} flounder flounder
+         *
          * @return {Object} default settings
          */
-        let setPlaceholderDefault = function( self, _data )
+        function setPlaceholderDefault( flounder )
         {
-            let refs        = self.refs;
-            let select      = refs.select;
-            let placeholder = configObj.placeholder;
+            const refs        = flounder.refs;
+            const classes     = flounder.classes;
+            const select      = refs.select;
+            const placeholder = configObj.placeholder;
 
-            let _default    = {
-                text        : placeholder || placeholder === `` ? placeholder : defaultOptions.placeholder,
-                value       : ``,
+            const defaultObj    = {
+                text        : placeholder || placeholder === '' ? placeholder :
+                                                    defaultOptions.placeholder,
+                value       : '',
                 index       : 0,
                 extraClass  : `${classes.HIDDEN}  ${classes.PLACEHOLDER}`
             };
 
             if ( select )
             {
-                let escapedText     = self.allowHTML ? _default.text : utils.escapeHTML( _default.text );
+                const escapedText     = flounder.allowHTML ? defaultObj.text :
+                                            utils.escapeHTML( defaultObj.text );
 
-                let defaultOption   = utils.constructElement( { tagname : `option`,
-                                            className   : classes.OPTION_TAG,
-                                            value       :  _default.value } );
+                const defaultOption   = utils.constructElement( {
+                    tagname     : 'option',
+                    className   : classes.OPTION_TAG,
+                    value       :  defaultObj.value
+                } );
+
                 defaultOption.innerHTML = escapedText;
 
                 select.insertBefore( defaultOption, select[ 0 ] );
-                self.refs.selectOptions.unshift( defaultOption );
+                flounder.refs.selectOptions.unshift( defaultOption );
             }
 
-            data.unshift( _default );
+            originalData.unshift( defaultObj );
 
-            return _default;
-        };
+            return defaultObj;
+        }
 
 
         /**
@@ -118,16 +131,19 @@ const defaults = {
          * sets a specified index as the default. This only works correctly if
          * it is a valid value, otherwise it returns null
          *
+         * @param {Array} data array of data objects
+         * @param {String} val value to set
+         *
          * @return {Object} default settings
          */
-        let setValueDefault = function( _data, _val )
+        function setValueDefault( data, val )
         {
-            let defaultProp = _val || `${configObj.defaultValue}`;
+            const defaultProp = val || `${configObj.defaultValue}`;
             let index;
 
-            _data.forEach( function( dataObj, i )
+            data.forEach( ( dataObj, i ) =>
             {
-                let dataObjValue = `${dataObj.value}`;
+                const dataObjValue = `${dataObj.value}`;
 
                 if ( dataObjValue === defaultProp )
                 {
@@ -135,16 +151,17 @@ const defaults = {
                 }
             } );
 
-            let defaultValue = index >= 0 ? _data[ index ] : null;
+            const defaultValue = index >= 0 ? data[ index ] : null;
 
             if ( defaultValue )
             {
                 defaultValue.index = index;
+
                 return defaultValue;
             }
 
             return null;
-        };
+        }
 
 
         /**
@@ -154,35 +171,36 @@ const defaults = {
          *
          * @return {Object} default data object
          */
-        let checkDefaultPriority = function()
+        function checkDefaultPriority()
         {
-            let _data       = self.sortData( data );
+            const data = context.sortData( originalData );
 
-            if ( ( configObj.multipleTags || configObj.multiple )
+            if ( ( configObj.multipleTags || configObj.multiple )
                     && !configObj.defaultIndex
                     && !configObj.defaultValue )
             {
-                configObj.placeholder = configObj.placeholder || defaultOptions.placeholder;
+                configObj.placeholder = configObj.placeholder ||
+                                                defaultOptions.placeholder;
             }
 
             if ( configObj.defaultEmpty )
             {
-                configObj.placeholder = ``;
+                configObj.placeholder = '';
             }
 
-            let placeholder = configObj.placeholder;
+            const placeholder = configObj.placeholder;
 
-            if ( placeholder || placeholder === `` || _data.length === 0 )
+            if ( placeholder || placeholder === '' || data.length === 0 )
             {
-                return setPlaceholderDefault( self, _data );
+                return setPlaceholderDefault( context, data );
             }
 
             let def;
 
             if ( rebuild )
             {
-                let val = self.refs.selected.getAttribute( `data-value` );
-                def     = setValueDefault( _data, val );
+                const val = context.refs.selected.getAttribute( 'data-value' );
+                def     = setValueDefault( data, val );
 
                 if ( def )
                 {
@@ -191,63 +209,20 @@ const defaults = {
             }
 
             // default prio
-            def = configObj.defaultIndex ? setIndexDefault( _data ) : null;
-            def = !def && configObj.defaultValue ? setValueDefault( _data ) : def;
-            def = !def ? setIndexDefault( _data, 0 ) : def;
+            def = configObj.defaultIndex ? setIndexDefault( data ) : null;
+            def = !def && configObj.defaultValue ? setValueDefault( data ) :
+                                                                            def;
+            def = !def ? setIndexDefault( data, 0 ) : def;
 
             return def;
-        };
+        }
 
-
-        data    = data || configObj.data || [];
+        originalData    = originalData || configObj.data || [];
 
         return checkDefaultPriority();
-    },
-
-
-    /**
-     * ## sortData
-     *
-     * checks the data object for header options, and sorts it accordingly
-     *
-     * @return _Boolean_ hasHeaders
-     */
-    sortData( data, res = [], i = 0 )
-    {
-        let self = this;
-
-        data.forEach( d =>
-        {
-            if ( d.header )
-            {
-                res = this.sortData( d.data, res, i );
-            }
-            else
-            {
-                if ( typeof d !== `object` )
-                {
-                    d = {
-                        text    : d,
-                        value   : d,
-                        index   : i
-                    };
-                }
-                else
-                {
-                    d.index = i;
-                }
-
-                res.push( d );
-                i++;
-            }
-        } );
-
-        return res;
     }
 };
 
-
 export const setDefaultOption = defaults.setDefaultOption;
-
 
 export default defaults;

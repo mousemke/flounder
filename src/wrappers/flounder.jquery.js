@@ -1,22 +1,22 @@
-
+/* global jQuery */
 import Flounder from '../core/flounder';
 
-( function( $ ) {
-
+( function( $ )
+{
     $.fn.flounder = function( options )
     {
-        let flounderDestroy = Flounder.prototype.destroy;
+        const flounderDestroy = Flounder.prototype.destroy;
 
-        this.each( function( i, el )
+        this.each( ( i, el ) =>
         {
-            let _f      = new Flounder( el, options );
-            let $el     = $( el );
-            $el.data( 'flounder', _f );
+            const f     = new Flounder( el, options );
+            const $el   = $( el );
+            $el.data( 'flounder', f );
 
-            _f.destroy  = function()
+            f.destroy  = function()
             {
                 $el.data( 'flounder', false );
-                flounderDestroy.call( _f );
+                flounderDestroy.call( f );
             };
         } );
 
