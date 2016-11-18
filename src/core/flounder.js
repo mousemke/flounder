@@ -1,3 +1,4 @@
+
 /* globals console, document */
 import { defaultOptions }   from './defaults';
 import utils                from './utils';

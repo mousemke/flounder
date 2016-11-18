@@ -2843,11 +2843,13 @@ describe( 'toggleOpen', () =>
             data    : [
                 {
                     header : 'header test',
-                    data   : [ {
-                        text    : 1,
-                        value   : 1
-                    },
-                    2 ]
+                    data   : [
+                        {
+                            text    : 1,
+                            value   : 1
+                        },
+                        2
+                    ]
                 },
                 3
             ],
