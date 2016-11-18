@@ -1,4 +1,4 @@
-Flounder.js 1.1.0
+Flounder.js 1.1.1
 =================
 
 [![Flounder build status](https://travis-ci.org/sociomantic-tsunami/flounder.svg)](https://travis-ci.org)
@@ -478,6 +478,14 @@ See more examples on the [demo page](./demo/index.html)
 
 Change Log
 ==========
+
+1.1.1
+-----
+
++ tests
+    + lint fixed
+    + test coverage brought back to 100%
+
 
 1.1.0
 -----
