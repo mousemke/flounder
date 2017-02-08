@@ -100,21 +100,22 @@ const events = {
             if ( option.value !== '' )
             {
                 const tag = this.buildMultiTag( option );
-
-                multiTagWrapper.appendChild( tag );
+                multiTagWrapper.insertBefore( tag, multiTagWrapper.lastChild );
             }
             else
             {
                 option.selected = false;
             }
-        } );
+        });
 
-        nativeSlice.call( multiTagWrapper.children, 0 ).forEach( el =>
+        const tags = nativeSlice.call( multiTagWrapper.children, 0, -1 );
+
+        tags.forEach( tag =>
         {
-            const firstChild = el.firstChild;
+            const closeBtn = tag.firstChild;
 
-            firstChild.addEventListener( 'click', this.removeMultiTag );
-            el.addEventListener( 'keydown', this.checkMultiTagKeydown );
+            closeBtn.addEventListener( 'click', this.removeMultiTag );
+            tag.addEventListener( 'keydown', this.checkMultiTagKeydown );
         } );
     },
 
@@ -461,13 +462,13 @@ const events = {
      */
     checkMultiTagKeydown( e )
     {
-        const keyCode               = e.keyCode;
-        const self                  = this;
-        const refs                  = this.refs;
-        const children              = refs.multiTagWrapper.children;
-        const target                = e.target;
-        const index                 = nativeSlice.call( children, 0 )
-                                                            .indexOf( target );
+        const keyCode   = e.keyCode;
+        const self      = this;
+        const refs      = this.refs;
+        const tags      = nativeSlice.call(
+            refs.multiTagWrapper.children, 0, -1 );
+        const target    = e.target;
+        const index     = tags.indexOf( target );
 
         /**
          * ## focusSearch
@@ -498,7 +499,7 @@ const events = {
             else
             {
                 self.checkMultiTagKeydownNavigate( focusSearch, keyCode,
-                                                                        index );
+                    index );
             }
         }
         else if ( e.key.length < 2 )
@@ -522,11 +523,12 @@ const events = {
      */
     checkMultiTagKeydownNavigate( focusSearch, keyCode, index )
     {
-        const children   = this.refs.multiTagWrapper.children;
+        const tags = nativeSlice.call(
+            this.refs.multiTagWrapper.children, 0, -1 );
 
         const adjustment = keyCode - 38;
         const newIndex   = index + adjustment;
-        const length     = children.length - 1;
+        const length     = tags.length - 1;
 
         if ( newIndex > length )
         {
@@ -534,7 +536,7 @@ const events = {
         }
         else if ( newIndex >= 0 )
         {
-            children[ newIndex ].focus();
+            tags[ newIndex ].focus();
         }
     },
 
@@ -553,14 +555,16 @@ const events = {
      */
     checkMultiTagKeydownRemove( target, focusSearch, index )
     {
-        const children  = this.refs.multiTagWrapper.children;
-        const siblings  = children.length - 1;
+        const tags = nativeSlice.call(
+            this.refs.multiTagWrapper.children, 0, -1 );
+
+        const siblings  = tags.length - 1;
 
         target.firstChild.click();
 
         if ( siblings > 0 )
         {
-            children[ index === 0 ? 0 : index - 1 ].focus();
+            tags[ index === 0 ? 0 : index - 1 ].focus();
         }
         else
         {
@@ -623,15 +627,17 @@ const events = {
      */
     displayMultipleTags( selectedOptions, multiTagWrapper )
     {
-        nativeSlice.call( multiTagWrapper.children, 0 ).forEach( el =>
+        const tags = nativeSlice.call( multiTagWrapper.children, 0, -1 );
+
+        tags.forEach( tag =>
         {
-            const firstChild = el.firstChild;
+            const closeBtn = tag.firstChild;
 
-            firstChild.removeEventListener( 'click', this.removeMultiTag );
-            el.removeEventListener( 'keydown', this.checkMultiTagKeydown );
+            closeBtn.removeEventListener( 'click', this.removeMultiTag );
+            tag.removeEventListener( 'keydown', this.checkMultiTagKeydown );
+
+            multiTagWrapper.removeChild( tag );
         } );
-
-        multiTagWrapper.innerHTML = '';
 
         if ( selectedOptions.length > 0 )
         {
@@ -641,8 +647,6 @@ const events = {
         {
             this.addPlaceholder();
         }
-
-        this.setTextMultiTagIndent();
     },
 
 
@@ -684,7 +688,7 @@ const events = {
             {
                 selected.innerHTML  = '';
                 this.displayMultipleTags( selectedOption,
-                                                        refs.multiTagWrapper );
+                    refs.multiTagWrapper );
             }
             else
             {
@@ -886,7 +890,6 @@ const events = {
 
         this.removeNoMoreOptionsMessage();
         this.removeNoResultsMessage();
-        this.setTextMultiTagIndent();
 
         selected.setAttribute( 'data-value', value );
         selected.setAttribute( 'data-index', index );
@@ -1280,30 +1283,6 @@ const events = {
 
 
     /**
-     * ## setTextMultiTagIndent
-     *
-     * sets the text-indent on the search field to go around selected tags
-     *
-     * @return {Void} void
-     */
-    setTextMultiTagIndent()
-    {
-        const refs    = this.refs;
-        const search  = refs.search;
-
-        let offset  = 0;
-
-        nativeSlice.call( refs.multiTagWrapper.children, 0 ).forEach( e =>
-        {
-            offset += utils.getElWidth( e, this.setTextMultiTagIndent, this );
-        } );
-
-        /* istanbul ignore next */
-        search.style.textIndent = offset > 0 ? `${offset}px` : '';
-    },
-
-
-    /**
      * ## toggleClosed
      *
      * post toggleList, this runs it the list should be closed
@@ -1465,11 +1444,16 @@ const events = {
             optionCount--;
         }
 
-        if ( refs.multiTagWrapper && refs.multiTagWrapper.childNodes.length ===
-                                            optionCount )
+        if ( refs.multiTagWrapper )
         {
-            this.removeNoResultsMessage();
-            this.addNoMoreOptionsMessage();
+            const tags = nativeSlice.call(
+                refs.multiTagWrapper.children, 0, -1 );
+
+            if ( tags.length === optionCount )
+            {
+                this.removeNoResultsMessage();
+                this.addNoMoreOptionsMessage();
+            }
         }
 
         if ( this.ready )

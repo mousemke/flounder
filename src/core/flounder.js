@@ -9,6 +9,8 @@ import Search               from './search';
 import version              from './version';
 import keycodes             from './keycodes';
 
+const nativeSlice = Array.prototype.slice;
+
 /**
  * main flounder class
  *
@@ -179,7 +181,8 @@ class Flounder
                 if ( this.multipleTags && keyCode === keycodes.BACKSPACE &&
                         this.fuzzySearch.previousValue === '' )
                 {
-                    const lastTag = this.refs.multiTagWrapper.lastChild;
+                    const lastTag = nativeSlice.call(
+                        this.refs.multiTagWrapper.children, 0, -1 ).pop();
 
                     if ( lastTag )
                     {
@@ -192,7 +195,7 @@ class Flounder
                 }
             }
             else if ( keyCode === keycodes.ESCAPE ||
-                                            keyCode === keycodes.ENTER )
+                keyCode === keycodes.ENTER )
             {
                 this.fuzzySearchReset();
                 this.toggleList( e, 'close' );
@@ -469,4 +472,3 @@ Object.defineProperty( Flounder.prototype, 'version', {
 utils.extendClass( Flounder, api, build, events );
 
 export default Flounder;
-

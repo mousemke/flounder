@@ -32,12 +32,11 @@ const build = {
      *
      * checks if a search box is required and attaches it or not
      *
-     * @param {Object} searchSibling next sibling to mount the input to
-     * @param {Object} flounder main element reference
+     * @param {Object} node node to append the input to
      *
      * @return {Mixed} search node or false
      */
-    addSearch( searchSibling, flounder )
+    addSearch( node )
     {
         if ( this.search )
         {
@@ -48,7 +47,7 @@ const build = {
                 className   : classes.SEARCH
             } );
 
-            flounder.insertBefore( search, searchSibling );
+            node.appendChild( search );
 
             return search;
         }
@@ -404,13 +403,10 @@ const build = {
             }
         } );
 
-        const searchLocation    = this.multipleTags ? optionsListWrapper :
-                                                                    selected;
-
-        const search            = this.addSearch( searchLocation, flounder );
-
-
-        const built = this.buildData( defaultValue, data, optionsList, select );
+        const search = this.addSearch( this.multipleTags ?
+            multiTagWrapper : flounder );
+        const built  = this.buildData(
+            defaultValue, data, optionsList, select );
 
         data                = built[ 0 ];
         const selectOptions = built[ 1 ];
