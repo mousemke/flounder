@@ -108,7 +108,6 @@ If flounder is fed an element that already has a flounder, it will destroy it an
         MULTIPLE_TAG_FLOUNDER : `class-for-multiple`,
         MULTI_TAG_LIST        : `class-for-multi-tag-list`,
         MULTIPLE_SELECT_TAG   : `class-for-multiple-select-tag`,
-        MULTIPLE_SELECTED     : `class-for-multiple-selected`,
         MULTIPLE_TAG_CLOSE    : `class-for-multiple-tag-close`,
         NO_RESULTS            : `class-for-no-results`,
         OPEN                  : `class-for-open`,
