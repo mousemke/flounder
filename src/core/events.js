@@ -669,11 +669,17 @@ const events = {
         const selectedLength  = selectedOption.length;
         const multipleTags    = this.multipleTags;
 
+        selected.className    = this.classes.SELECTED_DISPLAYED;
+
         if ( !multipleTags && selectedLength ===  1 )
         {
             index               = selectedOption[ 0 ].index;
             selected.innerHTML  = refs.data[ index ].innerHTML;
             value               = selectedOption[ 0 ].value;
+
+            const extraClass    = refs.data[ index ].extraClass;
+
+            selected.className += extraClass ? ' ' + extraClass : '';
         }
         else if ( !multipleTags && selectedLength === 0 )
         {
