@@ -113,6 +113,7 @@ class Flounder
         if ( val !== '' )
         {
             const data    = this.refs.data;
+            const sections = this.refs.sections;
             const classes = this.classes;
 
             data.forEach( el =>
@@ -120,9 +121,20 @@ class Flounder
                 utils.addClass( el, classes.SEARCH_HIDDEN );
             } );
 
+            sections.forEach( se =>
+            {
+                utils.addClass( se, classes.SEARCH_HIDDEN );
+            } );
+
             matches.forEach( e =>
             {
                 utils.removeClass( data[ e.i ], classes.SEARCH_HIDDEN );
+
+                if ( typeof e.d.s == 'number' )
+                {
+                    utils.removeClass( sections[ e.d.s ],
+                                                        classes.SEARCH_HIDDEN );
+                }
             } );
 
             if ( !this.refs.noMoreOptionsEl )
@@ -217,6 +229,11 @@ class Flounder
     {
         const refs    = this.refs;
         const classes = this.classes;
+
+        refs.sections.forEach( se =>
+        {
+            utils.removeClass( se, classes.SEARCH_HIDDEN );
+        } );
 
         refs.data.forEach( dataObj =>
         {
@@ -384,16 +401,20 @@ class Flounder
      * @param {Array} data flounder data options
      * @param {Array} res results
      * @param {Number} i index
+     * @param {Number} s section's index (undefined = no section)
      *
      * @return {Boolean} hasHeaders
      */
-    sortData( data, res = [], i = 0 )
+    sortData( data, res = [], i = 0, s = undefined )
     {
+        let indexHeader = 0;
+
         data.forEach( d =>
         {
             if ( d.header )
             {
-                res = this.sortData( d.data, res, i );
+                res = this.sortData( d.data, res, i, indexHeader );
+                indexHeader++;
             }
             else
             {
@@ -409,6 +430,11 @@ class Flounder
                 else
                 {
                     d.index = i;
+                }
+
+                if ( s !== undefined )
+                {
+                    d.s = s;
                 }
 
                 res.push( d );
@@ -469,4 +495,3 @@ Object.defineProperty( Flounder.prototype, 'version', {
 utils.extendClass( Flounder, api, build, events );
 
 export default Flounder;
-

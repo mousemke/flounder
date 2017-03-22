@@ -395,9 +395,33 @@ describe( 'fuzzySearch', () =>
  */
 describe( 'fuzzySearchReset', () =>
 {
+    const top = {
+        header : 'top',
+        data    : [ {
+            text  : 'doge',
+            value : 'doge'
+        } ]
+    };
+
+    const empty = {
+        header : 'empty',
+        data    : []
+    };
+
+    const bottom = {
+        header : 'bottom',
+        data    : [ {
+            text  : 'moon',
+            value : 'moon'
+        } ]
+    };
+
     const data = [
         'doge',
-        'moon'
+        'moon',
+        top,
+        empty,
+        bottom
     ];
 
     const flounder    = new Flounder( document.body, {
@@ -434,6 +458,34 @@ describe( 'fuzzySearchReset', () =>
 
         assert.equal( flounderRefs.search.value, '' );
         assert.equal( hiddenOptions.length, 0 );
+    } );
+
+    it( 'should hide all options without "m"', () =>
+    {
+
+        const flounderRefs = flounder.refs;
+
+        assert.equal( flounderRefs.sections.length, 3 );
+
+        flounderRefs.search.click();
+        flounder.fuzzySearch( {
+            keyCode         : 77,
+            preventDefault  : e => e,
+            target          : {
+                value : 'm  '
+            }
+        } );
+
+        const wrapper = flounderRefs.optionsListWrapper;
+        const hiddenOptions = wrapper.querySelectorAll(
+                                                `.${classes.HIDDEN}` );
+        const searchHiddenOptions = wrapper.querySelectorAll(
+                                                `.${classes.SEARCH_HIDDEN}` );
+
+        assert.equal( flounderRefs.search.value, '' );
+        assert.equal( hiddenOptions.length, 1 );        // empty.
+        assert.equal( searchHiddenOptions.length, 4 );  // 'doge', top, empty,
+                                                        // bottom.
     } );
 } );
 
@@ -766,4 +818,3 @@ describe( 'version', () =>
         assert.equal( Flounder.prototype.version, version );
     } );
 } );
-
