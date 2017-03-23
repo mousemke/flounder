@@ -106,7 +106,7 @@ const events = {
             {
                 option.selected = false;
             }
-        });
+        } );
 
         const tags = nativeSlice.call( multiTagWrapper.children, 0, -1 );
 
@@ -679,7 +679,7 @@ const events = {
 
             const extraClass    = refs.data[ index ].extraClass;
 
-            selected.className += extraClass ? ' ' + extraClass : '';
+            selected.className += extraClass ? ` ${extraClass}` : '';
         }
         else if ( !multipleTags && selectedLength === 0 )
         {

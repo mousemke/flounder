@@ -198,8 +198,9 @@ describe( 'addMultipleTags', () =>
     it( 'should add a tag with event listeners for each selected value', () =>
     {
         document.body.flounder = null;
-        const flounder    = new Flounder( document.body,
-            { multipleTags: true } );
+        const flounder    = new Flounder( document.body, {
+            multipleTags : true
+        } );
 
         flounder.addMultipleTags( options, multiTagWrapper );
 
@@ -211,8 +212,9 @@ describe( 'addMultipleTags', () =>
     it( 'should have the proper events bound to it', () =>
     {
         document.body.flounder = null;
-        const flounder    = new Flounder( document.body,
-            { multipleTags: true } );
+        const flounder    = new Flounder( document.body, {
+            multipleTags : true
+        } );
 
         sinon.stub( flounder, 'removeMultiTag', noop );
         sinon.stub( flounder, 'checkMultiTagKeydown', noop );
@@ -1163,7 +1165,7 @@ describe( 'checkMultiTagKeydownNavigate', () =>
         flounder.setByIndex( 2 );
 
         const lastTag = Array.prototype.slice.call(
-            refs.multiTagWrapper.children, 0, -1).pop();
+            refs.multiTagWrapper.children, 0, -1 ).pop();
 
         sinon.stub( lastTag, 'focus', noop );
         const focusSearch = sinon.spy();
@@ -1227,7 +1229,7 @@ describe( 'checkMultiTagKeydownRemove', () =>
         flounder.setByIndex( 1 );
 
         const tags          = Array.prototype.slice.call(
-            refs.multiTagWrapper.children, 0 , -1 );
+            refs.multiTagWrapper.children, 0, -1 );
         const firstTag      =  tags[ 0 ];
         const focusSearch   = sinon.spy();
 
@@ -1253,7 +1255,7 @@ describe( 'checkMultiTagKeydownRemove', () =>
         flounder.setByIndex( 3 );
 
         const tags = Array.prototype.slice.call(
-            refs.multiTagWrapper.children, 0, -1);
+            refs.multiTagWrapper.children, 0, -1 );
 
         const targetTag = tags[ 1 ];
 
@@ -1432,7 +1434,6 @@ describe( 'displayMultipleTags', () =>
         } );
 
         const refs            = flounder.refs;
-        const refsData        = refs.selectOptions;
         const multiTagWrapper = refs.multiTagWrapper;
 
         flounder.deselectAll();
