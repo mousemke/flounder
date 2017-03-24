@@ -144,6 +144,37 @@ export class Sole
 
 
     /**
+     * ## filterSelected
+     *
+     * helper function to filter selected options from data
+     *
+     * @param {Object} d object data
+     *
+     * @return {Boolean} data not in selected options
+     */
+    filterSelected( d )
+    {
+        if ( !d.value )
+        {
+            return false;
+        }
+
+        if ( this.flounder.multipleTags )
+        {
+            for ( const o of this.flounder.getSelectedValues() )
+            {
+                if ( d.value === o )
+                {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+
+    /**
      * ## getResultWeights
      *
      * after the data is prepared this is mapped through the data to get
@@ -237,7 +268,9 @@ export class Sole
             let data    = this.flounder.data;
             data        = this.flounder.sortData( data );
 
-            ratedRes    = this.ratedRes = data.map( this.getResultWeights );
+            data = data.filter( this.filterSelected.bind( this ) );
+
+            ratedRes = this.ratedRes = data.map( this.getResultWeights );
         }
         else
         {

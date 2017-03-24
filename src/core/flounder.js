@@ -112,6 +112,7 @@ class Flounder
 
         const matches = this.search.isThereAnythingRelatedTo( val ) || [];
 
+
         if ( val !== '' )
         {
             const data    = this.refs.data;
@@ -130,12 +131,12 @@ class Flounder
 
             matches.forEach( e =>
             {
-                utils.removeClass( data[ e.i ], classes.SEARCH_HIDDEN );
+                utils.removeClass( data[ e.d.index ], classes.SEARCH_HIDDEN );
 
                 if ( typeof e.d.s == 'number' )
                 {
                     utils.removeClass( sections[ e.d.s ],
-                                                        classes.SEARCH_HIDDEN );
+                        classes.SEARCH_HIDDEN );
                 }
             } );
 
@@ -244,6 +245,7 @@ class Flounder
         } );
 
         refs.search.value = '';
+        this.removeNoResultsMessage();
     }
 
 
@@ -441,6 +443,7 @@ class Flounder
                 }
 
                 res.push( d );
+
                 i++;
             }
         } );
@@ -473,6 +476,7 @@ Flounder.find = function( targets, props )
 
     return Array.prototype.slice.call( targets, 0 )
                                 .map( el => new Flounder( el, props ) );
+
 };
 
 

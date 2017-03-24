@@ -897,7 +897,7 @@ const events = {
         }
 
         this.removeNoMoreOptionsMessage();
-        this.removeNoResultsMessage();
+        this.fuzzySearchReset();
 
         selected.setAttribute( 'data-value', value );
         selected.setAttribute( 'data-index', index );
