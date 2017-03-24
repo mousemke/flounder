@@ -140,8 +140,10 @@ const build = {
     {
         const self              = this;
         let index               = 0;
+        let indexSection         = 0;
         const data              = [];
         const selectOptions     = [];
+        const sections           = [];
         const constructElement  = utils.constructElement;
         const selectedClass     = this.selectedClass;
         const escapeHTML        = utils.escapeHTML;
@@ -311,6 +313,16 @@ const build = {
                     selectOptions[ index ]  = buildOption( d, index );
                     index++;
                 } );
+
+                // Keep sections with no options, but hide them.
+                // We need to keep them because they exist in `originalData`.
+                if ( dataObjData.length == 0 )
+                {
+                    utils.addClass( section, classes.HIDDEN );
+                }
+
+                sections[ indexSection ] = section;
+                indexSection++;
             }
             else
             {
@@ -321,7 +333,7 @@ const build = {
             }
         } );
 
-        return  [ data, selectOptions ];
+        return  [ data, selectOptions, sections ];
     },
 
 
@@ -410,6 +422,7 @@ const build = {
 
         data                = built[ 0 ];
         const selectOptions = built[ 1 ];
+        const sections      = built[ 2 ];
 
         this.target.appendChild( wrapper );
 
@@ -424,6 +437,7 @@ const build = {
             optionsList,
             select,
             data,
+            sections,
             selectOptions
         };
 

@@ -567,8 +567,8 @@ const api = {
 
         refs.optionsList.innerHTML  = '';
 
-        [ refs.data, refs.selectOptions ] = this.buildData( this.defaultObj,
-                                        this.data, refs.optionsList, select );
+        [ refs.data, refs.selectOptions, refs.sections ] = this.buildData(
+                        this.defaultObj, this.data, refs.optionsList, select );
         refs.select                 = select;
 
         this.addOptionsListeners();
