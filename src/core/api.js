@@ -168,11 +168,11 @@ const api = {
      */
     deselectAll( silent )
     {
+        this.removeSelectedClass();
+        this.removeSelectedValue();
+
         if ( this.multiple )
         {
-            this.removeSelectedClass();
-            this.removeSelectedValue();
-
             const multiTagWrapper = this.refs.multiTagWrapper;
 
             if ( multiTagWrapper )
