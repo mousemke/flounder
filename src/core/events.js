@@ -375,7 +375,7 @@ const events = {
 
             matches.forEach( el =>
             {
-                const index   = el.i;
+                const index   = el.d.index;
                 el          = refs.selectOptions[ index ];
 
                 if ( selected.indexOf( el ) === -1 )
@@ -384,9 +384,28 @@ const events = {
                 }
             } );
 
+            // If only one result is available, select that result.
+            // If more than one results, select one only on exact match.
+            let selectedIndex = -1;
             if ( res.length === 1 )
             {
-                const el = res[ 0 ];
+                selectedIndex = 0;
+            }
+            else if ( res.length > 1 )
+            {
+                for ( let i = 0; i < res.length ; i++ )
+                {
+                    if ( res[ i ].text.toUpperCase() === val.toUpperCase() )
+                    {
+                        selectedIndex = i;
+                        break;
+                    }
+                }
+            }
+
+            if ( selectedIndex != -1 )
+            {
+                const el = res[ selectedIndex ];
 
                 this.setByIndex( el.index, this.multiple );
 
