@@ -2502,34 +2502,35 @@ describe( 'setSelectValueButton', () =>
  */
 describe( 'setSelectValueClick', () =>
 {
-    it( 'should toggle the selected value', () =>
+    it( 'should add the selected class', () =>
     {
         document.body.flounder  = null;
         const flounder          = new Flounder( document.body, {
-            data : [ 1, 2, 3 ]
+            placeholder : 'nothing selected', // placeholder is data[ 0 ]
+            data        : [ 1, 2, 3 ]
         } );
         const refs        = flounder.refs;
 
         sinon.stub( flounder, 'deselectAll', noop );
 
-        const res1 = utils.hasClass( refs.data[ 0 ], flounder.selectedClass );
+        const res1 = utils.hasClass( refs.data[ 1 ], flounder.selectedClass );
 
         flounder.setSelectValueClick( {
-            target : refs.data[ 0 ]
+            target : refs.data[ 1 ]
         } );
 
-        const res2 = utils.hasClass( refs.data[ 0 ], flounder.selectedClass );
+        const res2 = utils.hasClass( refs.data[ 1 ], flounder.selectedClass );
 
         assert.equal( res1, !res2 );
         assert.equal( flounder.deselectAll.callCount, 1 );
     } );
 
-    it( 'should toggle the selected value of both options and sections', () =>
+    it( 'should toggle the selected class on both options and sections', () =>
     {
         document.body.flounder  = null;
         const flounder          = new Flounder( document.body, {
             data : [
-                'doge',                 // data[ 0 ]
+                'doge',                 // data[ 0 ] - selected by default
                 'moon',                 // data[ 1 ]
                 {
                     header : 'top',     // section [ 0 ]
@@ -2584,7 +2585,7 @@ describe( 'setSelectValueClick', () =>
         const res7b = utils.hasClass( refs.sections[ 2 ],
                                                     flounder.selectedClass );
 
-        assert.equal( res1a,  res1b );
+        assert.equal( res1a, !res1b );
         assert.equal( res2a,  res2b );
         assert.equal( res3a, !res3b );
         assert.equal( res4a,  res4b );
@@ -2592,9 +2593,9 @@ describe( 'setSelectValueClick', () =>
         assert.equal( res6a,  res6b );
         assert.equal( res7a,  res7b );
 
-        // Deselect option 2.
+        // Select option 3
         flounder.setSelectValueClick( {
-            target : refs.data[ 2 ]
+            target : refs.data[ 3 ]
         } );
 
         const res1c = utils.hasClass( refs.data[ 0 ], flounder.selectedClass );
@@ -2608,38 +2609,14 @@ describe( 'setSelectValueClick', () =>
         const res7c = utils.hasClass( refs.sections[ 2 ],
                                                     flounder.selectedClass );
 
-        assert.equal( res1a,  res1c );
+        assert.equal( res1a, !res1c );
         assert.equal( res2a,  res2c );
         assert.equal( res3a,  res3c );
-        assert.equal( res4a,  res4c );
+        assert.equal( res4a, !res4c );
         assert.equal( res5a,  res5c );
         assert.equal( res6a,  res6c );
-        assert.equal( res7a,  res7c );
+        assert.equal( res7a, !res7c );
 
-
-        // Select option 3
-        flounder.setSelectValueClick( {
-            target : refs.data[ 3 ]
-        } );
-
-        const res1d = utils.hasClass( refs.data[ 0 ], flounder.selectedClass );
-        const res2d = utils.hasClass( refs.data[ 1 ], flounder.selectedClass );
-        const res3d = utils.hasClass( refs.data[ 2 ], flounder.selectedClass );
-        const res4d = utils.hasClass( refs.data[ 3 ], flounder.selectedClass );
-        const res5d = utils.hasClass( refs.sections[ 0 ],
-                                                    flounder.selectedClass );
-        const res6d = utils.hasClass( refs.sections[ 1 ],
-                                                    flounder.selectedClass );
-        const res7d = utils.hasClass( refs.sections[ 2 ],
-                                                    flounder.selectedClass );
-
-        assert.equal( res1a,  res1d );
-        assert.equal( res2a,  res2d );
-        assert.equal( res3a,  res3d );
-        assert.equal( res4a, !res4d );
-        assert.equal( res5a,  res5d );
-        assert.equal( res6a,  res6d );
-        assert.equal( res7a, !res7d );
     } );
 } );
 
