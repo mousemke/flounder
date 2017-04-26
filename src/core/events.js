@@ -995,19 +995,27 @@ const events = {
     /**
      * ## removeSelectedClass
      *
-     * removes the [[this.selectedClass]] from all data
+     * removes the [[this.selectedClass]] from all data and sections
      *
      * @param {Array} data array of data objects
      *
+     * @param {Array} sections array of section objects
+     *
      * @return {Void} void
      */
-    removeSelectedClass( data )
+    removeSelectedClass( data, sections )
     {
         data = data || this.refs.data;
+        sections = sections || this.refs.sections;
 
         data.forEach( dataObj =>
         {
             utils.removeClass( dataObj, this.selectedClass );
+        } );
+
+        sections.forEach( sectionObj =>
+        {
+            utils.removeClass( sectionObj, this.selectedClass );
         } );
     },
 
@@ -1265,22 +1273,26 @@ const events = {
 
         const selectedClass   = this.selectedClass;
 
+        const target         = e.target;
+        const index          = target.getAttribute( 'data-index' );
+        const selectedOption = refs.selectOptions[ index ];
+
         if ( ( !multiple ||  multiple && !this.multipleTags &&
                     !e[ this.multiSelect ] ) && !this.forceMultiple )
         {
             this.deselectAll();
+            utils.addClass( target, selectedClass );
+            selectedOption.selected = selectedOption.selected !== true;
+        }
+        else
+        {
+            utils.toggleClass( target, selectedClass );
+            selectedOption.selected = !selectedOption.selected;
         }
 
         this.forceMultiple   = false;
-        const target         = e.target;
-
-        utils.toggleClass( target, selectedClass );
-        const index          = target.getAttribute( 'data-index' );
-        const selectedOption = refs.selectOptions[ index ];
 
         this.hideEmptySection( target.parentNode );
-
-        selectedOption.selected = selectedOption.selected !== true;
 
         const firstOption = refs.selectOptions[ 0 ];
 
