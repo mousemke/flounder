@@ -691,6 +691,33 @@ describe( 'checkEnterOnSearch', () =>
     } );
 
 
+    it( 'should select the option if there is an exact match', () =>
+    {
+        document.body.flounder = null;
+        const flounder    = new Flounder( document.body, {
+            data    : [ 'abcd', 'abcde', 'abc' ],
+            search  : true
+        } );
+
+        const refs        = flounder.refs;
+
+        sinon.stub( refs.search, 'focus', noop );
+
+        // Case insensitive match.
+        const e = {
+            target : {
+                value : 'Abc'
+            }
+        };
+
+        const res = flounder.checkEnterOnSearch( e, refs );
+
+        assert.equal( res.length, 2 );
+        assert.equal( flounder.getSelected().length, 1 );
+        assert.equal( flounder.getSelected()[ 0 ].value, 'abc' );
+    } );
+
+
     it( 'should only select the option if there is only one left', () =>
     {
         document.body.flounder = null;
