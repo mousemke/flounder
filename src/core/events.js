@@ -407,20 +407,24 @@ const events = {
             {
                 const el = res[ selectedIndex ];
 
-                this.setByIndex( el.index, this.multiple );
+                if ( !el.disabled )
+                {
+                    this.setByIndex( el.index, this.multiple );
 
-                if ( this.multipleTags )
-                {
-                    setTimeout( () => refs.search.focus(), 200 );
-                }
+                    if ( this.multipleTags )
+                    {
+                        setTimeout( () => refs.search.focus(), 200 );
+                    }
 
-                try
-                {
-                    this.onChange( e, this.getSelectedValues() );
-                }
-                catch ( e )
-                {
-                    console.warn( 'something may be wrong in "onChange"', e );
+                    try
+                    {
+                        this.onChange( e, this.getSelectedValues() );
+                    }
+                    catch ( e )
+                    {
+                        console.warn( 'something may be wrong in "onChange"',
+                            e );
+                    }
                 }
             }
 
