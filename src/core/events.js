@@ -413,6 +413,15 @@ const events = {
                 {
                     setTimeout( () => refs.search.focus(), 200 );
                 }
+
+                try
+                {
+                    this.onChange( e, this.getSelectedValues() );
+                }
+                catch ( e )
+                {
+                    console.warn( 'something may be wrong in "onChange"', e );
+                }
             }
 
             return res;
