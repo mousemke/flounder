@@ -856,7 +856,8 @@ describe( 'checkFlounderKeypress', () =>
             target  : {
                 value   : 2
             },
-            preventDefault : noop
+            preventDefault  : noop,
+            stopPropagation : noop
         };
 
         flounder.checkFlounderKeypress( e );
@@ -880,7 +881,8 @@ describe( 'checkFlounderKeypress', () =>
             target          : {
                 value : 2
             },
-            preventDefault  : noop
+            preventDefault  : noop,
+            stopPropagation : noop
         };
 
         const res = flounder.checkFlounderKeypress( e );
@@ -905,7 +907,8 @@ describe( 'checkFlounderKeypress', () =>
             target  : {
                 tagName : 'MOON'
             },
-            preventDefault : noop
+            preventDefault  : noop,
+            stopPropagation : noop
         };
 
         flounder.checkFlounderKeypress( e );

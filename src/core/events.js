@@ -468,6 +468,7 @@ const events = {
             }
 
             e.preventDefault();
+            e.stopPropagation();
             this.toggleList( e );
         }
          // letters - allows native behavior
