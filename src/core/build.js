@@ -44,7 +44,8 @@ const build = {
             const search  = utils.constructElement( {
                 tagname     : 'input',
                 type        : 'text',
-                className   : classes.SEARCH
+                className   : classes.SEARCH,
+                tabIndex    : -1
             } );
 
             node.appendChild( search );
