@@ -375,7 +375,7 @@ const events = {
 
             matches.forEach( el =>
             {
-                const index   = el.d.index;
+                const index   = el.i;
                 el          = refs.selectOptions[ index ];
 
                 if ( selected.indexOf( el ) === -1 )
@@ -458,18 +458,24 @@ const events = {
             this.addPlaceholder();
             this.toggleClosed( e, optionsList, refs, wrapper, true );
         }
-        else if ( keyCode === keycodes.ENTER ||
-            keyCode === keycodes.SPACE && e.target.tagName !== 'INPUT' )
+        else if ( keyCode === keycodes.ENTER || keyCode === keycodes.SPACE )
         {
-            if ( keyCode === keycodes.ENTER && this.search &&
-                    utils.hasClass( refs.wrapper, classes.OPEN ) )
+            if ( keyCode === keycodes.ENTER )
             {
-                return this.checkEnterOnSearch( e, refs );
+                e.preventDefault();
+                e.stopPropagation();
+
+                if ( this.search &&
+                    utils.hasClass( refs.wrapper, classes.OPEN ) )
+                {
+                    return this.checkEnterOnSearch( e, refs );
+                }
             }
 
-            e.preventDefault();
-            e.stopPropagation();
-            this.toggleList( e );
+            if ( e.target.tagName !== 'INPUT' )
+            {
+                this.toggleList( e );
+            }
         }
          // letters - allows native behavior
         else if ( keyCode >= 48 && keyCode <= 57 ||
