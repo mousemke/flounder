@@ -131,7 +131,7 @@ class Flounder
 
             matches.forEach( e =>
             {
-                utils.removeClass( data[ e.d.index ], classes.SEARCH_HIDDEN );
+                utils.removeClass( data[ e.i ], classes.SEARCH_HIDDEN );
 
                 if ( typeof e.d.s == 'number' )
                 {

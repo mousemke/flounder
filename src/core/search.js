@@ -146,15 +146,15 @@ export class Sole
     /**
      * ## filterSelected
      *
-     * helper function to filter selected options from data
+     * helper function to filter selected options from search results
      *
-     * @param {Object} d object data
+     * @param {Object} res search result object
      *
      * @return {Boolean} data not in selected options
      */
-    filterSelected( d )
+    filterSelected( res )
     {
-        if ( !d.value )
+        if ( !res.d || !res.d.value )
         {
             return false;
         }
@@ -163,7 +163,7 @@ export class Sole
         {
             for ( const o of this.flounder.getSelectedValues() )
             {
-                if ( d.value === o )
+                if ( res.d.value === o )
                 {
                     return false;
                 }
@@ -268,8 +268,6 @@ export class Sole
             let data    = this.flounder.data;
             data        = this.flounder.sortData( data );
 
-            data = data.filter( this.filterSelected.bind( this ) );
-
             ratedRes = this.ratedRes = data.map( this.getResultWeights );
         }
         else
@@ -277,8 +275,9 @@ export class Sole
             return false;
         }
 
-        ratedRes.sort( this.compareScoreCards );
+        ratedRes = ratedRes.filter( this.filterSelected.bind( this ) );
         ratedRes = ratedRes.filter( this.isItemAboveMinimum );
+        ratedRes.sort( this.compareScoreCards );
 
         return this.ratedRes = ratedRes;
     }
