@@ -646,7 +646,7 @@ const events = {
 
         if ( !this.programmaticClick )
         {
-            this.toggleList( e );
+            this.toggleList( e, 'close' );
         }
 
         this.programmaticClick = false;
