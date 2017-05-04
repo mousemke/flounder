@@ -351,6 +351,12 @@ class Flounder
                                                     defaultClasses[ clss ];
                 }
             }
+            else if ( opt === 'data' )
+            {
+                this.data = props.data && props.data.length ?
+                                                    [ ...props.data ] :
+                                                    [ ...defaultOptions.data ];
+            }
             else
             {
                 this[ opt ] = props[ opt ] !== undefined ? props[ opt ] :

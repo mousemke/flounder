@@ -603,18 +603,28 @@ describe( 'initializeOptions', () =>
         }
     } );
 
+    flounder.data = undefined;
+    flounder.classes = undefined;
+    flounder.multiple = undefined;
 
     it( 'should exist', () =>
     {
         assert.ok( flounder.initializeOptions, 'exists' );
     } );
 
+    flounder.initializeOptions();
 
     it( 'should transfer all props to flounder', () =>
     {
         assert.deepEqual( flounder.data, data );
         assert.equal( flounder.multiple, 'doge' );
         assert.equal( flounder.classes.MAIN, 'cat' );
+    } );
+
+
+    it( 'should make a copy of data prop', () =>
+    {
+        assert.notEqual( flounder.data, data );
     } );
 
 
