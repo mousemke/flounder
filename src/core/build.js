@@ -32,12 +32,11 @@ const build = {
      *
      * checks if a search box is required and attaches it or not
      *
-     * @param {Object} searchSibling next sibling to mount the input to
-     * @param {Object} flounder main element reference
+     * @param {Object} node node to append the input to
      *
      * @return {Mixed} search node or false
      */
-    addSearch( searchSibling, flounder )
+    addSearch( node )
     {
         if ( this.search )
         {
@@ -45,10 +44,11 @@ const build = {
             const search  = utils.constructElement( {
                 tagname     : 'input',
                 type        : 'text',
-                className   : classes.SEARCH
+                className   : classes.SEARCH,
+                tabIndex    : -1
             } );
 
-            flounder.insertBefore( search, searchSibling );
+            node.appendChild( search );
 
             return search;
         }
@@ -379,12 +379,8 @@ const build = {
         this.defaultObj     = setDefaultOption( this, this.props, data );
         const defaultValue  = this.defaultObj;
 
-        const selectedDisplayedClasses = this.multipleTags ?
-                `${classes.SELECTED_DISPLAYED} ${classes.MULTIPLE_SELECTED}` :
-                classes.SELECTED_DISPLAYED;
-
         const selected          = constructElement( {
-            className       : selectedDisplayedClasses,
+            className       : classes.SELECTED_DISPLAYED,
             'data-value'    : defaultValue.value,
             'data-index'    : defaultValue.index
         } );
@@ -420,13 +416,10 @@ const build = {
             }
         } );
 
-        const searchLocation    = this.multipleTags ? optionsListWrapper :
-                                                                    selected;
-
-        const search            = this.addSearch( searchLocation, flounder );
-
-
-        const built = this.buildData( defaultValue, data, optionsList, select );
+        const search = this.addSearch( this.multipleTags ?
+            multiTagWrapper : flounder );
+        const built  = this.buildData(
+            defaultValue, data, optionsList, select );
 
         data                = built[ 0 ];
         const selectOptions = built[ 1 ];

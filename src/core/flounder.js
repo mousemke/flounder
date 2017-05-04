@@ -9,6 +9,8 @@ import Search               from './search';
 import version              from './version';
 import keycodes             from './keycodes';
 
+const nativeSlice = Array.prototype.slice;
+
 /**
  * main flounder class
  *
@@ -110,6 +112,7 @@ class Flounder
 
         const matches = this.search.isThereAnythingRelatedTo( val ) || [];
 
+
         if ( val !== '' )
         {
             const data    = this.refs.data;
@@ -133,7 +136,7 @@ class Flounder
                 if ( typeof e.d.s == 'number' )
                 {
                     utils.removeClass( sections[ e.d.s ],
-                                                        classes.SEARCH_HIDDEN );
+                        classes.SEARCH_HIDDEN );
                 }
             } );
 
@@ -191,7 +194,8 @@ class Flounder
                 if ( this.multipleTags && keyCode === keycodes.BACKSPACE &&
                         this.fuzzySearch.previousValue === '' )
                 {
-                    const lastTag = this.refs.multiTagWrapper.lastChild;
+                    const lastTag = nativeSlice.call(
+                        this.refs.multiTagWrapper.children, 0, -1 ).pop();
 
                     if ( lastTag )
                     {
@@ -204,7 +208,7 @@ class Flounder
                 }
             }
             else if ( keyCode === keycodes.ESCAPE ||
-                                            keyCode === keycodes.ENTER )
+                keyCode === keycodes.ENTER )
             {
                 this.fuzzySearchReset();
                 this.toggleList( e, 'close' );
@@ -241,6 +245,7 @@ class Flounder
         } );
 
         refs.search.value = '';
+        this.removeNoResultsMessage();
     }
 
 
@@ -346,6 +351,12 @@ class Flounder
                                                     defaultClasses[ clss ];
                 }
             }
+            else if ( opt === 'data' )
+            {
+                this.data = props.data && props.data.length ?
+                                                    [ ...props.data ] :
+                                                    [ ...defaultOptions.data ];
+            }
             else
             {
                 this[ opt ] = props[ opt ] !== undefined ? props[ opt ] :
@@ -438,6 +449,7 @@ class Flounder
                 }
 
                 res.push( d );
+
                 i++;
             }
         } );
@@ -470,6 +482,7 @@ Flounder.find = function( targets, props )
 
     return Array.prototype.slice.call( targets, 0 )
                                 .map( el => new Flounder( el, props ) );
+
 };
 
 

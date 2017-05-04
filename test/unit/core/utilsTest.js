@@ -247,11 +247,27 @@ describe( 'getElWidth', () =>
 
         const body            = document.body;
 
-        body.offsetWidth    = 0;
+        Object.defineProperty( document.body, 'offsetWidth', {
+            get()
+            {
+                return 0;
+            },
+            enumerable   : true,
+            configurable : true
+        } );
+
         assert.throws( utils.getElWidth.bind( utils, body ) );
         utils.getElWidth( body, noop, utils );
 
-        body.offsetWidth    = 1000;
+        Object.defineProperty( document.body, 'offsetWidth', {
+            get()
+            {
+                return 1000;
+            },
+            enumerable   : true,
+            configurable : true
+        } );
+
         const bodyWidth       = utils.getElWidth( body, noop, utils, 200 );
         const style           = window.getComputedStyle( body );
 

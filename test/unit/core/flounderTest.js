@@ -350,9 +350,11 @@ describe( 'fuzzySearch', () =>
 
         flounder.fuzzySearch( e );
 
-        flounder.refs.multiTagWrapper.innerHTML = '<span class="flounder__multiple--select--tag" aria-label="Deselect All" tabindex="0"><a class="flounder__multiple__tag__close" data-index="1"></a>All</span><span class="flounder__multiple--select--tag" aria-label="Deselect Tags" tabindex="0"><a class="flounder__multiple__tag__close" data-index="2"></a>Tags</span>'; // eslint-disable-line
+        flounder.refs.multiTagWrapper.innerHTML = '<span class="flounder__multiple--select--tag" aria-label="Deselect All" tabindex="0"><a class="flounder__multiple__tag__close" data-index="1"></a>All</span><span class="flounder__multiple--select--tag" aria-label="Deselect Tags" tabindex="0"><a class="flounder__multiple__tag__close" data-index="2"></a>Tags</span><input class="flounder__search"/>'; // eslint-disable-line
 
-        const lastTag = flounder.refs.multiTagWrapper.lastChild;
+        const lastTag = Array.prototype.slice.call(
+            flounder.refs.multiTagWrapper.children, 0, -1 ).pop();
+
         sinon.spy( lastTag, 'focus' );
 
         flounder.fuzzySearch( e );
@@ -601,18 +603,28 @@ describe( 'initializeOptions', () =>
         }
     } );
 
+    flounder.data = undefined;
+    flounder.classes = undefined;
+    flounder.multiple = undefined;
 
     it( 'should exist', () =>
     {
         assert.ok( flounder.initializeOptions, 'exists' );
     } );
 
+    flounder.initializeOptions();
 
     it( 'should transfer all props to flounder', () =>
     {
         assert.deepEqual( flounder.data, data );
         assert.equal( flounder.multiple, 'doge' );
         assert.equal( flounder.classes.MAIN, 'cat' );
+    } );
+
+
+    it( 'should make a copy of data prop', () =>
+    {
+        assert.notEqual( flounder.data, data );
     } );
 
 
