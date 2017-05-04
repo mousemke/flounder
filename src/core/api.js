@@ -1,3 +1,4 @@
+
 /* globals console */
 import utils                from './utils';
 import { setDefaultOption } from './defaults';
@@ -167,16 +168,17 @@ const api = {
      */
     deselectAll( silent )
     {
+        this.removeSelectedClass();
+        this.removeSelectedValue();
+
         if ( this.multiple )
         {
-            this.removeSelectedClass();
-            this.removeSelectedValue();
-
             const multiTagWrapper = this.refs.multiTagWrapper;
 
             if ( multiTagWrapper )
             {
-                const tags = nativeSlice.call( multiTagWrapper.children );
+                const tags = nativeSlice.call(
+                    multiTagWrapper.children, 0, -1 );
 
                 tags.forEach( ( el, count ) =>
                 {
@@ -191,13 +193,11 @@ const api = {
                     }
                     else
                     {
-                        el.removeEventListener( 'click',
-                                                    this.removeMultiTag );
+                        el.removeEventListener( 'click', this.removeMultiTag );
                         el.remove();
                     }
                 } );
 
-                this.setTextMultiTagIndent();
                 this.addPlaceholder();
             }
         }
@@ -567,8 +567,8 @@ const api = {
 
         refs.optionsList.innerHTML  = '';
 
-        [ refs.data, refs.selectOptions ] = this.buildData( this.defaultObj,
-                                        this.data, refs.optionsList, select );
+        [ refs.data, refs.selectOptions, refs.sections ] = this.buildData(
+                        this.defaultObj, this.data, refs.optionsList, select );
         refs.select                 = select;
 
         this.addOptionsListeners();
@@ -701,4 +701,3 @@ const api = {
 };
 
 export default api;
-

@@ -1,3 +1,4 @@
+
 /* globals console, document, setTimeout, window */
 import utils            from './utils';
 import keycodes         from './keycodes';
@@ -99,8 +100,7 @@ const events = {
             if ( option.value !== '' )
             {
                 const tag = this.buildMultiTag( option );
-
-                multiTagWrapper.appendChild( tag );
+                multiTagWrapper.insertBefore( tag, multiTagWrapper.lastChild );
             }
             else
             {
@@ -108,12 +108,14 @@ const events = {
             }
         } );
 
-        nativeSlice.call( multiTagWrapper.children, 0 ).forEach( el =>
-        {
-            const firstChild = el.firstChild;
+        const tags = nativeSlice.call( multiTagWrapper.children, 0, -1 );
 
-            firstChild.addEventListener( 'click', this.removeMultiTag );
-            el.addEventListener( 'keydown', this.checkMultiTagKeydown );
+        tags.forEach( tag =>
+        {
+            const closeBtn = tag.firstChild;
+
+            closeBtn.addEventListener( 'click', this.removeMultiTag );
+            tag.addEventListener( 'keydown', this.checkMultiTagKeydown );
         } );
     },
 
@@ -382,15 +384,47 @@ const events = {
                 }
             } );
 
+            // If only one result is available, select that result.
+            // If more than one results, select one only on exact match.
+            let selectedIndex = -1;
             if ( res.length === 1 )
             {
-                const el = res[ 0 ];
-
-                this.setByIndex( el.index, this.multiple );
-
-                if ( this.multipleTags )
+                selectedIndex = 0;
+            }
+            else if ( res.length > 1 )
+            {
+                for ( let i = 0; i < res.length ; i++ )
                 {
-                    setTimeout( () => refs.search.focus(), 200 );
+                    if ( res[ i ].text.toUpperCase() === val.toUpperCase() )
+                    {
+                        selectedIndex = i;
+                        break;
+                    }
+                }
+            }
+
+            if ( selectedIndex != -1 )
+            {
+                const el = res[ selectedIndex ];
+
+                if ( !el.disabled )
+                {
+                    this.setByIndex( el.index, this.multiple );
+
+                    if ( this.multipleTags )
+                    {
+                        setTimeout( () => refs.search.focus(), 200 );
+                    }
+
+                    try
+                    {
+                        this.onChange( e, this.getSelectedValues() );
+                    }
+                    catch ( e )
+                    {
+                        console.warn( 'something may be wrong in "onChange"',
+                            e );
+                    }
                 }
             }
 
@@ -424,17 +458,24 @@ const events = {
             this.addPlaceholder();
             this.toggleClosed( e, optionsList, refs, wrapper, true );
         }
-        else if ( keyCode === keycodes.ENTER ||
-            keyCode === keycodes.SPACE && e.target.tagName !== 'INPUT' )
+        else if ( keyCode === keycodes.ENTER || keyCode === keycodes.SPACE )
         {
-            if ( keyCode === keycodes.ENTER && this.search &&
-                    utils.hasClass( refs.wrapper, classes.OPEN ) )
+            if ( keyCode === keycodes.ENTER )
             {
-                return this.checkEnterOnSearch( e, refs );
+                e.preventDefault();
+                e.stopPropagation();
+
+                if ( this.search &&
+                    utils.hasClass( refs.wrapper, classes.OPEN ) )
+                {
+                    return this.checkEnterOnSearch( e, refs );
+                }
             }
 
-            e.preventDefault();
-            this.toggleList( e );
+            if ( e.target.tagName !== 'INPUT' )
+            {
+                this.toggleList( e );
+            }
         }
          // letters - allows native behavior
         else if ( keyCode >= 48 && keyCode <= 57 ||
@@ -460,13 +501,13 @@ const events = {
      */
     checkMultiTagKeydown( e )
     {
-        const keyCode               = e.keyCode;
-        const self                  = this;
-        const refs                  = this.refs;
-        const children              = refs.multiTagWrapper.children;
-        const target                = e.target;
-        const index                 = nativeSlice.call( children, 0 )
-                                                            .indexOf( target );
+        const keyCode   = e.keyCode;
+        const self      = this;
+        const refs      = this.refs;
+        const tags      = nativeSlice.call(
+            refs.multiTagWrapper.children, 0, -1 );
+        const target    = e.target;
+        const index     = tags.indexOf( target );
 
         /**
          * ## focusSearch
@@ -497,7 +538,7 @@ const events = {
             else
             {
                 self.checkMultiTagKeydownNavigate( focusSearch, keyCode,
-                                                                        index );
+                    index );
             }
         }
         else if ( e.key.length < 2 )
@@ -521,11 +562,12 @@ const events = {
      */
     checkMultiTagKeydownNavigate( focusSearch, keyCode, index )
     {
-        const children   = this.refs.multiTagWrapper.children;
+        const tags = nativeSlice.call(
+            this.refs.multiTagWrapper.children, 0, -1 );
 
         const adjustment = keyCode - 38;
         const newIndex   = index + adjustment;
-        const length     = children.length - 1;
+        const length     = tags.length - 1;
 
         if ( newIndex > length )
         {
@@ -533,7 +575,7 @@ const events = {
         }
         else if ( newIndex >= 0 )
         {
-            children[ newIndex ].focus();
+            tags[ newIndex ].focus();
         }
     },
 
@@ -552,14 +594,16 @@ const events = {
      */
     checkMultiTagKeydownRemove( target, focusSearch, index )
     {
-        const children  = this.refs.multiTagWrapper.children;
-        const siblings  = children.length - 1;
+        const tags = nativeSlice.call(
+            this.refs.multiTagWrapper.children, 0, -1 );
+
+        const siblings  = tags.length - 1;
 
         target.firstChild.click();
 
         if ( siblings > 0 )
         {
-            children[ index === 0 ? 0 : index - 1 ].focus();
+            tags[ index === 0 ? 0 : index - 1 ].focus();
         }
         else
         {
@@ -602,7 +646,7 @@ const events = {
 
         if ( !this.programmaticClick )
         {
-            this.toggleList( e );
+            this.toggleList( e, 'close' );
         }
 
         this.programmaticClick = false;
@@ -622,15 +666,17 @@ const events = {
      */
     displayMultipleTags( selectedOptions, multiTagWrapper )
     {
-        nativeSlice.call( multiTagWrapper.children, 0 ).forEach( el =>
+        const tags = nativeSlice.call( multiTagWrapper.children, 0, -1 );
+
+        tags.forEach( tag =>
         {
-            const firstChild = el.firstChild;
+            const closeBtn = tag.firstChild;
 
-            firstChild.removeEventListener( 'click', this.removeMultiTag );
-            el.removeEventListener( 'keydown', this.checkMultiTagKeydown );
+            closeBtn.removeEventListener( 'click', this.removeMultiTag );
+            tag.removeEventListener( 'keydown', this.checkMultiTagKeydown );
+
+            multiTagWrapper.removeChild( tag );
         } );
-
-        multiTagWrapper.innerHTML = '';
 
         if ( selectedOptions.length > 0 )
         {
@@ -640,8 +686,6 @@ const events = {
         {
             this.addPlaceholder();
         }
-
-        this.setTextMultiTagIndent();
     },
 
 
@@ -664,11 +708,17 @@ const events = {
         const selectedLength  = selectedOption.length;
         const multipleTags    = this.multipleTags;
 
+        selected.className    = this.classes.SELECTED_DISPLAYED;
+
         if ( !multipleTags && selectedLength ===  1 )
         {
             index               = selectedOption[ 0 ].index;
             selected.innerHTML  = refs.data[ index ].innerHTML;
             value               = selectedOption[ 0 ].value;
+
+            const extraClass    = refs.data[ index ].extraClass;
+
+            selected.className += extraClass ? ` ${extraClass}` : '';
         }
         else if ( !multipleTags && selectedLength === 0 )
         {
@@ -683,7 +733,7 @@ const events = {
             {
                 selected.innerHTML  = '';
                 this.displayMultipleTags( selectedOption,
-                                                        refs.multiTagWrapper );
+                    refs.multiTagWrapper );
             }
             else
             {
@@ -859,6 +909,8 @@ const events = {
         utils.removeClass( data[ targetIndex ], classes.SELECTED_HIDDEN );
         utils.removeClass( data[ targetIndex ], classes.SELECTED );
 
+        this.hideEmptySection( data[ targetIndex ].parentNode );
+
         target.removeEventListener( 'click', this.removeMultiTag );
 
         const span = target.parentNode;
@@ -884,8 +936,7 @@ const events = {
         }
 
         this.removeNoMoreOptionsMessage();
-        this.removeNoResultsMessage();
-        this.setTextMultiTagIndent();
+        this.fuzzySearchReset();
 
         selected.setAttribute( 'data-value', value );
         selected.setAttribute( 'data-index', index );
@@ -983,19 +1034,27 @@ const events = {
     /**
      * ## removeSelectedClass
      *
-     * removes the [[this.selectedClass]] from all data
+     * removes the [[this.selectedClass]] from all data and sections
      *
      * @param {Array} data array of data objects
      *
+     * @param {Array} sections array of section objects
+     *
      * @return {Void} void
      */
-    removeSelectedClass( data )
+    removeSelectedClass( data, sections )
     {
         data = data || this.refs.data;
+        sections = sections || this.refs.sections;
 
         data.forEach( dataObj =>
         {
             utils.removeClass( dataObj, this.selectedClass );
+        } );
+
+        sections.forEach( sectionObj =>
+        {
+            utils.removeClass( sectionObj, this.selectedClass );
         } );
     },
 
@@ -1250,23 +1309,29 @@ const events = {
     {
         const multiple        = this.multiple;
         const refs            = this.refs;
+
         const selectedClass   = this.selectedClass;
+
+        const target         = e.target;
+        const index          = target.getAttribute( 'data-index' );
+        const selectedOption = refs.selectOptions[ index ];
 
         if ( ( !multiple ||  multiple && !this.multipleTags &&
                     !e[ this.multiSelect ] ) && !this.forceMultiple )
         {
             this.deselectAll();
+            utils.addClass( target, selectedClass );
+            selectedOption.selected = selectedOption.selected !== true;
+        }
+        else
+        {
+            utils.toggleClass( target, selectedClass );
+            selectedOption.selected = !selectedOption.selected;
         }
 
         this.forceMultiple   = false;
-        const target         = e.target;
 
-        utils.toggleClass( target, selectedClass );
-        const index          = target.getAttribute( 'data-index' );
-        const selectedOption = refs.selectOptions[ index ];
-
-
-        selectedOption.selected = selectedOption.selected !== true;
+        this.hideEmptySection( target.parentNode );
 
         const firstOption = refs.selectOptions[ 0 ];
 
@@ -1275,30 +1340,6 @@ const events = {
             utils.removeClass( refs.data[ 0 ], selectedClass );
             refs.selectOptions[ 0 ].selected = false;
         }
-    },
-
-
-    /**
-     * ## setTextMultiTagIndent
-     *
-     * sets the text-indent on the search field to go around selected tags
-     *
-     * @return {Void} void
-     */
-    setTextMultiTagIndent()
-    {
-        const refs    = this.refs;
-        const search  = refs.search;
-
-        let offset  = 0;
-
-        nativeSlice.call( refs.multiTagWrapper.children, 0 ).forEach( e =>
-        {
-            offset += utils.getElWidth( e, this.setTextMultiTagIndent, this );
-        } );
-
-        /* istanbul ignore next */
-        search.style.textIndent = offset > 0 ? `${offset}px` : '';
     },
 
 
@@ -1464,11 +1505,16 @@ const events = {
             optionCount--;
         }
 
-        if ( refs.multiTagWrapper && refs.multiTagWrapper.childNodes.length ===
-                                            optionCount )
+        if ( refs.multiTagWrapper )
         {
-            this.removeNoResultsMessage();
-            this.addNoMoreOptionsMessage();
+            const tags = nativeSlice.call(
+                refs.multiTagWrapper.children, 0, -1 );
+
+            if ( tags.length === optionCount )
+            {
+                this.removeNoResultsMessage();
+                this.addNoMoreOptionsMessage();
+            }
         }
 
         if ( this.ready )
@@ -1483,6 +1529,54 @@ const events = {
             }
         }
 
+    },
+
+
+    /**
+     * ## hideEmptySection
+     *
+     * hides a section which does not have any visible options.
+     *
+     * @param {DOMElement} se the section to be checked
+     *
+     * @return {Void} void
+     */
+    hideEmptySection( se )
+    {
+        const selectedClass = this.selectedClass;
+        const sections      = this.refs.sections;
+
+        // Check if the provided element is indeed a section.
+        // If it is, check if it must to be shown or hidden.
+
+        for ( let i = 0; i < sections.length; ++i )
+        {
+            if ( sections[ i ] === se )
+            {
+                let shouldBeHidden = true;
+
+                // Ignore the title in childNodes[0].
+                for ( let j = 1; j < se.childNodes.length; j++ )
+                {
+                    if ( !utils.hasClass( se.childNodes[ j ], selectedClass ) )
+                    {
+                        shouldBeHidden = false;
+                        break;
+                    }
+                }
+
+                if ( shouldBeHidden )
+                {
+                    utils.addClass( se, selectedClass );
+                }
+                else
+                {
+                    utils.removeClass( se, selectedClass );
+                }
+
+                break;
+            }
+        }
     }
 };
 

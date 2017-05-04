@@ -180,26 +180,26 @@ describe( 'addListeners', () =>
  */
 describe( 'addMultipleTags', () =>
 {
-    const flounder    = new Flounder( document.body, {} );
-
-    sinon.stub( flounder, 'removeMultiTag', noop );
-    sinon.stub( flounder, 'checkMultiTagKeydown', noop );
-
     const select          = document.createElement( 'SELECT' );
     const multiTagWrapper = document.createElement( 'DIV' );
 
+    const options = [ {}, {}, {} ].map( ( el, i ) =>
+    {
+        el = document.createElement( 'OPTION' );
+        el.selected = true;
+
+        el.value    = i === 0 ? '' : 'moon';
+
+        select.appendChild( el );
+
+        return el;
+    } );
+
     it( 'should add a tag with event listeners for each selected value', () =>
     {
-        const options = [ {}, {}, {} ].map( ( el, i ) =>
-        {
-            el = document.createElement( 'OPTION' );
-            el.selected = true;
-
-            el.value    = i === 0 ? '' : 'moon';
-
-            select.appendChild( el );
-
-            return el;
+        document.body.flounder = null;
+        const flounder    = new Flounder( document.body, {
+            multipleTags : true
         } );
 
         flounder.addMultipleTags( options, multiTagWrapper );
@@ -211,10 +211,20 @@ describe( 'addMultipleTags', () =>
 
     it( 'should have the proper events bound to it', () =>
     {
-        const firstChild = multiTagWrapper.children[ 0 ];
+        document.body.flounder = null;
+        const flounder    = new Flounder( document.body, {
+            multipleTags : true
+        } );
 
-        simulant.fire( firstChild, 'keydown' );
-        simulant.fire( firstChild.firstChild, 'click' );
+        sinon.stub( flounder, 'removeMultiTag', noop );
+        sinon.stub( flounder, 'checkMultiTagKeydown', noop );
+
+        flounder.addMultipleTags( options, multiTagWrapper );
+
+        const firstTag = multiTagWrapper.firstChild;
+
+        simulant.fire( firstTag, 'keydown' );
+        simulant.fire( firstTag.firstChild, 'click' );
 
         assert.equal( flounder.removeMultiTag.callCount, 1 );
         assert.equal( flounder.checkMultiTagKeydown.callCount, 1 );
@@ -681,6 +691,33 @@ describe( 'checkEnterOnSearch', () =>
     } );
 
 
+    it( 'should select the option if there is an exact match', () =>
+    {
+        document.body.flounder = null;
+        const flounder    = new Flounder( document.body, {
+            data    : [ 'abcd', 'abcde', 'abc' ],
+            search  : true
+        } );
+
+        const refs        = flounder.refs;
+
+        sinon.stub( refs.search, 'focus', noop );
+
+        // Case insensitive match.
+        const e = {
+            target : {
+                value : 'Abc'
+            }
+        };
+
+        const res = flounder.checkEnterOnSearch( e, refs );
+
+        assert.equal( res.length, 2 );
+        assert.equal( flounder.getSelected().length, 1 );
+        assert.equal( flounder.getSelected()[ 0 ].value, 'abc' );
+    } );
+
+
     it( 'should only select the option if there is only one left', () =>
     {
         document.body.flounder = null;
@@ -819,7 +856,8 @@ describe( 'checkFlounderKeypress', () =>
             target  : {
                 value   : 2
             },
-            preventDefault : noop
+            preventDefault  : noop,
+            stopPropagation : noop
         };
 
         flounder.checkFlounderKeypress( e );
@@ -843,7 +881,8 @@ describe( 'checkFlounderKeypress', () =>
             target          : {
                 value : 2
             },
-            preventDefault  : noop
+            preventDefault  : noop,
+            stopPropagation : noop
         };
 
         const res = flounder.checkFlounderKeypress( e );
@@ -868,7 +907,8 @@ describe( 'checkFlounderKeypress', () =>
             target  : {
                 tagName : 'MOON'
             },
-            preventDefault : noop
+            preventDefault  : noop,
+            stopPropagation : noop
         };
 
         flounder.checkFlounderKeypress( e );
@@ -964,19 +1004,18 @@ describe( 'checkMultiTagKeydown', () =>
         sinon.stub( flounder, 'checkMultiTagKeydownNavigate', noop );
         sinon.stub( flounder, 'checkMultiTagKeydownRemove', noop );
 
-        const children    = refs.multiTagWrapper.children;
-        const target      = children[ 0 ];
+        const firstChild = refs.multiTagWrapper.firstChild;
 
         flounder.checkMultiTagKeydown( {
-            keyCode         : 39,
-            target          : target,
+            keyCode         : keycodes.RIGHT,
+            target          : firstChild,
             preventDefault  : noop,
             stopPropagation : noop
         } );
 
         flounder.checkMultiTagKeydown( {
-            keyCode         : 37,
-            target          : target,
+            keyCode         : keycodes.LEFT,
+            target          : firstChild,
             preventDefault  : noop,
             stopPropagation : noop
         } );
@@ -1002,12 +1041,11 @@ describe( 'checkMultiTagKeydown', () =>
         sinon.stub( flounder, 'checkMultiTagKeydownNavigate', noop );
         sinon.stub( flounder, 'checkMultiTagKeydownRemove', noop );
 
-        const children    = refs.multiTagWrapper.children;
-        const target      = children[ 0 ];
+        const firstChild = refs.multiTagWrapper.firstChild;
 
         flounder.checkMultiTagKeydown( {
-            keyCode         : 8,
-            target          : target,
+            keyCode         : keycodes.BACKSPACE,
+            target          : firstChild,
             preventDefault  : noop,
             stopPropagation : noop
         } );
@@ -1033,13 +1071,12 @@ describe( 'checkMultiTagKeydown', () =>
         sinon.stub( flounder, 'clearPlaceholder', noop );
         sinon.stub( flounder, 'toggleListSearchClick', noop );
 
-        const children    = refs.multiTagWrapper.children;
-        const target      = children[ 0 ];
+        const firstChild = refs.multiTagWrapper.firstChild;
 
         flounder.checkMultiTagKeydown( {
             keyCode         : 888,
             key             : 'm',
-            target          : target,
+            target          : firstChild,
             preventDefault  : noop,
             stopPropagation : noop
         } );
@@ -1065,13 +1102,12 @@ describe( 'checkMultiTagKeydown', () =>
         sinon.stub( flounder, 'clearPlaceholder', noop );
         sinon.stub( flounder, 'toggleListSearchClick', noop );
 
-        const children    = refs.multiTagWrapper.children;
-        const target      = children[ 0 ];
+        const firstChild = refs.multiTagWrapper.firstChild;
 
         flounder.checkMultiTagKeydown( {
             keyCode         : 888,
             key             : 'mkjbkhj',
-            target          : target,
+            target          : firstChild,
             preventDefault  : noop,
             stopPropagation : noop
         } );
@@ -1109,16 +1145,15 @@ describe( 'checkMultiTagKeydownNavigate', () =>
         flounder.setByIndex( 1 );
         flounder.setByIndex( 2 );
 
-        const children    = refs.multiTagWrapper.children;
-        const target      = children[ 0 ];
+        const firstTag = refs.multiTagWrapper.firstChild;
 
-        sinon.stub( target, 'focus', noop );
+        sinon.stub( firstTag, 'focus', noop );
         const focusSearch = sinon.spy();
 
-        flounder.checkMultiTagKeydownNavigate( focusSearch, 37, 1 );
+        flounder.checkMultiTagKeydownNavigate( focusSearch, keycodes.LEFT, 1 );
 
         assert.equal( focusSearch.callCount, 0 );
-        assert.equal( target.focus.callCount, 1 );
+        assert.equal( firstTag.focus.callCount, 1 );
     } );
 
 
@@ -1134,16 +1169,15 @@ describe( 'checkMultiTagKeydownNavigate', () =>
 
         flounder.setByIndex( 1 );
 
-        const children    = refs.multiTagWrapper.children;
-        const target      = children[ 0 ];
+        const firstTag = refs.multiTagWrapper.firstChild;
 
-        sinon.stub( target, 'focus', noop );
+        sinon.stub( firstTag, 'focus', noop );
         const focusSearch = sinon.spy();
 
-        flounder.checkMultiTagKeydownNavigate( focusSearch, 37, 0 );
+        flounder.checkMultiTagKeydownNavigate( focusSearch, keycodes.LEFT, 0 );
 
         assert.equal( focusSearch.callCount, 0 );
-        assert.equal( target.focus.callCount, 0 );
+        assert.equal( firstTag.focus.callCount, 0 );
     } );
 
 
@@ -1160,16 +1194,16 @@ describe( 'checkMultiTagKeydownNavigate', () =>
         flounder.setByIndex( 1 );
         flounder.setByIndex( 2 );
 
-        const children    = refs.multiTagWrapper.children;
-        const target      = children[ 1 ];
+        const lastTag = Array.prototype.slice.call(
+            refs.multiTagWrapper.children, 0, -1 ).pop();
 
-        sinon.stub( target, 'focus', noop );
+        sinon.stub( lastTag, 'focus', noop );
         const focusSearch = sinon.spy();
 
-        flounder.checkMultiTagKeydownNavigate( focusSearch, 39, 0 );
+        flounder.checkMultiTagKeydownNavigate( focusSearch, keycodes.RIGHT, 0 );
 
         assert.equal( focusSearch.callCount, 0 );
-        assert.equal( target.focus.callCount, 1 );
+        assert.equal( lastTag.focus.callCount, 1 );
     } );
 
 
@@ -1185,16 +1219,15 @@ describe( 'checkMultiTagKeydownNavigate', () =>
 
         flounder.setByIndex( 1 );
 
-        const children    = refs.multiTagWrapper.children;
-        const target      = children[ 0 ];
+        const firstTag = refs.multiTagWrapper.firstChild;
 
-        sinon.stub( target, 'focus', noop );
+        sinon.stub( firstTag, 'focus', noop );
         const focusSearch = sinon.spy();
 
-        flounder.checkMultiTagKeydownNavigate( focusSearch, 39, 0 );
+        flounder.checkMultiTagKeydownNavigate( focusSearch, keycodes.RIGHT, 0 );
 
         assert.equal( focusSearch.callCount, 1 );
-        assert.equal( target.focus.callCount, 0 );
+        assert.equal( firstTag.focus.callCount, 0 );
     } );
 } );
 
@@ -1217,30 +1250,27 @@ describe( 'checkMultiTagKeydownRemove', () =>
     {
         document.body.flounder = null;
 
-        const flounder    = new Flounder( document.body, {
+        const flounder  = new Flounder( document.body, {
             data            : [ 1, 2, 3 ],
             multipleTags    : true
         } );
-        const refs        = flounder.refs;
+        const refs      = flounder.refs;
 
         flounder.setByIndex( 1 );
 
-        const children    = refs.multiTagWrapper.children;
-        const target      = children[ 0 ];
-        const focusSearch = sinon.spy();
+        const tags          = Array.prototype.slice.call(
+            refs.multiTagWrapper.children, 0, -1 );
+        const firstTag      =  tags[ 0 ];
+        const focusSearch   = sinon.spy();
 
         flounder.checkMultiTagKeydownRemove(
-                                            target,
-                                            focusSearch,
-                                            [ target ],
-                                            1
-                                        );
+            firstTag, focusSearch, 0 );
 
         assert.equal( focusSearch.callCount, 1 );
     } );
 
 
-    it( 'should focus on the previous tag whn there are meore then 2', () =>
+    it( 'should focus on the previous tag whn there are more then 2', () =>
     {
         document.body.flounder = null;
 
@@ -1254,17 +1284,20 @@ describe( 'checkMultiTagKeydownRemove', () =>
         flounder.setByIndex( 2 );
         flounder.setByIndex( 3 );
 
-        const target      = refs.multiTagWrapper.children[ 1 ];
+        const tags = Array.prototype.slice.call(
+            refs.multiTagWrapper.children, 0, -1 );
+
+        const targetTag = tags[ 1 ];
+
         const focusSearch = sinon.spy();
 
-        sinon.stub( refs.multiTagWrapper.children[ 0 ], 'focus', noop );
-        flounder.checkMultiTagKeydownRemove( target, focusSearch, 1 );
+        sinon.stub( tags[ 0 ], 'focus', noop );
+        flounder.checkMultiTagKeydownRemove( targetTag, focusSearch, 1 );
 
-        const children    = refs.multiTagWrapper.children;
         assert.equal( focusSearch.callCount, 0 );
-        assert.equal( children[ 0 ].focus.callCount, 1 );
+        assert.equal( tags[ 0 ].focus.callCount, 1 );
 
-        children[ 0 ].focus.restore();
+        tags[ 0 ].focus.restore();
     } );
 
 
@@ -1287,10 +1320,10 @@ describe( 'checkMultiTagKeydownRemove', () =>
         flounder.setByIndex( 2 );
         flounder.setByIndex( 3 );
 
-        const target      = refs.multiTagWrapper.children[ 0 ];
+        const firstTag    = refs.multiTagWrapper.firstChild;
         const focusSearch = sinon.spy();
 
-        flounder.checkMultiTagKeydownRemove( target, focusSearch, 0 );
+        flounder.checkMultiTagKeydownRemove( firstTag, focusSearch, 0 );
 
         assert.equal( focusSearch.callCount, 0 );
     } );
@@ -1400,27 +1433,39 @@ describe( 'displayMultipleTags', () =>
         'main'
     ];
 
-    document.body.flounder = null;
-    const flounder    = new Flounder( document.body, {
-        multipleTags    : true,
-        data            : data
-    } );
-
-    const refs            = flounder.refs;
-    const refsData        = refs.data;
-    const multiTagWrapper = refs.multiTagWrapper;
-
-
     it( 'should create a tag for each selection', () =>
     {
+        document.body.flounder = null;
+        const flounder    = new Flounder( document.body, {
+            multipleTags    : true,
+            data            : data
+        } );
+
+        const refs            = flounder.refs;
+        const refsData        = refs.selectOptions;
+        const multiTagWrapper = refs.multiTagWrapper;
+
         flounder.displayMultipleTags( [ refsData[ 1 ], refsData[ 2 ] ],
-                                                            multiTagWrapper );
-        assert.equal( refs.multiTagWrapper.children.length, 2 );
+            multiTagWrapper );
+
+        const tags = Array.prototype.slice.call(
+            multiTagWrapper.children, 0, -1 );
+
+        assert.equal( tags.length, 2 );
     } );
 
 
     it( 'should re-add the placeholder if there are no tags', () =>
     {
+        document.body.flounder = null;
+        const flounder    = new Flounder( document.body, {
+            multipleTags    : true,
+            data            : data
+        } );
+
+        const refs            = flounder.refs;
+        const multiTagWrapper = refs.multiTagWrapper;
+
         flounder.deselectAll();
         flounder.refs.selected.innerHTML = '';
 
@@ -1765,7 +1810,10 @@ describe( 'removeMultiTag', () =>
             stopPropagation : stopPropagation
         } );
 
-        assert.equal( multiTagWrapper.children.length, 1 );
+        const tags = Array.prototype.slice.call(
+            refs.multiTagWrapper.children, 0, -1 );
+
+        assert.equal( tags.length, 1 );
         assert.equal( preventDefault.callCount, 1 );
         assert.equal( stopPropagation.callCount, 1 );
     } );
@@ -1800,7 +1848,7 @@ describe( 'removeMultiTag', () =>
             stopPropagation : stopPropagation
         } );
 
-        assert.equal( multiTagWrapper.children.length, 0 );
+        assert.equal( multiTagWrapper.children.length, 1 );
         assert.equal( preventDefault.callCount, 1 );
         assert.equal( stopPropagation.callCount, 1 );
         assert.equal( flounder.addPlaceholder.callCount, 1 );
@@ -2484,73 +2532,121 @@ describe( 'setSelectValueButton', () =>
  */
 describe( 'setSelectValueClick', () =>
 {
-    it( 'should toggle the selected value', () =>
+    it( 'should add the selected class', () =>
     {
         document.body.flounder  = null;
         const flounder          = new Flounder( document.body, {
-            data : [ 1, 2, 3 ]
+            placeholder : 'nothing selected', // placeholder is data[ 0 ]
+            data        : [ 1, 2, 3 ]
         } );
         const refs        = flounder.refs;
 
         sinon.stub( flounder, 'deselectAll', noop );
 
-        const res1 = utils.hasClass( refs.data[ 0 ], flounder.selectedClass );
+        const res1 = utils.hasClass( refs.data[ 1 ], flounder.selectedClass );
 
         flounder.setSelectValueClick( {
-            target : refs.data[ 0 ]
+            target : refs.data[ 1 ]
         } );
 
-        const res2 = utils.hasClass( refs.data[ 0 ], flounder.selectedClass );
+        const res2 = utils.hasClass( refs.data[ 1 ], flounder.selectedClass );
 
         assert.equal( res1, !res2 );
         assert.equal( flounder.deselectAll.callCount, 1 );
     } );
-} );
 
-
-
-/**
- * ## setTextMultiTagIndent
- *
- * sets the text-indent on the search field to go around selected tags
- *
- * @return {Void} void
- */
-describe( 'setTextMultiTagIndent', () =>
-{
-    it( 'should set the search box text indent correctly', () =>
+    it( 'should toggle the selected class on both options and sections', () =>
     {
-        document.body.flounder = null;
-
-        const data = [
-            'doge',
-            'moon'
-        ];
-
-        const flounder    = new Flounder( document.body, {
-            data            : data,
-            defaultIndex    : 0,
-            multipleTags    : true
+        document.body.flounder  = null;
+        const flounder          = new Flounder( document.body, {
+            data : [
+                'doge',                 // data[ 0 ] - selected by default
+                'moon',                 // data[ 1 ]
+                {
+                    header : 'top',     // section [ 0 ]
+                    data    : [ {
+                        text  : 'doge', // data[2]
+                        value : 'doge'
+                    } ]
+                },
+                {
+                    header : 'empty',   // section [ 1 ]
+                    data    : []
+                },
+                {
+                    header : 'bottom',  // section [ 2 ]
+                    data    : [ {
+                        text  : 'moon', // data[ 3 ]
+                        value : 'moon'
+                    } ]
+                }
+            ]
         } );
-        const refs = flounder.refs;
 
-        const span = document.createElement( 'SPAN' );
-        span.className = 'flounder__multiple--select--tag';
-        span.innerHTML =
-            '<a class="flounder__multiple__tag__close" data-index="1"></a>doge';
+        const refs  = flounder.refs;
 
-        refs.multiTagWrapper.appendChild( span );
+        assert.equal( refs.data.length, 4 );
+        assert.equal( refs.sections.length, 3 );
 
-        flounder.setTextMultiTagIndent();
+        const res1a = utils.hasClass( refs.data[ 0 ], flounder.selectedClass );
+        const res2a = utils.hasClass( refs.data[ 1 ], flounder.selectedClass );
+        const res3a = utils.hasClass( refs.data[ 2 ], flounder.selectedClass );
+        const res4a = utils.hasClass( refs.data[ 3 ], flounder.selectedClass );
+        const res5a = utils.hasClass( refs.sections[ 0 ],
+                                                    flounder.selectedClass );
+        const res6a = utils.hasClass( refs.sections[ 1 ],
+                                                    flounder.selectedClass );
+        const res7a = utils.hasClass( refs.sections[ 2 ],
+                                                    flounder.selectedClass );
 
-        const style       = window.getComputedStyle( span );
+        // Select option 2.
+        flounder.setSelectValueClick( {
+            target : refs.data[ 2 ]
+        } );
 
-        const spanOffset  = span.offsetWidth +
-                                        parseInt( style[ 'margin-left' ] ) +
-                                        parseInt( style[ 'margin-right' ] );
+        const res1b = utils.hasClass( refs.data[ 0 ], flounder.selectedClass );
+        const res2b = utils.hasClass( refs.data[ 1 ], flounder.selectedClass );
+        const res3b = utils.hasClass( refs.data[ 2 ], flounder.selectedClass );
+        const res4b = utils.hasClass( refs.data[ 3 ], flounder.selectedClass );
+        const res5b = utils.hasClass( refs.sections[ 0 ],
+                                                    flounder.selectedClass );
+        const res6b = utils.hasClass( refs.sections[ 1 ],
+                                                    flounder.selectedClass );
+        const res7b = utils.hasClass( refs.sections[ 2 ],
+                                                    flounder.selectedClass );
 
-        assert.equal( refs.search.style.textIndent,
-                                    spanOffset > 0 ? `${spanOffset}px` : '' );
+        assert.equal( res1a, !res1b );
+        assert.equal( res2a,  res2b );
+        assert.equal( res3a, !res3b );
+        assert.equal( res4a,  res4b );
+        assert.equal( res5a, !res5b );
+        assert.equal( res6a,  res6b );
+        assert.equal( res7a,  res7b );
+
+        // Select option 3
+        flounder.setSelectValueClick( {
+            target : refs.data[ 3 ]
+        } );
+
+        const res1c = utils.hasClass( refs.data[ 0 ], flounder.selectedClass );
+        const res2c = utils.hasClass( refs.data[ 1 ], flounder.selectedClass );
+        const res3c = utils.hasClass( refs.data[ 2 ], flounder.selectedClass );
+        const res4c = utils.hasClass( refs.data[ 3 ], flounder.selectedClass );
+        const res5c = utils.hasClass( refs.sections[ 0 ],
+                                                    flounder.selectedClass );
+        const res6c = utils.hasClass( refs.sections[ 1 ],
+                                                    flounder.selectedClass );
+        const res7c = utils.hasClass( refs.sections[ 2 ],
+                                                    flounder.selectedClass );
+
+        assert.equal( res1a, !res1c );
+        assert.equal( res2a,  res2c );
+        assert.equal( res3a,  res3c );
+        assert.equal( res4a, !res4c );
+        assert.equal( res5a,  res5c );
+        assert.equal( res6a,  res6c );
+        assert.equal( res7a, !res7c );
+
     } );
 } );
 
@@ -2843,11 +2939,13 @@ describe( 'toggleOpen', () =>
             data    : [
                 {
                     header : 'header test',
-                    data   : [ {
-                        text    : 1,
-                        value   : 1
-                    },
-                    2 ]
+                    data   : [
+                        {
+                            text    : 1,
+                            value   : 1
+                        },
+                        2
+                    ]
                 },
                 3
             ],

@@ -1,3 +1,4 @@
+
 /* globals console, document */
 import { defaultOptions }   from './defaults';
 import utils                from './utils';
@@ -7,6 +8,8 @@ import events               from './events';
 import Search               from './search';
 import version              from './version';
 import keycodes             from './keycodes';
+
+const nativeSlice = Array.prototype.slice;
 
 /**
  * main flounder class
@@ -109,9 +112,11 @@ class Flounder
 
         const matches = this.search.isThereAnythingRelatedTo( val ) || [];
 
+
         if ( val !== '' )
         {
             const data    = this.refs.data;
+            const sections = this.refs.sections;
             const classes = this.classes;
 
             data.forEach( el =>
@@ -119,9 +124,20 @@ class Flounder
                 utils.addClass( el, classes.SEARCH_HIDDEN );
             } );
 
+            sections.forEach( se =>
+            {
+                utils.addClass( se, classes.SEARCH_HIDDEN );
+            } );
+
             matches.forEach( e =>
             {
                 utils.removeClass( data[ e.i ], classes.SEARCH_HIDDEN );
+
+                if ( typeof e.d.s == 'number' )
+                {
+                    utils.removeClass( sections[ e.d.s ],
+                        classes.SEARCH_HIDDEN );
+                }
             } );
 
             if ( !this.refs.noMoreOptionsEl )
@@ -178,7 +194,8 @@ class Flounder
                 if ( this.multipleTags && keyCode === keycodes.BACKSPACE &&
                         this.fuzzySearch.previousValue === '' )
                 {
-                    const lastTag = this.refs.multiTagWrapper.lastChild;
+                    const lastTag = nativeSlice.call(
+                        this.refs.multiTagWrapper.children, 0, -1 ).pop();
 
                     if ( lastTag )
                     {
@@ -191,7 +208,7 @@ class Flounder
                 }
             }
             else if ( keyCode === keycodes.ESCAPE ||
-                                            keyCode === keycodes.ENTER )
+                keyCode === keycodes.ENTER )
             {
                 this.fuzzySearchReset();
                 this.toggleList( e, 'close' );
@@ -217,12 +234,18 @@ class Flounder
         const refs    = this.refs;
         const classes = this.classes;
 
+        refs.sections.forEach( se =>
+        {
+            utils.removeClass( se, classes.SEARCH_HIDDEN );
+        } );
+
         refs.data.forEach( dataObj =>
         {
             utils.removeClass( dataObj, classes.SEARCH_HIDDEN );
         } );
 
         refs.search.value = '';
+        this.removeNoResultsMessage();
     }
 
 
@@ -328,6 +351,12 @@ class Flounder
                                                     defaultClasses[ clss ];
                 }
             }
+            else if ( opt === 'data' )
+            {
+                this.data = props.data && props.data.length ?
+                                                    [ ...props.data ] :
+                                                    [ ...defaultOptions.data ];
+            }
             else
             {
                 this[ opt ] = props[ opt ] !== undefined ? props[ opt ] :
@@ -383,16 +412,20 @@ class Flounder
      * @param {Array} data flounder data options
      * @param {Array} res results
      * @param {Number} i index
+     * @param {Number} s section's index (undefined = no section)
      *
      * @return {Boolean} hasHeaders
      */
-    sortData( data, res = [], i = 0 )
+    sortData( data, res = [], i = 0, s = undefined )
     {
+        let indexHeader = 0;
+
         data.forEach( d =>
         {
             if ( d.header )
             {
-                res = this.sortData( d.data, res, i );
+                res = this.sortData( d.data, res, i, indexHeader );
+                indexHeader++;
             }
             else
             {
@@ -410,7 +443,13 @@ class Flounder
                     d.index = i;
                 }
 
+                if ( s !== undefined )
+                {
+                    d.s = s;
+                }
+
                 res.push( d );
+
                 i++;
             }
         } );
@@ -443,6 +482,7 @@ Flounder.find = function( targets, props )
 
     return Array.prototype.slice.call( targets, 0 )
                                 .map( el => new Flounder( el, props ) );
+
 };
 
 
@@ -468,4 +508,3 @@ Object.defineProperty( Flounder.prototype, 'version', {
 utils.extendClass( Flounder, api, build, events );
 
 export default Flounder;
-

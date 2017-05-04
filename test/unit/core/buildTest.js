@@ -282,8 +282,11 @@ describe( 'popInSelectElements', () =>
         const selectObj1 = buildSelect();
         const selectObj2 = buildSelect();
 
-        flounder.originalChildren = [ selectObj1.option1, selectObj1.option2,
-                                                        selectObj1.option3 ];
+        flounder.originalChildren = [
+            selectObj1.option1,
+            selectObj1.option2,
+            selectObj1.option3
+        ];
 
         flounder.popInSelectElements( selectObj2.select );
 

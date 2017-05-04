@@ -25,9 +25,16 @@ export const defaults = {
      * called as:
      * score += this.scoreThis( search[ param ], weights[ param ] );
      */
-    scoreProperties     : [ 'text', 'textFlat', 'textSplit', 'value',
-                                    'valueFlat', 'valueSplit', 'description',
-                                    'descriptionSplit' ],
+    scoreProperties     : [
+        'text',
+        'textFlat',
+        'textSplit',
+        'value',
+        'valueFlat',
+        'valueSplit',
+        'description',
+        'descriptionSplit'
+    ],
 
     /*
      * params to test with startsWith
@@ -137,6 +144,37 @@ export class Sole
 
 
     /**
+     * ## filterSelected
+     *
+     * helper function to filter selected options from search results
+     *
+     * @param {Object} res search result object
+     *
+     * @return {Boolean} data not in selected options
+     */
+    filterSelected( res )
+    {
+        if ( !res.d || !res.d.value )
+        {
+            return false;
+        }
+
+        if ( this.flounder.multipleTags )
+        {
+            for ( const o of this.flounder.getSelectedValues() )
+            {
+                if ( res.d.value === o )
+                {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+
+    /**
      * ## getResultWeights
      *
      * after the data is prepared this is mapped through the data to get
@@ -230,15 +268,16 @@ export class Sole
             let data    = this.flounder.data;
             data        = this.flounder.sortData( data );
 
-            ratedRes    = this.ratedRes = data.map( this.getResultWeights );
+            ratedRes = this.ratedRes = data.map( this.getResultWeights );
         }
         else
         {
             return false;
         }
 
-        ratedRes.sort( this.compareScoreCards );
+        ratedRes = ratedRes.filter( this.filterSelected.bind( this ) );
         ratedRes = ratedRes.filter( this.isItemAboveMinimum );
+        ratedRes.sort( this.compareScoreCards );
 
         return this.ratedRes = ratedRes;
     }

@@ -1,4 +1,4 @@
-Flounder.js 1.1.0
+Flounder.js 1.2.0
 =================
 
 [![Flounder build status](https://travis-ci.org/sociomantic-tsunami/flounder.svg)](https://travis-ci.org)
@@ -108,7 +108,6 @@ If flounder is fed an element that already has a flounder, it will destroy it an
         MULTIPLE_TAG_FLOUNDER : `class-for-multiple`,
         MULTI_TAG_LIST        : `class-for-multi-tag-list`,
         MULTIPLE_SELECT_TAG   : `class-for-multiple-select-tag`,
-        MULTIPLE_SELECTED     : `class-for-multiple-selected`,
         MULTIPLE_TAG_CLOSE    : `class-for-multiple-tag-close`,
         NO_RESULTS            : `class-for-no-results`,
         OPEN                  : `class-for-open`,
@@ -478,6 +477,41 @@ See more examples on the [demo page](./demo/index.html)
 
 Change Log
 ==========
+
+1.2.0
+-----
+
++ Flounder
+    + moved multitag search input location inside multitag list
+    + extraClass is added to displayed option
+    + removed redundant MULTIPLE_SELECTED CSS class
+
++ api
+    + deselectAll fixes
+
++ build
+    + makes a copy of props.data to prevent unwanted mutation
+    + search input has tab index -1
+
++ events
+    + disallows selecting disabled options by typing
+    + checkEnterOnSearch fires onChange
+    + checkFlounderKeypress stops ENTER propagation
+    + clickSet explicitly closes the dropdown list
+
++ search
+    + section headers hidden when no results
+    + pressing ENTER on exact match selects that option
+    + _No more results_ message fixes
+
+
+1.1.1
+-----
+
++ tests
+    + lint fixed
+    + test coverage brought back to 100%
+
 
 1.1.0
 -----

@@ -350,9 +350,11 @@ describe( 'fuzzySearch', () =>
 
         flounder.fuzzySearch( e );
 
-        flounder.refs.multiTagWrapper.innerHTML = '<span class="flounder__multiple--select--tag" aria-label="Deselect All" tabindex="0"><a class="flounder__multiple__tag__close" data-index="1"></a>All</span><span class="flounder__multiple--select--tag" aria-label="Deselect Tags" tabindex="0"><a class="flounder__multiple__tag__close" data-index="2"></a>Tags</span>'; // eslint-disable-line
+        flounder.refs.multiTagWrapper.innerHTML = '<span class="flounder__multiple--select--tag" aria-label="Deselect All" tabindex="0"><a class="flounder__multiple__tag__close" data-index="1"></a>All</span><span class="flounder__multiple--select--tag" aria-label="Deselect Tags" tabindex="0"><a class="flounder__multiple__tag__close" data-index="2"></a>Tags</span><input class="flounder__search"/>'; // eslint-disable-line
 
-        const lastTag = flounder.refs.multiTagWrapper.lastChild;
+        const lastTag = Array.prototype.slice.call(
+            flounder.refs.multiTagWrapper.children, 0, -1 ).pop();
+
         sinon.spy( lastTag, 'focus' );
 
         flounder.fuzzySearch( e );
@@ -395,9 +397,33 @@ describe( 'fuzzySearch', () =>
  */
 describe( 'fuzzySearchReset', () =>
 {
+    const top = {
+        header : 'top',
+        data    : [ {
+            text  : 'doge',
+            value : 'doge'
+        } ]
+    };
+
+    const empty = {
+        header : 'empty',
+        data    : []
+    };
+
+    const bottom = {
+        header : 'bottom',
+        data    : [ {
+            text  : 'moon',
+            value : 'moon'
+        } ]
+    };
+
     const data = [
         'doge',
-        'moon'
+        'moon',
+        top,
+        empty,
+        bottom
     ];
 
     const flounder    = new Flounder( document.body, {
@@ -434,6 +460,34 @@ describe( 'fuzzySearchReset', () =>
 
         assert.equal( flounderRefs.search.value, '' );
         assert.equal( hiddenOptions.length, 0 );
+    } );
+
+    it( 'should hide all options without "m"', () =>
+    {
+
+        const flounderRefs = flounder.refs;
+
+        assert.equal( flounderRefs.sections.length, 3 );
+
+        flounderRefs.search.click();
+        flounder.fuzzySearch( {
+            keyCode         : 77,
+            preventDefault  : e => e,
+            target          : {
+                value : 'm  '
+            }
+        } );
+
+        const wrapper = flounderRefs.optionsListWrapper;
+        const hiddenOptions = wrapper.querySelectorAll(
+                                                `.${classes.HIDDEN}` );
+        const searchHiddenOptions = wrapper.querySelectorAll(
+                                                `.${classes.SEARCH_HIDDEN}` );
+
+        assert.equal( flounderRefs.search.value, '' );
+        assert.equal( hiddenOptions.length, 1 );        // empty.
+        assert.equal( searchHiddenOptions.length, 4 );  // 'doge', top, empty,
+                                                        // bottom.
     } );
 } );
 
@@ -549,18 +603,28 @@ describe( 'initializeOptions', () =>
         }
     } );
 
+    flounder.data = undefined;
+    flounder.classes = undefined;
+    flounder.multiple = undefined;
 
     it( 'should exist', () =>
     {
         assert.ok( flounder.initializeOptions, 'exists' );
     } );
 
+    flounder.initializeOptions();
 
     it( 'should transfer all props to flounder', () =>
     {
         assert.deepEqual( flounder.data, data );
         assert.equal( flounder.multiple, 'doge' );
         assert.equal( flounder.classes.MAIN, 'cat' );
+    } );
+
+
+    it( 'should make a copy of data prop', () =>
+    {
+        assert.notEqual( flounder.data, data );
     } );
 
 
@@ -766,4 +830,3 @@ describe( 'version', () =>
         assert.equal( Flounder.prototype.version, version );
     } );
 } );
-

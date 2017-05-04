@@ -1,3 +1,4 @@
+
 /* globals document */
 import { setDefaultOption }     from './defaults';
 import utils                    from './utils';
@@ -31,12 +32,11 @@ const build = {
      *
      * checks if a search box is required and attaches it or not
      *
-     * @param {Object} searchSibling next sibling to mount the input to
-     * @param {Object} flounder main element reference
+     * @param {Object} node node to append the input to
      *
      * @return {Mixed} search node or false
      */
-    addSearch( searchSibling, flounder )
+    addSearch( node )
     {
         if ( this.search )
         {
@@ -44,10 +44,11 @@ const build = {
             const search  = utils.constructElement( {
                 tagname     : 'input',
                 type        : 'text',
-                className   : classes.SEARCH
+                className   : classes.SEARCH,
+                tabIndex    : -1
             } );
 
-            flounder.insertBefore( search, searchSibling );
+            node.appendChild( search );
 
             return search;
         }
@@ -140,8 +141,10 @@ const build = {
     {
         const self              = this;
         let index               = 0;
+        let indexSection         = 0;
         const data              = [];
         const selectOptions     = [];
+        const sections           = [];
         const constructElement  = utils.constructElement;
         const selectedClass     = this.selectedClass;
         const escapeHTML        = utils.escapeHTML;
@@ -311,6 +314,16 @@ const build = {
                     selectOptions[ index ]  = buildOption( d, index );
                     index++;
                 } );
+
+                // Keep sections with no options, but hide them.
+                // We need to keep them because they exist in `originalData`.
+                if ( dataObjData.length == 0 )
+                {
+                    utils.addClass( section, classes.HIDDEN );
+                }
+
+                sections[ indexSection ] = section;
+                indexSection++;
             }
             else
             {
@@ -321,7 +334,7 @@ const build = {
             }
         } );
 
-        return  [ data, selectOptions ];
+        return  [ data, selectOptions, sections ];
     },
 
 
@@ -366,12 +379,8 @@ const build = {
         this.defaultObj     = setDefaultOption( this, this.props, data );
         const defaultValue  = this.defaultObj;
 
-        const selectedDisplayedClasses = this.multipleTags ?
-                `${classes.SELECTED_DISPLAYED} ${classes.MULTIPLE_SELECTED}` :
-                classes.SELECTED_DISPLAYED;
-
         const selected          = constructElement( {
-            className       : selectedDisplayedClasses,
+            className       : classes.SELECTED_DISPLAYED,
             'data-value'    : defaultValue.value,
             'data-index'    : defaultValue.index
         } );
@@ -407,16 +416,14 @@ const build = {
             }
         } );
 
-        const searchLocation    = this.multipleTags ? optionsListWrapper :
-                                                                    selected;
-
-        const search            = this.addSearch( searchLocation, flounder );
-
-
-        const built = this.buildData( defaultValue, data, optionsList, select );
+        const search = this.addSearch( this.multipleTags ?
+            multiTagWrapper : flounder );
+        const built  = this.buildData(
+            defaultValue, data, optionsList, select );
 
         data                = built[ 0 ];
         const selectOptions = built[ 1 ];
+        const sections      = built[ 2 ];
 
         this.target.appendChild( wrapper );
 
@@ -431,6 +438,7 @@ const build = {
             optionsList,
             select,
             data,
+            sections,
             selectOptions
         };
 

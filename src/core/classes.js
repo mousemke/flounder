@@ -16,7 +16,6 @@ const classes = {
     MULTIPLE_TAG_FLOUNDER   : 'flounder--multiple',
     MULTI_TAG_LIST          : 'flounder__multi--tag--list',
     MULTIPLE_SELECT_TAG     : 'flounder__multiple--select--tag',
-    MULTIPLE_SELECTED       : 'flounder__multiple--selected',
     MULTIPLE_TAG_CLOSE      : 'flounder__multiple__tag__close',
     NO_RESULTS              : 'flounder__no-results',
     OPEN                    : 'open',
