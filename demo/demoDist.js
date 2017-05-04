@@ -5,7 +5,7 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _flounder = require('/Library/WebServer/Documents/flounder/src/core/flounder');
+var _flounder = require('/Users/conorcafferkey/flounder/src/core/flounder');
 
 var _flounder2 = _interopRequireDefault(_flounder);
 
@@ -306,7 +306,7 @@ requirejs(['flounder'], function (Flounder) {
 
 exports.default = _flounder2.default;
 
-},{"/Library/WebServer/Documents/flounder/src/core/flounder":18}],2:[function(require,module,exports){
+},{"/Users/conorcafferkey/flounder/src/core/flounder":18}],2:[function(require,module,exports){
 "use strict";
 
 // rawAsap provides everything we need except exception management.
@@ -454,9 +454,12 @@ function flush() {
 
 // Safari 6 and 6.1 for desktop, iPad, and iPhone are the only browsers that
 // have WebKitMutationObserver but not un-prefixed MutationObserver.
-// Must use `global` instead of `window` to work in both frames and web
+// Must use `global` or `self` instead of `window` to work in both frames and web
 // workers. `global` is a provision of Browserify, Mr, Mrs, or Mop.
-var BrowserMutationObserver = global.MutationObserver || global.WebKitMutationObserver;
+
+/* globals self */
+var scope = typeof global !== "undefined" ? global : self;
+var BrowserMutationObserver = scope.MutationObserver || scope.WebKitMutationObserver;
 
 // MutationObservers are desirable because they have high priority and work
 // reliably everywhere they are implemented.
@@ -1380,8 +1383,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 
 var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
-
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; }; /* globals console */
+/* globals console */
 
 
 var _utils = require('./utils');
@@ -1406,7 +1408,6 @@ var api = {
      *
      * @return {Void} void
      */
-
     buildFromUrl: function buildFromUrl(url, callback) {
         var _this = this;
 
@@ -1539,33 +1540,30 @@ var api = {
     deselectAll: function deselectAll(silent) {
         var _this2 = this;
 
-        if (this.multiple) {
-            this.removeSelectedClass();
-            this.removeSelectedValue();
+        this.removeSelectedClass();
+        this.removeSelectedValue();
 
+        if (this.multiple) {
             var multiTagWrapper = this.refs.multiTagWrapper;
 
             if (multiTagWrapper) {
-                (function () {
-                    var tags = nativeSlice.call(multiTagWrapper.children);
+                var tags = nativeSlice.call(multiTagWrapper.children, 0, -1);
 
-                    tags.forEach(function (el, count) {
-                        var lastEl = count === tags.length - 1;
+                tags.forEach(function (el, count) {
+                    var lastEl = count === tags.length - 1;
 
-                        if (!silent && lastEl) {
-                            el = el.children;
-                            el = el[0];
+                    if (!silent && lastEl) {
+                        el = el.children;
+                        el = el[0];
 
-                            el.click();
-                        } else {
-                            el.removeEventListener('click', _this2.removeMultiTag);
-                            el.remove();
-                        }
-                    });
+                        el.click();
+                    } else {
+                        el.removeEventListener('click', _this2.removeMultiTag);
+                        el.remove();
+                    }
+                });
 
-                    _this2.setTextMultiTagIndent();
-                    _this2.addPlaceholder();
-                })();
+                this.addPlaceholder();
             }
         }
     },
@@ -1611,22 +1609,14 @@ var api = {
      * @return {Void} void
      */
     disableByIndex: function disableByIndex(index, reenable) {
-        var _this3 = this;
-
         var refs = this.refs;
 
         if (typeof index !== 'string' && index.length) {
-            var _ret2 = function () {
-                var disableByIndex = _this3.disableByIndex.bind(_this3);
+            var disableByIndex = this.disableByIndex.bind(this);
 
-                return {
-                    v: index.map(function (_i) {
-                        return disableByIndex(_i, reenable);
-                    })
-                };
-            }();
-
-            if ((typeof _ret2 === 'undefined' ? 'undefined' : _typeof(_ret2)) === "object") return _ret2.v;
+            return index.map(function (_i) {
+                return disableByIndex(_i, reenable);
+            });
         }
 
         var data = refs.data;
@@ -1669,21 +1659,13 @@ var api = {
      * @return {Void} void
      */
     disableByText: function disableByText(text, reenable) {
-        var _this4 = this;
-
         if (typeof text !== 'string' && text.length) {
-            var _ret3 = function () {
-                var disableByText = _this4.disableByText.bind(_this4);
-                var res = text.map(function (_v) {
-                    return disableByText(_v, reenable);
-                });
+            var disableByText = this.disableByText.bind(this);
+            var _res = text.map(function (_v) {
+                return disableByText(_v, reenable);
+            });
 
-                return {
-                    v: res.length === 1 ? res[0] : res
-                };
-            }();
-
-            if ((typeof _ret3 === 'undefined' ? 'undefined' : _typeof(_ret3)) === "object") return _ret3.v;
+            return _res.length === 1 ? _res[0] : _res;
         }
 
         var res = [];
@@ -1713,21 +1695,13 @@ var api = {
      * @return {Void} void
      */
     disableByValue: function disableByValue(value, reenable) {
-        var _this5 = this;
-
         if (typeof value !== 'string' && value.length) {
-            var _ret4 = function () {
-                var disableByValue = _this5.disableByValue.bind(_this5);
-                var res = value.map(function (_v) {
-                    return disableByValue(_v, reenable);
-                });
+            var disableByValue = this.disableByValue.bind(this);
+            var _res2 = value.map(function (_v) {
+                return disableByValue(_v, reenable);
+            });
 
-                return {
-                    v: res.length === 1 ? res[0] : res
-                };
-            }();
-
-            if ((typeof _ret4 === 'undefined' ? 'undefined' : _typeof(_ret4)) === "object") return _ret4.v;
+            return _res2.length === 1 ? _res2[0] : _res2;
         }
 
         var res = this.refs.selectOptions.map(function (el, i) {
@@ -1794,7 +1768,7 @@ var api = {
      * @return {Object} option and div tage
      */
     getData: function getData(index) {
-        var _this6 = this;
+        var _this3 = this;
 
         var refs = this.refs;
 
@@ -1805,11 +1779,11 @@ var api = {
             };
         } else if (index && index.length && typeof index !== 'string') {
             return index.map(function (i) {
-                return _this6.getData(i);
+                return _this3.getData(i);
             });
         } else if (!index) {
             return refs.selectOptions.map(function (el, i) {
-                return _this6.getData(i);
+                return _this3.getData(i);
             });
         }
 
@@ -1865,23 +1839,23 @@ var api = {
      * @return {Void} void
      */
     loadDataFromUrl: function loadDataFromUrl(url, callback) {
-        var _this7 = this;
+        var _this4 = this;
 
         var classes = this.classes;
 
         _utils2.default.http.get(url).then(function (data) {
             if (data) {
-                _this7.data = JSON.parse(data);
+                _this4.data = JSON.parse(data);
 
                 if (callback) {
-                    callback(_this7.data);
+                    callback(_this4.data);
                 }
             } else {
                 console.warn('no data recieved');
             }
         }).catch(function (e) {
             console.warn('something happened: ', e);
-            _this7.rebuild([{
+            _this4.rebuild([{
                 text: '',
                 value: '',
                 index: 0,
@@ -1929,10 +1903,11 @@ var api = {
 
         var _buildData = this.buildData(this.defaultObj, this.data, refs.optionsList, select);
 
-        var _buildData2 = _slicedToArray(_buildData, 2);
+        var _buildData2 = _slicedToArray(_buildData, 3);
 
         refs.data = _buildData2[0];
         refs.selectOptions = _buildData2[1];
+        refs.sections = _buildData2[2];
 
         refs.select = select;
 
@@ -1960,24 +1935,16 @@ var api = {
      * @return {Void} void
      */
     setByIndex: function setByIndex(index, multiple) {
-        var _this8 = this;
-
-        var programmatic = arguments.length <= 2 || arguments[2] === undefined ? true : arguments[2];
+        var programmatic = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
 
         var refs = this.refs;
 
         if (typeof index !== 'string' && index.length) {
-            var _ret5 = function () {
-                var setByIndex = _this8.setByIndex.bind(_this8);
+            var setByIndex = this.setByIndex.bind(this);
 
-                return {
-                    v: index.map(function (_i) {
-                        return setByIndex(_i, multiple, programmatic);
-                    })
-                };
-            }();
-
-            if ((typeof _ret5 === 'undefined' ? 'undefined' : _typeof(_ret5)) === "object") return _ret5.v;
+            return index.map(function (_i) {
+                return setByIndex(_i, multiple, programmatic);
+            });
         }
 
         var data = this.data;
@@ -2017,22 +1984,14 @@ var api = {
      * @return {Void} void
      */
     setByText: function setByText(text, multiple) {
-        var _this9 = this;
-
-        var programmatic = arguments.length <= 2 || arguments[2] === undefined ? true : arguments[2];
+        var programmatic = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
 
         if (typeof text !== 'string' && text.length) {
-            var _ret6 = function () {
-                var setByText = _this9.setByText.bind(_this9);
+            var setByText = this.setByText.bind(this);
 
-                return {
-                    v: text.map(function (_i) {
-                        return setByText(_i, multiple, programmatic);
-                    })
-                };
-            }();
-
-            if ((typeof _ret6 === 'undefined' ? 'undefined' : _typeof(_ret6)) === "object") return _ret6.v;
+            return text.map(function (_i) {
+                return setByText(_i, multiple, programmatic);
+            });
         }
 
         var res = [];
@@ -2064,22 +2023,14 @@ var api = {
      * @return {Void} void
      */
     setByValue: function setByValue(value, multiple) {
-        var _this10 = this;
-
-        var programmatic = arguments.length <= 2 || arguments[2] === undefined ? true : arguments[2];
+        var programmatic = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
 
         if (typeof value !== 'string' && value.length) {
-            var _ret7 = function () {
-                var setByValue = _this10.setByValue.bind(_this10);
+            var setByValue = this.setByValue.bind(this);
 
-                return {
-                    v: value.map(function (_i) {
-                        return setByValue(_i, multiple, programmatic);
-                    })
-                };
-            }();
-
-            if ((typeof _ret7 === 'undefined' ? 'undefined' : _typeof(_ret7)) === "object") return _ret7.v;
+            return value.map(function (_i) {
+                return setByValue(_i, multiple, programmatic);
+            });
         }
 
         var values = this.refs.selectOptions.map(function (el, i) {
@@ -2101,7 +2052,8 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; }; /* globals document */
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+/* globals document */
 
 
 var _defaults = require('./defaults');
@@ -2127,7 +2079,6 @@ var build = {
      *
      * @return {Void} void
      */
-
     addOptionDescription: function addOptionDescription(el, text) {
         var div = document.createElement('div');
         div.innerHTML = text;
@@ -2141,21 +2092,21 @@ var build = {
      *
      * checks if a search box is required and attaches it or not
      *
-     * @param {Object} searchSibling next sibling to mount the input to
-     * @param {Object} flounder main element reference
+     * @param {Object} node node to append the input to
      *
      * @return {Mixed} search node or false
      */
-    addSearch: function addSearch(searchSibling, flounder) {
+    addSearch: function addSearch(node) {
         if (this.search) {
             var classes = this.classes;
             var search = _utils2.default.constructElement({
                 tagname: 'input',
                 type: 'text',
-                className: classes.SEARCH
+                className: classes.SEARCH,
+                tabIndex: -1
             });
 
-            flounder.insertBefore(search, searchSibling);
+            node.appendChild(search);
 
             return search;
         }
@@ -2228,8 +2179,10 @@ var build = {
     buildData: function buildData(defaultValue, originalData, optionsList, select) {
         var self = this;
         var index = 0;
+        var indexSection = 0;
         var data = [];
         var selectOptions = [];
+        var sections = [];
         var constructElement = _utils2.default.constructElement;
         var selectedClass = this.selectedClass;
         var escapeHTML = _utils2.default.escapeHTML;
@@ -2345,37 +2298,44 @@ var build = {
             }
 
             if (dataObj.header) {
-                (function () {
-                    var section = constructElement({
-                        tagname: 'div',
-                        className: classes.SECTION
-                    });
+                var section = constructElement({
+                    tagname: 'div',
+                    className: classes.SECTION
+                });
 
-                    var header = constructElement({
-                        tagname: 'div',
-                        className: classes.HEADER
-                    });
+                var header = constructElement({
+                    tagname: 'div',
+                    className: classes.HEADER
+                });
 
-                    header.textContent = dataObj.header;
-                    section.appendChild(header);
-                    optionsList.appendChild(section);
+                header.textContent = dataObj.header;
+                section.appendChild(header);
+                optionsList.appendChild(section);
 
-                    var dataObjData = dataObj.data;
-                    dataObjData.forEach(function (d, i) {
-                        /* istanbul ignore next */
-                        if ((typeof d === 'undefined' ? 'undefined' : _typeof(d)) !== 'object') {
-                            d = dataObjData[i] = {
-                                text: d,
-                                value: d
-                            };
-                        }
+                var dataObjData = dataObj.data;
+                dataObjData.forEach(function (d, i) {
+                    /* istanbul ignore next */
+                    if ((typeof d === 'undefined' ? 'undefined' : _typeof(d)) !== 'object') {
+                        d = dataObjData[i] = {
+                            text: d,
+                            value: d
+                        };
+                    }
 
-                        data[index] = buildDiv(d, index);
-                        section.appendChild(data[index]);
-                        selectOptions[index] = buildOption(d, index);
-                        index++;
-                    });
-                })();
+                    data[index] = buildDiv(d, index);
+                    section.appendChild(data[index]);
+                    selectOptions[index] = buildOption(d, index);
+                    index++;
+                });
+
+                // Keep sections with no options, but hide them.
+                // We need to keep them because they exist in `originalData`.
+                if (dataObjData.length == 0) {
+                    _utils2.default.addClass(section, classes.HIDDEN);
+                }
+
+                sections[indexSection] = section;
+                indexSection++;
             } else {
                 data[index] = buildDiv(dataObj, index);
                 optionsList.appendChild(data[index]);
@@ -2384,7 +2344,7 @@ var build = {
             }
         });
 
-        return [data, selectOptions];
+        return [data, selectOptions, sections];
     },
 
 
@@ -2426,10 +2386,8 @@ var build = {
         this.defaultObj = (0, _defaults.setDefaultOption)(this, this.props, data);
         var defaultValue = this.defaultObj;
 
-        var selectedDisplayedClasses = this.multipleTags ? classes.SELECTED_DISPLAYED + ' ' + classes.MULTIPLE_SELECTED : classes.SELECTED_DISPLAYED;
-
         var selected = constructElement({
-            className: selectedDisplayedClasses,
+            className: classes.SELECTED_DISPLAYED,
             'data-value': defaultValue.value,
             'data-index': defaultValue.index
         });
@@ -2462,14 +2420,12 @@ var build = {
             }
         });
 
-        var searchLocation = this.multipleTags ? optionsListWrapper : selected;
-
-        var search = this.addSearch(searchLocation, flounder);
-
+        var search = this.addSearch(this.multipleTags ? multiTagWrapper : flounder);
         var built = this.buildData(defaultValue, data, optionsList, select);
 
         data = built[0];
         var selectOptions = built[1];
+        var sections = built[2];
 
         this.target.appendChild(wrapper);
 
@@ -2484,6 +2440,7 @@ var build = {
             optionsList: optionsList,
             select: select,
             data: data,
+            sections: sections,
             selectOptions: selectOptions
         };
 
@@ -2541,8 +2498,6 @@ var build = {
      * @return {DOMElement} select box
      */
     initSelectBox: function initSelectBox(wrapper) {
-        var _this2 = this;
-
         var target = this.target;
         var refs = this.refs;
         var select = refs.select;
@@ -2559,23 +2514,21 @@ var build = {
             }
 
             if (target.length > 0 && !this.selectDataOverride) {
-                (function () {
-                    _this2.refs.select = select;
-                    var data = [];
-                    var selectOptions = [];
+                this.refs.select = select;
+                var data = [];
+                var selectOptions = [];
 
-                    nativeSlice.call(target.children, 0).forEach(function (optionEl) {
-                        selectOptions.push(optionEl);
-                        data.push({
-                            text: optionEl.innerHTML,
-                            value: optionEl.value
-                        });
+                nativeSlice.call(target.children, 0).forEach(function (optionEl) {
+                    selectOptions.push(optionEl);
+                    data.push({
+                        text: optionEl.innerHTML,
+                        value: optionEl.value
                     });
+                });
 
-                    refs.selectOptions = selectOptions;
+                refs.selectOptions = selectOptions;
 
-                    _this2.data = data;
-                })();
+                this.data = data;
             } else if (this.selectDataOverride) {
                 _utils2.default.removeAllChildren(target);
             }
@@ -2720,7 +2673,6 @@ var classes = {
     MULTIPLE_TAG_FLOUNDER: 'flounder--multiple',
     MULTI_TAG_LIST: 'flounder__multi--tag--list',
     MULTIPLE_SELECT_TAG: 'flounder__multiple--select--tag',
-    MULTIPLE_SELECTED: 'flounder__multiple--selected',
     MULTIPLE_TAG_CLOSE: 'flounder__multiple__tag__close',
     NO_RESULTS: 'flounder__no-results',
     OPEN: 'open',
@@ -2803,9 +2755,9 @@ var defaults = {
      * @return {Void} void
      */
     setDefaultOption: function setDefaultOption(context) {
-        var configObj = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+        var configObj = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
         var originalData = arguments[2];
-        var rebuild = arguments.length <= 3 || arguments[3] === undefined ? false : arguments[3];
+        var rebuild = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
 
         /**
          * ## setIndexDefault
@@ -2968,9 +2920,6 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; }; /* globals console, document, setTimeout, window */
-
-
 var _utils = require('./utils');
 
 var _utils2 = _interopRequireDefault(_utils);
@@ -2981,6 +2930,7 @@ var _keycodes2 = _interopRequireDefault(_keycodes);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+/* globals console, document, setTimeout, window */
 var nativeSlice = Array.prototype.slice;
 
 var events = {
@@ -2992,7 +2942,6 @@ var events = {
      *
      * @return {Void} void
      */
-
     addFirstTouchListeners: function addFirstTouchListeners() {
         var refs = this.refs;
         refs.selected.addEventListener('click', this.firstTouchController);
@@ -3067,18 +3016,19 @@ var events = {
         selectedOptions.forEach(function (option) {
             if (option.value !== '') {
                 var tag = _this.buildMultiTag(option);
-
-                multiTagWrapper.appendChild(tag);
+                multiTagWrapper.insertBefore(tag, multiTagWrapper.lastChild);
             } else {
                 option.selected = false;
             }
         });
 
-        nativeSlice.call(multiTagWrapper.children, 0).forEach(function (el) {
-            var firstChild = el.firstChild;
+        var tags = nativeSlice.call(multiTagWrapper.children, 0, -1);
 
-            firstChild.addEventListener('click', _this.removeMultiTag);
-            el.addEventListener('keydown', _this.checkMultiTagKeydown);
+        tags.forEach(function (tag) {
+            var closeBtn = tag.firstChild;
+
+            closeBtn.addEventListener('click', _this.removeMultiTag);
+            tag.addEventListener('keydown', _this.checkMultiTagKeydown);
         });
     },
 
@@ -3302,43 +3252,57 @@ var events = {
      * @return {Void} void
      */
     checkEnterOnSearch: function checkEnterOnSearch(e, refs) {
-        var _this3 = this;
-
         var val = e.target.value;
 
         if (val && val !== '') {
-            var _ret = function () {
-                var res = [];
-                var selected = _this3.getSelected();
-                var matches = _this3.search.isThereAnythingRelatedTo(val);
+            var res = [];
+            var selected = this.getSelected();
+            var matches = this.search.isThereAnythingRelatedTo(val);
 
-                matches.forEach(function (el) {
-                    var index = el.i;
-                    el = refs.selectOptions[index];
+            matches.forEach(function (el) {
+                var index = el.i;
+                el = refs.selectOptions[index];
 
-                    if (selected.indexOf(el) === -1) {
-                        res.push(el);
+                if (selected.indexOf(el) === -1) {
+                    res.push(el);
+                }
+            });
+
+            // If only one result is available, select that result.
+            // If more than one results, select one only on exact match.
+            var selectedIndex = -1;
+            if (res.length === 1) {
+                selectedIndex = 0;
+            } else if (res.length > 1) {
+                for (var i = 0; i < res.length; i++) {
+                    if (res[i].text.toUpperCase() === val.toUpperCase()) {
+                        selectedIndex = i;
+                        break;
                     }
-                });
+                }
+            }
 
-                if (res.length === 1) {
-                    var el = res[0];
+            if (selectedIndex != -1) {
+                var el = res[selectedIndex];
 
-                    _this3.setByIndex(el.index, _this3.multiple);
+                if (!el.disabled) {
+                    this.setByIndex(el.index, this.multiple);
 
-                    if (_this3.multipleTags) {
+                    if (this.multipleTags) {
                         setTimeout(function () {
                             return refs.search.focus();
                         }, 200);
                     }
+
+                    try {
+                        this.onChange(e, this.getSelectedValues());
+                    } catch (e) {
+                        console.warn('something may be wrong in "onChange"', e);
+                    }
                 }
+            }
 
-                return {
-                    v: res
-                };
-            }();
-
-            if ((typeof _ret === 'undefined' ? 'undefined' : _typeof(_ret)) === "object") return _ret.v;
+            return res;
         }
 
         return false;
@@ -3365,13 +3329,19 @@ var events = {
 
             this.addPlaceholder();
             this.toggleClosed(e, optionsList, refs, wrapper, true);
-        } else if (keyCode === _keycodes2.default.ENTER || keyCode === _keycodes2.default.SPACE && e.target.tagName !== 'INPUT') {
-            if (keyCode === _keycodes2.default.ENTER && this.search && _utils2.default.hasClass(refs.wrapper, classes.OPEN)) {
-                return this.checkEnterOnSearch(e, refs);
+        } else if (keyCode === _keycodes2.default.ENTER || keyCode === _keycodes2.default.SPACE) {
+            if (keyCode === _keycodes2.default.ENTER) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                if (this.search && _utils2.default.hasClass(refs.wrapper, classes.OPEN)) {
+                    return this.checkEnterOnSearch(e, refs);
+                }
             }
 
-            e.preventDefault();
-            this.toggleList(e);
+            if (e.target.tagName !== 'INPUT') {
+                this.toggleList(e);
+            }
         }
         // letters - allows native behavior
         else if (keyCode >= 48 && keyCode <= 57 || keyCode >= 65 && keyCode <= 90) {
@@ -3396,9 +3366,9 @@ var events = {
         var keyCode = e.keyCode;
         var self = this;
         var refs = this.refs;
-        var children = refs.multiTagWrapper.children;
+        var tags = nativeSlice.call(refs.multiTagWrapper.children, 0, -1);
         var target = e.target;
-        var index = nativeSlice.call(children, 0).indexOf(target);
+        var index = tags.indexOf(target);
 
         /**
          * ## focusSearch
@@ -3441,16 +3411,16 @@ var events = {
      * @return {Void} void
      */
     checkMultiTagKeydownNavigate: function checkMultiTagKeydownNavigate(focusSearch, keyCode, index) {
-        var children = this.refs.multiTagWrapper.children;
+        var tags = nativeSlice.call(this.refs.multiTagWrapper.children, 0, -1);
 
         var adjustment = keyCode - 38;
         var newIndex = index + adjustment;
-        var length = children.length - 1;
+        var length = tags.length - 1;
 
         if (newIndex > length) {
             focusSearch();
         } else if (newIndex >= 0) {
-            children[newIndex].focus();
+            tags[newIndex].focus();
         }
     },
 
@@ -3468,13 +3438,14 @@ var events = {
      * @return {Void} void
      */
     checkMultiTagKeydownRemove: function checkMultiTagKeydownRemove(target, focusSearch, index) {
-        var children = this.refs.multiTagWrapper.children;
-        var siblings = children.length - 1;
+        var tags = nativeSlice.call(this.refs.multiTagWrapper.children, 0, -1);
+
+        var siblings = tags.length - 1;
 
         target.firstChild.click();
 
         if (siblings > 0) {
-            children[index === 0 ? 0 : index - 1].focus();
+            tags[index === 0 ? 0 : index - 1].focus();
         } else {
             focusSearch();
         }
@@ -3512,7 +3483,7 @@ var events = {
         this.setSelectValue({}, e);
 
         if (!this.programmaticClick) {
-            this.toggleList(e);
+            this.toggleList(e, 'close');
         }
 
         this.programmaticClick = false;
@@ -3531,24 +3502,24 @@ var events = {
      * @return {Void} void
      */
     displayMultipleTags: function displayMultipleTags(selectedOptions, multiTagWrapper) {
-        var _this4 = this;
+        var _this3 = this;
 
-        nativeSlice.call(multiTagWrapper.children, 0).forEach(function (el) {
-            var firstChild = el.firstChild;
+        var tags = nativeSlice.call(multiTagWrapper.children, 0, -1);
 
-            firstChild.removeEventListener('click', _this4.removeMultiTag);
-            el.removeEventListener('keydown', _this4.checkMultiTagKeydown);
+        tags.forEach(function (tag) {
+            var closeBtn = tag.firstChild;
+
+            closeBtn.removeEventListener('click', _this3.removeMultiTag);
+            tag.removeEventListener('keydown', _this3.checkMultiTagKeydown);
+
+            multiTagWrapper.removeChild(tag);
         });
-
-        multiTagWrapper.innerHTML = '';
 
         if (selectedOptions.length > 0) {
             this.addMultipleTags(selectedOptions, multiTagWrapper);
         } else {
             this.addPlaceholder();
         }
-
-        this.setTextMultiTagIndent();
     },
 
 
@@ -3570,10 +3541,16 @@ var events = {
         var selectedLength = selectedOption.length;
         var multipleTags = this.multipleTags;
 
+        selected.className = this.classes.SELECTED_DISPLAYED;
+
         if (!multipleTags && selectedLength === 1) {
             index = selectedOption[0].index;
             selected.innerHTML = refs.data[index].innerHTML;
             value = selectedOption[0].value;
+
+            var extraClass = refs.data[index].extraClass;
+
+            selected.className += extraClass ? ' ' + extraClass : '';
         } else if (!multipleTags && selectedLength === 0) {
             var defaultValue = this.defaultObj;
             index = defaultValue.index || -1;
@@ -3744,6 +3721,8 @@ var events = {
         _utils2.default.removeClass(data[targetIndex], classes.SELECTED_HIDDEN);
         _utils2.default.removeClass(data[targetIndex], classes.SELECTED);
 
+        this.hideEmptySection(data[targetIndex].parentNode);
+
         target.removeEventListener('click', this.removeMultiTag);
 
         var span = target.parentNode;
@@ -3764,8 +3743,7 @@ var events = {
         }
 
         this.removeNoMoreOptionsMessage();
-        this.removeNoResultsMessage();
-        this.setTextMultiTagIndent();
+        this.fuzzySearchReset();
 
         selected.setAttribute('data-value', value);
         selected.setAttribute('data-index', index);
@@ -3786,14 +3764,14 @@ var events = {
      * @return {Void} void
      */
     removeOptionsListeners: function removeOptionsListeners() {
-        var _this5 = this;
+        var _this4 = this;
 
         this.refs.data.forEach(function (dataObj) {
             if (dataObj.tagName === 'DIV') {
-                dataObj.removeEventListener('click', _this5.clickSet);
+                dataObj.removeEventListener('click', _this4.clickSet);
 
-                dataObj.removeEventListener('mouseenter', _this5.addHoverClass);
-                dataObj.removeEventListener('mouseleave', _this5.removeHoverClass);
+                dataObj.removeEventListener('mouseenter', _this4.addHoverClass);
+                dataObj.removeEventListener('mouseleave', _this4.removeHoverClass);
             }
         });
     },
@@ -3852,19 +3830,26 @@ var events = {
     /**
      * ## removeSelectedClass
      *
-     * removes the [[this.selectedClass]] from all data
+     * removes the [[this.selectedClass]] from all data and sections
      *
      * @param {Array} data array of data objects
      *
+     * @param {Array} sections array of section objects
+     *
      * @return {Void} void
      */
-    removeSelectedClass: function removeSelectedClass(data) {
-        var _this6 = this;
+    removeSelectedClass: function removeSelectedClass(data, sections) {
+        var _this5 = this;
 
         data = data || this.refs.data;
+        sections = sections || this.refs.sections;
 
         data.forEach(function (dataObj) {
-            _utils2.default.removeClass(dataObj, _this6.selectedClass);
+            _utils2.default.removeClass(dataObj, _this5.selectedClass);
+        });
+
+        sections.forEach(function (sectionObj) {
+            _utils2.default.removeClass(sectionObj, _this5.selectedClass);
         });
     },
 
@@ -4083,20 +4068,25 @@ var events = {
     setSelectValueClick: function setSelectValueClick(e) {
         var multiple = this.multiple;
         var refs = this.refs;
+
         var selectedClass = this.selectedClass;
 
-        if ((!multiple || multiple && !this.multipleTags && !e[this.multiSelect]) && !this.forceMultiple) {
-            this.deselectAll();
-        }
-
-        this.forceMultiple = false;
         var target = e.target;
-
-        _utils2.default.toggleClass(target, selectedClass);
         var index = target.getAttribute('data-index');
         var selectedOption = refs.selectOptions[index];
 
-        selectedOption.selected = selectedOption.selected !== true;
+        if ((!multiple || multiple && !this.multipleTags && !e[this.multiSelect]) && !this.forceMultiple) {
+            this.deselectAll();
+            _utils2.default.addClass(target, selectedClass);
+            selectedOption.selected = selectedOption.selected !== true;
+        } else {
+            _utils2.default.toggleClass(target, selectedClass);
+            selectedOption.selected = !selectedOption.selected;
+        }
+
+        this.forceMultiple = false;
+
+        this.hideEmptySection(target.parentNode);
 
         var firstOption = refs.selectOptions[0];
 
@@ -4104,30 +4094,6 @@ var events = {
             _utils2.default.removeClass(refs.data[0], selectedClass);
             refs.selectOptions[0].selected = false;
         }
-    },
-
-
-    /**
-     * ## setTextMultiTagIndent
-     *
-     * sets the text-indent on the search field to go around selected tags
-     *
-     * @return {Void} void
-     */
-    setTextMultiTagIndent: function setTextMultiTagIndent() {
-        var _this7 = this;
-
-        var refs = this.refs;
-        var search = refs.search;
-
-        var offset = 0;
-
-        nativeSlice.call(refs.multiTagWrapper.children, 0).forEach(function (e) {
-            offset += _utils2.default.getElWidth(e, _this7.setTextMultiTagIndent, _this7);
-        });
-
-        /* istanbul ignore next */
-        search.style.textIndent = offset > 0 ? offset + 'px' : '';
     },
 
 
@@ -4145,7 +4111,7 @@ var events = {
      * @return {Void} void
      */
     toggleClosed: function toggleClosed(e, optionsList, refs, wrapper) {
-        var exit = arguments.length <= 4 || arguments[4] === undefined ? false : arguments[4];
+        var exit = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : false;
 
         var classes = this.classes;
 
@@ -4270,9 +4236,13 @@ var events = {
             optionCount--;
         }
 
-        if (refs.multiTagWrapper && refs.multiTagWrapper.childNodes.length === optionCount) {
-            this.removeNoResultsMessage();
-            this.addNoMoreOptionsMessage();
+        if (refs.multiTagWrapper) {
+            var tags = nativeSlice.call(refs.multiTagWrapper.children, 0, -1);
+
+            if (tags.length === optionCount) {
+                this.removeNoResultsMessage();
+                this.addNoMoreOptionsMessage();
+            }
         }
 
         if (this.ready) {
@@ -4280,6 +4250,46 @@ var events = {
                 this.onOpen(e, this.getSelectedValues());
             } catch (e) {
                 console.warn('something may be wrong in "onOpen"', e);
+            }
+        }
+    },
+
+
+    /**
+     * ## hideEmptySection
+     *
+     * hides a section which does not have any visible options.
+     *
+     * @param {DOMElement} se the section to be checked
+     *
+     * @return {Void} void
+     */
+    hideEmptySection: function hideEmptySection(se) {
+        var selectedClass = this.selectedClass;
+        var sections = this.refs.sections;
+
+        // Check if the provided element is indeed a section.
+        // If it is, check if it must to be shown or hidden.
+
+        for (var i = 0; i < sections.length; ++i) {
+            if (sections[i] === se) {
+                var shouldBeHidden = true;
+
+                // Ignore the title in childNodes[0].
+                for (var j = 1; j < se.childNodes.length; j++) {
+                    if (!_utils2.default.hasClass(se.childNodes[j], selectedClass)) {
+                        shouldBeHidden = false;
+                        break;
+                    }
+                }
+
+                if (shouldBeHidden) {
+                    _utils2.default.addClass(se, selectedClass);
+                } else {
+                    _utils2.default.removeClass(se, selectedClass);
+                }
+
+                break;
             }
         }
     }
@@ -4294,9 +4304,10 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /* globals console, document */
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+/* globals console, document */
 
 
 var _defaults = require('./defaults');
@@ -4331,7 +4342,11 @@ var _keycodes2 = _interopRequireDefault(_keycodes);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var nativeSlice = Array.prototype.slice;
 
 /**
  * main flounder class
@@ -4419,8 +4434,6 @@ var Flounder = function () {
     _createClass(Flounder, [{
         key: 'filterSearchResults',
         value: function filterSearchResults(e) {
-            var _this = this;
-
             var val = e.target.value.trim();
 
             this.fuzzySearch.previousValue = val;
@@ -4428,26 +4441,33 @@ var Flounder = function () {
             var matches = this.search.isThereAnythingRelatedTo(val) || [];
 
             if (val !== '') {
-                (function () {
-                    var data = _this.refs.data;
-                    var classes = _this.classes;
+                var data = this.refs.data;
+                var sections = this.refs.sections;
+                var classes = this.classes;
 
-                    data.forEach(function (el) {
-                        _utils2.default.addClass(el, classes.SEARCH_HIDDEN);
-                    });
+                data.forEach(function (el) {
+                    _utils2.default.addClass(el, classes.SEARCH_HIDDEN);
+                });
 
-                    matches.forEach(function (e) {
-                        _utils2.default.removeClass(data[e.i], classes.SEARCH_HIDDEN);
-                    });
+                sections.forEach(function (se) {
+                    _utils2.default.addClass(se, classes.SEARCH_HIDDEN);
+                });
 
-                    if (!_this.refs.noMoreOptionsEl) {
-                        if (matches.length === 0) {
-                            _this.addNoResultsMessage();
-                        } else {
-                            _this.removeNoResultsMessage();
-                        }
+                matches.forEach(function (e) {
+                    _utils2.default.removeClass(data[e.i], classes.SEARCH_HIDDEN);
+
+                    if (typeof e.d.s == 'number') {
+                        _utils2.default.removeClass(sections[e.d.s], classes.SEARCH_HIDDEN);
                     }
-                })();
+                });
+
+                if (!this.refs.noMoreOptionsEl) {
+                    if (matches.length === 0) {
+                        this.addNoResultsMessage();
+                    } else {
+                        this.removeNoResultsMessage();
+                    }
+                }
             } else {
                 this.fuzzySearchReset();
             }
@@ -4482,7 +4502,7 @@ var Flounder = function () {
 
                 if (keyCode !== _keycodes2.default.UP && keyCode !== _keycodes2.default.DOWN && keyCode !== _keycodes2.default.ENTER && keyCode !== _keycodes2.default.ESCAPE) {
                     if (this.multipleTags && keyCode === _keycodes2.default.BACKSPACE && this.fuzzySearch.previousValue === '') {
-                        var lastTag = this.refs.multiTagWrapper.lastChild;
+                        var lastTag = nativeSlice.call(this.refs.multiTagWrapper.children, 0, -1).pop();
 
                         if (lastTag) {
                             lastTag.focus();
@@ -4514,11 +4534,16 @@ var Flounder = function () {
             var refs = this.refs;
             var classes = this.classes;
 
+            refs.sections.forEach(function (se) {
+                _utils2.default.removeClass(se, classes.SEARCH_HIDDEN);
+            });
+
             refs.data.forEach(function (dataObj) {
                 _utils2.default.removeClass(dataObj, classes.SEARCH_HIDDEN);
             });
 
             refs.search.value = '';
+            this.removeNoResultsMessage();
         }
 
         /**
@@ -4554,12 +4579,10 @@ var Flounder = function () {
 
             this.buildDom();
 
-            var _utils$setPlatform = _utils2.default.setPlatform();
-
-            var isOsx = _utils$setPlatform.isOsx;
-            var isIos = _utils$setPlatform.isIos;
-            var multiSelect = _utils$setPlatform.multiSelect;
-
+            var _utils$setPlatform = _utils2.default.setPlatform(),
+                isOsx = _utils$setPlatform.isOsx,
+                isIos = _utils$setPlatform.isIos,
+                multiSelect = _utils$setPlatform.multiSelect;
 
             this.isOsx = isOsx;
             this.isIos = isIos;
@@ -4612,6 +4635,8 @@ var Flounder = function () {
                     for (var clss in defaultClasses) {
                         this.classes[clss] = propClasses[clss] ? propClasses[clss] : defaultClasses[clss];
                     }
+                } else if (opt === 'data') {
+                    this.data = props.data && props.data.length ? [].concat(_toConsumableArray(props.data)) : [].concat(_toConsumableArray(_defaults.defaultOptions.data));
                 } else {
                     this[opt] = props[opt] !== undefined ? props[opt] : _defaults.defaultOptions[opt];
                 }
@@ -4662,6 +4687,7 @@ var Flounder = function () {
          * @param {Array} data flounder data options
          * @param {Array} res results
          * @param {Number} i index
+         * @param {Number} s section's index (undefined = no section)
          *
          * @return {Boolean} hasHeaders
          */
@@ -4669,14 +4695,19 @@ var Flounder = function () {
     }, {
         key: 'sortData',
         value: function sortData(data) {
-            var _this2 = this;
+            var res = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
 
-            var res = arguments.length <= 1 || arguments[1] === undefined ? [] : arguments[1];
-            var i = arguments.length <= 2 || arguments[2] === undefined ? 0 : arguments[2];
+            var _this = this;
+
+            var i = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+            var s = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : undefined;
+
+            var indexHeader = 0;
 
             data.forEach(function (d) {
                 if (d.header) {
-                    res = _this2.sortData(d.data, res, i);
+                    res = _this.sortData(d.data, res, i, indexHeader);
+                    indexHeader++;
                 } else {
                     /* istanbul ignore next */
                     if ((typeof d === 'undefined' ? 'undefined' : _typeof(d)) !== 'object') {
@@ -4689,7 +4720,12 @@ var Flounder = function () {
                         d.index = i;
                     }
 
+                    if (s !== undefined) {
+                        d.s = s;
+                    }
+
                     res.push(d);
+
                     i++;
                 }
             });
@@ -4914,6 +4950,55 @@ var Sole = exports.Sole = function () {
         }
 
         /**
+         * ## filterSelected
+         *
+         * helper function to filter selected options from search results
+         *
+         * @param {Object} res search result object
+         *
+         * @return {Boolean} data not in selected options
+         */
+
+    }, {
+        key: 'filterSelected',
+        value: function filterSelected(res) {
+            if (!res.d || !res.d.value) {
+                return false;
+            }
+
+            if (this.flounder.multipleTags) {
+                var _iteratorNormalCompletion = true;
+                var _didIteratorError = false;
+                var _iteratorError = undefined;
+
+                try {
+                    for (var _iterator = this.flounder.getSelectedValues()[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                        var o = _step.value;
+
+                        if (res.d.value === o) {
+                            return false;
+                        }
+                    }
+                } catch (err) {
+                    _didIteratorError = true;
+                    _iteratorError = err;
+                } finally {
+                    try {
+                        if (!_iteratorNormalCompletion && _iterator.return) {
+                            _iterator.return();
+                        }
+                    } finally {
+                        if (_didIteratorError) {
+                            throw _iteratorError;
+                        }
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        /**
          * ## getResultWeights
          *
          * after the data is prepared this is mapped through the data to get
@@ -4996,7 +5081,7 @@ var Sole = exports.Sole = function () {
     }, {
         key: 'isThereAnythingRelatedTo',
         value: function isThereAnythingRelatedTo() {
-            var query = arguments.length <= 0 || arguments[0] === undefined ? '' : arguments[0];
+            var query = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
 
             var ratedRes = void 0;
 
@@ -5013,8 +5098,9 @@ var Sole = exports.Sole = function () {
                 return false;
             }
 
-            ratedRes.sort(this.compareScoreCards);
+            ratedRes = ratedRes.filter(this.filterSelected.bind(this));
             ratedRes = ratedRes.filter(this.isItemAboveMinimum);
+            ratedRes.sort(this.compareScoreCards);
 
             return this.ratedRes = ratedRes;
         }
@@ -5128,7 +5214,6 @@ var utils = {
      *
      * @return {Void} void
      */
-
     addClass: function addClass(el, clss) {
         if (typeof clss !== 'string' && clss.length) {
             clss.forEach(function (c) {
@@ -5260,7 +5345,7 @@ var utils = {
      * @return {Integer} adjusted width
      */
     getElWidth: function getElWidth(el, cb, context) {
-        var timeout = arguments.length <= 3 || arguments[3] === undefined ? 1500 : arguments[3];
+        var timeout = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 1500;
 
         var style = window.getComputedStyle(el);
 
@@ -5311,7 +5396,7 @@ var utils = {
      * @return {Void} void
      */
     iosVersion: function iosVersion() {
-        var windowObj = arguments.length <= 0 || arguments[0] === undefined ? window : arguments[0];
+        var windowObj = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : window;
 
         if (/iPad|iPhone|iPod/.test(windowObj.navigator.platform)) {
             if (windowObj.indexedDB) {
@@ -5421,7 +5506,7 @@ var utils = {
      * @return {Void} void
      */
     setPlatform: function setPlatform() {
-        var windowObj = arguments.length <= 0 || arguments[0] === undefined ? window : arguments[0];
+        var windowObj = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : window;
 
         var platform = windowObj.navigator.platform;
         var isOsx = platform.indexOf('Mac') !== -1;
@@ -5463,7 +5548,7 @@ exports.default = utils;
 },{"microbejs/src/modules/http":4}],22:[function(require,module,exports){
 'use strict';
 
-/* global module */
-module.exports = '1.1.0';
+/* globals module */
+module.exports = '1.2.0';
 
 },{}]},{},[1]);
