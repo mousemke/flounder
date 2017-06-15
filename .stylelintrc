@@ -1,0 +1,15 @@
+{
+    "extends": "./.stylelintbase",
+    "rules": {
+        "max-nesting-depth": [0,{
+            "message": "Nesting is not allowed"
+            }],
+        "property-no-vendor-prefix": true,
+        "selector-max-compound-selectors": 2,
+        "selector-max-specificity": ["0,2,1", {
+            "message": "Selectors may not increase specificity or target child elements."
+            }],
+        "selector-no-id": true,
+        "value-no-vendor-prefix": true
+    }
+}
