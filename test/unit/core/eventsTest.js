@@ -952,7 +952,7 @@ describe( 'checkFlounderKeypress', () =>
     } );
 
 
-    it( 'should toggle the list open with space', () =>
+    it( 'should toggle the list open with space in a non-input', () =>
     {
         document.body.flounder = null;
         const flounder    = new Flounder( document.body, {
@@ -974,6 +974,31 @@ describe( 'checkFlounderKeypress', () =>
         flounder.checkFlounderKeypress( e );
 
         assert.equal( utils.hasClass( refs.wrapper, classes.OPEN ), true );
+    } );
+
+
+    it( 'should not toggle the list open with space in an input', () =>
+    {
+        document.body.flounder = null;
+        const flounder    = new Flounder( document.body, {
+            data    : [ 1, 2, 3 ],
+            search  : true
+        } );
+
+        const refs        = flounder.refs;
+
+        const e = {
+            keyCode : keycodes.SPACE,
+            target  : {
+                tagName : 'INPUT'
+            },
+            preventDefault  : noop,
+            stopPropagation : noop
+        };
+
+        flounder.checkFlounderKeypress( e );
+
+        assert.equal( utils.hasClass( refs.wrapper, classes.OPEN ), false );
     } );
 
 
@@ -1003,6 +1028,7 @@ describe( 'checkFlounderKeypress', () =>
                 tagName : 'INPUT'
             }
         };
+
         flounder.checkFlounderKeypress( e );
     } );
 
