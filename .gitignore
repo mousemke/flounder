@@ -11,6 +11,7 @@ Thumbs.db
 ehthumbs.db
 Desktop.ini
 $RECYCLE.BIN/
+coverage/
 
 node_modules/
 .tmp
