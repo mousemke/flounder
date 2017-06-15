@@ -1587,6 +1587,7 @@ describe( 'displaySelected', () =>
             defaultIndex    : 0
         } );
 
+        flounder.refs.data[ 1 ].extraClass = 'extra!';
         flounder.setByIndex( 1 );
 
         const refs = flounder.refs;
