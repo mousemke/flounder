@@ -798,6 +798,66 @@ describe( 'checkEnterOnSearch', () =>
 
         assert.equal( res.length, 0 );
     } );
+
+
+    it( 'should exclude items that are already disabled', () =>
+    {
+        document.body.flounder = null;
+
+        const flounder    = new Flounder( document.body, {
+            data    : [ 1, 2, 3 ],
+            search  : true
+        } );
+
+        const refs        = flounder.refs;
+
+        flounder.disableByValue( '2' );
+
+        const e = {
+            target : {
+                value : '2'
+            }
+        };
+
+        sinon.stub( flounder, 'onChange', () =>
+        {
+        } );
+
+        flounder.checkEnterOnSearch( e, refs );
+
+        assert.equal( flounder.onChange.callCount, 0 );
+
+        flounder.onChange.restore();
+    } );
+
+
+    it( 'should display a message when onChange fails', () =>
+    {
+        document.body.flounder = null;
+
+        const flounder    = new Flounder( document.body, {
+            data        : [ 1, 2, 3 ],
+            onChange    : () => a + b,  // eslint-disable-line
+            search      : true
+        } );
+
+        const refs  = flounder.refs;
+        const e     = {
+            target : {
+                value : '2'
+            }
+        };
+
+        sinon.stub( console, 'warn', () =>
+        {
+        } );
+
+        flounder.checkEnterOnSearch( e, refs );
+
+        assert.equal( console.warn.callCount, 1 );
+
+        console.warn.restore();
+    } );
 } );
 
 

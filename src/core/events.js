@@ -387,6 +387,7 @@ const events = {
             // If only one result is available, select that result.
             // If more than one results, select one only on exact match.
             let selectedIndex = -1;
+
             if ( res.length === 1 )
             {
                 selectedIndex = 0;
