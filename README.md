@@ -478,6 +478,15 @@ See more examples on the [demo page](./demo/index.html)
 Change Log
 ==========
 
+1.2.1
+-----
+
++ tests
+    + test coverage brought back to 100%
+
++ release
+    + coverage data is no longer included in the release
+
 1.2.0
 -----
 
