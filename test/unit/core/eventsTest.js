@@ -1749,6 +1749,58 @@ describe( 'firstTouchController', () =>
 } );
 
 
+/**
+ * ## hideEmptySection
+ *
+ * Check if the provided element is indeed a section. If it is, check if
+ * it must to be shown or hidden.
+ *
+ * @param {DOMElement} se the section to be checked
+ *
+ * @return {Void} void
+ */
+describe( 'hideEmptySection', () =>
+{
+    it( 'should hide sections that have no visible content', () =>
+    {
+        document.body.flounder = null;
+
+        const flounder    = new Flounder( document.body, {
+            data : [
+                'doge',
+                {
+                    header : 'top',
+                    data    : [ {
+                        text  : 'doge',
+                        value : 'doge'
+                    } ]
+                },
+                {
+                    header : 'empty',
+                    data    : []
+                },
+                {
+                    header : 'bottom',
+                    data    : [ {
+                        text  : 'moon',
+                        value : 'moon'
+                    } ]
+                }
+            ]
+        } );
+
+        const selectedClass = flounder.selectedClass;
+
+        const secShowing    = flounder.refs.sections[ 0 ];
+        flounder.hideEmptySection( secShowing );
+        assert.equal( utils.hasClass( secShowing, selectedClass ), false );
+
+        const secHidden     = flounder.refs.sections[ 1 ];
+        flounder.hideEmptySection( secHidden );
+        assert.equal( utils.hasClass( secHidden, selectedClass ), true );
+    } );
+} );
+
 
 /**
  * ## removeHoverClass

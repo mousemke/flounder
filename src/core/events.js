@@ -833,6 +833,52 @@ const events = {
 
 
     /**
+     * ## hideEmptySection
+     *
+     * Check if the provided element is indeed a section. If it is, check if
+     * it must to be shown or hidden.
+     *
+     * @param {DOMElement} se the section to be checked
+     *
+     * @return {Void} void
+     */
+    hideEmptySection( se )
+    {
+        const selectedClass = this.selectedClass;
+        const sections      = this.refs.sections;
+
+        for ( let i = 0; i < sections.length; ++i )
+        {
+            if ( sections[ i ] === se )
+            {
+                let shouldBeHidden = true;
+
+                // Ignore the title in childNodes[0]
+                for ( let j = 1; j < se.childNodes.length; j++ )
+                {
+                    if ( !utils.hasClass( se.childNodes[ j ], selectedClass ) )
+                    {
+                        shouldBeHidden = false;
+                        break;
+                    }
+                }
+
+                if ( shouldBeHidden )
+                {
+                    utils.addClass( se, selectedClass );
+                }
+                else
+                {
+                    utils.removeClass( se, selectedClass );
+                }
+
+                break;
+            }
+        }
+    },
+
+
+    /**
      * ## removeHoverClass
      *
      * removes a hover class from an element
@@ -1530,54 +1576,6 @@ const events = {
             }
         }
 
-    },
-
-
-    /**
-     * ## hideEmptySection
-     *
-     * hides a section which does not have any visible options.
-     *
-     * @param {DOMElement} se the section to be checked
-     *
-     * @return {Void} void
-     */
-    hideEmptySection( se )
-    {
-        const selectedClass = this.selectedClass;
-        const sections      = this.refs.sections;
-
-        // Check if the provided element is indeed a section.
-        // If it is, check if it must to be shown or hidden.
-
-        for ( let i = 0; i < sections.length; ++i )
-        {
-            if ( sections[ i ] === se )
-            {
-                let shouldBeHidden = true;
-
-                // Ignore the title in childNodes[0].
-                for ( let j = 1; j < se.childNodes.length; j++ )
-                {
-                    if ( !utils.hasClass( se.childNodes[ j ], selectedClass ) )
-                    {
-                        shouldBeHidden = false;
-                        break;
-                    }
-                }
-
-                if ( shouldBeHidden )
-                {
-                    utils.addClass( se, selectedClass );
-                }
-                else
-                {
-                    utils.removeClass( se, selectedClass );
-                }
-
-                break;
-            }
-        }
     }
 };
 
