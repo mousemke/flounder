@@ -41,7 +41,6 @@
     "microbejs": "^0.4.20",
     "mocha": "^2.5.3",
     "mocha-istanbul": "^0.2.0",
-    "postcss": "^6.0.2",
     "promise": "^7.1.1",
     "requirejs": "^2.1.22",
     "simulant": "^0.2.2",
