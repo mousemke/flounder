@@ -144,37 +144,6 @@ export class Sole
 
 
     /**
-     * ## filterSelected
-     *
-     * helper function to filter selected options from search results
-     *
-     * @param {Object} res search result object
-     *
-     * @return {Boolean} data not in selected options
-     */
-    filterSelected( res )
-    {
-        if ( !res.d || !res.d.value )
-        {
-            return false;
-        }
-
-        if ( this.flounder.multipleTags )
-        {
-            for ( const o of this.flounder.getSelectedValues() )
-            {
-                if ( res.d.value === o )
-                {
-                    return false;
-                }
-            }
-        }
-
-        return true;
-    }
-
-
-    /**
      * ## getResultWeights
      *
      * after the data is prepared this is mapped through the data to get
@@ -275,7 +244,6 @@ export class Sole
             return false;
         }
 
-        ratedRes = ratedRes.filter( this.filterSelected.bind( this ) );
         ratedRes = ratedRes.filter( this.isItemAboveMinimum );
         ratedRes.sort( this.compareScoreCards );
 

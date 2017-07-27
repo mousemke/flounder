@@ -164,7 +164,6 @@ describe( 'Sole', () =>
     } );
 
 
-
     /**
      * ## getResultWeights
      *

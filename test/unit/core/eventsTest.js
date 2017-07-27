@@ -798,6 +798,66 @@ describe( 'checkEnterOnSearch', () =>
 
         assert.equal( res.length, 0 );
     } );
+
+
+    it( 'should exclude items that are already disabled', () =>
+    {
+        document.body.flounder = null;
+
+        const flounder    = new Flounder( document.body, {
+            data    : [ 1, 2, 3 ],
+            search  : true
+        } );
+
+        const refs        = flounder.refs;
+
+        flounder.disableByValue( '2' );
+
+        const e = {
+            target : {
+                value : '2'
+            }
+        };
+
+        sinon.stub( flounder, 'onChange', () =>
+        {
+        } );
+
+        flounder.checkEnterOnSearch( e, refs );
+
+        assert.equal( flounder.onChange.callCount, 0 );
+
+        flounder.onChange.restore();
+    } );
+
+
+    it( 'should display a message when onChange fails', () =>
+    {
+        document.body.flounder = null;
+
+        const flounder    = new Flounder( document.body, {
+            data        : [ 1, 2, 3 ],
+            onChange    : () => a + b,  // eslint-disable-line
+            search      : true
+        } );
+
+        const refs  = flounder.refs;
+        const e     = {
+            target : {
+                value : '2'
+            }
+        };
+
+        sinon.stub( console, 'warn', () =>
+        {
+        } );
+
+        flounder.checkEnterOnSearch( e, refs );
+
+        assert.equal( console.warn.callCount, 1 );
+
+        console.warn.restore();
+    } );
 } );
 
 
@@ -892,7 +952,7 @@ describe( 'checkFlounderKeypress', () =>
     } );
 
 
-    it( 'should toggle the list open with space', () =>
+    it( 'should toggle the list open with space in a non-input', () =>
     {
         document.body.flounder = null;
         const flounder    = new Flounder( document.body, {
@@ -914,6 +974,31 @@ describe( 'checkFlounderKeypress', () =>
         flounder.checkFlounderKeypress( e );
 
         assert.equal( utils.hasClass( refs.wrapper, classes.OPEN ), true );
+    } );
+
+
+    it( 'should not toggle the list open with space in an input', () =>
+    {
+        document.body.flounder = null;
+        const flounder    = new Flounder( document.body, {
+            data    : [ 1, 2, 3 ],
+            search  : true
+        } );
+
+        const refs        = flounder.refs;
+
+        const e = {
+            keyCode : keycodes.SPACE,
+            target  : {
+                tagName : 'INPUT'
+            },
+            preventDefault  : noop,
+            stopPropagation : noop
+        };
+
+        flounder.checkFlounderKeypress( e );
+
+        assert.equal( utils.hasClass( refs.wrapper, classes.OPEN ), false );
     } );
 
 
@@ -943,6 +1028,7 @@ describe( 'checkFlounderKeypress', () =>
                 tagName : 'INPUT'
             }
         };
+
         flounder.checkFlounderKeypress( e );
     } );
 
@@ -1501,6 +1587,7 @@ describe( 'displaySelected', () =>
             defaultIndex    : 0
         } );
 
+        flounder.refs.data[ 1 ].extraClass = 'extra!';
         flounder.setByIndex( 1 );
 
         const refs = flounder.refs;
@@ -1661,6 +1748,58 @@ describe( 'firstTouchController', () =>
     } );
 } );
 
+
+/**
+ * ## hideEmptySection
+ *
+ * Check if the provided element is indeed a section. If it is, check if
+ * it must to be shown or hidden.
+ *
+ * @param {DOMElement} se the section to be checked
+ *
+ * @return {Void} void
+ */
+describe( 'hideEmptySection', () =>
+{
+    it( 'should hide sections that have no visible content', () =>
+    {
+        document.body.flounder = null;
+
+        const flounder    = new Flounder( document.body, {
+            data : [
+                'doge',
+                {
+                    header : 'top',
+                    data    : [ {
+                        text  : 'doge',
+                        value : 'doge'
+                    } ]
+                },
+                {
+                    header : 'empty',
+                    data    : []
+                },
+                {
+                    header : 'bottom',
+                    data    : [ {
+                        text  : 'moon',
+                        value : 'moon'
+                    } ]
+                }
+            ]
+        } );
+
+        const selectedClass = flounder.selectedClass;
+
+        const secShowing    = flounder.refs.sections[ 0 ];
+        flounder.hideEmptySection( secShowing );
+        assert.equal( utils.hasClass( secShowing, selectedClass ), false );
+
+        const secHidden     = flounder.refs.sections[ 1 ];
+        flounder.hideEmptySection( secHidden );
+        assert.equal( utils.hasClass( secHidden, selectedClass ), true );
+    } );
+} );
 
 
 /**

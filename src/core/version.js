@@ -1,3 +1,3 @@
 
 /* globals module */
-module.exports = '1.2.0';
+module.exports = '1.2.1';
