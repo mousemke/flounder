@@ -165,43 +165,6 @@ describe( 'Sole', () =>
 
 
     /**
-     * ## filterSelected
-     *
-     * helper function to filter selected options from search results
-     *
-     * @param {Object} res search result object
-     *
-     * @return {Boolean} data not in selected options
-     */
-    describe( 'filterSelected', () =>
-    {
-        it( 'should remove currently selected options from the results', () =>
-        {
-            const el = search.flounder.refs.select.children[ 1 ];
-
-            el.selected                     = true;
-            search.flounder.multipleTags    = true;
-
-            const resFalse = search.filterSelected( {
-                d : search.flounder.data[ 1 ]
-            } );
-
-            const resTrue = search.filterSelected( {
-                d : search.flounder.data[ 2 ]
-            } );
-
-            assert.equal( resTrue, true );
-            assert.equal( resFalse, false );
-
-            el.selected                     = false;
-            search.flounder.multipleTags    = false;
-
-        } );
-    } );
-
-
-
-    /**
      * ## getResultWeights
      *
      * after the data is prepared this is mapped through the data to get
