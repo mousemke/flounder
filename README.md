@@ -1,4 +1,4 @@
-Flounder.js 1.2.0
+Flounder.js 1.2.1
 =================
 
 [![Flounder build status](https://travis-ci.org/sociomantic-tsunami/flounder.svg)](https://travis-ci.org)
@@ -486,6 +486,9 @@ Change Log
 
 + release
     + coverage data is no longer included in the release
+
++ search
+    + fixes multitag search performance
 
 1.2.0
 -----
