@@ -463,7 +463,10 @@ describe( 'addSearchListeners', () =>
         search.focus();
 
         assert.equal( flounder.toggleListSearchClick.callCount, 2 );
-        assert.equal( flounder.fuzzySearch.callCount, 1 );
+        setTimeout( () =>
+            assert.equal( flounder.fuzzySearch.callCount, 1 ),
+            400
+        );
         assert.equal( flounder.clearPlaceholder.callCount, 1 );
     } );
 } );

@@ -252,6 +252,8 @@ const events = {
         const search                  = this.refs.search;
         const multiTagWrapper         = this.refs.multiTagWrapper;
 
+        this.debouncedFuzzySearch = utils.debounce( this.fuzzySearch, 200 );
+
         if ( multiTagWrapper )
         {
             multiTagWrapper.addEventListener( 'click',
@@ -260,7 +262,7 @@ const events = {
 
         search.addEventListener( 'click', this.toggleListSearchClick );
         search.addEventListener( 'focus', this.toggleListSearchClick );
-        search.addEventListener( 'keyup', this.fuzzySearch );
+        search.addEventListener( 'keyup', this.debouncedFuzzySearch );
         search.addEventListener( 'focus', this.clearPlaceholder );
     },
 
@@ -1073,7 +1075,7 @@ const events = {
         const search = this.refs.search;
         search.removeEventListener( 'click', this.toggleListSearchClick );
         search.removeEventListener( 'focus', this.toggleListSearchClick );
-        search.removeEventListener( 'keyup', this.fuzzySearch );
+        search.removeEventListener( 'keyup', this.debouncedFuzzySearch );
         search.removeEventListener( 'focus', this.clearPlaceholder );
     },
 
