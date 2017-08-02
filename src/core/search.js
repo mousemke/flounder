@@ -18,6 +18,16 @@ export const defaults = {
      */
     minimumScore        : 0,
 
+    /*
+     * params that punish non-matches
+     *
+     */
+    punishProperties    : [
+        'text',
+        'textStartsWith',
+        'textFlat',
+        'textSplit'
+    ],
 
     /*
      * params to test for score
@@ -48,7 +58,7 @@ export const defaults = {
     /*
      * scoring weight
      */
-    weights             : {
+    weights              : {
         text                : 30,
         textStartsWith      : 50,
         textFlat            : 10,
@@ -60,7 +70,7 @@ export const defaults = {
         valueSplit          : 10,
 
         description         : 15,
-        descriptionSplit    : 30
+        descriptionSplit    : 5
     }
 };
 
@@ -169,16 +179,16 @@ export class Sole
 
         search.text             = dText;
         search.textFlat         = dText.toLowerCase();
-        search.textSplit        = search.textFlat.split( ' ' );
+        search.textSplit        = search.textFlat.split( /\s+/ );
 
         search.value            = dValue;
         search.valueFlat        = dValue.toLowerCase();
-        search.valueSplit       = search.valueFlat.split( ' ' );
+        search.valueSplit       = search.valueFlat.split( /\s+/ );
 
         search.description      = d.description ?
                                             d.description.toLowerCase() : null;
         search.descriptionSplit = d.description ?
-                                        search.description.split( ' ' ) : null;
+                                        search.description.split( /\s+/ ) : null;
 
 
         defaults.scoreProperties.forEach( param =>
@@ -232,7 +242,7 @@ export class Sole
 
         if ( query.length >= defaults.minimumValueLength )
         {
-            this.query  = query.toLowerCase().split( ' ' );
+            this.query  = query.toLowerCase().split( /\s+/ );
 
             let data    = this.flounder.data;
             data        = this.flounder.sortData( data );
@@ -289,14 +299,13 @@ export class Sole
      * weighted score.
      *
      * @param {String} target string to be search
-     * @param {Integer} weight weighting of importance for this target.
-     *                   higher is more important
-     * @param {Boolean} noPunishment when passed true, this does not give
-     *                               negative points for non-matches
-     *
+     * @param {Integer} weight weighting of importance for this target, higher
+     *                         is more important
+     * @param {Boolean} punish when passed true, gives negative points for
+     *                         non-matches
      * @return {Integer} the final weight adjusted score
      */
-    scoreThis( target, weight, noPunishment )
+    scoreThis( target, weight, punish )
     {
         let score = 0;
 
@@ -328,7 +337,7 @@ export class Sole
                 {
                     score += weight * count * 10;
                 }
-                else if ( noPunishment !== true )
+                else if ( punish )
                 {
                     score = -weight;
                 }
