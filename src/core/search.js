@@ -179,16 +179,16 @@ export class Sole
 
         search.text             = dText;
         search.textFlat         = dText.toLowerCase();
-        search.textSplit        = search.textFlat.split( ' ' );
+        search.textSplit        = search.textFlat.split( /\s+/ );
 
         search.value            = dValue;
         search.valueFlat        = dValue.toLowerCase();
-        search.valueSplit       = search.valueFlat.split( ' ' );
+        search.valueSplit       = search.valueFlat.split( /\s+/ );
 
         search.description      = d.description ?
                                             d.description.toLowerCase() : null;
         search.descriptionSplit = d.description ?
-                                        search.description.split( ' ' ) : null;
+                                        search.description.split( /\s+/ ) : null;
 
 
         defaults.scoreProperties.forEach( param =>
@@ -242,7 +242,7 @@ export class Sole
 
         if ( query.length >= defaults.minimumValueLength )
         {
-            this.query  = query.toLowerCase().split( ' ' );
+            this.query  = query.toLowerCase().split( /\s+/ );
 
             let data    = this.flounder.data;
             data        = this.flounder.sortData( data );
