@@ -3,8 +3,6 @@
 import { setDefaultOption }     from './defaults';
 import utils                    from './utils';
 
-const nativeSlice = Array.prototype.slice;
-
 const build = {
 
     /**
@@ -527,14 +525,14 @@ const build = {
                 const data          = [];
                 const selectOptions = [];
 
-                nativeSlice.call( target.children, 0 ).forEach( optionEl =>
+                for ( const optionEl of target.children )
                 {
                     selectOptions.push( optionEl );
                     data.push( {
                         text    : optionEl.innerHTML,
                         value   : optionEl.value
                     } );
-                } );
+                }
 
                 refs.selectOptions = selectOptions;
 
@@ -576,10 +574,10 @@ const build = {
     {
         utils.removeAllChildren( select );
 
-        this.originalChildren.forEach( _el =>
+        for ( const el of this.originalChildren )
         {
-            select.appendChild( _el );
-        } );
+            select.appendChild( el );
+        }
     },
 
 
@@ -597,14 +595,16 @@ const build = {
     {
         const res = [];
 
-        this.originalChildren = nativeSlice.call( select.children, 0 );
+        this.originalChildren = select.children;
         const children = this.originalChildren;
 
-        children.forEach( ( _el, i ) =>
+        for ( let i = 0; i < children.length; i++ )
         {
-            res[ i ] = _el.cloneNode( true );
-            select.removeChild( _el );
-        } );
+            const el = children[ i ];
+
+            res[ i ]  = el.cloneNode( true );
+            select.removeChild( el );
+        }
 
         res.forEach( _el =>
         {
