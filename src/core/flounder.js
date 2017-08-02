@@ -9,8 +9,6 @@ import Search               from './search';
 import version              from './version';
 import keycodes             from './keycodes';
 
-const nativeSlice = Array.prototype.slice;
-
 /**
  * main flounder class
  *
@@ -194,8 +192,7 @@ class Flounder
                 if ( this.multipleTags && keyCode === keycodes.BACKSPACE &&
                         this.fuzzySearch.previousValue === '' )
                 {
-                    const lastTag = nativeSlice.call(
-                        this.refs.multiTagWrapper.children, 0, -1 ).pop();
+                    const lastTag = this.refs.search.previousSibling;
 
                     if ( lastTag )
                     {
