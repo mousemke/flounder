@@ -70,7 +70,7 @@ export const defaults = {
         valueSplit          : 10,
 
         description         : 15,
-        descriptionSplit    : 30
+        descriptionSplit    : 5
     }
 };
 
