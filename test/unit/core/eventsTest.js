@@ -1154,8 +1154,7 @@ describe( 'checkMultiTagKeydown', () =>
         flounder.setByIndex( 1 );
         flounder.setByIndex( 2 );
 
-        sinon.stub( flounder, 'clearPlaceholder', noop );
-        sinon.stub( flounder, 'toggleListSearchClick', noop );
+        const focusSearch = sinon.stub( flounder.refs.search, 'focus', noop );
 
         const firstChild = refs.multiTagWrapper.firstChild;
 
@@ -1167,8 +1166,9 @@ describe( 'checkMultiTagKeydown', () =>
             stopPropagation : noop
         } );
 
-        assert.equal( flounder.clearPlaceholder.callCount, 1 );
-        assert.equal( flounder.toggleListSearchClick.callCount, 1 );
+        assert.equal( focusSearch.callCount, 1 );
+
+        focusSearch.restore();
     } );
 
 
@@ -1231,15 +1231,19 @@ describe( 'checkMultiTagKeydownNavigate', () =>
         flounder.setByIndex( 1 );
         flounder.setByIndex( 2 );
 
-        const firstTag = refs.multiTagWrapper.firstChild;
+        const firstTag  = refs.multiTagWrapper.firstChild;
+        const secondTag = firstTag.nextSibling;
 
-        sinon.stub( firstTag, 'focus', noop );
-        const focusSearch = sinon.spy();
+        const focusFirst  = sinon.stub( firstTag, 'focus', noop );
+        const focusSearch = sinon.stub( flounder.refs.search, 'focus', noop );
 
-        flounder.checkMultiTagKeydownNavigate( focusSearch, keycodes.LEFT, 1 );
+        flounder.checkMultiTagKeydownNavigate( keycodes.LEFT, secondTag );
 
         assert.equal( focusSearch.callCount, 0 );
-        assert.equal( firstTag.focus.callCount, 1 );
+        assert.equal( focusFirst.callCount, 1 );
+
+        focusFirst.restore();
+        focusSearch.restore();
     } );
 
 
@@ -1257,13 +1261,16 @@ describe( 'checkMultiTagKeydownNavigate', () =>
 
         const firstTag = refs.multiTagWrapper.firstChild;
 
-        sinon.stub( firstTag, 'focus', noop );
-        const focusSearch = sinon.spy();
+        const focusFirst  = sinon.stub( firstTag, 'focus', noop );
+        const focusSearch = sinon.stub( refs.search, 'focus', noop );
 
-        flounder.checkMultiTagKeydownNavigate( focusSearch, keycodes.LEFT, 0 );
+        flounder.checkMultiTagKeydownNavigate( keycodes.LEFT, firstTag );
 
         assert.equal( focusSearch.callCount, 0 );
-        assert.equal( firstTag.focus.callCount, 0 );
+        assert.equal( focusFirst.callCount, 0 );
+
+        focusFirst.restore();
+        focusSearch.restore();
     } );
 
 
@@ -1280,16 +1287,19 @@ describe( 'checkMultiTagKeydownNavigate', () =>
         flounder.setByIndex( 1 );
         flounder.setByIndex( 2 );
 
-        const lastTag = Array.prototype.slice.call(
-            refs.multiTagWrapper.children, 0, -1 ).pop();
+        const firstTag  = refs.multiTagWrapper.firstChild;
+        const secondTag = firstTag.nextSibling;
 
-        sinon.stub( lastTag, 'focus', noop );
-        const focusSearch = sinon.spy();
+        const focusSecond = sinon.stub( secondTag, 'focus', noop );
+        const focusSearch = sinon.stub( refs.search, 'focus', noop );
 
-        flounder.checkMultiTagKeydownNavigate( focusSearch, keycodes.RIGHT, 0 );
+        flounder.checkMultiTagKeydownNavigate( keycodes.RIGHT, firstTag );
 
         assert.equal( focusSearch.callCount, 0 );
-        assert.equal( lastTag.focus.callCount, 1 );
+        assert.equal( focusSecond.callCount, 1 );
+
+        focusSecond.restore();
+        focusSearch.restore();
     } );
 
 
@@ -1307,13 +1317,16 @@ describe( 'checkMultiTagKeydownNavigate', () =>
 
         const firstTag = refs.multiTagWrapper.firstChild;
 
-        sinon.stub( firstTag, 'focus', noop );
-        const focusSearch = sinon.spy();
+        const focusFirst  = sinon.stub( firstTag, 'focus', noop );
+        const focusSearch = sinon.stub( refs.search, 'focus', noop );
 
-        flounder.checkMultiTagKeydownNavigate( focusSearch, keycodes.RIGHT, 0 );
+        flounder.checkMultiTagKeydownNavigate( keycodes.RIGHT, firstTag );
 
         assert.equal( focusSearch.callCount, 1 );
-        assert.equal( firstTag.focus.callCount, 0 );
+        assert.equal( focusFirst.callCount, 0 );
+
+        focusFirst.restore();
+        focusSearch.restore();
     } );
 } );
 
@@ -1344,15 +1357,16 @@ describe( 'checkMultiTagKeydownRemove', () =>
 
         flounder.setByIndex( 1 );
 
-        const tags          = Array.prototype.slice.call(
+        const tags       = Array.prototype.slice.call(
             refs.multiTagWrapper.children, 0, -1 );
-        const firstTag      =  tags[ 0 ];
-        const focusSearch   = sinon.spy();
+        const firstTag    =  tags[ 0 ];
+        const focusSearch = sinon.stub( flounder.refs.search, 'focus', noop );
 
-        flounder.checkMultiTagKeydownRemove(
-            firstTag, focusSearch, 0 );
+        flounder.checkMultiTagKeydownRemove( firstTag );
 
         assert.equal( focusSearch.callCount, 1 );
+
+        focusSearch.restore();
     } );
 
 
@@ -1375,15 +1389,16 @@ describe( 'checkMultiTagKeydownRemove', () =>
 
         const targetTag = tags[ 1 ];
 
-        const focusSearch = sinon.spy();
+        const focusSearch = sinon.stub( flounder.refs.search, 'focus', noop );
 
         sinon.stub( tags[ 0 ], 'focus', noop );
-        flounder.checkMultiTagKeydownRemove( targetTag, focusSearch, 1 );
+        flounder.checkMultiTagKeydownRemove( targetTag );
 
         assert.equal( focusSearch.callCount, 0 );
         assert.equal( tags[ 0 ].focus.callCount, 1 );
 
         tags[ 0 ].focus.restore();
+        focusSearch.restore();
     } );
 
 
@@ -1407,11 +1422,13 @@ describe( 'checkMultiTagKeydownRemove', () =>
         flounder.setByIndex( 3 );
 
         const firstTag    = refs.multiTagWrapper.firstChild;
-        const focusSearch = sinon.spy();
+        const focusSearch = sinon.stub( flounder.refs.search, 'focus', noop );
 
-        flounder.checkMultiTagKeydownRemove( firstTag, focusSearch, 0 );
+        flounder.checkMultiTagKeydownRemove( firstTag );
 
         assert.equal( focusSearch.callCount, 0 );
+
+        focusSearch.restore();
     } );
 } );
 

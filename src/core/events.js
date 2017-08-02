@@ -3,8 +3,6 @@
 import utils            from './utils';
 import keycodes         from './keycodes';
 
-const nativeSlice = Array.prototype.slice;
-
 const events = {
 
     /**
@@ -108,15 +106,16 @@ const events = {
             }
         } );
 
-        const tags = nativeSlice.call( multiTagWrapper.children, 0, -1 );
+        const children = multiTagWrapper.children;
 
-        tags.forEach( tag =>
+        for ( let i = 0; i < children.length - 1; i++ )
         {
+            const tag      = children[ i ];
             const closeBtn = tag.firstChild;
 
             closeBtn.addEventListener( 'click', this.removeMultiTag );
             tag.addEventListener( 'keydown', this.checkMultiTagKeydown );
-        } );
+        }
     },
 
 
@@ -493,8 +492,8 @@ const events = {
     /**
      * ## checkMultiTagKeydown
      *
-     * when a tag is selected, this decided how to handle it by either
-     * passing the event on, or handling tag removal
+     * when a tag is selected, this decides how to handle it by either passing
+     * the event on, or handling tag removal
      *
      * @param {Object} e event object
      *
@@ -502,49 +501,31 @@ const events = {
      */
     checkMultiTagKeydown( e )
     {
-        const keyCode   = e.keyCode;
-        const self      = this;
-        const refs      = this.refs;
-        const tags      = nativeSlice.call(
-            refs.multiTagWrapper.children, 0, -1 );
-        const target    = e.target;
-        const index     = tags.indexOf( target );
+        const { keyCode, target } = e;
 
-        /**
-         * ## focusSearch
-         *
-         * focus' on the search input
-         *
-         * @return {Void}  void
-         */
-        function focusSearch()
-        {
-            refs.search.focus();
-            self.clearPlaceholder();
-            self.toggleListSearchClick( e );
-        }
+        const catchKeys = [
+            keycodes.BACKSPACE,
+            keycodes.LEFT,
+            keycodes.RIGHT
+        ];
 
-
-        if ( keyCode === keycodes.LEFT || keyCode === keycodes.RIGHT ||
-            keyCode === keycodes.BACKSPACE )
+        if ( catchKeys.indexOf( keyCode ) !== -1 )
         {
             e.preventDefault();
             e.stopPropagation();
 
-
             if ( keyCode === keycodes.BACKSPACE )
             {
-                self.checkMultiTagKeydownRemove( target, focusSearch, index );
+                this.checkMultiTagKeydownRemove( target );
             }
             else
             {
-                self.checkMultiTagKeydownNavigate( focusSearch, keyCode,
-                    index );
+                this.checkMultiTagKeydownNavigate( keyCode, target );
             }
         }
         else if ( e.key.length < 2 )
         {
-            focusSearch();
+            this.refs.search.focus();
         }
     },
 
@@ -552,31 +533,33 @@ const events = {
     /**
      * ## checkMultiTagKeydownNavigate
      *
-     * after left or right is hit while a multitag is focused, this focus' on
+     * after left or right is hit while a multitag is focused, this focuses on
      * the next tag in that direction or the the search field
      *
-     * @param {Function} focusSearch function to focus on the search field
-     * @param {Number} keyCode keyclode from te keypress event
-     * @param {Number} index index of currently focused tag
+     * @param {Number} keyCode keycode from the keypress event
+     * @param {DOMElement} target focused multitag
      *
      * @return {Void} void
      */
-    checkMultiTagKeydownNavigate( focusSearch, keyCode, index )
+    checkMultiTagKeydownNavigate( keyCode, target )
     {
-        const tags = nativeSlice.call(
-            this.refs.multiTagWrapper.children, 0, -1 );
-
-        const adjustment = keyCode - 38;
-        const newIndex   = index + adjustment;
-        const length     = tags.length - 1;
-
-        if ( newIndex > length )
+        if ( keyCode === keycodes.LEFT )
         {
-            focusSearch();
+            const prev = target.previousSibling;
+
+            if ( prev )
+            {
+                prev.focus();
+            }
         }
-        else if ( newIndex >= 0 )
+        else if ( keyCode === keycodes.RIGHT )
         {
-            tags[ newIndex ].focus();
+            const next = target.nextSibling;
+
+            if ( next )
+            {
+                next.focus();
+            }
         }
     },
 
@@ -584,31 +567,27 @@ const events = {
     /**
      * ## checkMultiTagKeydownRemove
      *
-     * after a backspece while a multitag is focused, this removes the tag and
-     * focus' on the next
+     * after a backspace while a multitag is focused, this removes the tag and
+     * focuses on the next
      *
      * @param {DOMElement} target focused multitag
-     * @param {Function} focusSearch function to focus on the search field
-     * @param {Number} index index of currently focused tag
      *
      * @return {Void} void
      */
-    checkMultiTagKeydownRemove( target, focusSearch, index )
+    checkMultiTagKeydownRemove( target )
     {
-        const tags = nativeSlice.call(
-            this.refs.multiTagWrapper.children, 0, -1 );
-
-        const siblings  = tags.length - 1;
+        const prev = target.previousSibling;
+        const next = target.nextSibling;
 
         target.firstChild.click();
 
-        if ( siblings > 0 )
+        if ( prev )
         {
-            tags[ index === 0 ? 0 : index - 1 ].focus();
+            prev.focus();
         }
-        else
+        else if ( next )
         {
-            focusSearch();
+            next.focus();
         }
     },
 
@@ -667,17 +646,18 @@ const events = {
      */
     displayMultipleTags( selectedOptions, multiTagWrapper )
     {
-        const tags = nativeSlice.call( multiTagWrapper.children, 0, -1 );
+        const children = multiTagWrapper.children;
 
-        tags.forEach( tag =>
+        for ( let i = 0; i < children.length - 1; i++ )
         {
+            const tag      = children[ i ];
             const closeBtn = tag.firstChild;
 
             closeBtn.removeEventListener( 'click', this.removeMultiTag );
             tag.removeEventListener( 'keydown', this.checkMultiTagKeydown );
 
             multiTagWrapper.removeChild( tag );
-        } );
+        }
 
         if ( selectedOptions.length > 0 )
         {
@@ -1554,10 +1534,9 @@ const events = {
 
         if ( refs.multiTagWrapper )
         {
-            const tags = nativeSlice.call(
-                refs.multiTagWrapper.children, 0, -1 );
+            const numTags = refs.multiTagWrapper.children.length - 1;
 
-            if ( tags.length === optionCount )
+            if ( numTags === optionCount )
             {
                 this.removeNoResultsMessage();
                 this.addNoMoreOptionsMessage();
