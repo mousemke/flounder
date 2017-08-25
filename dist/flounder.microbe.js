@@ -1,12 +1,12 @@
 /*!
-                        * Flounder JavaScript Stylable Selectbox v1.2.1
+                        * Flounder JavaScript Stylable Selectbox v1.2.2
                         * https://github.com/sociomantic-tsunami/flounder
                         *
                         * Copyright 2015-2017 Sociomantic Labs and other contributors
                         * Released under the MIT license
                         * https://github.com/sociomantic-tsunami/flounder/license
                         *
-                        * Date: Thu Jul 27 2017
+                        * Date: Fri Aug 25 2017
                         *
                         * "This, so far, is the best Flounder ever"
                         */(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
@@ -4819,14 +4819,14 @@ var Sole = exports.Sole = function () {
                         count = (target.match(queryWord) || []).length;
                     } else if (target[0]) {
                         target.forEach(function (word) {
-                            count = word.indexOf(queryWord) !== -1 ? 1 : 0;
+                            count += word.indexOf(queryWord) !== -1 ? 1 : 0;
                         });
                     } else {
                         count = target[queryWord] || 0.000001;
                     }
 
-                    if (count && count > 0) {
-                        score += weight * count * 10;
+                    if (count > 0) {
+                        score = weight * count * 10;
                     } else if (noPunishment !== true) {
                         score = -weight;
                     }
@@ -5201,7 +5201,7 @@ exports.default = utils;
 'use strict';
 
 /* globals module */
-module.exports = '1.2.1';
+module.exports = '1.2.2';
 
 },{}],22:[function(require,module,exports){
 'use strict';

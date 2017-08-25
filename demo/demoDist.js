@@ -5116,14 +5116,14 @@ var Sole = exports.Sole = function () {
                         count = (target.match(queryWord) || []).length;
                     } else if (target[0]) {
                         target.forEach(function (word) {
-                            count = word.indexOf(queryWord) !== -1 ? 1 : 0;
+                            count += word.indexOf(queryWord) !== -1 ? 1 : 0;
                         });
                     } else {
                         count = target[queryWord] || 0.000001;
                     }
 
-                    if (count && count > 0) {
-                        score += weight * count * 10;
+                    if (count > 0) {
+                        score = weight * count * 10;
                     } else if (noPunishment !== true) {
                         score = -weight;
                     }
@@ -5498,6 +5498,6 @@ exports.default = utils;
 'use strict';
 
 /* globals module */
-module.exports = '1.2.1';
+module.exports = '1.2.2';
 
 },{}]},{},[1]);
