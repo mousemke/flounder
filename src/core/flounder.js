@@ -1,5 +1,5 @@
 
-/* globals console, document */
+/* globals console, document, setTimeout */
 import { defaultOptions }   from './defaults';
 import utils                from './utils';
 import api                  from './api';
@@ -199,7 +199,7 @@ class Flounder
 
                     if ( lastTag )
                     {
-                        lastTag.focus();
+                        setTimeout( () => lastTag.focus(), 0 );
                     }
                 }
                 else
