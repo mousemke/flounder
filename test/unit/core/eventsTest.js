@@ -3052,12 +3052,10 @@ describe( 'toggleOpen', () =>
 
         sinon.stub( refs.search, 'focus', noop );
         sinon.stub( flounder, 'onOpen', noop );
-        sinon.stub( flounder, 'addSelectKeyListener', noop );
 
         flounder.toggleOpen( {}, refs.optionList, refs, refs.wrapper );
 
         assert.equal( flounder.onOpen.callCount, 1 );
-        assert.equal( flounder.addSelectKeyListener.callCount, 0 );
 
         assert.equal( utils.addClass.callCount, 1 );
         assert.equal( utils.removeClass.callCount, 1 );
