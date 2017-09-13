@@ -1,12 +1,12 @@
 /*!
-                        * Flounder JavaScript Stylable Selectbox v1.2.2
+                        * Flounder JavaScript Stylable Selectbox v1.2.3
                         * https://github.com/sociomantic-tsunami/flounder
                         *
                         * Copyright 2015-2017 Sociomantic Labs and other contributors
                         * Released under the MIT license
                         * https://github.com/sociomantic-tsunami/flounder/license
                         *
-                        * Date: Fri Aug 25 2017
+                        * Date: Wed Sep 13 2017
                         *
                         * "This, so far, is the best Flounder ever"
                         */(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
@@ -2874,8 +2874,7 @@ var events = {
      * @return {Void} void
      */
     addSelectKeyListener: function addSelectKeyListener() {
-        var refs = this.refs;
-        var select = refs.select;
+        var select = this.refs.select;
 
         select.addEventListener('keyup', this.setSelectValue);
         select.addEventListener('keydown', this.setKeypress);
@@ -2892,8 +2891,6 @@ var events = {
             plug.className = classes.PLUG;
             select.insertBefore(plug, firstOption);
         }
-
-        select.focus();
     },
 
 
@@ -3082,7 +3079,9 @@ var events = {
          * @return {Void}  void
          */
         function focusSearch() {
-            refs.search.focus();
+            setTimeout(function () {
+                return refs.search.focus();
+            }, 0);
             self.clearPlaceholder();
             self.toggleListSearchClick(e);
         }
@@ -3124,7 +3123,9 @@ var events = {
         if (newIndex > length) {
             focusSearch();
         } else if (newIndex >= 0) {
-            tags[newIndex].focus();
+            setTimeout(function () {
+                return tags[newIndex].focus();
+            }, 0);
         }
     },
 
@@ -3149,7 +3150,9 @@ var events = {
         target.firstChild.click();
 
         if (siblings > 0) {
-            tags[index === 0 ? 0 : index - 1].focus();
+            setTimeout(function () {
+                return tags[index === 0 ? 0 : index - 1].focus();
+            }, 0);
         } else {
             focusSearch();
         }
@@ -3858,8 +3861,6 @@ var events = {
         var classes = this.classes;
 
         _utils2.default.addClass(refs.optionsListWrapper, classes.HIDDEN);
-        this.removeSelectKeyListener();
-
         _utils2.default.removeClass(wrapper, classes.OPEN);
 
         var qsHTML = document.querySelector('html');
@@ -3868,10 +3869,14 @@ var events = {
 
         if (this.search) {
             this.fuzzySearchReset();
+        } else {
+            this.removeSelectKeyListener();
         }
 
         if (!exit) {
-            refs.flounder.focus();
+            setTimeout(function () {
+                return refs.flounder.focus();
+            }, 0);
         }
 
         if (this.ready) {
@@ -3947,8 +3952,6 @@ var events = {
      * @return {Void} void
      */
     toggleOpen: function toggleOpen(e, optionsList, refs) {
-        this.addSelectKeyListener();
-
         if (!this.isIos || this.search || this.multipleTags === true) {
             var classes = this.classes;
 
@@ -3961,7 +3964,7 @@ var events = {
             qsHTML.addEventListener('touchend', this.catchBodyClick);
         }
 
-        if (!this.multiple) {
+        if (!this.multipleTags) {
             var index = refs.select.selectedIndex;
             var selectedDiv = refs.data[index];
 
@@ -3969,7 +3972,14 @@ var events = {
         }
 
         if (this.search) {
-            refs.search.focus();
+            setTimeout(function () {
+                return refs.search.focus();
+            }, 0);
+        } else {
+            this.addSelectKeyListener();
+            setTimeout(function () {
+                return refs.select.focus();
+            }, 0);
         }
 
         var optionCount = refs.data.length;
@@ -4009,7 +4019,7 @@ Object.defineProperty(exports, "__esModule", {
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-/* globals console, document */
+/* globals console, document, setTimeout */
 
 
 var _defaults = require('./defaults');
@@ -4207,7 +4217,9 @@ var Flounder = function () {
                         var lastTag = nativeSlice.call(this.refs.multiTagWrapper.children, 0, -1).pop();
 
                         if (lastTag) {
-                            lastTag.focus();
+                            setTimeout(function () {
+                                return lastTag.focus();
+                            }, 0);
                         }
                     } else {
                         this.filterSearchResults(e);
@@ -5201,7 +5213,7 @@ exports.default = utils;
 'use strict';
 
 /* globals module */
-module.exports = '1.2.2';
+module.exports = '1.2.3';
 
 },{}],22:[function(require,module,exports){
 'use strict';
