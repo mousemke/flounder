@@ -3057,7 +3057,7 @@ describe( 'toggleOpen', () =>
         flounder.toggleOpen( {}, refs.optionList, refs, refs.wrapper );
 
         assert.equal( flounder.onOpen.callCount, 1 );
-        assert.equal( flounder.addSelectKeyListener.callCount, 1 );
+        assert.equal( flounder.addSelectKeyListener.callCount, 0 );
 
         assert.equal( utils.addClass.callCount, 1 );
         assert.equal( utils.removeClass.callCount, 1 );
@@ -3070,6 +3070,40 @@ describe( 'toggleOpen', () =>
             assert.equal( refs.search.focus.callCount, 1 );
             done();
         }, 100 );
+    } );
+
+    it( 'should call addSelectKeyListener when search is disabled', () =>
+    {
+        document.body.flounder  = null;
+        const flounder          = new Flounder( document.body, {
+            data    : [ 1, 2, 3 ],
+            search  : false
+        } );
+
+        const refs              = flounder.refs;
+
+        sinon.stub( flounder, 'addSelectKeyListener', noop );
+
+        flounder.toggleOpen( {}, refs.optionList, refs, refs.wrapper );
+
+        assert.equal( flounder.addSelectKeyListener.callCount, 1 );
+    } );
+
+    it( 'should not call addSelectKeyListener when search is enabled', () =>
+    {
+        document.body.flounder  = null;
+        const flounder          = new Flounder( document.body, {
+            data    : [ 1, 2, 3 ],
+            search  : true
+        } );
+
+        const refs              = flounder.refs;
+
+        sinon.stub( flounder, 'addSelectKeyListener', noop );
+
+        flounder.toggleOpen( {}, refs.optionList, refs, refs.wrapper );
+
+        assert.equal( flounder.addSelectKeyListener.callCount, 0 );
     } );
 
 
