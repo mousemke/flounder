@@ -275,8 +275,7 @@ const events = {
      */
     addSelectKeyListener()
     {
-        const refs    = this.refs;
-        const select  = refs.select;
+        const select  = this.refs.select;
 
         select.addEventListener( 'keyup', this.setSelectValue );
         select.addEventListener( 'keydown', this.setKeypress );
@@ -294,8 +293,6 @@ const events = {
             plug.className   = classes.PLUG;
             select.insertBefore( plug, firstOption );
         }
-
-        select.focus();
     },
 
 
@@ -519,7 +516,7 @@ const events = {
          */
         function focusSearch()
         {
-            refs.search.focus();
+            setTimeout( () => refs.search.focus(), 0 );
             self.clearPlaceholder();
             self.toggleListSearchClick( e );
         }
@@ -576,7 +573,7 @@ const events = {
         }
         else if ( newIndex >= 0 )
         {
-            tags[ newIndex ].focus();
+            setTimeout( () => tags[ newIndex ].focus(), 0 );
         }
     },
 
@@ -604,7 +601,7 @@ const events = {
 
         if ( siblings > 0 )
         {
-            tags[ index === 0 ? 0 : index - 1 ].focus();
+            setTimeout( () =>  tags[ index === 0 ? 0 : index - 1 ].focus(), 0 );
         }
         else
         {
@@ -1413,8 +1410,6 @@ const events = {
         const classes = this.classes;
 
         utils.addClass( refs.optionsListWrapper, classes.HIDDEN );
-        this.removeSelectKeyListener();
-
         utils.removeClass( wrapper, classes.OPEN );
 
         const qsHTML = document.querySelector( 'html' );
@@ -1425,10 +1420,14 @@ const events = {
         {
             this.fuzzySearchReset();
         }
+        else
+        {
+            this.removeSelectKeyListener();
+        }
 
         if ( !exit )
         {
-            refs.flounder.focus();
+            setTimeout( () => refs.flounder.focus(), 0 );
         }
 
         if ( this.ready )
@@ -1516,8 +1515,6 @@ const events = {
      */
     toggleOpen( e, optionsList, refs )
     {
-        this.addSelectKeyListener();
-
         if ( !this.isIos || this.search || this.multipleTags === true )
         {
             const classes = this.classes;
@@ -1532,7 +1529,7 @@ const events = {
         }
 
 
-        if ( !this.multiple )
+        if ( !this.multipleTags )
         {
             const index       = refs.select.selectedIndex;
             const selectedDiv = refs.data[ index ];
@@ -1542,7 +1539,12 @@ const events = {
 
         if ( this.search )
         {
-            refs.search.focus();
+            setTimeout( () => refs.search.focus(), 0 );
+        }
+        else
+        {
+            this.addSelectKeyListener();
+            setTimeout( () => refs.select.focus(), 0 );
         }
 
         let optionCount = refs.data.length;
