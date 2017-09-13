@@ -275,8 +275,7 @@ const events = {
      */
     addSelectKeyListener()
     {
-        const refs    = this.refs;
-        const select  = refs.select;
+        const select  = this.refs.select;
 
         select.addEventListener( 'keyup', this.setSelectValue );
         select.addEventListener( 'keydown', this.setKeypress );
@@ -294,8 +293,6 @@ const events = {
             plug.className   = classes.PLUG;
             select.insertBefore( plug, firstOption );
         }
-
-        setTimeout( () => select.focus(), 0 );
     },
 
 
@@ -1413,8 +1410,6 @@ const events = {
         const classes = this.classes;
 
         utils.addClass( refs.optionsListWrapper, classes.HIDDEN );
-        this.removeSelectKeyListener();
-
         utils.removeClass( wrapper, classes.OPEN );
 
         const qsHTML = document.querySelector( 'html' );
@@ -1424,6 +1419,10 @@ const events = {
         if ( this.search )
         {
             this.fuzzySearchReset();
+        }
+        else
+        {
+            this.removeSelectKeyListener();
         }
 
         if ( !exit )
@@ -1516,8 +1515,6 @@ const events = {
      */
     toggleOpen( e, optionsList, refs )
     {
-        this.addSelectKeyListener();
-
         if ( !this.isIos || this.search || this.multipleTags === true )
         {
             const classes = this.classes;
@@ -1532,7 +1529,7 @@ const events = {
         }
 
 
-        if ( !this.multiple )
+        if ( !this.multipleTags )
         {
             const index       = refs.select.selectedIndex;
             const selectedDiv = refs.data[ index ];
@@ -1543,6 +1540,11 @@ const events = {
         if ( this.search )
         {
             setTimeout( () => refs.search.focus(), 0 );
+        }
+        else
+        {
+            this.addSelectKeyListener();
+            setTimeout( () => refs.select.focus(), 0 );
         }
 
         let optionCount = refs.data.length;
