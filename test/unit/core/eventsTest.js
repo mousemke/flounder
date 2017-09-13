@@ -32,17 +32,21 @@ describe( 'addFirstTouchListeners', () =>
 
     flounder.addFirstTouchListeners();
 
-    it( 'should react on click and focus events', () =>
+    it( 'should react on click and focus events', done  =>
     {
         refs.selected.click();
         refs.select.focus();
 
-        assert.equal( flounder.firstTouchController.callCount, 2 );
-        flounder.firstTouchController.restore();
+        setTimeout( () =>
+        {
+            assert.equal( flounder.firstTouchController.callCount, 2 );
+            flounder.firstTouchController.restore();
+            done();
+        }, 100 );
     } );
 
 
-    it( 'should bind mouseenter to the wrapper if openOnHover is set', () =>
+    it( 'should bind mouseenter to the wrapper if openOnHover is set', done =>
     {
         document.body.flounder = null;
         const flounder    = new Flounder( document.body, {
@@ -60,8 +64,12 @@ describe( 'addFirstTouchListeners', () =>
         simulant.fire( flounder.refs.wrapper, 'mouseenter' );
 
         // there's some weird focus event too
-        assert.equal( flounder.firstTouchController.callCount, 2 );
-        flounder.firstTouchController.restore();
+        setTimeout( () =>
+        {
+            assert.equal( flounder.firstTouchController.callCount, 2 );
+            flounder.firstTouchController.restore();
+            done();
+        }, 100 );
     } );
 } );
 
@@ -1218,7 +1226,7 @@ describe( 'checkMultiTagKeydown', () =>
  */
 describe( 'checkMultiTagKeydownNavigate', () =>
 {
-    it( 'should focus on next left tag when left is pressed', () =>
+    it( 'should focus on next left tag when left is pressed', done =>
     {
         document.body.flounder = null;
 
@@ -1239,7 +1247,12 @@ describe( 'checkMultiTagKeydownNavigate', () =>
         flounder.checkMultiTagKeydownNavigate( focusSearch, keycodes.LEFT, 1 );
 
         assert.equal( focusSearch.callCount, 0 );
-        assert.equal( firstTag.focus.callCount, 1 );
+
+        setTimeout( () =>
+        {
+            assert.equal( firstTag.focus.callCount, 1 );
+            done();
+        }, 100 );
     } );
 
 
@@ -1267,7 +1280,7 @@ describe( 'checkMultiTagKeydownNavigate', () =>
     } );
 
 
-    it( 'should focus on next right tag when right is pressed', () =>
+    it( 'should focus on next right tag when right is pressed', done =>
     {
         document.body.flounder = null;
 
@@ -1289,7 +1302,12 @@ describe( 'checkMultiTagKeydownNavigate', () =>
         flounder.checkMultiTagKeydownNavigate( focusSearch, keycodes.RIGHT, 0 );
 
         assert.equal( focusSearch.callCount, 0 );
-        assert.equal( lastTag.focus.callCount, 1 );
+
+        setTimeout( () =>
+        {
+            assert.equal( lastTag.focus.callCount, 1 );
+            done();
+        }, 100 );
     } );
 
 
@@ -1356,7 +1374,7 @@ describe( 'checkMultiTagKeydownRemove', () =>
     } );
 
 
-    it( 'should focus on the previous tag whn there are more then 2', () =>
+    it( 'should focus on the previous tag whn there are more than 2', done =>
     {
         document.body.flounder = null;
 
@@ -1381,9 +1399,15 @@ describe( 'checkMultiTagKeydownRemove', () =>
         flounder.checkMultiTagKeydownRemove( targetTag, focusSearch, 1 );
 
         assert.equal( focusSearch.callCount, 0 );
-        assert.equal( tags[ 0 ].focus.callCount, 1 );
 
-        tags[ 0 ].focus.restore();
+        setTimeout( () =>
+        {
+            assert.equal( tags[ 0 ].focus.callCount, 1 );
+            tags[ 0 ].focus.restore();
+            done();
+        }, 100 );
+
+
     } );
 
 
@@ -2805,7 +2829,7 @@ describe( 'setSelectValueClick', () =>
  */
 describe( 'toggleClosed', () =>
 {
-    it( 'should close the options list and remove necessary listeners', () =>
+    it( 'should close the options list and remove necessary listeners', done =>
     {
         document.body.flounder  = null;
         const flounder            = new Flounder( document.body, {
@@ -2826,14 +2850,19 @@ describe( 'toggleClosed', () =>
         flounder.toggleClosed( {}, {}, refs, refs.wrapper );
 
         assert.equal( flounder.fuzzySearchReset.callCount, 1 );
-        assert.equal( refs.flounder.focus.callCount, 1 );
         assert.equal( flounder.onClose.callCount, 1 );
-
         assert.equal( utils.addClass.callCount, 1 );
         assert.equal( utils.removeClass.callCount, 1 );
 
         utils.addClass.restore();
         utils.removeClass.restore();
+
+        setTimeout( () =>
+        {
+            assert.equal( refs.flounder.focus.callCount, 1 );
+            refs.flounder.focus.restore();
+            done();
+        }, 100 );
     } );
 
 
@@ -3008,15 +3037,15 @@ describe( 'toggleListSearchClick', () =>
  */
 describe( 'toggleOpen', () =>
 {
-    it( 'should open the options list and add necessary listeners', () =>
+    it( 'should open the options list and add necessary listeners', done =>
     {
         document.body.flounder  = null;
-        let flounder            = new Flounder( document.body, {
+        const flounder          = new Flounder( document.body, {
             data    : [ 1, 2, 3 ],
             search  : true
         } );
 
-        let refs                = flounder.refs;
+        const refs              = flounder.refs;
 
         sinon.stub( utils, 'addClass', noop );
         sinon.stub( utils, 'removeClass', noop );
@@ -3027,27 +3056,20 @@ describe( 'toggleOpen', () =>
 
         flounder.toggleOpen( {}, refs.optionList, refs, refs.wrapper );
 
-        assert.equal( refs.search.focus.callCount, 1 );
         assert.equal( flounder.onOpen.callCount, 1 );
         assert.equal( flounder.addSelectKeyListener.callCount, 1 );
 
         assert.equal( utils.addClass.callCount, 1 );
         assert.equal( utils.removeClass.callCount, 1 );
 
-        flounder            = new Flounder( document.body, {
-            data : [ 1, 2, 3 ]
-        } );
-
-        flounder.isIos      = true;
-        refs                = flounder.refs;
-
-        sinon.stub( flounder, 'onOpen', noop );
-        sinon.stub( flounder, 'addSelectKeyListener', noop );
-
-        flounder.toggleOpen( {}, refs.optionList, refs, refs.wrapper );
-
         utils.addClass.restore();
         utils.removeClass.restore();
+
+        setTimeout( () =>
+        {
+            assert.equal( refs.search.focus.callCount, 1 );
+            done();
+        }, 100 );
     } );
 
 

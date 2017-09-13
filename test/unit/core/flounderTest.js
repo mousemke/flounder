@@ -1,4 +1,4 @@
-/* globals describe, it, document, console */
+/* globals describe, it, document, console, setTimeout */
 import assert   from 'assert';
 import sinon    from 'sinon';
 
@@ -342,7 +342,7 @@ describe( 'fuzzySearch', () =>
 
 
 
-    it( 'should go to the last tag on backspace in an empty searchbox', () =>
+    it( 'should go to the last tag on backspace in an empty searchbox', done =>
     {
         e.keyCode = keycodes.BACKSPACE;
 
@@ -359,7 +359,11 @@ describe( 'fuzzySearch', () =>
 
         flounder.fuzzySearch( e );
 
-        assert.equal( lastTag.focus.callCount, 1 );
+        setTimeout( () =>
+        {
+            assert.equal( lastTag.focus.callCount, 1 );
+            done();
+        }, 100 );
     } );
 
 

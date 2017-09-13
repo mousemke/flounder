@@ -295,7 +295,7 @@ const events = {
             select.insertBefore( plug, firstOption );
         }
 
-        select.focus();
+        setTimeout( () => select.focus(), 0 );
     },
 
 
@@ -519,7 +519,7 @@ const events = {
          */
         function focusSearch()
         {
-            refs.search.focus();
+            setTimeout( () => refs.search.focus(), 0 );
             self.clearPlaceholder();
             self.toggleListSearchClick( e );
         }
@@ -576,7 +576,7 @@ const events = {
         }
         else if ( newIndex >= 0 )
         {
-            tags[ newIndex ].focus();
+            setTimeout( () => tags[ newIndex ].focus(), 0 );
         }
     },
 
@@ -604,7 +604,7 @@ const events = {
 
         if ( siblings > 0 )
         {
-            tags[ index === 0 ? 0 : index - 1 ].focus();
+            setTimeout( () =>  tags[ index === 0 ? 0 : index - 1 ].focus(), 0 );
         }
         else
         {
@@ -1428,7 +1428,7 @@ const events = {
 
         if ( !exit )
         {
-            refs.flounder.focus();
+            setTimeout( () => refs.flounder.focus(), 0 );
         }
 
         if ( this.ready )
@@ -1542,7 +1542,7 @@ const events = {
 
         if ( this.search )
         {
-            refs.search.focus();
+            setTimeout( () => refs.search.focus(), 0 );
         }
 
         let optionCount = refs.data.length;
