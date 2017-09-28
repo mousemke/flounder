@@ -316,33 +316,38 @@ const utils = {
      *
      * checks if an option is visible and, if it is not, scrolls it into view
      *
-     * @param {DOMElement} element element to check
+     * @param {DOMElement}  element         element to check
+     * @param {DOMElement}  [scrollParent]  parent element to scroll
      *
      * @return {Void} void
      */
-    scrollTo( element )
+    scrollTo( element, scrollParent )
     {
         if ( element )
         {
-            const parent    = element.parentNode.parentNode;
-            const elHeight  = element.offsetHeight;
-            const min       = parent.scrollTop;
-            const max       = parent.scrollTop + parent.offsetHeight - elHeight;
-            const pos       = element.offsetTop;
+            const scrollElement = scrollParent || element.offsetParent;
 
-            if ( pos < min )
+            if ( scrollElement.scrollHeight > scrollElement.offsetHeight )
             {
-                parent.scrollTop = pos  - elHeight * 0.5;
-            }
-            else if ( pos > max )
-            {
-                parent.scrollTop = pos - parent.offsetHeight + elHeight * 1.5;
+                const pos        = element.offsetTop;
+                const elHeight   = element.offsetHeight;
+                const contHeight = scrollElement.offsetHeight;
+
+                const min = scrollElement.scrollTop;
+                const max = min + scrollElement.offsetHeight - elHeight;
+
+                if ( pos < min )
+                {
+                    scrollElement.scrollTop = pos;
+                }
+                else if ( pos > max )
+                {
+                    scrollElement.scrollTop = pos - ( contHeight - elHeight );
+                }
             }
         }
-        else
-        {
-            return false;
-        }
+
+        return false;
     },
 
 

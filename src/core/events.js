@@ -1335,7 +1335,7 @@ const events = {
 
             utils.addClass( selectedOption, selectedClass );
 
-            utils.scrollTo( selectedOption );
+            utils.scrollTo( selectedOption, refs.optionsListWrapper );
         }
     },
 
@@ -1534,7 +1534,7 @@ const events = {
             const index       = refs.select.selectedIndex;
             const selectedDiv = refs.data[ index ];
 
-            utils.scrollTo( selectedDiv  );
+            utils.scrollTo( selectedDiv, refs.optionsListWrapper );
         }
 
         if ( this.search )

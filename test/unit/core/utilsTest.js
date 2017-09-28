@@ -455,20 +455,19 @@ describe( 'scrollTo', () =>
         const element = {
             offsetHeight    : 10,
             offsetTop       : 150,
-            parentNode      : {
-                parentNode      : {
-                    scrollTop       : 7,
-                    offsetHeight    : 100
-                }
+            offsetParent    : {
+                scrollTop       : 7,
+                offsetHeight    : 100,
+                scrollHeight    : 500
             }
         };
 
         utils.scrollTo( element );
-        assert.equal( element.parentNode.parentNode.scrollTop, 65 );
+        assert.equal( element.offsetParent.scrollTop, 60 );
 
         element.offsetTop = 5;
         utils.scrollTo( element );
-        assert.equal( element.parentNode.parentNode.scrollTop, 0 );
+        assert.equal( element.offsetParent.scrollTop, 5 );
     } );
 
 
