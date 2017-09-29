@@ -36,6 +36,11 @@ let data = [
     }
 ];
 
+for( let i = 0; i < 10; i++ )
+{
+  data = data.concat( data );
+}
+
 
 let buildData = function()
 {

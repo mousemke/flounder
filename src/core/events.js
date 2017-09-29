@@ -200,12 +200,11 @@ const events = {
      */
     addPlaceholder()
     {
-        const selectedValues  = this.getSelectedValues();
-        const val             = selectedValues[ 0 ];
         const selectedItems   = this.getSelected();
-        const selectedText    = selectedItems.length ?
+        const selectedCount   = selectedItems.length;
+        const val             = selectedCount ? selectedItems[ 0 ].value : '';
+        const selectedText    = selectedCount ?
                                             selectedItems[ 0 ].innerHTML : '';
-        const selectedCount   = selectedValues.length;
         const selected        = this.refs.selected;
 
         switch ( selectedCount )
@@ -228,7 +227,7 @@ const events = {
                 this.setByIndex( 0 );
             }
 
-            if ( !val || val === '' )
+            if ( !val )
             {
                 selected.innerHTML = this.placeholder;
             }
@@ -416,7 +415,7 @@ const events = {
 
                     try
                     {
-                        this.onChange( e, this.getSelectedValues() );
+                        this.onChange( e, selected.map( s => s.value ) );
                     }
                     catch ( e )
                     {
@@ -987,7 +986,7 @@ const events = {
 
         try
         {
-            this.onChange( e, this.getSelectedValues() );
+            this.onChange( e, selectedOptions.map( o => o.value ) );
         }
         catch ( e )
         {
