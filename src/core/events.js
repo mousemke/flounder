@@ -260,7 +260,7 @@ const events = {
 
         search.addEventListener( 'click', this.toggleListSearchClick );
         search.addEventListener( 'focus', this.toggleListSearchClick );
-        search.addEventListener( 'keyup', this.fuzzySearch );
+        search.addEventListener( 'input', this.fuzzySearch );
         search.addEventListener( 'focus', this.clearPlaceholder );
     },
 
@@ -1070,7 +1070,7 @@ const events = {
         const search = this.refs.search;
         search.removeEventListener( 'click', this.toggleListSearchClick );
         search.removeEventListener( 'focus', this.toggleListSearchClick );
-        search.removeEventListener( 'keyup', this.fuzzySearch );
+        search.removeEventListener( 'input', this.fuzzySearch );
         search.removeEventListener( 'focus', this.clearPlaceholder );
     },
 

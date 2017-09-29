@@ -467,7 +467,7 @@ describe( 'addSearchListeners', () =>
         const search = flounder.refs.search;
 
         simulant.fire( search, 'click' );
-        simulant.fire( search, 'keyup' );
+        simulant.fire( search, 'input' );
         search.focus();
 
         assert.equal( flounder.toggleListSearchClick.callCount, 2 );
