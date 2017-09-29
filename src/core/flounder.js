@@ -36,7 +36,7 @@ class Flounder
             catch ( e )
             {
                 console.warn(
-                    `something may be wrong in "onComponentWillUnmount"`, e );
+                    'something may be wrong in "onComponentWillUnmount"', e );
             }
         }
 
