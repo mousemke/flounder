@@ -813,8 +813,9 @@ describe( 'checkEnterOnSearch', () =>
         document.body.flounder = null;
 
         const flounder    = new Flounder( document.body, {
-            data    : [ 1, 2, 3 ],
-            search  : true
+            data     : [ 1, 2, 3 ],
+            search   : true,
+            onChange : sinon.stub()
         } );
 
         const refs        = flounder.refs;
@@ -827,15 +828,9 @@ describe( 'checkEnterOnSearch', () =>
             }
         };
 
-        sinon.stub( flounder, 'onChange', () =>
-        {
-        } );
-
         flounder.checkEnterOnSearch( e, refs );
 
         assert.equal( flounder.onChange.callCount, 0 );
-
-        flounder.onChange.restore();
     } );
 
 
@@ -1757,10 +1752,9 @@ describe( 'firstTouchController', () =>
 
         const flounder    = new Flounder( document.body, {
             data            : [ 1, 2, 3 ],
-            multipleTags    : true
+            multipleTags    : true,
+            onFirstTouch    : () => a + b // eslint-disable-line
         } );
-
-        flounder.onFirstTouch = () => a + b; // eslint-disable-line
 
         sinon.stub( console, 'warn', noop );
 
@@ -2024,13 +2018,12 @@ describe( 'removeMultiTag', () =>
         document.body.flounder = null;
 
         const flounder        = new Flounder( document.body, {
-            data            : [ 1, 2, 3 ],
-            multipleTags    : true
+            data         : [ 1, 2, 3 ],
+            multipleTags : true,
+            onChange     : () => a + b // eslint-disable-line
         } );
         const refs            = flounder.refs;
         const multiTagWrapper = refs.multiTagWrapper;
-
-        flounder.onChange   =  () => a + b; // eslint-disable-line
 
         flounder.setByIndex( 1 );
 
@@ -2567,11 +2560,11 @@ describe( 'setSelectValue', () =>
     {
         document.body.flounder = null;
         const flounder = new Flounder( document.body, {
-            data : [ 1, 2, 3 ]
+            data     : [ 1, 2, 3 ],
+            onChange : sinon.stub()
         } );
 
         sinon.stub( flounder, 'setSelectValueClick', noop );
-        sinon.stub( flounder, 'onChange', noop );
 
         flounder.programmaticClick = true;
         flounder.setSelectValue( null, {} );
@@ -2590,11 +2583,12 @@ describe( 'setSelectValue', () =>
     {
         document.body.flounder = null;
         const flounder = new Flounder( document.body, {
-            data : [ 1, 2, 3 ]
+            data     : [ 1, 2, 3 ],
+            onChange : () => a + b // eslint-disable-line
         } );
 
         sinon.stub( flounder, 'setSelectValueButton', noop );
-        sinon.stub( flounder, 'onChange', () => a + b ); // eslint-disable-line
+        sinon.spy( flounder, 'onChange' );
         sinon.stub( console, 'warn', noop );
 
         flounder.setSelectValue( {
@@ -2612,11 +2606,11 @@ describe( 'setSelectValue', () =>
     {
         document.body.flounder = null;
         const flounder = new Flounder( document.body, {
-            data : [ 1, 2, 3 ]
+            data     : [ 1, 2, 3 ],
+            onChange : sinon.stub()
         } );
 
         sinon.stub( flounder, 'setSelectValueButton', noop );
-        sinon.stub( flounder, 'onChange', noop );
 
         flounder.toggleList.justOpened = true;
         flounder.setSelectValue( {
@@ -2834,7 +2828,8 @@ describe( 'toggleClosed', () =>
         document.body.flounder  = null;
         const flounder            = new Flounder( document.body, {
             data    : [ 1, 2, 3 ],
-            search  : true
+            search  : true,
+            onClose : sinon.stub()
         } );
 
         const refs                = flounder.refs;
@@ -2845,7 +2840,6 @@ describe( 'toggleClosed', () =>
         sinon.stub( flounder, 'removeSelectKeyListener', noop );
         sinon.stub( flounder, 'fuzzySearchReset', noop );
         sinon.stub( refs.flounder, 'focus', noop );
-        sinon.stub( flounder, 'onClose', noop );
 
         flounder.toggleClosed( {}, {}, refs, refs.wrapper );
 
@@ -2870,7 +2864,8 @@ describe( 'toggleClosed', () =>
     {
         document.body.flounder  = null;
         const flounder            = new Flounder( document.body, {
-            data : [ 1, 2, 3 ]
+            data    : [ 1, 2, 3 ],
+            onClose : () => a + b // eslint-disable-line
         } );
         const refs                = flounder.refs;
 
@@ -2878,7 +2873,6 @@ describe( 'toggleClosed', () =>
         sinon.stub( utils, 'removeClass', noop );
 
         sinon.stub( console, 'warn', noop );
-        sinon.stub( flounder, 'onClose', () => a + b ); // eslint-disable-line
 
         flounder.toggleClosed( {}, {}, refs, refs.wrapper );
 
@@ -2925,7 +2919,8 @@ describe( 'toggleClosed', () =>
                 },
                 2,
                 3
-            ]
+            ],
+            onClose : sinon.stub()
         } );
 
         flounder.ready          = false;
@@ -2933,8 +2928,6 @@ describe( 'toggleClosed', () =>
 
         sinon.stub( utils, 'addClass', noop );
         sinon.stub( utils, 'removeClass', noop );
-
-        sinon.stub( flounder, 'onClose', noop );
 
         flounder.toggleClosed( {}, {}, refs, refs.wrapper, true );
 
@@ -3042,7 +3035,8 @@ describe( 'toggleOpen', () =>
         document.body.flounder  = null;
         const flounder          = new Flounder( document.body, {
             data    : [ 1, 2, 3 ],
-            search  : true
+            search  : true,
+            onOpen  : sinon.stub()
         } );
 
         const refs              = flounder.refs;
@@ -3051,7 +3045,6 @@ describe( 'toggleOpen', () =>
         sinon.stub( utils, 'removeClass', noop );
 
         sinon.stub( refs.search, 'focus', noop );
-        sinon.stub( flounder, 'onOpen', noop );
 
         flounder.toggleOpen( {}, refs.optionList, refs, refs.wrapper );
 
@@ -3143,7 +3136,8 @@ describe( 'toggleOpen', () =>
                 3
             ],
             allowHTML   : true,
-            multiple    : true
+            multiple    : true,
+            onOpen      : () => a + b //eslint-disable-line
         } );
 
         const refs                = flounder.refs;
@@ -3152,7 +3146,7 @@ describe( 'toggleOpen', () =>
         sinon.stub( utils, 'removeClass', noop );
 
         sinon.stub( console, 'warn', noop );
-        sinon.stub( flounder, 'onOpen', () => a + b ); // eslint-disable-line
+
 
         flounder.toggleOpen( {}, {}, refs, refs.wrapper );
 
@@ -3170,14 +3164,14 @@ describe( 'toggleOpen', () =>
         const select        = document.querySelector( 'SELECT' );
         select.innerHTML    = '<option value="2">2</option><option value="3" disabled>3</option>'; // eslint-disable-line
         select.flounder     = null;
-        const flounder      = new Flounder( select );
+        const flounder      = new Flounder( select, {
+            onClose : sinon.stub()
+        } );
         flounder.ready      = false;
         const refs          = flounder.refs;
 
         sinon.stub( utils, 'addClass', noop );
         sinon.stub( utils, 'removeClass', noop );
-
-        sinon.stub( flounder, 'onClose', noop );
 
         flounder.toggleOpen( {}, {}, refs, refs.wrapper );
 
