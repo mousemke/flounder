@@ -250,11 +250,15 @@ input:active ~ .flounder__arrow--wrapper
 }
 
 
-.flounder--hidden,
-.flounder--search--hidden
+.flounder--hidden
 {
     left:                           -999999px;
     position:                       absolute;
+}
+
+.flounder--search--hidden
+{
+    display:                        none;
 }
 
 
