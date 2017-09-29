@@ -414,14 +414,17 @@ const events = {
                         setTimeout( () => refs.search.focus(), 200 );
                     }
 
-                    try
+                    if ( this.onChange )
                     {
-                        this.onChange( e, this.getSelectedValues() );
-                    }
-                    catch ( e )
-                    {
-                        console.warn( 'something may be wrong in "onChange"',
-                            e );
+                        try
+                        {
+                            this.onChange( e, this.getSelectedValues() );
+                        }
+                        catch ( e )
+                        {
+                            console.warn(
+                              'something may be wrong in "onChange"', e );
+                        }
                     }
                 }
             }
@@ -809,13 +812,16 @@ const events = {
     {
         const refs = this.refs;
 
-        try
+        if ( this.onFirstTouch )
         {
-            this.onFirstTouch( e );
-        }
-        catch ( e )
-        {
-            console.warn( 'something may be wrong in "onFirstTouch"', e );
+            try
+            {
+                this.onFirstTouch( e );
+            }
+            catch ( e )
+            {
+                console.warn( 'something may be wrong in "onFirstTouch"', e );
+            }
         }
 
         refs.selected.removeEventListener( 'click', this.firstTouchController );
@@ -985,13 +991,16 @@ const events = {
         selected.setAttribute( 'data-value', value );
         selected.setAttribute( 'data-index', index );
 
-        try
+        if ( this.onChange )
         {
-            this.onChange( e, this.getSelectedValues() );
-        }
-        catch ( e )
-        {
-            console.warn( 'something may be wrong in "onChange"', e );
+            try
+            {
+                this.onChange( e, this.getSelectedValues() );
+            }
+            catch ( e )
+            {
+                console.warn( 'something may be wrong in "onChange"', e );
+            }
         }
     },
 
@@ -1287,7 +1296,7 @@ const events = {
                 {
                     this.toggleList.justOpened = false;
                 }
-                else
+                else if ( this.onChange )
                 {
                     try
                     {
@@ -1430,7 +1439,7 @@ const events = {
             setTimeout( () => refs.flounder.focus(), 0 );
         }
 
-        if ( this.ready )
+        if ( this.onClose && this.ready )
         {
             try
             {
@@ -1566,7 +1575,7 @@ const events = {
             }
         }
 
-        if ( this.ready )
+        if ( this.onOpen && this.ready )
         {
             try
             {
