@@ -368,21 +368,27 @@ const build = {
         } );
 
         flounder.setAttribute( 'aria-hidden', true );
-        flounder.tabIndex       = 0;
+        flounder.tabIndex     = 0;
         wrapper.appendChild( flounder );
 
-        const select        = this.initSelectBox( wrapper );
-        select.tabIndex     = -1;
+        const select          = this.initSelectBox( wrapper );
+        select.tabIndex       = -1;
 
-        let data            = this.data;
+        let data              = this.data;
 
-        this.defaultObj     = setDefaultOption( this, this.props, data );
-        const defaultValue  = this.defaultObj;
+        this.defaultObj       = setDefaultOption( this, this.props, data );
+        const defaultValue    = this.defaultObj;
 
-        const selected          = constructElement( {
-            className       : classes.SELECTED_DISPLAYED,
-            'data-value'    : defaultValue.value,
-            'data-index'    : defaultValue.index
+        let selectedClassName = classes.SELECTED_DISPLAYED;
+        if ( defaultValue.value && defaultValue.extraClass )
+        {
+            selectedClassName += ` ${defaultValue.extraClass}`;
+        }
+
+        const selected = constructElement( {
+            className    : selectedClassName,
+            'data-value' : defaultValue.value,
+            'data-index' : defaultValue.index
         } );
 
         const multiTagWrapper   = this.multipleTags ? constructElement( {
