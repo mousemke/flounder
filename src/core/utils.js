@@ -1,4 +1,4 @@
-/* globals document, window, setTimeout*/
+/* globals clearTimeout, document, setTimeout, window */
 import microbeHttp      from 'microbejs/src/modules/http';
 
 const utils = {
@@ -88,6 +88,34 @@ const utils = {
         utils.attachAttributes( el, elObj );
 
         return el;
+    },
+
+
+    /**
+     * ## debounce
+     *
+     * debounces a function using the specified delay
+     *
+     * @param {Function} func function to be debounced
+     * @param {Number} wait debounce delay
+     * @param {Object} context context for debounced funtion execution
+     *
+     * @return {Void} void
+     */
+    debounce( func, wait, context = this )
+    {
+        let args;
+        let timeout;
+
+        const debounced = () => func.apply( context, args );
+
+        return function()
+        {
+            clearTimeout( timeout );
+
+            args    = arguments;
+            timeout = setTimeout( debounced, wait );
+        };
     },
 
 

@@ -65,8 +65,11 @@ describe( 'componentWillUnmount', () =>
 
     it( 'should run this.onComponentWillUnmount()', () =>
     {
-        flounder                        = new Flounder( document.body );
-        let elSpy = sinon.stub( flounder, 'onComponentWillUnmount', noop );
+        flounder = new Flounder( document.body, {
+            onComponentWillUnmount : noop
+        } );
+
+        let elSpy = sinon.stub( flounder, 'onComponentWillUnmount' );
 
         flounder.componentWillUnmount();
         assert.equal( elSpy.callCount, 1 );
@@ -265,7 +268,8 @@ describe( 'fuzzySearch', () =>
         multipleTags    : true,
         data            : data,
         defaultIndex    : 0,
-        search          : true
+        search          : true,
+        onInputChange   : noop
     } );
 
     const e = {
