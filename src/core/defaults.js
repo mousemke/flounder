@@ -15,14 +15,14 @@ export const defaultOptions = {
     multipleMessage         : '(Multiple Items Selected)',
     noMoreOptionsMessage    : 'No more options to add.',
     noMoreResultsMessage    : 'No matches found',
-    onChange                : function( e, selectedValues ){},  // eslint-disable-line
-    onClose                 : function( e, selectedValues ){},  // eslint-disable-line
-    onComponentDidMount     : function(){},                     // eslint-disable-line
-    onComponentWillUnmount  : function(){},                     // eslint-disable-line
-    onFirstTouch            : function( e ){},                  // eslint-disable-line
-    onInit                  : function(){},                     // eslint-disable-line
-    onInputChange           : function( e ){},                  // eslint-disable-line
-    onOpen                  : function( e, selectedValues ){},  // eslint-disable-line
+    onChange                : null, // function( e, selectedValues ){}
+    onClose                 : null, // function( e, selectedValues ){}
+    onComponentDidMount     : null, // function(){}
+    onComponentWillUnmount  : null, // function(){}
+    onFirstTouch            : null, // function( e ){}
+    onInit                  : null, // function(){}
+    onInputChange           : null, // function( e ){}
+    onOpen                  : null, // function( e, selectedValues ){}
     openOnHover             : false,
     placeholder             : 'Please choose an option',
     search                  : false,

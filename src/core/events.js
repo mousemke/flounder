@@ -251,6 +251,8 @@ const events = {
         const search                  = this.refs.search;
         const multiTagWrapper         = this.refs.multiTagWrapper;
 
+        this.debouncedFuzzySearch = utils.debounce( this.fuzzySearch, 200 );
+
         if ( multiTagWrapper )
         {
             multiTagWrapper.addEventListener( 'click',
@@ -259,7 +261,7 @@ const events = {
 
         search.addEventListener( 'click', this.toggleListSearchClick );
         search.addEventListener( 'focus', this.toggleListSearchClick );
-        search.addEventListener( 'keyup', this.fuzzySearch );
+        search.addEventListener( 'keyup', this.debouncedFuzzySearch );
         search.addEventListener( 'focus', this.clearPlaceholder );
     },
 
@@ -274,8 +276,7 @@ const events = {
      */
     addSelectKeyListener()
     {
-        const refs    = this.refs;
-        const select  = refs.select;
+        const select  = this.refs.select;
 
         select.addEventListener( 'keyup', this.setSelectValue );
         select.addEventListener( 'keydown', this.setKeypress );
@@ -293,8 +294,6 @@ const events = {
             plug.className   = classes.PLUG;
             select.insertBefore( plug, firstOption );
         }
-
-        select.focus();
     },
 
 
@@ -416,14 +415,17 @@ const events = {
                         setTimeout( () => refs.search.focus(), 200 );
                     }
 
-                    try
+                    if ( this.onChange )
                     {
-                        this.onChange( e, this.getSelectedValues() );
-                    }
-                    catch ( e )
-                    {
-                        console.warn( 'something may be wrong in "onChange"',
-                            e );
+                        try
+                        {
+                            this.onChange( e, this.getSelectedValues() );
+                        }
+                        catch ( e )
+                        {
+                            console.warn(
+                              'something may be wrong in "onChange"', e );
+                        }
                     }
                 }
             }
@@ -525,7 +527,7 @@ const events = {
         }
         else if ( e.key.length < 2 )
         {
-            this.refs.search.focus();
+            setTimeout( () => this.refs.search.focus(), 0 );
         }
     },
 
@@ -558,7 +560,7 @@ const events = {
 
             if ( next )
             {
-                next.focus();
+                setTimeout( () => next.focus(), 0 );
             }
         }
     },
@@ -583,7 +585,7 @@ const events = {
 
         if ( prev )
         {
-            prev.focus();
+            setTimeout( () =>  prev.focus(), 0 );
         }
         else if ( next )
         {
@@ -792,13 +794,16 @@ const events = {
     {
         const refs = this.refs;
 
-        try
+        if ( this.onFirstTouch )
         {
-            this.onFirstTouch( e );
-        }
-        catch ( e )
-        {
-            console.warn( 'something may be wrong in "onFirstTouch"', e );
+            try
+            {
+                this.onFirstTouch( e );
+            }
+            catch ( e )
+            {
+                console.warn( 'something may be wrong in "onFirstTouch"', e );
+            }
         }
 
         refs.selected.removeEventListener( 'click', this.firstTouchController );
@@ -968,13 +973,16 @@ const events = {
         selected.setAttribute( 'data-value', value );
         selected.setAttribute( 'data-index', index );
 
-        try
+        if ( this.onChange )
         {
-            this.onChange( e, this.getSelectedValues() );
-        }
-        catch ( e )
-        {
-            console.warn( 'something may be wrong in "onChange"', e );
+            try
+            {
+                this.onChange( e, this.getSelectedValues() );
+            }
+            catch ( e )
+            {
+                console.warn( 'something may be wrong in "onChange"', e );
+            }
         }
     },
 
@@ -1053,7 +1061,7 @@ const events = {
         const search = this.refs.search;
         search.removeEventListener( 'click', this.toggleListSearchClick );
         search.removeEventListener( 'focus', this.toggleListSearchClick );
-        search.removeEventListener( 'keyup', this.fuzzySearch );
+        search.removeEventListener( 'keyup', this.debouncedFuzzySearch );
         search.removeEventListener( 'focus', this.clearPlaceholder );
     },
 
@@ -1270,7 +1278,7 @@ const events = {
                 {
                     this.toggleList.justOpened = false;
                 }
-                else
+                else if ( this.onChange )
                 {
                     try
                     {
@@ -1393,8 +1401,6 @@ const events = {
         const classes = this.classes;
 
         utils.addClass( refs.optionsListWrapper, classes.HIDDEN );
-        this.removeSelectKeyListener();
-
         utils.removeClass( wrapper, classes.OPEN );
 
         const qsHTML = document.querySelector( 'html' );
@@ -1405,13 +1411,17 @@ const events = {
         {
             this.fuzzySearchReset();
         }
+        else
+        {
+            this.removeSelectKeyListener();
+        }
 
         if ( !exit )
         {
-            refs.flounder.focus();
+            setTimeout( () => refs.flounder.focus(), 0 );
         }
 
-        if ( this.ready )
+        if ( this.onClose && this.ready )
         {
             try
             {
@@ -1496,8 +1506,6 @@ const events = {
      */
     toggleOpen( e, optionsList, refs )
     {
-        this.addSelectKeyListener();
-
         if ( !this.isIos || this.search || this.multipleTags === true )
         {
             const classes = this.classes;
@@ -1512,7 +1520,7 @@ const events = {
         }
 
 
-        if ( !this.multiple )
+        if ( !this.multipleTags )
         {
             const index       = refs.select.selectedIndex;
             const selectedDiv = refs.data[ index ];
@@ -1522,7 +1530,12 @@ const events = {
 
         if ( this.search )
         {
-            refs.search.focus();
+            setTimeout( () => refs.search.focus(), 0 );
+        }
+        else
+        {
+            this.addSelectKeyListener();
+            setTimeout( () => refs.select.focus(), 0 );
         }
 
         let optionCount = refs.data.length;
@@ -1543,7 +1556,7 @@ const events = {
             }
         }
 
-        if ( this.ready )
+        if ( this.onOpen && this.ready )
         {
             try
             {

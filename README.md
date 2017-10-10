@@ -1,4 +1,4 @@
-Flounder.js 1.2.1
+Flounder.js 1.2.3
 =================
 
 [![Flounder build status](https://travis-ci.org/sociomantic-tsunami/flounder.svg)](https://travis-ci.org)
@@ -95,7 +95,6 @@ If flounder is fed an element that already has a flounder, it will destroy it an
         ARROW_INNER           : `class-for-arrow-inner`,
         DESCRIPTION           : `class-for-option-description`,
         DISABLED              : `class-for-disabled`,
-        DISABLED_OPTION       : `class-for-disabled-option`,
         HEADER                : `class-for-header`,
         HIDDEN                : `class-for-hidden`,
         HIDDEN_IOS            : `class-for-hidden-ios`,

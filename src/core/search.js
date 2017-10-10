@@ -316,7 +316,7 @@ export class Sole
                 {
                     target.forEach( word =>
                     {
-                        count = word.indexOf( queryWord ) !== -1 ? 1 : 0;
+                        count += word.indexOf( queryWord ) !== -1 ? 1 : 0;
                     } );
                 }
                 else
@@ -324,9 +324,9 @@ export class Sole
                     count = target[ queryWord ] || 0.000001;
                 }
 
-                if ( count && count > 0 )
+                if ( count > 0 )
                 {
-                    score += weight * count * 10;
+                    score = weight * count * 10;
                 }
                 else if ( noPunishment !== true )
                 {
