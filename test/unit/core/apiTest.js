@@ -270,13 +270,11 @@ describe( 'disable', () =>
         data : [ 1, 2, 3 ]
     } );
     const refs        = flounder.refs;
-    const selected    = refs.selected;
     const flounderEl  = refs.flounder;
 
     it( 'should disable flounder', () =>
     {
         flounder.disable( true );
-        assert.ok( utils.hasClass( selected, classes.DISABLED ) );
         assert.ok( utils.hasClass( flounderEl, classes.DISABLED ) );
     } );
 
@@ -284,7 +282,6 @@ describe( 'disable', () =>
     it( 'should enable flounder', () =>
     {
         flounder.disable();
-        assert.ok( !utils.hasClass( selected, classes.DISABLED ) );
         assert.ok( !utils.hasClass( flounderEl, classes.DISABLED ) );
     } );
 } );
