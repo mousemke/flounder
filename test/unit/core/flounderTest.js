@@ -356,8 +356,9 @@ describe( 'fuzzySearch', () =>
 
         flounder.refs.multiTagWrapper.innerHTML = '<span class="flounder__multiple--select--tag" aria-label="Deselect All" tabindex="0"><a class="flounder__multiple__tag__close" data-index="1"></a>All</span><span class="flounder__multiple--select--tag" aria-label="Deselect Tags" tabindex="0"><a class="flounder__multiple__tag__close" data-index="2"></a>Tags</span><input class="flounder__search"/>'; // eslint-disable-line
 
-        const lastTag = Array.prototype.slice.call(
-            flounder.refs.multiTagWrapper.children, 0, -1 ).pop();
+        flounder.refs.search = flounder.refs.multiTagWrapper.lastChild;
+
+        const lastTag = flounder.refs.search.previousSibling;
 
         sinon.spy( lastTag, 'focus' );
 
