@@ -3,7 +3,6 @@ const classes = {
     ARROW_INNER             : 'flounder__arrow--inner',
     DESCRIPTION             : 'flounder__option--description',
     DISABLED                : 'flounder__disabled',
-    DISABLED_OPTION         : 'flounder__disabled--option',
     HEADER                  : 'flounder__header',
     HIDDEN                  : 'flounder--hidden',
     HIDDEN_IOS              : 'flounder--hidden--ios',

@@ -258,18 +258,12 @@ input:active ~ .flounder__arrow--wrapper
 }
 
 
-.flounder__disabled,
-.flounder__disabled--option
-{
-    cursor:                         auto;
-    pointer-events:                 none;
-}
-
-
 .flounder__disabled
 {
     border-color:                   #cccccc;
     color:                          #cccccc;
+    cursor:                         auto;
+    pointer-events:                 none;
 }
 
 
