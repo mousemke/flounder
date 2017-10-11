@@ -1,4 +1,4 @@
-Flounder.js 1.2.3
+Flounder.js 1.3.0
 =================
 
 [![Flounder build status](https://travis-ci.org/sociomantic-tsunami/flounder.svg)](https://travis-ci.org)
@@ -476,6 +476,29 @@ See more examples on the [demo page](./demo/index.html)
 
 Change Log
 ==========
+
+1.3.0
+-----
+
++ performance improvements for large datasets
+    + debounced search
+    + defer calling focus on flounder main div and search input
+    + addSelectKeyListener no longer called when search is enabled
+    + removed calls to Array.prototype.slice
+    + test event functions/hooks are defined before calling
+    + use display:none to hide options filtered by search
+    + move user-select:none CSS rule
+
++ build
+    + fixes extraClass for default selected option
+
++ utils
+    + scrollTo fixes/improvements
+
++ api
+    + no longer adds disabled class to selectedDisplayed on disable(true)
+
++ fix the license file name
 
 1.2.1
 -----
