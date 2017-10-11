@@ -65,8 +65,11 @@ describe( 'componentWillUnmount', () =>
 
     it( 'should run this.onComponentWillUnmount()', () =>
     {
-        flounder                        = new Flounder( document.body );
-        let elSpy = sinon.stub( flounder, 'onComponentWillUnmount', noop );
+        flounder = new Flounder( document.body, {
+            onComponentWillUnmount : noop
+        } );
+
+        let elSpy = sinon.stub( flounder, 'onComponentWillUnmount' );
 
         flounder.componentWillUnmount();
         assert.equal( elSpy.callCount, 1 );
@@ -265,7 +268,8 @@ describe( 'fuzzySearch', () =>
         multipleTags    : true,
         data            : data,
         defaultIndex    : 0,
-        search          : true
+        search          : true,
+        onInputChange   : noop
     } );
 
     const e = {
@@ -352,8 +356,9 @@ describe( 'fuzzySearch', () =>
 
         flounder.refs.multiTagWrapper.innerHTML = '<span class="flounder__multiple--select--tag" aria-label="Deselect All" tabindex="0"><a class="flounder__multiple__tag__close" data-index="1"></a>All</span><span class="flounder__multiple--select--tag" aria-label="Deselect Tags" tabindex="0"><a class="flounder__multiple__tag__close" data-index="2"></a>Tags</span><input class="flounder__search"/>'; // eslint-disable-line
 
-        const lastTag = Array.prototype.slice.call(
-            flounder.refs.multiTagWrapper.children, 0, -1 ).pop();
+        flounder.refs.search = flounder.refs.multiTagWrapper.lastChild;
+
+        const lastTag = flounder.refs.search.previousSibling;
 
         sinon.spy( lastTag, 'focus' );
 

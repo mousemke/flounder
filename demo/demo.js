@@ -45,7 +45,8 @@ let buildData = function()
         res.push( {
             text        : dataObj.text,
             value       : dataObj.id,
-            description : `${dataObj.id} could be described as "${dataObj.text}"`
+            description : `${dataObj.id} could be described as "${dataObj.text}"`,
+            extraClass  : dataObj.cssClass
         } );
     } );
 

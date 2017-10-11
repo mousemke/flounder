@@ -3,8 +3,6 @@
 import utils                from './utils';
 import { setDefaultOption } from './defaults';
 
-const nativeSlice = Array.prototype.slice;
-
 const api = {
 
     /**
@@ -177,12 +175,13 @@ const api = {
 
             if ( multiTagWrapper )
             {
-                const tags = nativeSlice.call(
-                    multiTagWrapper.children, 0, -1 );
+                const children = multiTagWrapper.children;
 
-                tags.forEach( ( el, count ) =>
+                for ( let i = 0; i < children.length - 1; i++ )
                 {
-                    const lastEl = count === tags.length - 1;
+                    let el = children[ i ];
+
+                    const lastEl = i === children.length - 1;
 
                     if ( !silent && lastEl )
                     {
@@ -196,7 +195,7 @@ const api = {
                         el.removeEventListener( 'click', this.removeMultiTag );
                         el.remove();
                     }
-                } );
+                }
 
                 this.addPlaceholder();
             }
@@ -222,18 +221,15 @@ const api = {
 
         if ( bool )
         {
-            refs.flounder.removeEventListener( 'keydown',
+            flounder.removeEventListener( 'keydown',
                                                 this.checkFlounderKeypress );
-            refs.selected.removeEventListener( 'click', this.toggleList );
-            utils.addClass( selected, classes.DISABLED );
+            selected.removeEventListener( 'click', this.toggleList );
             utils.addClass( flounder, classes.DISABLED );
         }
         else
         {
-            refs.flounder.addEventListener( 'keydown',
-                                                this.checkFlounderKeypress );
-            refs.selected.addEventListener( 'click', this.toggleList );
-            utils.removeClass( selected, classes.DISABLED );
+            flounder.addEventListener( 'keydown', this.checkFlounderKeypress );
+            selected.addEventListener( 'click', this.toggleList );
             utils.removeClass( flounder, classes.DISABLED );
         }
     },
@@ -461,13 +457,13 @@ const api = {
         const data      = el.options;
         const classes   = this.classes;
 
-        nativeSlice.call( data ).forEach( el =>
+        for ( const el of data )
         {
             if ( el.selected && !utils.hasClass( el, classes.PLACEHOLDER ) )
             {
                 opts.push( el );
             }
-        } );
+        }
 
         return opts;
     },

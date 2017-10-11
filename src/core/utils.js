@@ -1,4 +1,4 @@
-/* globals document, window, setTimeout*/
+/* globals clearTimeout, document, setTimeout, window */
 import microbeHttp      from 'microbejs/src/modules/http';
 
 const utils = {
@@ -88,6 +88,34 @@ const utils = {
         utils.attachAttributes( el, elObj );
 
         return el;
+    },
+
+
+    /**
+     * ## debounce
+     *
+     * debounces a function using the specified delay
+     *
+     * @param {Function} func function to be debounced
+     * @param {Number} wait debounce delay
+     * @param {Object} context context for debounced funtion execution
+     *
+     * @return {Void} void
+     */
+    debounce( func, wait, context = this )
+    {
+        let args;
+        let timeout;
+
+        const debounced = () => func.apply( context, args );
+
+        return function()
+        {
+            clearTimeout( timeout );
+
+            args    = arguments;
+            timeout = setTimeout( debounced, wait );
+        };
     },
 
 
@@ -316,33 +344,38 @@ const utils = {
      *
      * checks if an option is visible and, if it is not, scrolls it into view
      *
-     * @param {DOMElement} element element to check
+     * @param {DOMElement}  element         element to check
+     * @param {DOMElement}  [scrollParent]  parent element to scroll
      *
      * @return {Void} void
      */
-    scrollTo( element )
+    scrollTo( element, scrollParent )
     {
         if ( element )
         {
-            const parent    = element.parentNode.parentNode;
-            const elHeight  = element.offsetHeight;
-            const min       = parent.scrollTop;
-            const max       = parent.scrollTop + parent.offsetHeight - elHeight;
-            const pos       = element.offsetTop;
+            const scrollElement = scrollParent || element.offsetParent;
 
-            if ( pos < min )
+            if ( scrollElement.scrollHeight > scrollElement.offsetHeight )
             {
-                parent.scrollTop = pos  - elHeight * 0.5;
-            }
-            else if ( pos > max )
-            {
-                parent.scrollTop = pos - parent.offsetHeight + elHeight * 1.5;
+                const pos        = element.offsetTop;
+                const elHeight   = element.offsetHeight;
+                const contHeight = scrollElement.offsetHeight;
+
+                const min = scrollElement.scrollTop;
+                const max = min + scrollElement.offsetHeight - elHeight;
+
+                if ( pos < min )
+                {
+                    scrollElement.scrollTop = pos;
+                }
+                else if ( pos > max )
+                {
+                    scrollElement.scrollTop = pos - ( contHeight - elHeight );
+                }
             }
         }
-        else
-        {
-            return false;
-        }
+
+        return false;
     },
 
 
