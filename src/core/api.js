@@ -221,18 +221,15 @@ const api = {
 
         if ( bool )
         {
-            refs.flounder.removeEventListener( 'keydown',
+            flounder.removeEventListener( 'keydown',
                                                 this.checkFlounderKeypress );
-            refs.selected.removeEventListener( 'click', this.toggleList );
-            utils.addClass( selected, classes.DISABLED );
+            selected.removeEventListener( 'click', this.toggleList );
             utils.addClass( flounder, classes.DISABLED );
         }
         else
         {
-            refs.flounder.addEventListener( 'keydown',
-                                                this.checkFlounderKeypress );
-            refs.selected.addEventListener( 'click', this.toggleList );
-            utils.removeClass( selected, classes.DISABLED );
+            flounder.addEventListener( 'keydown', this.checkFlounderKeypress );
+            selected.addEventListener( 'click', this.toggleList );
             utils.removeClass( flounder, classes.DISABLED );
         }
     },
