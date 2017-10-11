@@ -3,7 +3,6 @@
 {
     display:                        inline-block;
     text-align:                     left;
-    user-select:                    none;
     width:                          18rem;
 }
 
@@ -250,11 +249,15 @@ input:active ~ .flounder__arrow--wrapper
 }
 
 
-.flounder--hidden,
-.flounder--search--hidden
+.flounder--hidden
 {
     left:                           -999999px;
     position:                       absolute;
+}
+
+.flounder--search--hidden
+{
+    display:                        none;
 }
 
 
@@ -320,6 +323,7 @@ div:focus > .flounder__multiple__tag__close
     margin-right:                   4px;
     padding:                        4px 5px;
     position:                       relative;
+    user-select:                    none;
     z-index:                        2;
 }
 

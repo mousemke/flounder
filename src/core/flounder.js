@@ -9,8 +9,6 @@ import Search               from './search';
 import version              from './version';
 import keycodes             from './keycodes';
 
-const nativeSlice = Array.prototype.slice;
-
 /**
  * main flounder class
  *
@@ -27,14 +25,17 @@ class Flounder
      */
     componentWillUnmount()
     {
-        try
+        if ( this.onComponentWillUnmount )
         {
-            this.onComponentWillUnmount();
-        }
-        catch ( e )
-        {
-            console.warn( `something may be wrong in
-                                        "onComponentWillUnmount"`, e );
+            try
+            {
+                this.onComponentWillUnmount();
+            }
+            catch ( e )
+            {
+                console.warn(
+                    'something may be wrong in "onComponentWillUnmount"', e );
+            }
         }
 
         this.removeListeners();
@@ -173,13 +174,16 @@ class Flounder
     {
         this.fuzzySearch.previousValue = this.fuzzySearch.previousValue || '';
 
-        try
+        if ( this.onInputChange )
         {
-            this.onInputChange( e );
-        }
-        catch ( e )
-        {
-            console.warn( 'something may be wrong in "onInputChange"', e );
+            try
+            {
+                this.onInputChange( e );
+            }
+            catch ( e )
+            {
+                console.warn( 'something may be wrong in "onInputChange"', e );
+            }
         }
 
         if ( !this.toggleList.justOpened )
@@ -194,8 +198,7 @@ class Flounder
                 if ( this.multipleTags && keyCode === keycodes.BACKSPACE &&
                         this.fuzzySearch.previousValue === '' )
                 {
-                    const lastTag = nativeSlice.call(
-                        this.refs.multiTagWrapper.children, 0, -1 ).pop();
+                    const lastTag = this.refs.search.previousSibling;
 
                     if ( lastTag )
                     {
@@ -273,13 +276,16 @@ class Flounder
             this.search = new Search( this );
         }
 
-        try
+        if ( this.onInit )
         {
-            this.onInit();
-        }
-        catch ( e )
-        {
-            console.warn( 'something may be wrong in "onInit"', e );
+            try
+            {
+                this.onInit();
+            }
+            catch ( e )
+            {
+                console.warn( 'something may be wrong in "onInit"', e );
+            }
         }
 
         this.buildDom();
@@ -291,13 +297,17 @@ class Flounder
         this.multiSelect    = multiSelect;
         this.onRender();
 
-        try
+        if ( this.onComponentDidMount )
         {
-            this.onComponentDidMount();
-        }
-        catch ( e )
-        {
-            console.warn( 'something may be wrong in onComponentDidMount', e );
+            try
+            {
+                this.onComponentDidMount();
+            }
+            catch ( e )
+            {
+                console.warn(
+                  'something may be wrong in onComponentDidMount', e );
+            }
         }
 
         this.ready = true;
