@@ -80,6 +80,7 @@ const build = {
             'removeHoverClass',
             'removeMultiTag',
             'setKeypress',
+            'setKeypressElement',
             'setSelectValue',
             'toggleList',
             'toggleListSearchClick'

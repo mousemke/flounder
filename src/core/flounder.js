@@ -113,7 +113,6 @@ class Flounder
 
         const matches = this.search.isThereAnythingRelatedTo( val ) || [];
 
-
         if ( val !== '' )
         {
             const data    = this.refs.data;
@@ -130,16 +129,36 @@ class Flounder
                 utils.addClass( se, classes.SEARCH_HIDDEN );
             } );
 
-            matches.forEach( e =>
+            if ( this.activeIndex > -1 )
             {
-                utils.removeClass( data[ e.i ], classes.SEARCH_HIDDEN );
+                utils.removeClass( data[ this.activeIndex ], classes.HOVER );
+                this.activeindex = -1;
+            }
 
-                if ( typeof e.d.s == 'number' )
+            if ( matches.length )
+            {
+                this.activeIndex = matches[ 0 ].i;
+
+                matches.forEach( e =>
                 {
-                    utils.removeClass( sections[ e.d.s ],
-                        classes.SEARCH_HIDDEN );
-                }
-            } );
+                    utils.removeClass( data[ e.i ], classes.SEARCH_HIDDEN );
+
+                    if ( typeof e.d.s == 'number' )
+                    {
+                        utils.removeClass( sections[ e.d.s ],
+                            classes.SEARCH_HIDDEN );
+                    }
+
+                    if ( e.i < this.activeIndex )
+                    {
+                        this.activeIndex = e.i;
+                    }
+                } );
+
+                utils.addClass( data[ this.activeIndex ], classes.HOVER );
+                utils.scrollTo(
+                    data[ this.activeIndex ], this.refs.optionsListWrapper );
+            }
 
             if ( !this.refs.noMoreOptionsEl )
             {
@@ -188,8 +207,6 @@ class Flounder
 
         if ( !this.toggleList.justOpened )
         {
-            e.preventDefault();
-
             const keyCode = e.keyCode;
 
             if ( keyCode !== keycodes.UP && keyCode !== keycodes.DOWN &&
@@ -210,12 +227,11 @@ class Flounder
                     this.filterSearchResults( e );
                 }
             }
-            else if ( keyCode === keycodes.ESCAPE ||
-                keyCode === keycodes.ENTER )
+            else
             {
-                this.fuzzySearchReset();
-                this.toggleList( e, 'close' );
-                this.addPlaceholder();
+                e.preventDefault();
+                this.setKeypress( e );
+                // this.setSelectValue( e );
             }
         }
         else
@@ -274,6 +290,9 @@ class Flounder
         if ( this.search )
         {
             this.search = new Search( this );
+
+            this.filterSearchResults =
+                utils.debounce( this.filterSearchResults, 200, this );
         }
 
         if ( this.onInit )

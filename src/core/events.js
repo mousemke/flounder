@@ -37,7 +37,15 @@ const events = {
      */
     addHoverClass( e )
     {
+        const { activeIndex } = this;
+        if ( activeIndex > -1 )
+        {
+            utils.removeClass(
+                this.refs.data[ activeIndex ], this.classes.HOVER );
+        }
+
         utils.addClass( e.target, this.classes.HOVER );
+        this.activeIndex = parseInt( e.target.dataset.index );
     },
 
 
@@ -251,8 +259,6 @@ const events = {
         const search                  = this.refs.search;
         const multiTagWrapper         = this.refs.multiTagWrapper;
 
-        this.debouncedFuzzySearch = utils.debounce( this.fuzzySearch, 200 );
-
         if ( multiTagWrapper )
         {
             multiTagWrapper.addEventListener( 'click',
@@ -261,7 +267,7 @@ const events = {
 
         search.addEventListener( 'click', this.toggleListSearchClick );
         search.addEventListener( 'focus', this.toggleListSearchClick );
-        search.addEventListener( 'keyup', this.debouncedFuzzySearch );
+        search.addEventListener( 'keydown', this.fuzzySearch );
         search.addEventListener( 'focus', this.clearPlaceholder );
     },
 
@@ -278,7 +284,7 @@ const events = {
     {
         const select  = this.refs.select;
 
-        select.addEventListener( 'keyup', this.setSelectValue );
+        // select.addEventListener( 'keyup', this.setSelectValue );
         select.addEventListener( 'keydown', this.setKeypress );
 
         // weird shit
@@ -470,13 +476,14 @@ const events = {
                 if ( this.search &&
                     utils.hasClass( refs.wrapper, classes.OPEN ) )
                 {
-                    return this.checkEnterOnSearch( e, refs );
+                    this.setByIndex( this.activeIndex, this.multiple, false );
+                    // return this.checkEnterOnSearch( e, refs );
                 }
             }
 
             if ( e.target.tagName !== 'INPUT' )
             {
-                this.toggleList( e );
+                this.toggleList( e ); //OK
             }
         }
          // letters - allows native behavior
@@ -874,6 +881,7 @@ const events = {
     removeHoverClass( e )
     {
         utils.removeClass( e.target, this.classes.HOVER );
+        this.activeIndex = -1;
     },
 
 
@@ -1061,7 +1069,7 @@ const events = {
         const search = this.refs.search;
         search.removeEventListener( 'click', this.toggleListSearchClick );
         search.removeEventListener( 'focus', this.toggleListSearchClick );
-        search.removeEventListener( 'keyup', this.debouncedFuzzySearch );
+        search.removeEventListener( 'keyup', this.fuzzySearch );
         search.removeEventListener( 'focus', this.clearPlaceholder );
     },
 
@@ -1162,26 +1170,29 @@ const events = {
             if ( keyCode === keycodes.ENTER || keyCode === keycodes.ESCAPE ||
                     keyCode === keycodes.SPACE )
             {
-                this.toggleList( e );
+                const { activeIndex } = this;
+
+                if ( activeIndex > -1 && keyCode !== keycodes.ESCAPE )
+                {
+                    this.setByIndex( activeIndex, this.multiple, false );
+                }
+                else
+                {
+                    this.toggleList( e );
+                }
 
                 return false;
             }
 
             if ( keyCode === keycodes.UP || keyCode === keycodes.DOWN )
             {
-                if ( !window.sidebar )
+                if ( !window.sidebar && !refs.noResultsEl &&
+                    !refs.noMoreOptionsEl )
                 {
                     e.preventDefault();
-
-                    if ( refs.search )
-                    {
-                        refs.search.value = '';
-                    }
-
                     increment = keyCode - 39;
+                    this.setKeypressElement( e, increment );
                 }
-
-                this.setKeypressElement( e, increment );
             }
 
             return true;
@@ -1198,40 +1209,56 @@ const events = {
      *
      * @param {Object} e event object
      * @param {Number} increment amount to change the index by
+     * @param {Number} [counter] number of times called recursively
      *
      * @return {Void} void
      */
-    setKeypressElement( e, increment )
+    setKeypressElement( e, increment, counter = 0 )
     {
-        const refs              = this.refs;
-        const selectTag         = refs.select;
-        const data              = refs.data;
-        const dataMaxIndex      = data.length - 1;
-        let index               = selectTag.selectedIndex + increment;
+        const { activeIndex = 0 } = this;
 
-        if ( index > dataMaxIndex )
+        const refs          = this.refs;
+        const data          = refs.data;
+        const dataMaxIndex  = data.length - 1;
+        let newIndex        = activeIndex + increment;
+
+        if ( newIndex > dataMaxIndex )
         {
-            index = 0;
+            newIndex = 0;
         }
-        else if ( index < 0 )
+        else if ( newIndex < 0 )
         {
-            index = dataMaxIndex;
+            newIndex = dataMaxIndex;
         }
 
         const classes           = this.classes;
         const hasClass          = utils.hasClass;
-        const dataAtIndex       = data[ index ];
 
-        selectTag.selectedIndex = index;
-
-        if ( hasClass( dataAtIndex, classes.HIDDEN ) ||
-             hasClass( dataAtIndex, classes.SELECTED_HIDDEN ) ||
-             hasClass( dataAtIndex, classes.SEARCH_HIDDEN ) ||
-             hasClass( dataAtIndex, classes.DISABLED ) )
+        if ( activeIndex > -1 )
         {
-            this.setKeypress( e );
+            utils.removeClass( data[ activeIndex ], classes.HOVER );
         }
 
+        utils.addClass( data[ newIndex ], classes.HOVER );
+        utils.scrollTo( data[ newIndex ], refs.optionsListWrapper );
+        this.activeIndex = newIndex;
+
+        const activeOption = data[ this.activeIndex ];
+
+        if ( hasClass( activeOption, classes.HIDDEN ) ||
+             hasClass( activeOption, classes.SELECTED_HIDDEN ) ||
+             hasClass( activeOption, classes.SEARCH_HIDDEN ) ||
+             hasClass( activeOption, classes.DISABLED ) )
+        {
+            if ( counter < data.length )
+            {
+                this.setKeypressElement( e, increment, ++counter );
+            }
+            else
+            {
+                this.deselectAll( true );
+            }
+        }
     },
 
 
@@ -1250,7 +1277,7 @@ const events = {
      */
     setSelectValue( obj, e )
     {
-        const refs    = this.refs;
+        const refs = this.refs;
         let keyCode;
 
         if ( e ) // click
@@ -1263,7 +1290,10 @@ const events = {
             this.setSelectValueButton( obj );
         }
 
-        this.displaySelected( refs.selected, refs );
+        if ( this.multiple )
+        {
+            this.displaySelected( refs.selected, refs );
+        }
 
         if ( !this.programmaticClick )
         {
@@ -1419,6 +1449,11 @@ const events = {
         if ( !exit )
         {
             setTimeout( () => refs.flounder.focus(), 0 );
+        }
+
+        if ( !this.multiple )
+        {
+            this.displaySelected( refs.selected, refs );
         }
 
         if ( this.onClose && this.ready )
