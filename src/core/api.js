@@ -457,8 +457,9 @@ const api = {
         const data      = el.options;
         const classes   = this.classes;
 
-        for ( const el of data )
+        for ( let i = 0; i < data.length; i++ )
         {
+            const el = data[ i ];
             if ( el.selected && !utils.hasClass( el, classes.PLACEHOLDER ) )
             {
                 opts.push( el );

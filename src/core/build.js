@@ -531,8 +531,9 @@ const build = {
                 const data          = [];
                 const selectOptions = [];
 
-                for ( const optionEl of target.children )
+                for ( let i = 0; i < target.children.length; i++ )
                 {
+                    const optionEl = target.children[ i ];
                     selectOptions.push( optionEl );
                     data.push( {
                         text    : optionEl.innerHTML,
@@ -580,8 +581,9 @@ const build = {
     {
         utils.removeAllChildren( select );
 
-        for ( const el of this.originalChildren )
+        for ( let i = 0; i < this.originalChildren.length; i++ )
         {
+            const el = this.originalChildren[ i ];
             select.appendChild( el );
         }
     },
@@ -591,7 +593,7 @@ const build = {
      * ## popOutSelectElements
      *
      * pops out all the options of a select box, clones them, then appends the
-     * clones.  This gives us the ability to restore the original tag
+     * clones.  This gives us the ability to res``tore the original tag
      *
      * @param {DOMElement} select select element
      *
