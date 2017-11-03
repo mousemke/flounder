@@ -1801,30 +1801,10 @@ var api = {
         var data = el.options;
         var classes = this.classes;
 
-        var _iteratorNormalCompletion = true;
-        var _didIteratorError = false;
-        var _iteratorError = undefined;
-
-        try {
-            for (var _iterator = data[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-                var _el = _step.value;
-
-                if (_el.selected && !_utils2.default.hasClass(_el, classes.PLACEHOLDER)) {
-                    opts.push(_el);
-                }
-            }
-        } catch (err) {
-            _didIteratorError = true;
-            _iteratorError = err;
-        } finally {
-            try {
-                if (!_iteratorNormalCompletion && _iterator.return) {
-                    _iterator.return();
-                }
-            } finally {
-                if (_didIteratorError) {
-                    throw _iteratorError;
-                }
+        for (var i = 0; i < data.length; i++) {
+            var _el = data[i];
+            if (_el.selected && !_utils2.default.hasClass(_el, classes.PLACEHOLDER)) {
+                opts.push(_el);
             }
         }
 
@@ -2539,33 +2519,13 @@ var build = {
                 var data = [];
                 var selectOptions = [];
 
-                var _iteratorNormalCompletion = true;
-                var _didIteratorError = false;
-                var _iteratorError = undefined;
-
-                try {
-                    for (var _iterator = target.children[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-                        var optionEl = _step.value;
-
-                        selectOptions.push(optionEl);
-                        data.push({
-                            text: optionEl.innerHTML,
-                            value: optionEl.value
-                        });
-                    }
-                } catch (err) {
-                    _didIteratorError = true;
-                    _iteratorError = err;
-                } finally {
-                    try {
-                        if (!_iteratorNormalCompletion && _iterator.return) {
-                            _iterator.return();
-                        }
-                    } finally {
-                        if (_didIteratorError) {
-                            throw _iteratorError;
-                        }
-                    }
+                for (var i = 0; i < target.children.length; i++) {
+                    var optionEl = target.children[i];
+                    selectOptions.push(optionEl);
+                    data.push({
+                        text: optionEl.innerHTML,
+                        value: optionEl.value
+                    });
                 }
 
                 refs.selectOptions = selectOptions;
@@ -2603,29 +2563,9 @@ var build = {
     popInSelectElements: function popInSelectElements(select) {
         _utils2.default.removeAllChildren(select);
 
-        var _iteratorNormalCompletion2 = true;
-        var _didIteratorError2 = false;
-        var _iteratorError2 = undefined;
-
-        try {
-            for (var _iterator2 = this.originalChildren[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-                var el = _step2.value;
-
-                select.appendChild(el);
-            }
-        } catch (err) {
-            _didIteratorError2 = true;
-            _iteratorError2 = err;
-        } finally {
-            try {
-                if (!_iteratorNormalCompletion2 && _iterator2.return) {
-                    _iterator2.return();
-                }
-            } finally {
-                if (_didIteratorError2) {
-                    throw _iteratorError2;
-                }
-            }
+        for (var i = 0; i < this.originalChildren.length; i++) {
+            var el = this.originalChildren[i];
+            select.appendChild(el);
         }
     },
 
@@ -2634,7 +2574,7 @@ var build = {
      * ## popOutSelectElements
      *
      * pops out all the options of a select box, clones them, then appends the
-     * clones.  This gives us the ability to restore the original tag
+     * clones.  This gives us the ability to res``tore the original tag
      *
      * @param {DOMElement} select select element
      *
@@ -5607,6 +5547,6 @@ exports.default = utils;
 'use strict';
 
 /* globals module */
-module.exports = '1.3.0';
+module.exports = '1.3.1';
 
 },{}]},{},[1]);

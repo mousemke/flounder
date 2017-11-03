@@ -1,12 +1,12 @@
 /*!
-                        * Flounder JavaScript Stylable Selectbox v1.3.0
+                        * Flounder JavaScript Stylable Selectbox v1.3.1
                         * https://github.com/sociomantic-tsunami/flounder
                         *
                         * Copyright 2015-2017 Sociomantic Labs and other contributors
                         * Released under the MIT license
                         * https://github.com/sociomantic-tsunami/flounder/license
                         *
-                        * Date: Wed Oct 11 2017
+                        * Date: Fri Nov 03 2017
                         *
                         * "This, so far, is the best Flounder ever"
                         */(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
@@ -1503,30 +1503,10 @@ var api = {
         var data = el.options;
         var classes = this.classes;
 
-        var _iteratorNormalCompletion = true;
-        var _didIteratorError = false;
-        var _iteratorError = undefined;
-
-        try {
-            for (var _iterator = data[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-                var _el = _step.value;
-
-                if (_el.selected && !_utils2.default.hasClass(_el, classes.PLACEHOLDER)) {
-                    opts.push(_el);
-                }
-            }
-        } catch (err) {
-            _didIteratorError = true;
-            _iteratorError = err;
-        } finally {
-            try {
-                if (!_iteratorNormalCompletion && _iterator.return) {
-                    _iterator.return();
-                }
-            } finally {
-                if (_didIteratorError) {
-                    throw _iteratorError;
-                }
+        for (var i = 0; i < data.length; i++) {
+            var _el = data[i];
+            if (_el.selected && !_utils2.default.hasClass(_el, classes.PLACEHOLDER)) {
+                opts.push(_el);
             }
         }
 
@@ -2241,33 +2221,13 @@ var build = {
                 var data = [];
                 var selectOptions = [];
 
-                var _iteratorNormalCompletion = true;
-                var _didIteratorError = false;
-                var _iteratorError = undefined;
-
-                try {
-                    for (var _iterator = target.children[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-                        var optionEl = _step.value;
-
-                        selectOptions.push(optionEl);
-                        data.push({
-                            text: optionEl.innerHTML,
-                            value: optionEl.value
-                        });
-                    }
-                } catch (err) {
-                    _didIteratorError = true;
-                    _iteratorError = err;
-                } finally {
-                    try {
-                        if (!_iteratorNormalCompletion && _iterator.return) {
-                            _iterator.return();
-                        }
-                    } finally {
-                        if (_didIteratorError) {
-                            throw _iteratorError;
-                        }
-                    }
+                for (var i = 0; i < target.children.length; i++) {
+                    var optionEl = target.children[i];
+                    selectOptions.push(optionEl);
+                    data.push({
+                        text: optionEl.innerHTML,
+                        value: optionEl.value
+                    });
                 }
 
                 refs.selectOptions = selectOptions;
@@ -2305,29 +2265,9 @@ var build = {
     popInSelectElements: function popInSelectElements(select) {
         _utils2.default.removeAllChildren(select);
 
-        var _iteratorNormalCompletion2 = true;
-        var _didIteratorError2 = false;
-        var _iteratorError2 = undefined;
-
-        try {
-            for (var _iterator2 = this.originalChildren[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-                var el = _step2.value;
-
-                select.appendChild(el);
-            }
-        } catch (err) {
-            _didIteratorError2 = true;
-            _iteratorError2 = err;
-        } finally {
-            try {
-                if (!_iteratorNormalCompletion2 && _iterator2.return) {
-                    _iterator2.return();
-                }
-            } finally {
-                if (_didIteratorError2) {
-                    throw _iteratorError2;
-                }
-            }
+        for (var i = 0; i < this.originalChildren.length; i++) {
+            var el = this.originalChildren[i];
+            select.appendChild(el);
         }
     },
 
@@ -2336,7 +2276,7 @@ var build = {
      * ## popOutSelectElements
      *
      * pops out all the options of a select box, clones them, then appends the
-     * clones.  This gives us the ability to restore the original tag
+     * clones.  This gives us the ability to res``tore the original tag
      *
      * @param {DOMElement} select select element
      *
@@ -5309,7 +5249,7 @@ exports.default = utils;
 'use strict';
 
 /* globals module */
-module.exports = '1.3.0';
+module.exports = '1.3.1';
 
 },{}],22:[function(require,module,exports){
 'use strict';
