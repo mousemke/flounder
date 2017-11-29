@@ -1,12 +1,12 @@
 /*!
-                        * Flounder JavaScript Stylable Selectbox v1.3.1
+                        * Flounder JavaScript Stylable Selectbox v1.3.2
                         * https://github.com/sociomantic-tsunami/flounder
                         *
                         * Copyright 2015-2017 Sociomantic Labs and other contributors
                         * Released under the MIT license
                         * https://github.com/sociomantic-tsunami/flounder/license
                         *
-                        * Date: Fri Nov 03 2017
+                        * Date: Wed Nov 29 2017
                         *
                         * "This, so far, is the best Flounder ever"
                         */(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
@@ -1086,6 +1086,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 
 var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 /* globals console */
 
 
@@ -1597,9 +1599,17 @@ var api = {
 
         refs.select.innerHTML = '';
         refs.select = false;
+
         this.defaultObj = (0, _defaults.setDefaultOption)(this, props, data, true);
 
         refs.optionsList.innerHTML = '';
+
+        if (refs.noMoreOptionsEl || _typeof(refs.noMoreOptionsEl) === undefined) {
+            delete refs.noMoreOptionsEl;
+        }
+        if (refs.noResultsEl || _typeof(refs.noResultsEl) === undefined) {
+            delete refs.noResultsEl;
+        }
 
         var _buildData = this.buildData(this.defaultObj, this.data, refs.optionsList, select);
 
@@ -2505,31 +2515,35 @@ var defaults = {
             var select = refs.select;
             var placeholder = configObj.placeholder;
 
-            var defaultObj = {
-                text: placeholder || placeholder === '' ? placeholder : defaultOptions.placeholder,
-                value: '',
-                index: 0,
-                extraClass: classes.HIDDEN + '  ' + classes.PLACEHOLDER
-            };
+            if (!rebuild || configObj.data) {
+                var defaultObj = {
+                    text: placeholder || placeholder === '' ? placeholder : defaultOptions.placeholder,
+                    value: '',
+                    index: 0,
+                    extraClass: classes.HIDDEN + '  ' + classes.PLACEHOLDER
+                };
 
-            if (select) {
-                var escapedText = flounder.allowHTML ? defaultObj.text : _utils2.default.escapeHTML(defaultObj.text);
+                if (select) {
+                    var escapedText = flounder.allowHTML ? defaultObj.text : _utils2.default.escapeHTML(defaultObj.text);
 
-                var defaultOption = _utils2.default.constructElement({
-                    tagname: 'option',
-                    className: classes.OPTION_TAG,
-                    value: defaultObj.value
-                });
+                    var defaultOption = _utils2.default.constructElement({
+                        tagname: 'option',
+                        className: classes.OPTION_TAG,
+                        value: defaultObj.value
+                    });
 
-                defaultOption.innerHTML = escapedText;
+                    defaultOption.innerHTML = escapedText;
 
-                select.insertBefore(defaultOption, select[0]);
-                flounder.refs.selectOptions.unshift(defaultOption);
+                    select.insertBefore(defaultOption, select[0]);
+                    flounder.refs.selectOptions.unshift(defaultOption);
+                }
+
+                originalData.unshift(defaultObj);
+
+                return defaultObj;
             }
 
-            originalData.unshift(defaultObj);
-
-            return defaultObj;
+            return flounder.data[0];
         }
 
         /**
@@ -3904,15 +3918,17 @@ var events = {
         var isHidden = _utils2.default.hasClass(optionsList, classes.HIDDEN);
         var type = e.type;
 
-        if (type === 'mouseleave' || force === 'close' || !isHidden) {
-            this.toggleList.justOpened = false;
-            this.toggleClosed(e, optionsList, refs, wrapper);
-        } else {
-            if (type === 'keydown') {
-                this.toggleList.justOpened = true;
-            }
+        if (!(this.data.length === 0 || this.data.length === 1 && this.data[0].extraClass.indexOf('flounder__placeholder') > -1)) {
+            if (type === 'mouseleave' || force === 'close' || !isHidden) {
+                this.toggleList.justOpened = false;
+                this.toggleClosed(e, optionsList, refs, wrapper);
+            } else {
+                if (type === 'keydown') {
+                    this.toggleList.justOpened = true;
+                }
 
-            this.toggleOpen(e, optionsList, refs, wrapper);
+                this.toggleOpen(e, optionsList, refs, wrapper);
+            }
         }
     },
 
@@ -5249,6 +5265,6 @@ exports.default = utils;
 'use strict';
 
 /* globals module */
-module.exports = '1.3.1';
+module.exports = '1.3.2';
 
 },{}]},{},[17]);
