@@ -1458,7 +1458,7 @@ const events = {
 
         if ( !( this.data.length === 0 ||
             this.data.length === 1 &&
-            this.data[ 0 ].extraClass.indexOf( 'flounder__placeholder' ) >= -1 )
+            this.data[ 0 ].extraClass.indexOf( 'flounder__placeholder' ) > -1 )
         )
         {
             if ( type === 'mouseleave' || force === 'close' || !isHidden )
