@@ -94,34 +94,39 @@ const defaults = {
             const select      = refs.select;
             const placeholder = configObj.placeholder;
 
-            const defaultObj    = {
-                text        : placeholder || placeholder === '' ? placeholder :
-                                                    defaultOptions.placeholder,
-                value       : '',
-                index       : 0,
-                extraClass  : `${classes.HIDDEN}  ${classes.PLACEHOLDER}`
-            };
-
-            if ( select )
+            if ( !rebuild || configObj.data )
             {
-                const escapedText     = flounder.allowHTML ? defaultObj.text :
+                const defaultObj    = {
+                    text       : placeholder || placeholder === '' ?
+                                       placeholder : defaultOptions.placeholder,
+                    value      : '',
+                    index      : 0,
+                    extraClass : `${classes.HIDDEN}  ${classes.PLACEHOLDER}`
+                };
+
+                if ( select )
+                {
+                    const escapedText   = flounder.allowHTML ? defaultObj.text :
                                             utils.escapeHTML( defaultObj.text );
 
-                const defaultOption   = utils.constructElement( {
-                    tagname     : 'option',
-                    className   : classes.OPTION_TAG,
-                    value       :  defaultObj.value
-                } );
+                    const defaultOption = utils.constructElement( {
+                        tagname     : 'option',
+                        className   : classes.OPTION_TAG,
+                        value       :  defaultObj.value
+                    } );
 
-                defaultOption.innerHTML = escapedText;
+                    defaultOption.innerHTML = escapedText;
 
-                select.insertBefore( defaultOption, select[ 0 ] );
-                flounder.refs.selectOptions.unshift( defaultOption );
+                    select.insertBefore( defaultOption, select[ 0 ] );
+                    flounder.refs.selectOptions.unshift( defaultOption );
+                }
+
+                originalData.unshift( defaultObj );
+
+                return defaultObj;
             }
 
-            originalData.unshift( defaultObj );
-
-            return defaultObj;
+            return flounder.data[ 0 ];
         }
 
 
