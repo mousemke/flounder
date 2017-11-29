@@ -1,4 +1,4 @@
-Flounder.js 1.3.1
+Flounder.js 1.3.2
 =================
 
 [![Flounder build status](https://travis-ci.org/sociomantic-tsunami/flounder.svg)](https://travis-ci.org)
