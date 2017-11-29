@@ -1456,19 +1456,25 @@ const events = {
         const isHidden    = utils.hasClass( optionsList, classes.HIDDEN );
         const type        = e.type;
 
-        if ( type === 'mouseleave' || force === 'close' || !isHidden )
+        if ( !( this.data.length === 0 ||
+            this.data.length === 1 &&
+            this.data[ 0 ].extraClass.indexOf( 'flounder__placeholder' ) > -1 )
+        )
         {
-            this.toggleList.justOpened = false;
-            this.toggleClosed( e, optionsList, refs, wrapper );
-        }
-        else
-        {
-            if ( type === 'keydown' )
+            if ( type === 'mouseleave' || force === 'close' || !isHidden )
             {
-                this.toggleList.justOpened = true;
+                this.toggleList.justOpened = false;
+                this.toggleClosed( e, optionsList, refs, wrapper );
             }
+            else
+            {
+                if ( type === 'keydown' )
+                {
+                    this.toggleList.justOpened = true;
+                }
 
-            this.toggleOpen( e, optionsList, refs, wrapper );
+                this.toggleOpen( e, optionsList, refs, wrapper );
+            }
         }
     },
 

@@ -46,7 +46,7 @@ describe( 'addFirstTouchListeners', () =>
     } );
 
 
-    it( 'should bind mouseenter to the wrapper if openOnHover is set', done =>
+    it( 'should bind mouseenter to the wrapper if openOnHover is set', () =>
     {
         document.body.flounder = null;
         const flounder    = new Flounder( document.body, {
@@ -55,7 +55,7 @@ describe( 'addFirstTouchListeners', () =>
 
         flounder.firstTouchController( {} );
 
-        sinon.stub( flounder, 'firstTouchController', e => e );
+        sinon.spy( flounder, 'firstTouchController' );
 
         flounder.addFirstTouchListeners();
 
@@ -63,13 +63,9 @@ describe( 'addFirstTouchListeners', () =>
 
         simulant.fire( flounder.refs.wrapper, 'mouseenter' );
 
-        setTimeout( () =>
-        {
-            // there's some weird focus event too
-            assert.equal( flounder.firstTouchController.callCount, 2 );
-            flounder.firstTouchController.restore();
-            done();
-        }, 100 );
+        assert.equal( flounder.firstTouchController.callCount, 1 );
+
+        flounder.firstTouchController.restore();
     } );
 } );
 
