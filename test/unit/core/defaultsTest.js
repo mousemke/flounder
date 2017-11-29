@@ -116,7 +116,7 @@ describe( 'setDefaultOption', () =>
                 placeholder : 'moon!',
                 data        : dataVal
             };
-            flounder.allowHTML  = true;
+
             const defaultVal = defaults.setDefaultOption( flounder, configObj );
 
             assert.equal( defaultVal.index, 0 );

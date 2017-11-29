@@ -558,11 +558,21 @@ const api = {
         this.deselectAll();
         this.removeOptionsListeners();
 
-        refs.select.innerHTML       = '';
-        refs.select         = false;
-        this.defaultObj     = setDefaultOption( this, props, data, true );
+        refs.select.innerHTML = '';
+        refs.select           = false;
+
+        this.defaultObj       = setDefaultOption( this, props, data, true );
 
         refs.optionsList.innerHTML  = '';
+
+        if ( refs.noMoreOptionsEl || typeof refs.noMoreOptionsEl === undefined )
+        {
+            delete refs.noMoreOptionsEl;
+        }
+        if ( refs.noResultsEl || typeof refs.noResultsEl === undefined )
+        {
+            delete refs.noResultsEl;
+        }
 
         [ refs.data, refs.selectOptions, refs.sections ] = this.buildData(
                         this.defaultObj, this.data, refs.optionsList, select );
