@@ -1,12 +1,12 @@
 /*!
-                        * Flounder JavaScript Stylable Selectbox v1.3.2
+                        * Flounder JavaScript Stylable Selectbox v1.3.3
                         * https://github.com/sociomantic-tsunami/flounder
                         *
                         * Copyright 2015-2017 Sociomantic Labs and other contributors
                         * Released under the MIT license
                         * https://github.com/sociomantic-tsunami/flounder/license
                         *
-                        * Date: Wed Nov 29 2017
+                        * Date: Tue Dec 12 2017
                         *
                         * "This, so far, is the best Flounder ever"
                         */(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
@@ -3190,6 +3190,7 @@ var events = {
      * @return {Void} void
      */
     clickSet: function clickSet(e) {
+
         e.preventDefault();
         e.stopPropagation();
 
@@ -3215,16 +3216,18 @@ var events = {
      * @return {Void} void
      */
     displayMultipleTags: function displayMultipleTags(selectedOptions, multiTagWrapper) {
-        var children = multiTagWrapper.children;
+        var tag = this.refs.search.previousSibling;
 
-        for (var i = 0; i < children.length - 1; i++) {
-            var tag = children[i];
+        while (tag) {
             var closeBtn = tag.firstChild;
+            var prevTag = tag.previousSibling;
 
             closeBtn.removeEventListener('click', this.removeMultiTag);
             tag.removeEventListener('keydown', this.checkMultiTagKeydown);
 
             multiTagWrapper.removeChild(tag);
+
+            tag = prevTag;
         }
 
         if (selectedOptions.length > 0) {
@@ -5265,6 +5268,6 @@ exports.default = utils;
 'use strict';
 
 /* globals module */
-module.exports = '1.3.2';
+module.exports = '1.3.3';
 
 },{}]},{},[17]);

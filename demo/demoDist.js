@@ -5,7 +5,7 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _flounder = require('/Users/damian/projects/tsunami/flounder/src/core/flounder');
+var _flounder = require('/Users/conorcafferkey/flounder/src/core/flounder');
 
 var _flounder2 = _interopRequireDefault(_flounder);
 
@@ -307,7 +307,7 @@ requirejs(['flounder'], function (Flounder) {
 
 exports.default = _flounder2.default;
 
-},{"/Users/damian/projects/tsunami/flounder/src/core/flounder":18}],2:[function(require,module,exports){
+},{"/Users/conorcafferkey/flounder/src/core/flounder":18}],2:[function(require,module,exports){
 "use strict";
 
 // rawAsap provides everything we need except exception management.
@@ -3488,6 +3488,7 @@ var events = {
      * @return {Void} void
      */
     clickSet: function clickSet(e) {
+
         e.preventDefault();
         e.stopPropagation();
 
@@ -3513,16 +3514,18 @@ var events = {
      * @return {Void} void
      */
     displayMultipleTags: function displayMultipleTags(selectedOptions, multiTagWrapper) {
-        var children = multiTagWrapper.children;
+        var tag = this.refs.search.previousSibling;
 
-        for (var i = 0; i < children.length - 1; i++) {
-            var tag = children[i];
+        while (tag) {
             var closeBtn = tag.firstChild;
+            var prevTag = tag.previousSibling;
 
             closeBtn.removeEventListener('click', this.removeMultiTag);
             tag.removeEventListener('keydown', this.checkMultiTagKeydown);
 
             multiTagWrapper.removeChild(tag);
+
+            tag = prevTag;
         }
 
         if (selectedOptions.length > 0) {
@@ -5563,6 +5566,6 @@ exports.default = utils;
 'use strict';
 
 /* globals module */
-module.exports = '1.3.2';
+module.exports = '1.3.3';
 
 },{}]},{},[1]);
