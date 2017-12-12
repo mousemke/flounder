@@ -621,6 +621,7 @@ const events = {
      */
     clickSet( e )
     {
+
         e.preventDefault();
         e.stopPropagation();
 
@@ -648,17 +649,19 @@ const events = {
      */
     displayMultipleTags( selectedOptions, multiTagWrapper )
     {
-        const children = multiTagWrapper.children;
+        let tag = this.refs.search.previousSibling;
 
-        for ( let i = 0; i < children.length - 1; i++ )
+        while ( tag )
         {
-            const tag      = children[ i ];
             const closeBtn = tag.firstChild;
+            const prevTag  = tag.previousSibling;
 
             closeBtn.removeEventListener( 'click', this.removeMultiTag );
             tag.removeEventListener( 'keydown', this.checkMultiTagKeydown );
 
             multiTagWrapper.removeChild( tag );
+
+            tag = prevTag;
         }
 
         if ( selectedOptions.length > 0 )
