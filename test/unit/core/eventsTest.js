@@ -1573,16 +1573,16 @@ describe( 'displayMultipleTags', () =>
         } );
 
         const refs            = flounder.refs;
-        const refsData        = refs.selectOptions;
         const multiTagWrapper = refs.multiTagWrapper;
 
-        flounder.displayMultipleTags( [ refsData[ 1 ], refsData[ 2 ] ],
-            multiTagWrapper );
+        flounder.setByValue( Array.prototype.slice.call( data, 0, -2 ) );
+
+        flounder.displayMultipleTags( flounder.getSelected(), multiTagWrapper );
 
         const tags = Array.prototype.slice.call(
             multiTagWrapper.children, 0, -1 );
 
-        assert.equal( tags.length, 2 );
+        assert.equal( tags.length, 3 );
     } );
 
 
@@ -1602,6 +1602,10 @@ describe( 'displayMultipleTags', () =>
 
         flounder.displayMultipleTags( [], multiTagWrapper );
 
+        const tags = Array.prototype.slice.call(
+            multiTagWrapper.children, 0, -1 );
+
+        assert.equal( tags.length, 0 );
         assert.equal( refs.selected.innerHTML, flounder.placeholder );
     } );
 } );
