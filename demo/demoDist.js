@@ -5566,6 +5566,6 @@ exports.default = utils;
 'use strict';
 
 /* globals module */
-module.exports = '1.3.3';
+module.exports = '1.3.4';
 
 },{}]},{},[1]);
