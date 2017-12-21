@@ -1450,26 +1450,38 @@ const events = {
      */
     toggleList( e, force )
     {
-        const classes     = this.classes;
-        const refs        = this.refs;
+        const classes = this.classes;
+        const refs    = this.refs;
 
         const optionsList = refs.optionsListWrapper;
-
         const wrapper     = refs.wrapper;
-        const isHidden    = utils.hasClass( optionsList, classes.HIDDEN );
-        const type        = e.type;
 
-        if ( !( this.data.length === 0 ||
-            this.data.length === 1 &&
-            this.data[ 0 ].extraClass.indexOf( 'flounder__placeholder' ) > -1 )
-        )
+        const type = e.type;
+
+        const isHidden = utils.hasClass( optionsList, classes.HIDDEN );
+
+        if ( type === 'mouseleave' || force === 'close' || !isHidden )
         {
-            if ( type === 'mouseleave' || force === 'close' || !isHidden )
+            this.toggleList.justOpened = false;
+            this.toggleClosed( e, optionsList, refs, wrapper );
+        }
+        else
+        {
+            const data = this.data;
+
+            let shouldOpen = false;
+
+            if ( data.length === 1 )
             {
-                this.toggleList.justOpened = false;
-                this.toggleClosed( e, optionsList, refs, wrapper );
+                shouldOpen = !( data[ 0 ].extraClass &&
+                    data[ 0 ].extraClass.indexOf( classes.PLACEHOLDER ) > -1 );
             }
-            else
+            else if ( data.length > 1 )
+            {
+                shouldOpen = true;
+            }
+
+            if ( shouldOpen )
             {
                 if ( type === 'keydown' )
                 {
