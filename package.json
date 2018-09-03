@@ -34,7 +34,7 @@
     "browserify": "^16.2.2",
     "eslint": "^3.4.0",
     "eslint-plugin-react": "^6.2.0",
-    "gulp": "^4.0.0",
+    "gulp": "^3.9.1",
     "gulp-header": "^1.7.1",
     "gulp-uglify": "^1.5.1",
     "istanbul-coveralls": "^1.0.3",
