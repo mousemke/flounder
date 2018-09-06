@@ -83,13 +83,12 @@ function updateLine( url, ln, replacement )
  */
 function updateVersion()
 {
-    const version         = getResource( versionUrl );
-    const versionSplit    = version.split( '.' );
-    versionSplit.shift();
-    versionSplit[ 0 ]     = parseInt( versionSplit[ 0 ].split( '\'' )[ 1 ] );
+    const version = getResource( versionUrl ).split( '=' )[ 1 ];
+    const versionSplit = version.split( '.' );
+    versionSplit[ 0 ] = parseInt( versionSplit[ 0 ].split( '\'' )[ 1 ] );
 
-    const newVersion      = parseInt( versionSplit[ 2 ] ) + 1;
-    versionSplit[ 2 ]   = newVersion;
+    const newVersion  = parseInt( versionSplit[ 2 ] ) + 1;
+    versionSplit[ 2 ] = newVersion;
 
     return versionSplit.join( '.' );
 }
@@ -102,7 +101,7 @@ const bowerUrl        = './bower.json';
 
 const newVersion      = process.argv[ 2 ] || updateVersion( versionUrl );
 
-updateLine( versionUrl, 2, `module.exports = \'${newVersion}\';` );
+updateLine( versionUrl, 12, `module.exports = \'${newVersion}\';` );
 updateLine( readmeUrl, 0, `Flounder.js ${newVersion}` );
 updateLine( packageUrl, 2, `  "version": "${newVersion}",` );
 updateLine( bowerUrl, 2, `    "version": "${newVersion}",` );
