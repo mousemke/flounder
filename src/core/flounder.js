@@ -7,7 +7,6 @@
  *
  */
 
-
 /* globals console, document, setTimeout */
 import { defaultOptions }   from './defaults';
 import utils                from './utils';

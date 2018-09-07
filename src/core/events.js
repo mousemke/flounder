@@ -7,7 +7,6 @@
  *
  */
 
-
 /* globals console, document, setTimeout, window */
 import utils            from './utils';
 import keycodes         from './keycodes';
