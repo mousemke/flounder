@@ -7,6 +7,7 @@
  *
  */
 
+
 /* globals console */
 import utils                from './utils';
 import { setDefaultOption } from './defaults';
