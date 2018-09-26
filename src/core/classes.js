@@ -20,7 +20,7 @@ const classes = {
     LOADING                 : 'flounder__loading',
     LOADING_FAILED          : 'flounder__loading--failed',
     MAIN                    : 'flounder',
-    MAIN_WRAPPER            : 'flounder--wrapper  flounder__input--select',
+    MAIN_WRAPPER            : 'flounder--wrapper',
     MULTIPLE_TAG_FLOUNDER   : 'flounder--multiple',
     MULTI_TAG_LIST          : 'flounder__multi--tag--list',
     MULTIPLE_SELECT_TAG     : 'flounder__multiple--select--tag',
