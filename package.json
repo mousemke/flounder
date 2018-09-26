@@ -61,7 +61,7 @@
     "dist/"
   ],
   "homepage": "https://github.com/sociomantic-tsunami/flounder",
-  "main": "./dist/flounder.js",
+  "main": "./src/core/flounder.js",
   "keywords": [
     "select2",
     "dropdown",
