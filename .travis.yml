@@ -1,6 +1,10 @@
 language: node_js
 node_js:
   - "10.5.0"
+  - "9.11.2"
+  - "8.12.0"
+  - "7.10.1"
+  - "7.0.0"
 script:
   - npm run build
 addons:

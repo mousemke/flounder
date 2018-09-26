@@ -364,7 +364,7 @@ npm scripts
 Contributing
 ============
 
-Development of Flounder requires node '4.3.1' or higher.
+Development of Flounder requires node '7.0.0' or higher.
 
 Flounder's **branch structure** goes as follows:
 
