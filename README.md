@@ -1,4 +1,4 @@
-Flounder.js 1.3.6
+Flounder.js 1.3.7
 =================
 
 [![Flounder build status](https://travis-ci.org/sociomantic-tsunami/flounder.svg)](https://travis-ci.org)
@@ -46,7 +46,7 @@ document.querySelector( '#vanilla--select' ).flounder.destroy()
 ```
 
 
-###Target options
+### Target options
 
 Flounder's target is quite flexible, however it will only build on the first element it finds.
 
@@ -85,7 +85,7 @@ new Flounder( 'input', configOptions );
 If flounder is fed an element that already has a flounder, it will destroy it and re initialize it with the new config options.
 
 
-###Available config options
+### Available config options
 
 ```js
 {
@@ -364,7 +364,7 @@ npm scripts
 Contributing
 ============
 
-Development of Flounder requires node '4.3.1' or higher.
+Development of Flounder requires node '7.0.0' or higher.
 
 Flounder's **branch structure** goes as follows:
 
