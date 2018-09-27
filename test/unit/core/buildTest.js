@@ -35,6 +35,7 @@ describe( 'addOptionDescription', () =>
     {
         const el = document.createElement( 'div' );
         build.classes = classes;
+        build.buildClasses = classes;
         build.addOptionDescription( el, 'moon' );
 
         assert.equal( el.children.length, 1 );

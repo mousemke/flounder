@@ -636,7 +636,7 @@ describe( 'initializeOptions', () =>
     {
         assert.deepEqual( flounder.data, data );
         assert.equal( flounder.multiple, 'doge' );
-        assert.equal( flounder.classes.MAIN, 'cat' );
+        assert.equal( flounder.buildClasses.MAIN, 'cat  flounder' );
     } );
 
 

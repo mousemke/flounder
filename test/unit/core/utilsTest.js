@@ -36,13 +36,13 @@ describe( 'addClass', () =>
     it( 'should add as many classes passed to it once', () =>
     {
         utils.addClass( body, [ 'moon', 'doge' ] );
-        assert.equal( body.className, 'moon  doge' );
+        assert.equal( body.className, 'moon doge' );
 
         utils.addClass( body, 'brains' );
-        assert.equal( body.className, 'moon  doge  brains' );
+        assert.equal( body.className, 'moon doge brains' );
 
         utils.addClass( body, 'brains' );
-        assert.equal( body.className, 'moon  doge  brains' );
+        assert.equal( body.className, 'moon doge brains' );
     } );
 } );
 

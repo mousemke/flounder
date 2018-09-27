@@ -26,9 +26,9 @@ const build = {
      */
     addOptionDescription( el, text )
     {
-        const div         = document.createElement( 'div' );
+        const div       = document.createElement( 'div' );
         div.innerHTML   = text;
-        div.className   = this.classes.DESCRIPTION;
+        utils.addClass(div, this.classes.DESCRIPTION);
         el.appendChild( div );
     },
 
@@ -147,10 +147,10 @@ const build = {
     {
         const self              = this;
         let index               = 0;
-        let indexSection         = 0;
+        let indexSection        = 0;
         const data              = [];
         const selectOptions     = [];
-        const sections           = [];
+        const sections          = [];
         const constructElement  = utils.constructElement;
         const selectedClass     = this.selectedClass;
         const escapeHTML        = utils.escapeHTML;
@@ -158,7 +158,7 @@ const build = {
         const refs              = this.refs;
         const selectRef         = refs.select;
         const allowHTML         = this.allowHTML;
-        const classes           = this.classes;
+        const classes      = this.classes;
 
         /**
          * ## buildDiv
@@ -174,11 +174,20 @@ const build = {
         {
             dataObj.index   = i;
 
-            const extraClass  = i === defaultValue.index ?
-                                                    `  ${selectedClass}` : '';
+            const divClasses = classes.OPTION;
+
+            if (dataObj.extraClass)
+            {
+                divClasses.push(dataObj.extraClass);
+            }
+
+            if ( i === defaultValue.index )
+            {
+                divClasses.push(selectedClass);
+            }
 
             const res = {
-                className       : classes.OPTION + extraClass,
+                className       : divClasses,
                 'data-index'    : i
             };
 
@@ -199,9 +208,6 @@ const build = {
                 self.addOptionDescription( data, dataObj.description,
                                                         classes.DESCRIPTION );
             }
-
-            data.className += dataObj.extraClass ?
-                                                `  ${dataObj.extraClass}` : '';
 
             data.setAttribute( 'role', 'option' );
 
@@ -226,11 +232,10 @@ const build = {
             if ( !selectRef )
             {
                 const extra             = dataObj.extraClass || '';
-                const selectOptionClass = `${classes.OPTION_TAG}  ${extra}`;
 
                 selectOption            = constructElement( {
                     tagname     : 'option',
-                    className   : selectOptionClass.trim(),
+                    className   : classes.OPTION_TAG.push(extra),
                     value       : dataObj.value
                 } );
 
@@ -363,11 +368,9 @@ const build = {
             className : classes.MAIN_WRAPPER
         } );
 
-        const flounderClass     = classes.MAIN;
-
         const flounderClasses   = this.multipleTags ?
-                        `${flounderClass} ${classes.MULTIPLE_TAG_FLOUNDER}` :
-                        flounderClass;
+                        classes.MAIN.concat(classes.MULTIPLE_TAG_FLOUNDER) :
+                        classes.MAIN;
 
         const flounder          = constructElement( {
             className : flounderClasses
@@ -386,9 +389,10 @@ const build = {
         const defaultValue    = this.defaultObj;
 
         let selectedClassName = classes.SELECTED_DISPLAYED;
+
         if ( defaultValue.value && defaultValue.extraClass )
         {
-            selectedClassName += ` ${defaultValue.extraClass}`;
+            selectedClassName.push( defaultValue.extraClass );
         }
 
         const selected = constructElement( {
@@ -402,7 +406,7 @@ const build = {
         } ) : null;
 
         const optionsListWrapper = constructElement( {
-            className : `${classes.OPTIONS_WRAPPER}  ${classes.HIDDEN}`
+            className : classes.OPTIONS_WRAPPER.concat(classes.HIDDEN)
         } );
 
         const optionsList       = constructElement( {
@@ -488,12 +492,12 @@ const build = {
         const classes    = this.classes;
         const optionText = option.innerHTML;
         const span       = document.createElement( 'SPAN' );
-        span.className   = classes.MULTIPLE_SELECT_TAG;
+        utils.addClass(span, classes.MULTIPLE_SELECT_TAG);
         span.setAttribute( 'aria-label', 'Close' );
         span.setAttribute( 'tabindex', 0 );
 
         const a         = document.createElement( 'A' );
-        a.className     = classes.MULTIPLE_TAG_CLOSE;
+        utils.addClass(a, classes.MULTIPLE_TAG_CLOSE);
         a.setAttribute( 'data-index', option.index );
 
         span.appendChild( a );
@@ -565,7 +569,7 @@ const build = {
         {
             select = utils.constructElement( {
                 tagname     : 'SELECT',
-                className   : `${classes.SELECT_TAG}  ${classes.HIDDEN}`
+                className   : classes.SELECT_TAG.concat(classes.HIDDEN)
             } );
 
             wrapper.appendChild( select );

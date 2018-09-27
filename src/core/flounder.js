@@ -357,16 +357,23 @@ class Flounder
             }
             else if ( opt === 'classes' )
             {
-                this.classes            = {};
-                const defaultClasses    = defaultOptions[ opt ];
-                const propClasses       = typeof props[ opt ] === 'object' ?
-                                                        props[ opt ] : {};
+                const defaultClasses    = defaultOptions.classes;
+                const propClasses       = typeof props.classes === 'object' ?
+                                                        props.classes : {};
+
+                this.classes       = {};
 
                 for ( const clss in defaultClasses )
                 {
-                    this.classes[ clss ] = propClasses[ clss ] ?
-                                                    propClasses[ clss ] :
-                                                    defaultClasses[ clss ];
+                    const propClass = propClasses[ clss ];
+                    let buildClass = [defaultClasses[ clss ]];
+
+                    if ( propClass && propClass !== buildClass[0] )
+                    {
+                        buildClass.push(propClass);
+                    }
+
+                    this.classes[ clss ] = buildClass;
                 }
             }
             else if ( opt === 'data' )
@@ -382,7 +389,7 @@ class Flounder
             }
         }
 
-        this.selectedClass = this.classes.SELECTED;
+        this.selectedClass = [ this.classes.SELECTED ];
 
         if ( props.defaultEmpty )
         {
@@ -393,7 +400,7 @@ class Flounder
         {
             this.search         = true;
             this.multiple       = true;
-            this.selectedClass  += `  ${this.classes.SELECTED_HIDDEN}`;
+            this.selectedClass.push(this.classes.SELECTED_HIDDEN);
         }
     }
 

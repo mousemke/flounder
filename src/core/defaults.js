@@ -110,7 +110,7 @@ const defaults = {
                                        placeholder : defaultOptions.placeholder,
                     value      : '',
                     index      : 0,
-                    extraClass : `${classes.HIDDEN}  ${classes.PLACEHOLDER}`
+                    extraClass : [ classes.HIDDEN, classes.PLACEHOLDER ]
                 };
 
                 if ( select )
@@ -121,7 +121,7 @@ const defaults = {
                     const defaultOption = utils.constructElement( {
                         tagname     : 'option',
                         className   : classes.OPTION_TAG,
-                        value       :  defaultObj.value
+                        value       : defaultObj.value
                     } );
 
                     defaultOption.innerHTML = escapedText;
