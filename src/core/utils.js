@@ -7,7 +7,7 @@
  *
  */
 
-/* globals clearTimeout, document, setTimeout, window */
+/* globals clearTimeout, document, setTimeout, window, Set */
 import microbeHttp      from 'microbejs/src/modules/http';
 
 const utils = {
@@ -23,9 +23,9 @@ const utils = {
      */
     addClass( el, clss )
     {
-        if ( typeof clss !== 'string' && clss.length )
+        if ( Array.isArray( clss ) )
         {
-            clss.forEach( c =>
+            [ ...new Set( clss ) ].forEach( c =>
             {
                 utils.addClass( el, c );
             } );
@@ -33,20 +33,7 @@ const utils = {
             return true;
         }
 
-        let elClass         = el.className;
-        const elClassLength = elClass.length;
-
-        const className = elClass.slice( elClassLength - clss.length - 1,
-                                                                elClassLength );
-
-        if ( !utils.hasClass( el, clss ) &&
-                elClass.slice( 0, clss.length + 1 ) !== `${clss} ` &&
-            className !== ` ${clss}` )
-        {
-            elClass += `  ${clss}`;
-        }
-
-        el.className = elClass.trim();
+        el.classList.add( clss );
     },
 
 
@@ -69,6 +56,13 @@ const utils = {
                 if ( att.slice( 0, 5 ) === 'data-' )
                 {
                     el.setAttribute( att, elObj[ att ] );
+                }
+                else if ( att === 'className' )
+                {
+                    const objClass = elObj.className;
+                    el.className = Array.isArray( objClass ) ?
+                                            objClass.join( '  ' ) :
+                                            objClass;
                 }
                 else
                 {
@@ -238,10 +232,14 @@ const utils = {
      */
     hasClass( el, clss )
     {
-        const elClass   = el.className;
-        const regex     = new RegExp( `(^${clss} )|( ${clss}$)|( ${clss} )|(^${clss}$)` ); // eslint-disable-line
+        let testClass = clss;
 
-        return !!elClass.match( regex );
+        if ( Array.isArray( clss ) )
+        {
+            testClass = testClass[ 0 ];
+        }
+
+        return el.classList.contains( testClass );
     },
 
 
@@ -312,9 +310,9 @@ const utils = {
      */
     removeClass( el, clss )
     {
-        if ( typeof clss !== 'string' && clss.length )
+        if ( Array.isArray( clss ) )
         {
-            clss.forEach( _c =>
+            [ ...new Set( clss ) ].forEach( _c =>
             {
                 utils.removeClass( el, _c );
             } );
@@ -322,29 +320,7 @@ const utils = {
             return true;
         }
 
-        let baseClass           = el.className;
-        const baseClassLength   = baseClass.length;
-        const classLength       = clss.length;
-
-        if ( baseClass === clss )
-        {
-            baseClass = '';
-        }
-        else if ( baseClass.slice( 0, classLength + 1 ) === `${clss} ` )
-        {
-            baseClass = baseClass.slice( classLength + 1, baseClassLength );
-        }
-        else if ( baseClass.slice( baseClassLength - classLength - 1,
-                                            baseClassLength ) === ` ${clss}` )
-        {
-            baseClass = baseClass.slice( 0, baseClassLength - classLength - 1 );
-        }
-        else if ( baseClass.indexOf( ` ${clss} ` ) !== -1 )
-        {
-            baseClass = baseClass.replace( ` ${clss} `, ' ' );
-        }
-
-        el.className = baseClass.trim();
+        el.classList.remove( clss );
     },
 
 

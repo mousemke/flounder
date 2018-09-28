@@ -1,6 +1,6 @@
 {
   "name": "flounder",
-  "version": "1.3.7",
+  "version": "1.3.8",
   "author": "Mouse Braun <mouse@knoblau.ch>",
   "description": "a native friendly dropdown menu",
   "repository": {
@@ -38,7 +38,6 @@
     "gulp-header": "^1.7.1",
     "gulp-uglify": "^1.5.1",
     "jsdom": "^9.4.1",
-    "microbejs": "^0.4.20",
     "mocha": "^5.2.0",
     "mocha-istanbul": "^0.2.0",
     "promise": "^7.1.1",
@@ -48,6 +47,9 @@
     "stylelint": "^7.11.0",
     "stylelint-no-browser-hacks": "^1.0.2",
     "stylelint-order": "^0.5.0"
+  },
+  "dependencies": {
+    "microbejs": "^0.4.20"
   },
   "license": "MIT",
   "bugs": {
