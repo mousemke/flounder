@@ -160,7 +160,7 @@ const events = {
     {
         const classes = this.classes;
         const elProps = {
-            className : classes.OPTION.push(classes.NO_RESULTS),
+            className : classes.OPTION.push( classes.NO_RESULTS )
         };
 
         const noMoreOptionsEl   = this.refs.noMoreOptionsEl ||
@@ -184,7 +184,7 @@ const events = {
     {
         const classes = this.classes;
         const elProps = {
-            className : classes.OPTION.push(classes.NO_RESULTS),
+            className : classes.OPTION.push( classes.NO_RESULTS )
         };
 
         const noResultsEl = this.refs.noResultsEl ||
@@ -701,7 +701,7 @@ const events = {
         const selectedLength  = selectedOption.length;
         const multipleTags    = this.multipleTags;
 
-        utils.addClass(selected, this.classes.SELECTED_DISPLAYED );
+        utils.addClass( selected, this.classes.SELECTED_DISPLAYED );
 
         if ( !multipleTags && selectedLength ===  1 )
         {
@@ -711,9 +711,9 @@ const events = {
 
             const extraClass    = refs.data[ index ].extraClass;
 
-            if (extraClass)
+            if ( extraClass )
             {
-                utils.addClass(selected, extraClass)    ;
+                utils.addClass( selected, extraClass );
             }
         }
         else if ( !multipleTags && selectedLength === 0 )

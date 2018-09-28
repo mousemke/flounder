@@ -366,11 +366,11 @@ class Flounder
                 for ( const clss in defaultClasses )
                 {
                     const propClass = propClasses[ clss ];
-                    let buildClass = [defaultClasses[ clss ]];
+                    const buildClass = [ defaultClasses[ clss ] ];
 
-                    if ( propClass && propClass !== buildClass[0] )
+                    if ( propClass && propClass !== buildClass[ 0 ] )
                     {
-                        buildClass.push(propClass);
+                        buildClass.push( propClass );
                     }
 
                     this.classes[ clss ] = buildClass;
@@ -400,7 +400,7 @@ class Flounder
         {
             this.search         = true;
             this.multiple       = true;
-            this.selectedClass.push(this.classes.SELECTED_HIDDEN);
+            this.selectedClass.push( this.classes.SELECTED_HIDDEN );
         }
     }
 

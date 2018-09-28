@@ -33,7 +33,7 @@ const utils = {
             return true;
         }
 
-        el.classList.add(clss);
+        el.classList.add( clss );
     },
 
 
@@ -57,16 +57,16 @@ const utils = {
                 {
                     el.setAttribute( att, elObj[ att ] );
                 }
+                else if ( att === 'className' )
+                {
+                    const objClass = elObj.className;
+                    el.className = Array.isArray( objClass ) ?
+                                            objClass.join( '  ' ) :
+                                            objClass;
+                }
                 else
                 {
-                    if ( att === 'className' )
-                    {
-                        const objClass = elObj.className;
-                        el.className = Array.isArray(objClass) ? objClass.join('  ') : objClass;
-                    }
-                    else {
-                        el[ att ] = elObj[ att ];
-                    }
+                    el[ att ] = elObj[ att ];
                 }
             }
         }
@@ -234,12 +234,12 @@ const utils = {
     {
         let testClass = clss;
 
-        if ( Array.isArray(clss) )
+        if ( Array.isArray( clss ) )
         {
             testClass = testClass[ 0 ];
         }
 
-        return el.classList.contains(testClass);
+        return el.classList.contains( testClass );
     },
 
 
@@ -320,7 +320,7 @@ const utils = {
             return true;
         }
 
-        el.classList.remove( clss )
+        el.classList.remove( clss );
     },
 
 

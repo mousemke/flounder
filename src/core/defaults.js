@@ -110,7 +110,7 @@ const defaults = {
                                        placeholder : defaultOptions.placeholder,
                     value      : '',
                     index      : 0,
-                    extraClass : [ classes.HIDDEN, classes.PLACEHOLDER ]
+                    extraClass : classes.HIDDEN.concat( classes.PLACEHOLDER )
                 };
 
                 if ( select )
