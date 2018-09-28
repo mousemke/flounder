@@ -110,7 +110,7 @@ const bowerUrl        = './bower.json';
 
 const newVersion      = process.argv[ 2 ] || updateVersion( versionUrl );
 
-updateLine( versionUrl, 12, `module.exports = \'${newVersion}\';` );
+updateLine( versionUrl, 10, `module.exports = \'${newVersion}\';` );
 updateLine( readmeUrl, 0, `Flounder.js ${newVersion}` );
 updateLine( packageUrl, 2, `  "version": "${newVersion}",` );
 updateLine( bowerUrl, 2, `    "version": "${newVersion}",` );
