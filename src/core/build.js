@@ -392,7 +392,8 @@ const build = {
 
         if ( defaultValue.value && defaultValue.extraClass )
         {
-            selectedClassName = selectedClassName.concat( defaultValue.extraClass );
+            const extraClass = defaultValue.extraClass;
+            selectedClassName = selectedClassName.concat( extraClass );
         }
 
         const selected = constructElement( {

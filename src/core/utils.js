@@ -7,7 +7,7 @@
  *
  */
 
-/* globals clearTimeout, document, setTimeout, window */
+/* globals clearTimeout, document, setTimeout, window, Set */
 import microbeHttp      from 'microbejs/src/modules/http';
 
 const utils = {

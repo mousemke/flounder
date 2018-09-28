@@ -174,7 +174,10 @@ describe( 'destroy', () =>
         } );
 
         flounder.originalTarget[ 0 ] = {
-            className : classes.PLACEHOLDER
+            className : classes.PLACEHOLDER,
+            classList : {
+                contains : () => true
+            }
         };
 
         sinon.stub( flounder.originalTarget, 'removeChild', noop );
