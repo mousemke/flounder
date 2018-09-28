@@ -174,16 +174,16 @@ const build = {
         {
             dataObj.index   = i;
 
-            const divClasses = classes.OPTION;
+            let divClasses = classes.OPTION;
 
             if ( dataObj.extraClass )
             {
-                divClasses.push( dataObj.extraClass );
+                divClasses = divClasses.concat( dataObj.extraClass );
             }
 
             if ( i === defaultValue.index )
             {
-                divClasses.push( selectedClass );
+                divClasses = divClasses.concat( selectedClass );
             }
 
             const res = {
@@ -199,7 +199,7 @@ const build = {
                 }
             }
 
-            const data        = constructElement( res );
+            const data      = constructElement( res );
             data.innerHTML  = allowHTML ? dataObj.text :
                                             escapeHTML( dataObj.text );
 
@@ -231,18 +231,18 @@ const build = {
 
             if ( !selectRef )
             {
-                const extra             = dataObj.extraClass || '';
+                const extra             = dataObj.extraClass || [];
 
                 selectOption            = constructElement( {
                     tagname     : 'option',
-                    className   : classes.OPTION_TAG.push( extra ),
+                    className   : classes.OPTION_TAG.concat( extra ),
                     value       : dataObj.value
                 } );
 
-                const escapedText         = escapeHTML( dataObj.text );
+                const escapedText       = escapeHTML( dataObj.text );
                 selectOption.innerHTML  = escapedText;
 
-                const disabled            = dataObj.disabled;
+                const disabled          = dataObj.disabled;
 
                 if ( disabled )
                 {
@@ -253,7 +253,7 @@ const build = {
             }
             else
             {
-                const selectChild     = selectRef.children[ i ];
+                const selectChild   = selectRef.children[ i ];
                 selectOption        = selectChild;
                 selectChild.setAttribute( 'value', selectChild.value );
 
@@ -388,11 +388,11 @@ const build = {
         this.defaultObj       = setDefaultOption( this, this.props, data );
         const defaultValue    = this.defaultObj;
 
-        const selectedClassName = classes.SELECTED_DISPLAYED;
+        let selectedClassName = classes.SELECTED_DISPLAYED;
 
         if ( defaultValue.value && defaultValue.extraClass )
         {
-            selectedClassName.push( defaultValue.extraClass );
+            selectedClassName = selectedClassName.concat( defaultValue.extraClass );
         }
 
         const selected = constructElement( {

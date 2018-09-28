@@ -25,7 +25,7 @@ const utils = {
     {
         if ( Array.isArray( clss ) )
         {
-            clss.forEach( c =>
+            [ ...new Set( clss ) ].forEach( c =>
             {
                 utils.addClass( el, c );
             } );
@@ -312,7 +312,7 @@ const utils = {
     {
         if ( Array.isArray( clss ) )
         {
-            clss.forEach( _c =>
+            [ ...new Set( clss ) ].forEach( _c =>
             {
                 utils.removeClass( el, _c );
             } );
