@@ -1119,7 +1119,7 @@ const events = {
     removeSelectedValue( data )
     {
         data                = data || this.refs.data;
-        const optionTags    = this.refs.select.children;
+        const optionTags    = this.refs.selectOptions;
 
         data.forEach( ( d, i ) =>
         {

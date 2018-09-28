@@ -151,6 +151,7 @@ const build = {
         const data              = [];
         const selectOptions     = [];
         const sections          = [];
+        const optionGroups      = [];
         const constructElement  = utils.constructElement;
         const selectedClass     = this.selectedClass;
         const escapeHTML        = utils.escapeHTML;
@@ -248,8 +249,6 @@ const build = {
                 {
                     selectOption.setAttribute( 'disabled', disabled );
                 }
-
-                select.appendChild( selectOption );
             }
             else
             {
@@ -280,7 +279,6 @@ const build = {
         }
 
 
-
         originalData.forEach( ( dataObj, i ) =>
         {
             /* istanbul ignore next */
@@ -294,6 +292,11 @@ const build = {
 
             if ( dataObj.header )
             {
+                const optGroup = constructElement( {
+                    tagname     : 'optgroup',
+                    label       : dataObj.header
+                } );
+
                 const section = constructElement( {
                     tagname     : 'div',
                     className   : classes.SECTION
@@ -306,7 +309,6 @@ const build = {
 
                 header.textContent = dataObj.header;
                 section.appendChild( header );
-                optionsList.appendChild( section );
 
                 const dataObjData = dataObj.data;
                 dataObjData.forEach( ( d, i ) =>
@@ -322,9 +324,13 @@ const build = {
 
                     data[ index ]           = buildDiv( d, index );
                     section.appendChild( data[ index ] );
-                    selectOptions[ index ]  = buildOption( d, index );
+                    selectOptions[ index ] = buildOption( d, index );
+                    optGroup.appendChild( selectOptions[ index ] );
                     index++;
                 } );
+
+                optionsList.appendChild( section );
+                select.appendChild( optGroup );
 
                 // Keep sections with no options, but hide them.
                 // We need to keep them because they exist in `originalData`.
@@ -334,6 +340,7 @@ const build = {
                 }
 
                 sections[ indexSection ] = section;
+                optionGroups[ indexSection ] = optGroup;
                 indexSection++;
             }
             else
@@ -341,11 +348,12 @@ const build = {
                 data[ index ]           = buildDiv( dataObj, index );
                 optionsList.appendChild( data[ index ] );
                 selectOptions[ index ]  = buildOption( dataObj, index );
+                select.appendChild( selectOptions[ index ] );
                 index++;
             }
         } );
 
-        return  [ data, selectOptions, sections ];
+        return  [ data, selectOptions, sections, optionGroups ];
     },
 
 
@@ -441,6 +449,7 @@ const build = {
         data                = built[ 0 ];
         const selectOptions = built[ 1 ];
         const sections      = built[ 2 ];
+        const optGroups     = built[ 3 ];
 
         this.target.appendChild( wrapper );
 
@@ -452,6 +461,7 @@ const build = {
             optionsListWrapper,
             search,
             multiTagWrapper,
+            optGroups,
             optionsList,
             select,
             data,
