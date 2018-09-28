@@ -17,6 +17,7 @@ import Search               from './search';
 import version              from './version';
 import keycodes             from './keycodes';
 
+// ie 10
 /* eslint-disable */
 if ( !window.Set )
 {
@@ -92,15 +93,6 @@ if ( !window.Set )
         return this.__wm__.values.length;
       }
     };
-
-    defineProperties( Set.prototype, {
-      clear : enumFalse,
-      add : enumFalse,
-      has : enumFalse,
-      delete : enumFalse,
-      forEach : enumFalse,
-      size : enumFalse
-    });
 
     window.Set = Set;
 /* eslint-enable */
