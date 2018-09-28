@@ -7,7 +7,7 @@
  *
  */
 
-/* globals clearTimeout, document, setTimeout, window, Set */
+/* globals clearTimeout, document, setTimeout, window */
 import microbeHttp      from 'microbejs/src/modules/http';
 
 const utils = {
@@ -25,7 +25,21 @@ const utils = {
     {
         if ( Array.isArray( clss ) )
         {
-            [ ...new Set( clss ) ].forEach( c =>
+            // $fixme
+            // this should be Set, but uglify was mangling it away
+            const uniqueValues = [];
+
+            clss.forEach( c =>
+            {
+                if ( uniqueValues.includes( c ) )
+                {
+                    return;
+                }
+
+                uniqueValues.push( c );
+            } );
+
+            uniqueValues.forEach( c =>
             {
                 utils.addClass( el, c );
             } );
@@ -312,9 +326,23 @@ const utils = {
     {
         if ( Array.isArray( clss ) )
         {
-            [ ...new Set( clss ) ].forEach( _c =>
+            // $fixme
+            // this should be Set, but uglify was mangling it away
+            const uniqueValues = [];
+
+            clss.forEach( c =>
             {
-                utils.removeClass( el, _c );
+                if ( uniqueValues.includes( c ) )
+                {
+                    return;
+                }
+
+                uniqueValues.push( c );
+            } );
+
+            uniqueValues.forEach( c =>
+            {
+                utils.removeClass( el, c );
             } );
 
             return true;
