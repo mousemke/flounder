@@ -390,7 +390,7 @@ class Flounder
             }
         }
 
-        this.selectedClass = [ this.classes.SELECTED ];
+        this.selectedClass = this.classes.SELECTED;
 
         if ( props.defaultEmpty )
         {
