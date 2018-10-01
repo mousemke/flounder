@@ -1559,14 +1559,17 @@ const events = {
             utils.scrollTo( selectedDiv, refs.optionsListWrapper );
         }
 
-        if ( this.search )
+        if ( !this.props.openOnHover )
         {
-            setTimeout( () => refs.search.focus(), 0 );
-        }
-        else
-        {
-            this.addSelectKeyListener();
-            setTimeout( () => refs.select.focus(), 0 );
+            if ( this.search )
+            {
+                setTimeout( () => refs.search.focus(), 0 );
+            }
+            else
+            {
+                this.addSelectKeyListener();
+                setTimeout( () => refs.select.focus(), 0 );
+            }
         }
 
         let optionCount = refs.data.length;
