@@ -1419,14 +1419,16 @@ const events = {
         const qsHTML = document.querySelector( 'html' );
         qsHTML.removeEventListener( 'click', this.catchBodyClick );
         qsHTML.removeEventListener( 'touchend', this.catchBodyClick );
-
-        if ( this.search )
+        if ( !this.props.openOnHover )
         {
-            this.fuzzySearchReset();
-        }
-        else
-        {
-            this.removeSelectKeyListener();
+            if ( this.search )
+            {
+                this.fuzzySearchReset();
+            }
+            else
+            {
+                this.removeSelectKeyListener();
+            }
         }
 
         if ( !exit )

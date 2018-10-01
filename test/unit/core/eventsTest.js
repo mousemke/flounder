@@ -3137,6 +3137,56 @@ describe( 'toggleOpen', () =>
     } );
 
 
+    it( 'should not focus search if openOnHover / search enabled', done =>
+    {
+        document.body.flounder  = null;
+        const flounder          = new Flounder( document.body, {
+            data        : [ 1, 2, 3 ],
+            openOnHover : true,
+            search      : true
+        } );
+
+        const refs              = flounder.refs;
+
+        sinon.stub( refs.search, 'focus', noop );
+
+        flounder.toggleOpen( {}, refs.optionList, refs, refs.wrapper );
+
+        setTimeout( () =>
+        {
+            assert.equal( flounder.refs.search.focus.callCount, 0 );
+            flounder.refs.search.focus.restore();
+            done();
+        }, 100 );
+    } );
+
+
+    it( 'should not focus select while openOnHover in enabled', done =>
+    {
+        const select = document.createElement( 'select' );
+
+        document.body.appendChild( select );
+
+        const flounder          = new Flounder( select, {
+            data        : [ 1, 2, 3 ],
+            openOnHover : true
+        } );
+
+        const refs              = flounder.refs;
+
+        sinon.stub( refs.select, 'focus', noop );
+
+        flounder.toggleOpen( {}, refs.optionList, refs, refs.wrapper );
+
+        setTimeout( () =>
+        {
+            assert.equal( flounder.refs.select.focus.callCount, 0 );
+            flounder.refs.select.focus.restore();
+            done();
+        }, 100 );
+    } );
+
+
     it( 'should add a no more options message if all are selected', () =>
     {
         document.body.flounder  = null;
@@ -3151,7 +3201,6 @@ describe( 'toggleOpen', () =>
 
         assert.equal( typeof flounder.refs.noMoreOptionsEl, 'object' );
     } );
-
 
 
     it( 'should correctly handle onOpen failures', () =>
@@ -3195,7 +3244,6 @@ describe( 'toggleOpen', () =>
         utils.addClass.restore();
         utils.removeClass.restore();
     } );
-
 
 
     it( 'should skip everything if not ready', () =>
