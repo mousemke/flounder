@@ -673,7 +673,7 @@ const build = {
             props.data  = props.data    || this.data;
         }
 
-        return this.constructor( this.originalTarget, props );
+        return new this.constructor( this.originalTarget, props );
     },
 
 
