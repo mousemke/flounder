@@ -66,7 +66,7 @@ let buildData = function()
 /**
  * Vanilla from Input (sections, multiple tags, built from selector string)
  */
-new Flounder( '.vanilla--input--tags', {
+new Flounder( '.input--tags', {
 
     multipleTags    : true,
 
@@ -114,7 +114,7 @@ new Flounder( '.vanilla--input--tags', {
 /**
  * Vanilla from Input (multiple, no tags, dynamic options, default index, built from element)
  */
-new Flounder( document.getElementById( 'vanilla--input' ), {
+new Flounder( document.getElementById( 'input' ), {
     defaultIndex         : 2,
 
     data                : data,
@@ -149,16 +149,16 @@ new Flounder( document.getElementById( 'vanilla--input' ), {
 /**
  * Vanilla from Select (default value, custom classes, built from element)
  */
-new Flounder( document.getElementById( 'vanilla--select' ), {
+new Flounder( document.getElementById( 'select' ), {
     defaultValue    : '2',
 
     onSelect        : function(){ console.log( 'woot' ); },
 
     classes         : {
-        MAIN         : 'flounder  extra-class-to-give-the-main-flounder-element',
-        HIDDEN       : 'flounder--hidden  extra-class-to-denote-hidden',
-        SELECTED     : 'flounder__option--selected  extra-class-to-denote-selected-option',
-        MAIN_WRAPPER : 'flounder--wrapper  flounder__input--select  extra-class-to-give-the-wrapper'
+        MAIN         : [ 'flounder', 'extra-class-to-give-the-main-flounder-element'],
+        HIDDEN       : ['flounder--hidden', 'extra-class-to-denote-hidden'],
+        SELECTED     : ['flounder__option--selected', 'extra-class-to-denote-selected-option'],
+        MAIN_WRAPPER : ['flounder--wrapper', 'flounder__input--select', 'extra-class-to-give-the-wrapper']
     }
 } );
 
@@ -166,7 +166,7 @@ new Flounder( document.getElementById( 'vanilla--select' ), {
 /**
  * Vanilla from Div (multiple, tags, placeholder, built from element)
  */
-new Flounder( document.getElementById( 'vanilla--multiple--tags' ), {
+new Flounder( document.getElementById( 'multiple--tags' ), {
 
     defaultIndex        : 2,
 
@@ -181,7 +181,7 @@ new Flounder( document.getElementById( 'vanilla--multiple--tags' ), {
 /**
  * Vanilla from Span (default value, built from element)
  */
-new Flounder( document.getElementById( 'vanilla--span' ), {
+new Flounder( document.getElementById( 'span' ), {
 
     disableArrow        : true,
 
@@ -197,7 +197,7 @@ new Flounder( document.getElementById( 'vanilla--span' ), {
 /**
  * Vanilla from Div (multiple, description, default index, elements disabled, built from element)
  */
-new Flounder( document.getElementById( 'vanilla--multiple--desc' ), {
+new Flounder( document.getElementById( 'multiple--desc' ), {
     defaultIndex        : 3,
 
     multiple            : true,
@@ -220,111 +220,95 @@ new Flounder( document.getElementById( 'vanilla--multiple--desc' ), {
 } );
 
 
-requirejs.config( {
-    paths : {
-        flounder : '../dist/flounder.amd'
+/**
+ * from Div (description, placeholder, built from string)
+ */
+new Flounder( '#div-desc', {
+    placeholder          : 'placeholders!',
+
+    onInit               : function()
+    {
+        let res = [];
+        data.forEach( function( dataObj )
+        {
+            res.push( {
+                text        : dataObj.text,
+                value       : dataObj.id,
+                description : `${dataObj.id} could be described as "${dataObj.text}"`
+            } );
+        } );
+
+        this.data = res;
     }
 } );
 
-/**
- * AMD required vanilla from Div (description, placeholder, built from string)
- */
-requirejs( [ 'flounder' ], function( Flounder )
-{
-    new Flounder( '#AMD--desc', {
-        placeholder          : 'placeholders!',
-
-        onInit               : function()
-        {
-            let res = [];
-            data.forEach( function( dataObj )
-            {
-                res.push( {
-                    text        : dataObj.text,
-                    value       : dataObj.id,
-                    description : `${dataObj.id} could be described as "${dataObj.text}"`
-                } );
-            } );
-
-            this.data = res;
-        }
-     } );
-} );
-
 
 /**
- * AMD required vanilla from select (loadFromUrl, placeholder, built from element)
+ * from select (loadFromUrl, placeholder, built from element)
  */
-requirejs( [ 'flounder' ], function( Flounder )
-{
-    new Flounder( document.getElementById( 'AMD--select' ), {
+new Flounder( document.getElementById( 'select--from-url' ), {
 
-        placeholder          : 'placeholders!',
+    placeholder          : 'placeholders!',
 
-        onInit               : function()
-        {
-            this.data = this.loadDataFromUrl( './dummData.json', function( data )
-            {
-                setTimeout( function(){ self.rebuild( data.dummyData ) }, 10000 );
-            } );
-        }
-     } );
-} );
-
-
-µ( function()
+    onInit               : function()
     {
-        /**
-         * Microbe plugin from Div (multiple, microbe wrapper, loads JSON onFirstTouch)
-         */
-        µ( '#microbe--multiple--desc' ).flounder( {
-
-            onFirstTouch : function()
-            {
-                var self = this;
-
-                this.data = this.loadDataFromUrl( './dummyData.json', function( data )
-                {
-                    setTimeout( function(){ self.rebuild( data.dummyData ) }, 10000 );
-                } );
-
-                this.rebuild( this.data );
-            },
-
-            multiple            : true
-         } );
-
-
-        /**
-         * jQuery plugin from Div (search, placeholder, jquery wrapper, loadData onInit)
-         */
-         $( '#jquery--div' ).flounder( {
-            onInit               : function()
-            {
-                var self = this;
-
-                this.data = this.buildFromUrl( './dummyData.json',
-                                        function( _d ){ self.data =_d.dummyData } );
-            },
-
-            placeholder         : 'placeholders!',
-
-            search              : true
+        this.data = this.loadDataFromUrl( './dummData.json', function( data )
+        {
+            setTimeout( function(){ self.rebuild( data.dummyData ) }, 10000 );
         } );
     }
-);
+ } );
+
+/**
+ * from Div (multiple, loads JSON onFirstTouch)
+ */
+new Flounder( '#multiple--desc__firstTouch', {
+
+    onFirstTouch : function()
+    {
+        var self = this;
+
+        this.data = this.loadDataFromUrl( './dummyData.json', function( data )
+        {
+            setTimeout( function(){ self.rebuild( data.dummyData ) }, 10000 );
+        } );
+
+        this.rebuild( this.data );
+    },
+
+    multiple            : true
+ } );
 
 
-µ( '.debug--mode' ).on( 'click', function()
-{
-    µ( '.flounder--select--tag' ).removeClass( 'flounder--hidden' ).removeClass( 'flounder--hidden--ios' );
-    µ( '.flounder' ).css( 'display', 'inline-block' )
+/**
+ * from Div (search, placeholder, loadData onInit)
+ */
+ new Flounder( '#div--loadData-onInit', {
+    onInit               : function()
+    {
+        var self = this;
+
+        this.data = this.buildFromUrl( './dummyData.json',
+                                function( _d ){ self.data =_d.dummyData } );
+    },
+
+    placeholder         : 'placeholders!',
+
+    search              : true
 } );
 
 
-µ( '.destroy--all' ).on( 'click', function()
+
+document.querySelector( '.debug--mode' ).addEventListener( 'click', function()
 {
-    µ( '.flounder' ).each( function( el )
+    document.querySelector( '.flounder--select--tag' ).removeClass( 'flounder--hidden' ).removeClass( 'flounder--hidden--ios' );
+    document.querySelector( '.flounder' ).css( 'display', 'inline-block' )
+} );
+
+
+document.querySelector( '.destroy--all' ).addEventListener( 'click', function()
+{
+    [ ...document.querySelectorAll( '.flounder' ) ].each( function( el )
     {
         el.flounder.destroy();
     } );

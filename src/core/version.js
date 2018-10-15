@@ -8,4 +8,4 @@
  */
 
 /* globals module */
-module.exports = '1.3.13';
+module.exports = '2.0.0';

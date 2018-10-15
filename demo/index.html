@@ -15,12 +15,12 @@
     </head>
     <body>
         <div>
-            <span class="demo--label">Vanilla from Input (sections, multiple tags, built from selector string)</span>
-            <input class="vanilla--input--tags" id="vanilla--input--tags" type="text">
+            <span class="demo--label">From Input (sections, multiple tags, built from selector string)</span>
+            <input class="input--tags" id="input--tags" type="text">
         </div>
         <div>
-            <span class="demo--label">Vanilla from Input (multiple, dynamic options, default index, built from element)</span>
-            <input id="vanilla--input" type="text">
+            <span class="demo--label">From Input (multiple, dynamic options, default index, built from element)</span>
+            <input id="input" type="text">
         </div>
         <div>
             <style type="text/css">
@@ -35,8 +35,8 @@
                     background-color:           #509;
                 }
             </style>
-            <span class="demo--label">Vanilla from Select (default value, custom classes, built from element)</span>
-            <select id="vanilla--select" class="test--class--one  test--class--two">
+            <span class="demo--label">From Select (default value, custom classes, built from element)</span>
+            <select id="select" class="test--class--one  test--class--two">
                 <option value="1">Gew&uuml;rzdose mit Streueinsatz</option>
                 <option value="2">2</option>
                 <option value="3" disabled>3</option>
@@ -45,42 +45,36 @@
             </select>
         </div>
         <div>
-            <span class="demo--label">Vanilla from Div (multiple, tags, placeholder, built from element)</span>
-            <div style="display:inline-block;" id="vanilla--multiple--tags"></div>
+            <span class="demo--label">From Div (multiple, tags, placeholder, built from element)</span>
+            <div style="display:inline-block;" id="multiple--tags"></div>
         </div>
         <div>
-            <span class="demo--label">Vanilla from Span (default value, built from element)</span>
-            <span style="display:inline-block;" id="vanilla--span"></span>
+            <span class="demo--label">From Span (default value, built from element)</span>
+            <span style="display:inline-block;" id="span"></span>
         </div>
         <div>
-            <span class="demo--label">Vanilla from Div (multiple, desciption, default index, elements disabled, built from element)</span>
-            <div style="display:inline-block;" id="vanilla--multiple--desc"></div>
+            <span class="demo--label">From Div (multiple, desciption, default index, elements disabled, built from element)</span>
+            <div style="display:inline-block;" id="multiple--desc"></div>
         </div>
         <div>
-            <span class="demo--label">AMD required vanilla from Div (description, placeholder, built from string)</span>
-            <div style="display:inline-block;" id="AMD--desc"></div>
+            <span class="demo--label">From Div (description, placeholder, built from string)</span>
+            <div style="display:inline-block;" id="div-desc"></div>
         </div>
         <div>
-            <span class="demo--label">AMD required vanilla from select (loadFromUrl, placeholder, built from element)</span>
-            <select id="AMD--select" class="test--class--one  test--class--two">
+            <span class="demo--label">From select (loadFromUrl, placeholder, built from element)</span>
+            <select id="select--from-url" class="test--class--one  test--class--two">
             </select>
         </div>
         <div>
-            <span class="demo--label">Microbe plugin from Div (multiple, microbe wrapper, loads JSON onFirstTouch)</span>
-            <div style="display:inline-block;" id="microbe--multiple--desc"></div>
+            <span class="demo--label">From Div (multiple, loads JSON onFirstTouch)</span>
+            <div style="display:inline-block;" id="multiple--desc__firstTouch"></div>
         </div>
         <div>
-            <span class="demo--label">jQuery plugin from Div (search, placeholder, jquery wrapper, loadData onInit)</span>
-            <div style="display:inline-block;" id="jquery--div"></div>
+            <span class="demo--label">From Div (search, placeholder, loadData onInit)</span>
+            <div style="display:inline-block;" id="div--loadData-onInit"></div>
         </div>
-
+        <script type="text/javascript" src="../demo/demoDist.js"></script>
         <button class="debug--mode">debug mode</button>
         <button class="destroy--all">destroy all</button>
-        <script type="text/javascript" src="./vendor/jquery.js"></script>
-        <script type="text/javascript" src="../dist/flounder.jquery.js"></script>
-        <script type="text/javascript" src="./vendor/microbe.js"></script>
-        <script type="text/javascript" src="../dist/flounder.microbe.js"></script>
-        <script type="text/javascript" data-main="../demo/demoDist.js" src="./vendor/require.js"></script>
-
     </body>
 </html>

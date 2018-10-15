@@ -106,11 +106,9 @@ function updateVersion()
 const readmeUrl       = './README.md';
 const packageUrl      = './package.json';
 const versionUrl      = './src/core/version.js';
-const bowerUrl        = './bower.json';
 
 const newVersion      = process.argv[ 2 ] || updateVersion( versionUrl );
 
 updateLine( versionUrl, 10, `module.exports = \'${newVersion}\';` );
 updateLine( readmeUrl, 0, `Flounder.js ${newVersion}` );
 updateLine( packageUrl, 2, `  "version": "${newVersion}",` );
-updateLine( bowerUrl, 2, `    "version": "${newVersion}",` );

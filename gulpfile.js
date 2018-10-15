@@ -83,44 +83,20 @@ gulp.task( 'vanilla', function()
 } );
 
 
-gulp.task( 'amd', function()
-{
-    build( 'wrappers', 'flounder.amd' );
-} );
-
-
-gulp.task( 'jquery', function()
-{
-    build( 'wrappers', 'flounder.jquery' );
-} );
-
-
-gulp.task( 'microbe', function()
-{
-    build( 'wrappers', 'flounder.microbe' );
-} );
-
-
 gulp.task( 'default', [], function()
 {
-    gulp.start( [ 'vanilla', 'amd', 'jquery', 'microbe', 'demo' ] );
+    gulp.start( [ 'vanilla', 'demo' ] );
 } );
 
 
 gulp.task( 'compile', [], function()
 {
         browserifyFiles( 'core', 'flounder' );
-        browserifyFiles( 'wrappers', 'flounder.amd' );
-        browserifyFiles( 'wrappers', 'flounder.jquery' );
-        browserifyFiles( 'wrappers', 'flounder.microbe' );
 } );
 
 
 gulp.task( 'min', [], function()
 {
         min( 'core', 'flounder' );
-        min( 'wrappers', 'flounder.amd' );
-        min( 'wrappers', 'flounder.jquery' );
-        min( 'wrappers', 'flounder.microbe' );
 } );
 
