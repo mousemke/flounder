@@ -8,7 +8,6 @@
  */
 
 /* globals clearTimeout, document, setTimeout, window */
-import microbeHttp      from 'microbejs/src/modules/http';
 
 const utils = {
     /**
@@ -257,10 +256,6 @@ const utils = {
     },
 
 
-    /* placeholder for microbe http module */
-    http : false,
-
-
     /**
      * ## iosVersion
      *
@@ -438,7 +433,5 @@ const utils = {
         }
     }
 };
-
-microbeHttp( utils );
 
 export default utils;

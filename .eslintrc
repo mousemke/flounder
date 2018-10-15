@@ -10,9 +10,6 @@
     "extends": [
         "eslint:recommended",
     ],
-    "plugins": [
-        "react"
-    ],
     "rules": {
         "array-bracket-spacing": [ 2, "always" ],
         "arrow-spacing": 2,

@@ -712,33 +712,6 @@ describe( 'loadDataFromUrl', () =>
         data        : []
     } );
 
-    const getStub = res =>
-    {
-        return {
-            then    : func =>
-            {
-                try
-                {
-                    res = func( res );
-
-                    return {
-                        catch : () => res
-                    };
-                }
-                catch ( e )
-                {
-                    return {
-                        catch : func => func( e )
-                    };
-                }
-            },
-            catch   : noop
-        };
-    };
-
-    sinon.stub( utils.http, 'get', getStub );
-
-
 
     it( 'should return a loading value while loading', () =>
     {

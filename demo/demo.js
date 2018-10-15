@@ -298,7 +298,6 @@ new Flounder( '#multiple--desc__firstTouch', {
 } );
 
 
-
 document.querySelector( '.debug--mode' ).addEventListener( 'click', function()
 {
     document.querySelector( '.flounder--select--tag' ).removeClass( 'flounder--hidden' ).removeClass( 'flounder--hidden--ios' );

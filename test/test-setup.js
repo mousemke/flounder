@@ -9,6 +9,7 @@
 
 /* globals global require, document */
 const jsdom                 = require( 'jsdom' );
+require( 'isomorphic-fetch' );
 
 global.document             = jsdom.jsdom( `
     <!doctype html>

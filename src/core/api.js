@@ -7,7 +7,7 @@
  *
  */
 
-/* globals console */
+/* globals console, fetch */
 import utils                from './utils';
 import { setDefaultOption } from './defaults';
 
@@ -505,7 +505,7 @@ const api = {
     {
         const classes = this.classes;
 
-        utils.http.get( url ).then( data =>
+        fetch( url ).then( j => j.json() ).then( data =>
         {
             if ( data )
             {
